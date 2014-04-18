@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 ### libraries
 import os
@@ -49,7 +49,6 @@ def cache_fill():
 
     # jump to last parsed site in history per cache_fill run
     while (len(imgmap) < max_cache_imgs):
-
 
         # choose last found "more_url" if its not the first run
         if (lasturl != "" and sc != 0 ):
