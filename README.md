@@ -11,7 +11,7 @@ download, install `werkzeug` and `bs4` and point your browser to the configured 
 ```bash
 git clone https://github.com/k4cg/nichtparasoup
 cd nichtparasoup
-pip install bs4
+pip install beautifulsoup4
 pip install werkzeug
 ```
 
