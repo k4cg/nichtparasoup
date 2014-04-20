@@ -102,7 +102,6 @@ def cache_get():
         cache_fill()
         msg = "refilling cache - remaining: %d - already seen: %d" % (len(imgmap),len(blacklist))
         logger.warning(msg)
-        return msg
 
 # print status of cache
 def cache_status():
