@@ -6,6 +6,8 @@ at [k4cg](http://k4cg.org) we use this very often. but the project has some issu
 the idea behind nichtparasoup is to keep it as simple as possible by just requiring 2 python libraries. you should just be able to
 download, install `werkzeug` and `bs4` and point your browser to the configured port of your machine
 
+<img src="https://github.com/k4cg/nichtparasoup/raw/master/screenshot.png">
+
 # setup
 
 ```bash
