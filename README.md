@@ -13,8 +13,7 @@ download, install `werkzeug` and `bs4` and point your browser to the configured 
 ```bash
 git clone https://github.com/k4cg/nichtparasoup
 cd nichtparasoup
-pip install beautifulsoup4
-pip install werkzeug
+pip install -r requirements.txt
 ```
 
 configure the (hopefully self explaining) config options at the top of `nichtparasoup.py`
