@@ -25,7 +25,7 @@ user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebK
 
 ### init values
 headers = { 'User-Agent' : user_agent }
-imgmap = {} # will be filled by cache_fill
+imgmap = [] # will be filled by cache_fill
 blacklist = [] # will be filled by cache_get
 lasturl = "" # will be used to remind the last page
 logger = logging.getLogger('nichtparasoup')
@@ -63,6 +63,7 @@ def cache_fill():
         page = BeautifulSoup(response.read())
         containers = page.find_all("div", { "class" : "imagecontainer" })
 
+
         # get more content ("scroll down")
         # to know what page to parse next
         url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
@@ -80,8 +81,8 @@ def cache_fill():
         # and if max_cache is not reached yet
         for con in containers:
             if (len(imgmap) < max_cache_imgs):
-                if not any(con.find('img')['alt'] in s for s in blacklist):
-                    imgmap.update({con.find('img')['alt']: con.find('img')['src'] } )
+                if not any(con.find('img')['src'] in s for s in blacklist):
+                    imgmap.append(con.find('img')['src'])
                     logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
                     c = c + 1 # increase image counter for log
 
@@ -93,9 +94,9 @@ def cache_get():
     # if the cache is not empty, return an object
     # and add id to blacklist. otherwise start refilling the cache
     if imgmap:
-        a = random.choice(imgmap.keys())
-        url = imgmap.pop(a)
-        blacklist.append(a) # add it to the blacklist to detect duplicates
+        url = random.choice(imgmap)
+        imgmap.remove(url)
+        blacklist.append(url) # add it to the blacklist to detect duplicates
         logger.debug("delivered: %s - remaining: %d" % (url, len(imgmap)))
         return url
     else:
@@ -156,7 +157,6 @@ class nichtparasoup(object):
 # main function how to run
 # on startup, fill the cache and get up the webserver
 def main():
-    cache_fill()
     run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False, use_reloader=True)
 
 if __name__ == "__main__":
