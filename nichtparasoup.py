@@ -91,18 +91,20 @@ def cache_fill():
 # return a img url
 def cache_get():
 
+    # start refilling the cache if neccessary
+    if (len(imgmap) == 0):
+        cache_fill()
+        msg = "refilling cache - remaining: %d - already seen: %d" % (len(imgmap),len(blacklist))
+        logger.warning(msg)
+
     # if the cache is not empty, return an object
-    # and add id to blacklist. otherwise start refilling the cache
+    # and add id to blacklist.
     if imgmap:
         url = random.choice(imgmap)
         imgmap.remove(url)
         blacklist.append(url) # add it to the blacklist to detect duplicates
         logger.debug("delivered: %s - remaining: %d" % (url, len(imgmap)))
         return url
-    else:
-        cache_fill()
-        msg = "refilling cache - remaining: %d - already seen: %d" % (len(imgmap),len(blacklist))
-        logger.warning(msg)
 
 # print status of cache
 def cache_status():
