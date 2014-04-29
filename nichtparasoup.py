@@ -1,12 +1,21 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 ### libraries
 import os
 import random
 import logging
-import urllib2
-import urlparse
+import time
+import sys
+try:
+    import urllib.request as urllib2 #py3
+except:
+    import urllib2 #py2
+try:
+    import urllib.parse as urlparse # py3
+except:
+    import urlparse #py2
 import templates as tmpl
+import threading
 from bs4 import BeautifulSoup
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -19,9 +28,11 @@ nps_port = 5000
 nps_bindip = "0.0.0.0"
 soupiobase = "http://soup.io/"
 soupiourl = "http://soup.io/everyone?type=image"
-max_cache_imgs = 50
+min_cache_imgs = 50
+min_cache_imgs_before_refill = 10
 logfile = "nichtparasoup.log"
 user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+cacheFill_sleep = 1.0 # seconds
 
 ### init values
 headers = { 'User-Agent' : user_agent }
@@ -33,7 +44,7 @@ hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
-
+cacehe_fill_loop_continue = True
 
 ### cache functions
 #fill up the cache with ids and images
@@ -43,12 +54,12 @@ def cache_fill():
     sc = 0 # site count
     c = 0  # image count
 
-    # initialzie url values
+    # initialize URI values
     global lasturl
     url = soupiourl
 
     # jump to last parsed site in history per cache_fill run
-    while (len(imgmap) < max_cache_imgs):
+    while (len(imgmap) < min_cache_imgs):
 
         # choose last found "more_url" if its not the first run
         if (lasturl != "" and sc != 0 ):
@@ -59,7 +70,7 @@ def cache_fill():
         logger.debug("parsing %s" % url)
         response = urllib2.urlopen(req)
 
-        # throw everything in beautifulsoup and get images
+        # throw everything in BeautifulSoup and get images
         page = BeautifulSoup(response.read())
         containers = page.find_all("div", { "class" : "imagecontainer" })
 
@@ -69,33 +80,35 @@ def cache_fill():
         url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
         url = urlparse.urljoin(soupiobase, url)
 
-        # update new last url when we're not on first run
+        # update new last URI when we're not on first run
         if (sc != 0):
             lasturl = url
 
         # increase site count for log
         sc = sc + 1
 
-        # for every found imagecontainer
-        # add img-alt and img-src to map if not blacklisted
-        # and if max_cache is not reached yet
+        # for every found imageContainer
+        # add img-src to map if not blacklisted
+        # ignore min_cache_imgs at this point - always parse whole page  
         for con in containers:
-            if (len(imgmap) < max_cache_imgs):
-                if not any(con.find('img')['src'] in s for s in blacklist):
-                    imgmap.append(con.find('img')['src'])
-                    logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
-                    c = c + 1 # increase image counter for log
+            if not any(con.find('img')['src'] in s for s in blacklist):
+                imgmap.append(con.find('img')['src'])
+                logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
+                c = c + 1 # increase image counter for log
 
     logger.info("added %d new images to cache by parsing %d pages" % (c, sc) )
 
+def cacehe_fill_loop():
+    while cacehe_fill_loop_continue :
+        if ( len(imgmap) < min_cache_imgs_before_refill ) :
+            cache_fill()
+
+        time.sleep(cacheFill_sleep)
+
+
 # return a img url
 def cache_get():
-
-    # start refilling the cache if neccessary
-    if (len(imgmap) == 0):
-        cache_fill()
-        msg = "refilling cache - remaining: %d - already seen: %d" % (len(imgmap),len(blacklist))
-        logger.warning(msg)
+    url = ""
 
     # if the cache is not empty, return an object
     # and add id to blacklist.
@@ -104,7 +117,9 @@ def cache_get():
         imgmap.remove(url)
         blacklist.append(url) # add it to the blacklist to detect duplicates
         logger.debug("delivered: %s - remaining: %d" % (url, len(imgmap)))
-        return url
+
+    return url
+
 
 # print status of cache
 def cache_status():
@@ -134,7 +149,7 @@ class nichtparasoup(object):
         try:
             endpoint, values = adapter.match()
             return getattr(self, 'on_' + endpoint)(request, **values)
-        except HTTPException, e:
+        except HTTPException as e:
             return e
 
     # the wsgi app itself
@@ -155,11 +170,30 @@ class nichtparasoup(object):
     def on_cache_get(self, request):
         return Response(cache_get())
 
+
+
+
 ### runtime
 # main function how to run
-# on startup, fill the cache and get up the webserver
+# on start-up, fill the cache and get up the webserver
 def main():
+
+    try :
+        # start the cache filler tread
+        cacehe_fill_loop_continue = True
+        cache_fill_thread = threading.Thread(target=cacehe_fill_loop)
+        cache_fill_thread.daemon = True
+        cache_fill_thread.start()
+    except (KeyboardInterrupt, SystemExit) :
+        # end the cache filler thread properly
+        cacehe_fill_loop_continue = False # stop loop
+        min_cache_imgs = -1 # stop cache_fill-inner_loop
+
+    time.sleep(1.337) # give the cache_fill some time in advance
+    # start webserver after a bit of delay
     run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False, use_reloader=True)
+
+
 
 if __name__ == "__main__":
     main()
