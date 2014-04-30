@@ -23,7 +23,7 @@ from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.utils import redirect
 from werkzeug.serving import run_simple
 
-### configuration
+## configuration
 nps_port = 5000
 nps_bindip = "0.0.0.0"
 soupiobase = "http://soup.io/"
@@ -44,7 +44,7 @@ hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
-cacehe_fill_loop_continue = True
+cache_fill_loop_continue = True
 
 ### cache functions
 #fill up the cache with ids and images
@@ -99,7 +99,7 @@ def cache_fill():
     logger.info("added %d new images to cache by parsing %d pages" % (c, sc) )
 
 def cacehe_fill_loop():
-    while cacehe_fill_loop_continue :
+    while cache_fill_loop_continue :
         if ( len(imgmap) < min_cache_imgs_before_refill ) :
             cache_fill()
 
@@ -180,13 +180,13 @@ def main():
 
     try :
         # start the cache filler tread
-        cacehe_fill_loop_continue = True
+        cache_fill_loop_continue = True
         cache_fill_thread = threading.Thread(target=cacehe_fill_loop)
         cache_fill_thread.daemon = True
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit) :
         # end the cache filler thread properly
-        cacehe_fill_loop_continue = False # stop loop
+        cache_fill_loop_continue = False # stop loop
         min_cache_imgs = -1 # stop cache_fill-inner_loop
 
     time.sleep(1.337) # give the cache_fill some time in advance
