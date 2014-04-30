@@ -98,7 +98,7 @@ def cache_fill():
 
     logger.info("added %d new images to cache by parsing %d pages" % (c, sc) )
 
-def cacehe_fill_loop():
+def cache_fill_loop():
     while cache_fill_loop_continue :
         if ( len(imgmap) < min_cache_imgs_before_refill ) :
             cache_fill()
@@ -181,7 +181,7 @@ def main():
     try :
         # start the cache filler tread
         cache_fill_loop_continue = True
-        cache_fill_thread = threading.Thread(target=cacehe_fill_loop)
+        cache_fill_thread = threading.Thread(target=cache_fill_loop)
         cache_fill_thread.daemon = True
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit) :
