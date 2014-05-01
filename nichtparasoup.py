@@ -28,11 +28,11 @@ nps_port = 5000
 nps_bindip = "0.0.0.0"
 soupiobase = "http://soup.io/"
 soupiourl = "http://soup.io/everyone?type=image"
+imgururl = "https://imgur.com/random"
 min_cache_imgs = 50
 min_cache_imgs_before_refill = 10
 logfile = "nichtparasoup.log"
 user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
-cacheFill_sleep = 1.0 # seconds
 
 ### init values
 headers = { 'User-Agent' : user_agent }
@@ -48,7 +48,7 @@ cache_fill_loop_continue = True
 
 ### cache functions
 #fill up the cache with ids and images
-def cache_fill():
+def soupio():
 
     # set counters for log
     sc = 0 # site count
@@ -59,51 +59,67 @@ def cache_fill():
     url = soupiourl
 
     # jump to last parsed site in history per cache_fill run
-    while (len(imgmap) < min_cache_imgs):
+    #while (len(imgmap) < min_cache_imgs):
 
-        # choose last found "more_url" if its not the first run
-        if (lasturl != "" and sc != 0 ):
-            url = lasturl
+    # choose last found "more_url" if its not the first run
+    if (lasturl != "" and sc != 0 ):
+        url = lasturl
 
-        # make request
-        req = urllib2.Request(url, None, headers)
-        logger.debug("parsing %s" % url)
-        response = urllib2.urlopen(req)
+    # make request
+    req = urllib2.Request(url, None, headers)
+    logger.debug("parsing %s" % url)
+    response = urllib2.urlopen(req)
 
-        # throw everything in BeautifulSoup and get images
-        page = BeautifulSoup(response.read())
-        containers = page.find_all("div", { "class" : "imagecontainer" })
+    # throw everything in BeautifulSoup and get images
+    page = BeautifulSoup(response.read())
+    containers = page.find_all("div", { "class" : "imagecontainer" })
 
 
-        # get more content ("scroll down")
-        # to know what page to parse next
-        url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
-        url = urlparse.urljoin(soupiobase, url)
+    # get more content ("scroll down")
+    # to know what page to parse next
+    url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
+    url = urlparse.urljoin(soupiobase, url)
 
-        # update new last URI when we're not on first run
-        if (sc != 0):
-            lasturl = url
+    # update new last URI when we're not on first run
+    if (sc != 0):
+        lasturl = url
 
-        # increase site count for log
-        sc = sc + 1
+    # increase site count for log
+    sc = sc + 1
 
-        # for every found imageContainer
-        # add img-src to map if not blacklisted
-        # ignore min_cache_imgs at this point - always parse whole page  
-        for con in containers:
-            if not any(con.find('img')['src'] in s for s in blacklist):
-                imgmap.append(con.find('img')['src'])
-                logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
-                c = c + 1 # increase image counter for log
+    # for every found imageContainer
+    # add img-src to map if not blacklisted
+    # ignore min_cache_imgs at this point - always parse whole page  
+    for con in containers:
+        if not any(con.find('img')['src'] in s for s in blacklist):
+            imgmap.append(con.find('img')['src'])
+            logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
+            c = c + 1 # increase image counter for log
 
-    logger.info("added %d new images to cache by parsing %d pages" % (c, sc) )
+    logger.info("added %d new images to cache by parsing %d pages from soup.io" % (c, sc) )
 
+def imgur():
+    global imgururl
+
+    # make request
+    req = urllib2.Request(imgururl, None, headers)
+    response = urllib2.urlopen(req)
+    image = BeautifulSoup(response.read()).find("div", { "id" : "image" }).find("img")["src"]
+
+    if not any(image in s for s in blacklist):
+      imgmap.append(image)
+      logger.debug("added: %s - status: %d" % (image, len(imgmap)))
+
+    logger.info("added %d new images to cache from imgur" % len(imgmap) )
+
+# choose random source for filling cache
 def cache_fill_loop():
     while cache_fill_loop_continue :
         if ( len(imgmap) < min_cache_imgs_before_refill ) :
-            cache_fill()
+            sources = [ soupio, imgur ]
 
-        time.sleep(cacheFill_sleep)
+            while (len(imgmap) < min_cache_imgs):
+                random.choice(sources)()
 
 
 # return a img url
