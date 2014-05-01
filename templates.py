@@ -128,102 +128,111 @@ root = """
 })(iw={}, this);
 	</script>
 	<style type="text/css">
-html {
-	direction: ltr;
-	overflow: scroll;
-	overflow-x: hidden;
-}
-html, body {
-	color: #ccc;
-	background-color: black;
-	margin: 0ex 0em;
-	padding: 0ex 0em;
-}
+		html {
+			direction: ltr;
+			overflow: scroll;
+			overflow-x: hidden;
+		}
 
-#header {
-	z-index: 99999;
-	display: block;
-	position: fixed;
-	top: 0ex;
-	left: 0em;
-	right: 0em;
-	height: 4ex;
-	margin: 0ex 0em 0.5ex;
-	padding: 0ex 1em;
-	line-height: 4ex;
-	border-bottom: 0.5ex solid #111;
-	background-color: #111;
-	background-color: rgba(23, 23, 23, 0.9);
+		html, body {
+			color: #ccc;
+			background-color: black;
+			margin: 0ex 0em;
+			padding: 0ex 0em;
+			height: 100%
+		}
 
-	text-align: center;
+		#header {
+			z-index: 99999;
+			display: block;
+			position: fixed;
+			top: 0ex;
+			left: 0em;
+			right: 0em;
+			height: 4ex;
+			margin: 0ex 0em 0.5ex;
+			padding: 0ex 1em;
+			line-height: 4ex;
+			border-bottom: 0.5ex solid #111;
+			background-color: #111;
+			background-color: rgba(23, 23, 23, 0.9);
+			text-align: center;
+		}
 
-}
+		#toggle {
+			margin: 0ex 5em;
+			cursor: pointer;
+			display: inline-block;
+			width: 5em;
+		}
 
-#toggle {
-	margin: 0ex 5em;
-	cursor: pointer;
-	display: inline-block;
-	width: 5em;
-}
-#toggle:hover { text-decoration: underline; }
+		#toggle:hover {
+			text-decoration: underline;
+		}
 
-#wall {
-	margin-top: 5ex;
-	display: block;
-}
-#wallbreaker {
-	clear: both;
-	display: none;
-}
+		#wall {
+			margin-top: 5ex;
+			display: block;
+			height: 100%;
+		}
 
-#wall img {
-	margin: 1ex 1ex;
-	padding: 0ex 0em;
-	border: 1px solid #999;
-	display: inline;
-	display: inline-block;
-	float: left;
-}
+		#wallbreaker {
+			clear: both;
+			display: none;
+		}
 
-#wall img.hidden {
-	display: none;
-}
+		#wall img {
+			margin: 1ex 1ex;
+			padding: 0ex 0em;
+			border: 1px solid #999;
+			display: inline;
+			display: inline-block;
+			float: left;
+			max-height: 80%;
+		}
 
-#wall img.scaleIn {
-	animation: scaleIn linear 0.5s;
-	-webkit-animation: scaleIn linear 0.5s;
-	-moz-animation: scaleIn linear 0.5s;
-	-o-animation: scaleIn linear 0.5s;
-	-ms-animation: scaleIn linear 0.5s;
+		#wall img.hidden {
+			display: none;
+		}
 
-	transform-origin: top left;
-	-webkit-transform-origin: top left;
-	-moz-transform-origin: top left;
-	-o-transform-origin: top left;
-	-ms-transform-origin: top left;
-}
-@keyframes scaleIn {
-	from { transform: scale(0); }
-	to   { transform: scale(1); }
-}
-@-webkit-keyframes scaleIn {
-	from { -webkit-transform: scale(0); }
-	to   { -webkit-transform: scale(1); }
-}
-@-moz-keyframes scaleIn {
-	from { -moz-transform: scale(0); }
-	to   { -moz-transform: scale(1); }
-}
-@-o-keyframes scaleIn {
-	from { -o-transform: scale(0); }
-	to   { -o-transform: scale(1); }
-}
-@-ms-keyframes scaleIn {
-	from { -ms-transform: scale(0); }
-	to   { -ms-transform: scale(1); }
-}
+		#wall img.scaleIn {
+			animation: scaleIn linear 0.5s;
+			-webkit-animation: scaleIn linear 0.5s;
+			-moz-animation: scaleIn linear 0.5s;
+			-o-animation: scaleIn linear 0.5s;
+			-ms-animation: scaleIn linear 0.5s;
 
+			transform-origin: top left;
+			-webkit-transform-origin: top left;
+			-moz-transform-origin: top left;
+			-o-transform-origin: top left;
+			-ms-transform-origin: top left;
+		}
 
+		@keyframes scaleIn {
+			from { transform: scale(0); }
+			to   { transform: scale(1); }
+		}
+
+		@-webkit-keyframes scaleIn {
+			from { -webkit-transform: scale(0); }
+			to   { -webkit-transform: scale(1); }
+		}
+
+		@-moz-keyframes scaleIn {
+			from { -moz-transform: scale(0); }
+			to   { -moz-transform: scale(1); }
+		}
+
+		@-o-keyframes scaleIn {
+			from { -o-transform: scale(0); }
+			to   { -o-transform: scale(1); }
+		}
+
+		@-ms-keyframes scaleIn {
+			from { -ms-transform: scale(0); }
+			to   { -ms-transform: scale(1); }
+		}
 	</style>
 </head>
 <body onload="document.getElementById('interval').onchange(); iw.init('wall');">
