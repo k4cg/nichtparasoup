@@ -26,13 +26,15 @@ from werkzeug.serving import run_simple
 ## configuration
 nps_port = 5000
 nps_bindip = "0.0.0.0"
+min_cache_imgs = 50
+min_cache_imgs_before_refill = 10
+user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+logfile = "nichtparasoup.log"
+logverbosity = "DEBUG"
 soupiobase = "http://soup.io/"
 soupiourl = "http://soup.io/everyone?type=image"
 imgururl = "https://imgur.com/random"
-min_cache_imgs = 50
-min_cache_imgs_before_refill = 10
-logfile = "nichtparasoup.log"
-user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+pr0grammurl = "http://pr0gramm.com/static/"
 
 ### init values
 headers = { 'User-Agent' : user_agent }
@@ -47,7 +49,7 @@ logger.setLevel(logging.DEBUG)
 cache_fill_loop_continue = True
 
 ### cache functions
-#fill up the cache with ids and images
+# soup.io image provider
 def soupio():
 
     c = 0  # image count
@@ -55,9 +57,6 @@ def soupio():
     # initialize URI values
     global lasturl
     url = soupiourl
-
-    # jump to last parsed site in history per cache_fill run
-    #while (len(imgmap) < min_cache_imgs):
 
     # choose last found "more_url" if its not the first run
     if (lasturl != ""):
@@ -72,7 +71,6 @@ def soupio():
     page = BeautifulSoup(response.read())
     containers = page.find_all("div", { "class" : "imagecontainer" })
 
-
     # get more content ("scroll down")
     # to know what page to parse next
     url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
@@ -83,15 +81,18 @@ def soupio():
 
     # for every found imageContainer
     # add img-src to map if not blacklisted
-    # ignore min_cache_imgs at this point - always parse whole page  
+    # ignore min_cache_imgs at this point - always parse whole page
     for con in containers:
-        if not any(con.find('img')['src'] in s for s in blacklist):
-            imgmap.append(con.find('img')['src'])
-            logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
+        image = con.find('img')['src']
+        if not any(image in s for s in blacklist):
+            imgmap.append(image)
+            blacklist.append(image) # add it to the blacklist to detect duplicates
+            logger.debug("added: %s - status: %d" % (image, len(imgmap)))
             c = c + 1 # increase image counter for log
 
     logger.info("added %d new images to cache by parsing %d pages from soup.io" % (c,c) )
 
+# imgur.com image provider
 def imgur():
     global imgururl
 
@@ -102,21 +103,48 @@ def imgur():
 
     if not any(image in s for s in blacklist):
       imgmap.append(image)
+      blacklist.append(image) # add it to the blacklist to detect duplicates
       logger.debug("added: %s - status: %d" % (image, len(imgmap)))
 
     logger.info("added %d new images to cache from imgur" % len(imgmap) )
 
-# choose random source for filling cache
+# pr0gramm.com image provider
+def pr0gramm():
+    global pr0grammurl
+
+    req = urllib2.Request(pr0grammurl, None, headers)
+    response = urllib2.urlopen(req)
+    pages = BeautifulSoup(response.read()).findAll("a")
+    for p in pages:
+        x =  "http://pr0gramm.com/%s" % p["href"]
+        req = urllib2.Request(x, None, headers)
+        response = urllib2.urlopen(req)
+        try:
+            image = BeautifulSoup(response.read()).find("img")["src"]
+            if not any(image in s for s in blacklist):
+                imgmap.append(image)
+                blacklist.append(image) # add it to the blacklist to detect duplicates
+                logger.debug("added: %s - status: %d" % (image, len(imgmap)))
+        except (NameError, TypeError):
+            pass
+
+# wrapper function for cache filling
 def cache_fill_loop():
     while cache_fill_loop_continue :
-        if ( len(imgmap) < min_cache_imgs_before_refill ) :
-            sources = [ soupio, imgur ]
 
+        # fill cache up to min_cache_imgs
+        if ( len(imgmap) < min_cache_imgs_before_refill ) :
+
+            # choose image provider randomly
+            sources = [ soupio, imgur, pr0gramm ]
             while (len(imgmap) < min_cache_imgs):
                 random.choice(sources)()
 
+        # sleep for non-invasive threading ;)
+        time.sleep(1.337)
 
-# return a img url
+
+# return a img url from map
 def cache_get():
     url = ""
 
@@ -125,7 +153,6 @@ def cache_get():
     if imgmap:
         url = random.choice(imgmap)
         imgmap.remove(url)
-        blacklist.append(url) # add it to the blacklist to detect duplicates
         logger.debug("delivered: %s - remaining: %d" % (url, len(imgmap)))
 
     return url
@@ -199,10 +226,11 @@ def main():
         cache_fill_loop_continue = False # stop loop
         min_cache_imgs = -1 # stop cache_fill-inner_loop
 
-    time.sleep(1.337) # give the cache_fill some time in advance
+    # give the cache_fill some time in advance
+    time.sleep(1.337)
+
     # start webserver after a bit of delay
     run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False, use_reloader=True)
-
 
 
 if __name__ == "__main__":
