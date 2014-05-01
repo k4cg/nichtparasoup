@@ -50,8 +50,6 @@ cache_fill_loop_continue = True
 #fill up the cache with ids and images
 def soupio():
 
-    # set counters for log
-    sc = 0 # site count
     c = 0  # image count
 
     # initialize URI values
@@ -62,7 +60,7 @@ def soupio():
     #while (len(imgmap) < min_cache_imgs):
 
     # choose last found "more_url" if its not the first run
-    if (lasturl != "" and sc != 0 ):
+    if (lasturl != ""):
         url = lasturl
 
     # make request
@@ -81,11 +79,7 @@ def soupio():
     url = urlparse.urljoin(soupiobase, url)
 
     # update new last URI when we're not on first run
-    if (sc != 0):
-        lasturl = url
-
-    # increase site count for log
-    sc = sc + 1
+    lasturl = url
 
     # for every found imageContainer
     # add img-src to map if not blacklisted
@@ -96,7 +90,7 @@ def soupio():
             logger.debug("added: %s - status: %d" % (con.find('img')['src'], len(imgmap)))
             c = c + 1 # increase image counter for log
 
-    logger.info("added %d new images to cache by parsing %d pages from soup.io" % (c, sc) )
+    logger.info("added %d new images to cache by parsing %d pages from soup.io" % (c,c) )
 
 def imgur():
     global imgururl
