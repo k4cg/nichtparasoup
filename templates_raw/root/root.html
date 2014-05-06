@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>nichtparasoup</title>
+	<script type="application/javascript" src="feel.js"></script>
+	<link rel="stylesheet" href="look.css" />
+</head>
+<body onload="document.getElementById('interval').onchange(); iw.init('wall');">
+	<div id="header">
+		update
+		interval: 1<input type="range" min="1" max="9" step="1" value="5" onchange="iw.setInterval(this.value)" id="interval" />9
+		<a onclick="this.innerHTML = ( iw.toggle() ? 'halt' : 'continue' );" id="toggle" >halt</a>
+	</div>
+	<div id="wall">
+		<span id="wallbreaker"></span>
+	</div>
+	<noscript>!!! enable JavaScript !!!</noscript>
+	<striponbuild style="display:block;clear:both;">!!! offline mode is not supported in Chrome - use FireFox instead !!!</striponbuild>
+</body>
+</html>
