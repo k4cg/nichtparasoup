@@ -5,11 +5,13 @@ html {
 	overflow: scroll;
 	overflow-x: hidden;
 }
+
 html, body {
 	color: #ccc;
 	background-color: black;
 	margin: 0ex 0em;
 	padding: 0ex 0em;
+	height: 100%;
 }
 
 #header {
@@ -26,9 +28,7 @@ html, body {
 	border-bottom: 0.5ex solid #111;
 	background-color: #111;
 	background-color: rgba(23, 23, 23, 0.9);
-
 	text-align: center;
-
 }
 
 #toggle {
@@ -37,12 +37,17 @@ html, body {
 	display: inline-block;
 	width: 5em;
 }
-#toggle:hover { text-decoration: underline; }
+
+#toggle:hover {
+	text-decoration: underline;
+}
 
 #wall {
 	margin-top: 5ex;
 	display: block;
+	height: 100%;
 }
+
 #wallbreaker {
 	clear: both;
 	display: none;
@@ -55,6 +60,7 @@ html, body {
 	display: inline;
 	display: inline-block;
 	float: left;
+	max-height: 80%;
 }
 
 #wall img.hidden {
@@ -74,22 +80,27 @@ html, body {
 	-o-transform-origin: top left;
 	-ms-transform-origin: top left;
 }
+
 @keyframes scaleIn {
 	from { transform: scale(0); }
 	to   { transform: scale(1); }
 }
+
 @-webkit-keyframes scaleIn {
 	from { -webkit-transform: scale(0); }
 	to   { -webkit-transform: scale(1); }
 }
+
 @-moz-keyframes scaleIn {
 	from { -moz-transform: scale(0); }
 	to   { -moz-transform: scale(1); }
 }
+
 @-o-keyframes scaleIn {
 	from { -o-transform: scale(0); }
 	to   { -o-transform: scale(1); }
 }
+
 @-ms-keyframes scaleIn {
 	from { -ms-transform: scale(0); }
 	to   { -ms-transform: scale(1); }
