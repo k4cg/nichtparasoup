@@ -2,6 +2,7 @@
 
 ### libraries
 import os
+import re
 import random
 import logging
 import time
@@ -110,9 +111,11 @@ def pr0gramm():
 
     req = urllib2.Request(pr0grammurl, None, headers)
     response = urllib2.urlopen(req)
-    pages = BeautifulSoup(response.read()).findAll("a")
+    filter = re.compile('^/static/[\d]+')
+    pages = BeautifulSoup(response.read()).findAll("a", href=filter)
+
     for p in pages:
-        x =  "http://pr0gramm.com/%s" % p["href"]
+        x =  "http://pr0gramm.com%s" % urllib2.quote(p["href"])
         req = urllib2.Request(x, None, headers)
         response = urllib2.urlopen(req)
         try:
@@ -138,6 +141,7 @@ def cache_fill_loop():
             logger.debug("in mincache condition")
             # choose image provider randomly
             sources = [ soupio, pr0gramm ]
+            sources = [ pr0gramm ]
             #sources = [ soupio, imgur, pr0gramm ]
             while (len(imgmap) < min_cache_imgs):
                 imgmap = random.choice(sources)()
