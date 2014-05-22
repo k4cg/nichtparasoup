@@ -13,7 +13,8 @@ j.className=a.cssCNhidden;j.onload=d.imgOnload;j.src=k;if(m.firstChild){i=m.inse
 c=new XMLHttpRequest();c.onreadystatechange=function(){if(this.readyState===4){f.req=false;var i=(this.status===200);
 if(i){d.add(this.responseText)}if(!f.halt){h.setTimeout(d.fetch,a.interval)}}};
 e.init=function(i){f.target=document.getElementById(i);d.fetch()}})(iw={},this);</script><style type="text/css">
-html{direction:ltr;overflow:scroll;overflow-x:hidden}html,body{color:#ccc;background-color:black;margin:0;padding:0;height:100%}
+html{direction:ltr;overflow:scroll;overflow-x:hidden}
+html,body{color:#ccc;background-color:black;margin:0;padding:0;height:100%}
 #header{z-index:99999;display:block;position:fixed;top:0;left:0;right:0;height:4ex;margin:0 0 .5ex;padding:0 1em;line-height:4ex;border-bottom:.5ex solid #111;background-color:#111;background-color:rgba(23,23,23,0.9);text-align:center}
 #toggle{margin:0 5em;cursor:pointer;display:inline-block;width:5em}#toggle:hover{text-decoration:underline}
 #wall{margin-top:5ex;display:block;height:100%}#wallbreaker{clear:both;display:none}

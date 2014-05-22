@@ -61,6 +61,7 @@ html, body {
 	display: inline-block;
 	float: left;
 	max-height: 80%;
+	/* max-width: 80%; */
 }
 
 #wall img.hidden {

@@ -46,7 +46,7 @@ fi
 
 
 
-for css in $(find . -type f -maxdepth 1 -iname "*.css")
+for css in $(find . -maxdepth 1 -type f -iname "*.css")
 do
 	sed -e "s/^.*$stripOnBuildMarker.*$//g" $css  1> $targetPath/$css
 	if [ $hasJava -eq 1 ]
@@ -56,7 +56,7 @@ do
 	fi
 done
 
-for js in $(find . -type f -maxdepth 1 -iname "*.js")
+for js in $(find . -maxdepth 1 -type f -iname "*.js")
 do
 	sed -e "s/^.*$stripOnBuildMarker.*$//g" $js  1> $targetPath/$js
 	if [ $hasJava -eq 1 ]
