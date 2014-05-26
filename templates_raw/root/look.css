@@ -52,7 +52,7 @@ input[type="range"] {
 }
 
 #wall {
-	margin-top: 5ex;
+	margin-top: 2ex;
 	display: block;
 	height: 100%;
 }
