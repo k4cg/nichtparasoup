@@ -24,7 +24,7 @@ html, body {
 	height: 7ex;
 	line-height: 4ex;
 	background-color: #111;
-	background-color: rgba(23,23,23,0.9);
+	background-color: rgba(23, 23, 23, 0.9);
 	text-align: center;
 	border-bottom: 1px solid #111;
 	transition: all 0.6s ease-in-out 0s;
