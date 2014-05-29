@@ -131,18 +131,16 @@ def pr0gramm():
 
 # wrapper function for cache filling
 def cache_fill_loop():
+
+    global imgmap
+    sources = [ soupio, imgur, pr0gramm ]
     while cache_fill_loop_continue :
-        global imgmap
 
         # fill cache up to min_cache_imgs
         logger.debug(len(imgmap))
         if ( len(imgmap) < min_cache_imgs_before_refill ) :
 
             logger.debug("in mincache condition")
-            # choose image provider randomly
-            sources = [ soupio, pr0gramm ]
-            sources = [ pr0gramm ]
-            #sources = [ soupio, imgur, pr0gramm ]
             while (len(imgmap) < min_cache_imgs):
                 imgmap = random.choice(sources)()
 
@@ -234,7 +232,7 @@ def main():
     time.sleep(1.337)
 
     # start webserver after a bit of delay
-    run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False, use_reloader=True)
+    run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False)
 
 
 if __name__ == "__main__":
