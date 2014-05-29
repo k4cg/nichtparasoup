@@ -64,7 +64,10 @@ def soupio():
     # make request
     req = urllib2.Request(url, None, headers)
     logger.debug("parsing %s" % url)
-    response = urllib2.urlopen(req)
+    try: 
+        response = urllib2.urlopen(req,timeout=2)
+    except urllib2.URLError as e:
+        pass
 
     # throw everything in BeautifulSoup and get images
     page = BeautifulSoup(response.read())
@@ -96,7 +99,11 @@ def imgur():
     for c in range(1,20):
         # make request
         req = urllib2.Request(imgururl, None, headers)
-        response = urllib2.urlopen(req)
+        try:
+            response = urllib2.urlopen(req,timeout=2)
+        except urllib2.URLError as e:
+            pass
+
         image = BeautifulSoup(response.read()).find("div", { "id" : "image" }).find("img")["src"]
 
         if not any(image in s for s in blacklist):
@@ -110,7 +117,11 @@ def pr0gramm():
     global pr0grammurl
 
     req = urllib2.Request(pr0grammurl, None, headers)
-    response = urllib2.urlopen(req)
+    try: 
+        response = urllib2.urlopen(req,timeout=2)
+    except urllib2.URLError as e:
+        pass
+
     filter = re.compile('^/static/[\d]+')
     pages = BeautifulSoup(response.read()).findAll("a", href=filter)
 
@@ -165,7 +176,7 @@ def cache_get():
 
 # print status of cache
 def cache_status():
-    msg = "images cached: %d (%d bytes) - already seen: %d (%d bytes)" % (len(imgmap), 
+    msg = "images cached: %d (%d bytes) - already seen: %d (%d bytes)" % (len(imgmap),
             sys.getsizeof(imgmap), len(blacklist), sys.getsizeof(blacklist))
     logger.info(msg)
     return msg
