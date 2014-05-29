@@ -98,7 +98,7 @@ def soupio():
 def imgur():
     global imgururl
 
-    for c in range(1,20):
+    for c in range(1,5):
         # make request
         req = urllib2.Request(imgururl, None, headers)
         try:
@@ -166,8 +166,7 @@ def pr0gramm():
 def cache_fill_loop():
 
     global imgmap
-    sources = [ soupio, imgur, pr0gramm ]
-    sources = [ reddit ]
+    sources = [ soupio, imgur, pr0gramm, reddit ]
     while cache_fill_loop_continue :
 
         # fill cache up to min_cache_imgs
