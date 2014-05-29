@@ -120,6 +120,7 @@ def pr0gramm():
         response = urllib2.urlopen(req)
         try:
             image = BeautifulSoup(response.read()).find("img")["src"]
+            image = "http://pr0gramm.com%s" % (image)
             if not any(image in s for s in blacklist):
                 imgmap.append(image)
                 blacklist.append(image) # add it to the blacklist to detect duplicates
