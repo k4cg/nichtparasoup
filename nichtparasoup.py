@@ -165,7 +165,8 @@ def cache_get():
 
 # print status of cache
 def cache_status():
-    msg = "images cached: %d - already seen: %d" % (len(imgmap), len(blacklist))
+    msg = "images cached: %d (%d bytes) - already seen: %d (%d bytes)" % (len(imgmap), 
+            sys.getsizeof(imgmap), len(blacklist), sys.getsizeof(blacklist))
     logger.info(msg)
     return msg
 
