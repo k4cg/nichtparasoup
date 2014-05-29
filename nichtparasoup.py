@@ -49,7 +49,6 @@ hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
-cache_fill_loop_continue = True
 
 ### cache functions
 # soup.io image provider
@@ -129,6 +128,7 @@ def reddit():
                 logger.debug("added: %s - status: %d" % (image, len(imgmap)))
 
     except urllib2.URLError as e:
+        logger.debug("Url %s broken" % req)
         pass
 
     return imgmap
@@ -167,7 +167,7 @@ def cache_fill_loop():
 
     global imgmap
     sources = [ soupio, imgur, pr0gramm, reddit ]
-    while cache_fill_loop_continue :
+    while True :
 
         # fill cache up to min_cache_imgs
         logger.debug(len(imgmap))
@@ -253,13 +253,11 @@ def main():
 
     try :
         # start the cache filler tread
-        cache_fill_loop_continue = True
         cache_fill_thread = threading.Thread(target=cache_fill_loop)
         cache_fill_thread.daemon = True
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit) :
         # end the cache filler thread properly
-        cache_fill_loop_continue = False # stop loop
         min_cache_imgs = -1 # stop cache_fill-inner_loop
 
     # give the cache_fill some time in advance
