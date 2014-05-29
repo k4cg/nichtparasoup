@@ -4,6 +4,7 @@
 import os
 import re
 import random
+import json
 import logging
 import time
 import sys
@@ -36,6 +37,7 @@ soupiobase = "http://soup.io/"
 soupiourl = "http://soup.io/everyone?type=image"
 imgururl = "https://imgur.com/random"
 pr0grammurl = "http://pr0gramm.com/static/"
+redditurl = "http://www.reddit.com/r/images.json"
 
 ### init values
 headers = { 'User-Agent' : user_agent }
@@ -112,6 +114,25 @@ def imgur():
           logger.debug("added: %s - status: %d" % (image, len(imgmap)))
     return imgmap
 
+def reddit():
+    global redditurl
+
+    req = urllib2.Request(redditurl, None, headers)
+    try:
+        response = urllib2.urlopen(req,timeout=2)
+        data = json.loads(response.read())
+        for e in data['data']['children']:
+            image = e['data']['url']
+            if not any(image in s for s in blacklist):
+                imgmap.append(image)
+                blacklist.append(image) # add it to the blacklist to detect duplicates
+                logger.debug("added: %s - status: %d" % (image, len(imgmap)))
+
+    except urllib2.URLError as e:
+        pass
+
+    return imgmap
+
 # pr0gramm.com image provider
 def pr0gramm():
     global pr0grammurl
@@ -146,6 +167,7 @@ def cache_fill_loop():
 
     global imgmap
     sources = [ soupio, imgur, pr0gramm ]
+    sources = [ reddit ]
     while cache_fill_loop_continue :
 
         # fill cache up to min_cache_imgs
