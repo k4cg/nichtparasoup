@@ -126,8 +126,7 @@ def reddit():
     req = urllib2.Request(redditurl_next, None, headers)
     try:
         response = urllib2.urlopen(req, timeout=2)
-        charset = response.info().get_param('charset', 'utf8')
-        data = json.loads(response.read().decode(charset))
+        data = json.loads(response.read())
 
         redditurl_next = urlparse.urljoin(redditurl_next, "?after="+ data['data']['after'])
 
