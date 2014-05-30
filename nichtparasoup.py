@@ -37,30 +37,34 @@ soupiobase = "http://soup.io/"
 soupiourl = "http://soup.io/everyone?type=image"
 imgururl = "https://imgur.com/random"
 pr0grammurl = "http://pr0gramm.com/static/"
-redditurl = "http://www.reddit.com/r/images.json"
+redditurl = "http://www.reddit.com/r/images"
 
 ### init values
 headers = { 'User-Agent' : user_agent }
-imgmap = [] # will be filled by cache_fill
-blacklist = [] # will be filled by cache_get
-lasturl = "" # will be used to remind the last page
+imgmap = []  # will be filled by cache_fill
+blacklist = []  # will be filled by cache_get
+
 logger = logging.getLogger('nichtparasoup')
 hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
 
+
+lasturl_soupio = ""  # will be used to remind the last page
+redditurl_next = ""  # will be used to remind the next page
+
 ### cache functions
 # soup.io image provider
 def soupio():
 
     # initialize URI values
-    global lasturl
+    global lasturl_soupio
     url = soupiourl
 
     # choose last found "more_url" if its not the first run
-    if (lasturl != ""):
-        url = lasturl
+    if (lasturl_soupio != ""):
+        url = lasturl_soupio
 
     # make request
     req = urllib2.Request(url, None, headers)
@@ -80,7 +84,7 @@ def soupio():
     url = urlparse.urljoin(soupiobase, url)
 
     # update new last URI when we're not on first run
-    lasturl = url
+    lasturl_soupio = url
 
     # for every found imageContainer
     # add img-src to map if not blacklisted
@@ -114,17 +118,24 @@ def imgur():
     return imgmap
 
 def reddit():
-    global redditurl
+    global redditurl_next, redditurl
 
-    req = urllib2.Request(redditurl, None, headers)
+    if (redditurl_next == ""):
+        redditurl_next = redditurl +'.json'
+
+    req = urllib2.Request(redditurl_next, None, headers)
     try:
-        response = urllib2.urlopen(req,timeout=2)
-        data = json.loads(response.read())
-        for e in data['data']['children']:
-            image = e['data']['url']
+        response = urllib2.urlopen(req, timeout=2)
+        charset = response.info().get_param('charset', 'utf8')
+        data = json.loads(response.read().decode(charset))
+
+        redditurl_next = urlparse.urljoin(redditurl_next, "?after="+ data['data']['after'])
+
+        for child in data['data']['children']:
+            image = child['data']['url']
             if not any(image in s for s in blacklist):
                 imgmap.append(image)
-                blacklist.append(image) # add it to the blacklist to detect duplicates
+                blacklist.append(image)  # add it to the blacklist to detect duplicates
                 logger.debug("added: %s - status: %d" % (image, len(imgmap)))
 
     except urllib2.URLError as e:
@@ -178,7 +189,7 @@ def cache_fill_loop():
                 imgmap = random.choice(sources)()
 
         # sleep for non-invasive threading ;)
-        time.sleep(2.337)
+        time.sleep(1.337)
 
 
 # return a img url from map
