@@ -14,27 +14,45 @@ html, body {
 	height: 100%;
 }
 
+
 #header {
 	z-index: 99999;
 	display: block;
 	position: fixed;
-	top: -42px;
-	left: 0;
-	right: 0;
-	height: 7ex;
-	line-height: 4ex;
+	top: 0ex;
+	left: 0em;
+	right: 0em;
+	height: 5ex;
+	line-height: 5ex;
+	text-align: right;
+	padding: 0ex 1em;
+	color: #666;
+	background-color: transparent;
+	cursor: default;
+}
+#header .fix {
+	position: fixed;
+	top: inherit;
+	right: inherit;
+	margin-right: 1em;
+}
+#header .content {
+	position: absolute;
+	top: -7ex; /* neg. height */
+	left: 0em;
+	right: 0em;
 	background-color: #111;
 	background-color: rgba(23, 23, 23, 0.9);
-	text-align: right;
-	padding: 0ex 2em;
-	border-bottom: 1px solid #111;
+	border-bottom: 1px solid #808080;
 	transition: all 0.6s ease-in-out 0s;
 }
-
 #header:hover {
-	top: 0;
-	border-bottom: 1px solid #808080;
+	color: #ccc;
 }
+#header:hover .content {
+	top: 0ex;
+}
+
 
 input[type="range"] {
 	position: relative;
@@ -51,6 +69,9 @@ input[type="range"] {
 #toggle:hover {
 	text-decoration: underline;
 }
+
+
+
 
 #wall {
 	margin-top: 2ex;

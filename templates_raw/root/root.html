@@ -7,11 +7,23 @@
 </head>
 <body onload="document.getElementById('interval').onchange(); iw.init('wall');">
 	<div id="header">
-		update interval: 1<input type="range" min="1" max="9" step="1" value="5" onchange="iw.setInterval(this.value)" id="interval" />9
-		<a onclick="this.innerHTML = ( iw.toggle() ? 'halt' : 'continue' );" id="toggle" >halt</a>
-		<br/> &#9776;
+		<div class="content">
+			update interval: 1<input type="range" min="1" max="9" step="1" value="5" onchange="iw.setInterval(this.value)" id="interval" />9
+			<a onclick="this.innerHTML = ( iw.toggle() ? 'halt' : 'continue' );" id="toggle" >halt</a>
+		</div>
+		<span class="fix">&#9776;</span>
 	</div>
 	<div id="wall">
+		<striponbuild>
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+			<img src="testimg.png" />
+		</striponbuild>
+
 		<span id="wallbreaker"></span>
 	</div>
 	<noscript>!!! enable JavaScript !!!</noscript>
