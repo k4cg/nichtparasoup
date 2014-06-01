@@ -3,9 +3,14 @@
 <head>
 	<title>nichtparasoup</title>
 	<script type="application/javascript" src="feel.js"></script>
+	<script type="application/javascript" src="look.js"></script>
+
 	<link rel="stylesheet" href="look.css" />
+	<link rel="stylesheet" href="sourceIcons.css" />
+
+	<script type="application/javascript" src="root.js" charset="utf-8"></script>
 </head>
-<body onload="document.getElementById('interval').onchange(); iw.init('wall');">
+<body>
 	<div id="header">
 		<div class="content">
 			update interval: 1<input type="range" min="1" max="9" step="1" value="5" onchange="iw.setInterval(this.value)" id="interval" />9
@@ -14,19 +19,25 @@
 		<span class="fix">&#9776;</span>
 	</div>
 	<div id="wall">
-		<striponbuild>
-			<img src="testimg.png" />
-			<img src="testimg.png" />
-			<img src="testimg.png" />
-			<img src="testimg.png" />
-			<img src="testimg.png" />
-			<img src="testimg.png" />
-			<img src="testimg.png" />
+		<striponbuild><!-- some DEMO -->
+			<script>
+				var window_onload = window.onload;
+				window.onload = function ()
+				{
+					if ( window_onload ) { window_onload.call(this); }
+
+					iw.test_add("testimg.png#soupio");
+					iw.test_add("testimg.png#imgur");
+					iw.test_add("testimg.png#reddit");
+					iw.test_add("testimg.png#pr0gramm");
+				}
+			</script>
 		</striponbuild>
 
 		<span id="wallbreaker"></span>
 	</div>
 	<noscript>!!! enable JavaScript !!!</noscript>
 	<striponbuild style="display:block;clear:both;">!!! offline mode is not supported in Chrome - use Firefox instead !!!</striponbuild>
+
 </body>
 </html>

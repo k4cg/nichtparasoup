@@ -54,5 +54,5 @@ class Pr0gramm(Crawler):
 
         image = BeautifulSoup(response.read()).find("img")["src"]
 
-        Crawler._add_image(urlparse.urljoin(Pr0gramm.__base, image))
+        self._add_image(urlparse.urljoin(Pr0gramm.__base, image))
 

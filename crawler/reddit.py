@@ -53,4 +53,4 @@ class Reddit(Crawler):
 
         for child in data['data']['children']:
             image = child['data']['url']
-            Crawler._add_image(image)
+            self._add_image(image)

@@ -69,7 +69,7 @@ class Crawler(object):
         return False
 
     @classmethod
-    def _add_image(cls, uri):
+    def __add_image(cls, uri):
         if not cls._is_blacklisted(uri):
             cls.__images.append(uri)
             cls._blacklist(uri)  # add it to the blacklist to detect duplicates
@@ -120,6 +120,8 @@ class Crawler(object):
             e = sys.exc_info()[0]
             Crawler._log("exception", "unexpected crawler error: " + repr(e))
 
+    def _add_image(self, uri):
+        return Crawler.__add_image(uri + '#' + self.__class__.__name__)
 
     # abstract functions
 

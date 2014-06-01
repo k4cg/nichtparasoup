@@ -53,4 +53,4 @@ class Soupio(Crawler):
         # add img-src to map if not blacklisted
         for con in page.find_all("div", {"class": "imagecontainer"}):
             image = con.find('img')['src']
-            Crawler._add_image(urlparse.urljoin(Soupio.__base, image))
+            self._add_image(urlparse.urljoin(Soupio.__base, image))

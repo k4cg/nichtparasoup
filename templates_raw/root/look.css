@@ -11,7 +11,6 @@ html, body {
 	background-color: black;
 	margin: 0ex 0em;
 	padding: 0ex 0em;
-	height: 100%;
 }
 
 
@@ -29,6 +28,7 @@ html, body {
 	color: #666;
 	background-color: transparent;
 	cursor: default;
+	white-space: nowrap;
 }
 #header .fix {
 	position: fixed;
@@ -84,22 +84,22 @@ input[type="range"] {
 	display: none;
 }
 
-#wall img {
+#wall .img {
+	position: relative;
 	margin: 1ex 1ex;
 	padding: 0ex 0em;
 	border: 1px solid #999;
 	display: inline;
 	display: inline-block;
 	float: left;
-	max-height: 80%;
-	/* max-width: 80%; */
+
 }
 
-#wall img.hidden {
+#wall img {
 	display: none;
 }
 
-#wall img.scaleIn {
+#wall .img {
 	animation: scaleIn linear 0.5s;
 	-webkit-animation: scaleIn linear 0.5s;
 	-moz-animation: scaleIn linear 0.5s;
@@ -136,4 +136,43 @@ input[type="range"] {
 @-ms-keyframes scaleIn {
 	from { -ms-transform: scale(0); }
 	to   { -ms-transform: scale(1); }
+}
+
+#wall .img img {
+	display: block; /* needed for alignment of the image to its container box ... */
+}
+
+#wall .img .src {
+	display: block;
+	position: absolute;
+	bottom: 0ex;
+	right: 0ex;
+	line-height: 2.5ex;
+	min-height: 2.5ex;
+	min-width: 2.5ex;
+	background-size: 2.5ex 2.5ex;
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-color: transparent;
+	color: white;
+	opacity: 0.5;
+	text-align: auto; /* fall back to native */
+}
+#wall .img .src a {
+	word-wrap: break-word;
+	text-decoration: none;
+	color: inherit;
+	display: none;
+	margin: 0.1ex 0.5em 0.1ex 0.1em;
+	padding-right: 2.5ex; /* min-width of parent elem */
+}
+
+#wall .img .src:hover {
+	opacity: 1;
+	background-color: #999;
+	background-color: rgba(100, 100, 100, 0.7);
+	left: 0em;
+}
+#wall .img .src:hover a {
+	display: inline;
 }
