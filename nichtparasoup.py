@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 
-### libraries
-import os
-import re
+### import libraries
 import random
-import json
 import logging
 import time
-import sys
-try:
-    import urllib.request as urllib2 #py3
-except:
-    import urllib2 #py2
-try:
-    import urllib.parse as urlparse # py3
-except:
-    import urlparse #py2
-import templates as tmpl
 import threading
-from bs4 import BeautifulSoup
+
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, NotFound
-from werkzeug.utils import redirect
 from werkzeug.serving import run_simple
+
+
+## import templates
+import templates as tmpl
+
+
+## import crawler
+from crawler import Crawler
+
+
 
 ## configuration
 nps_port = 5000
@@ -31,19 +27,11 @@ nps_bindip = "0.0.0.0"
 min_cache_imgs = 50
 min_cache_imgs_before_refill = 20
 user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+
 logfile = "nichtparasoup.log"
 logverbosity = "DEBUG"
-soupiobase = "http://soup.io/"
-soupiourl = "http://soup.io/everyone?type=image"
-imgururl = "https://imgur.com/random"
-pr0grammurl = "http://pr0gramm.com/static/"
-redditurl = "http://www.reddit.com/r/images"
 
 ### init values
-headers = { 'User-Agent' : user_agent }
-imgmap = []  # will be filled by cache_fill
-blacklist = []  # will be filled by cache_get
-
 logger = logging.getLogger('nichtparasoup')
 hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
@@ -51,147 +39,34 @@ logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
 
 
-lasturl_soupio = ""  # will be used to remind the last page
-redditurl_next = ""  # will be used to remind the next page
 
-### cache functions
-# soup.io image provider
-def soupio():
+Crawler.headers({'User-Agent': user_agent})
+Crawler.set_logger(logger)
 
-    # initialize URI values
-    global lasturl_soupio
-    url = soupiourl
+### config the  crawlers
+from crawler.reddit import Reddit
+from crawler.soupio import Soupio
+from crawler.pr0gramm import Pr0gramm
+from crawler.imgur import Imgur
 
-    # choose last found "more_url" if its not the first run
-    if (lasturl_soupio != ""):
-        url = lasturl_soupio
+sources = [Reddit("http://www.reddit.com/r/gifs"),
+           Reddit("http://www.reddit.com/r/pics"),
+           Soupio("http://soup.io/everyone"),
+           Pr0gramm("http://pr0gramm.com/static/"),
+           Imgur("http://imgur.com/random")]
 
-    # make request
-    req = urllib2.Request(url, None, headers)
-    logger.debug("parsing %s" % url)
-    try: 
-        response = urllib2.urlopen(req,timeout=2)
-    except urllib2.URLError as e:
-        pass
-
-    # throw everything in BeautifulSoup and get images
-    page = BeautifulSoup(response.read())
-    containers = page.find_all("div", { "class" : "imagecontainer" })
-
-    # get more content ("scroll down")
-    # to know what page to parse next
-    url = page.find("div", { "id" : "more_loading" }).find("a")["href"]
-    url = urlparse.urljoin(soupiobase, url)
-
-    # update new last URI when we're not on first run
-    lasturl_soupio = url
-
-    # for every found imageContainer
-    # add img-src to map if not blacklisted
-    # ignore min_cache_imgs at this point - always parse whole page
-    for con in containers:
-        image = con.find('img')['src']
-        if not any(image in s for s in blacklist):
-            imgmap.append(image)
-            blacklist.append(image) # add it to the blacklist to detect duplicates
-            logger.debug("added: %s - status: %d" % (image, len(imgmap)))
-    return imgmap
-
-# imgur.com image provider
-def imgur():
-    global imgururl
-
-    for c in range(1,5):
-        # make request
-        req = urllib2.Request(imgururl, None, headers)
-        try:
-            response = urllib2.urlopen(req,timeout=2)
-        except urllib2.URLError as e:
-            pass
-
-        image = BeautifulSoup(response.read()).find("div", { "id" : "image" }).find("img")["src"]
-
-        if not any(image in s for s in blacklist):
-          imgmap.append(image)
-          blacklist.append(image) # add it to the blacklist to detect duplicates
-          logger.debug("added: %s - status: %d" % (image, len(imgmap)))
-    return imgmap
-
-def reddit():
-    global redditurl_next, redditurl
-
-    if (redditurl_next == ""):
-        redditurl_next = redditurl +'.json'
-
-    req = urllib2.Request(redditurl_next, None, headers)
-    try:
-        response = urllib2.urlopen(req, timeout=2)
-        charset = 'utf8'
-        try: # py3
-            charset = response.info().get_param('charset', charset)
-        except:
-            pass
-
-        data = json.loads(response.read().decode(charset))
-
-        redditurl_next = urlparse.urljoin(redditurl_next, "?after="+ data['data']['after'])
-
-        for child in data['data']['children']:
-            image = child['data']['url']
-            if not any(image in s for s in blacklist):
-                imgmap.append(image)
-                blacklist.append(image)  # add it to the blacklist to detect duplicates
-                logger.debug("added: %s - status: %d" % (image, len(imgmap)))
-
-    except urllib2.URLError as e:
-        logger.debug("Url %s broken" % req)
-        pass
-
-    return imgmap
-
-# pr0gramm.com image provider
-def pr0gramm():
-    global pr0grammurl
-
-    req = urllib2.Request(pr0grammurl, None, headers)
-    try: 
-        response = urllib2.urlopen(req,timeout=2)
-    except urllib2.URLError as e:
-        pass
-
-    filter = re.compile('^/static/[\d]+')
-    pages = BeautifulSoup(response.read()).findAll("a", href=filter)
-
-    for p in pages:
-        x =  "http://pr0gramm.com%s" % urllib2.quote(p["href"])
-        req = urllib2.Request(x, None, headers)
-        response = urllib2.urlopen(req)
-        try:
-            image = BeautifulSoup(response.read()).find("img")["src"]
-            image = "http://pr0gramm.com%s" % (image)
-            if not any(image in s for s in blacklist):
-                imgmap.append(image)
-                blacklist.append(image) # add it to the blacklist to detect duplicates
-                logger.debug("added: %s - status: %d" % (image, len(imgmap)))
-        except (NameError, TypeError):
-            pass
-
-    return imgmap
 
 # wrapper function for cache filling
 def cache_fill_loop():
+    global sources
+    sources = [source for source in sources if isinstance(source, Crawler)]
 
-    global imgmap
-    sources = [ soupio, imgur, pr0gramm, reddit ]
-    while True :
-
-        # fill cache up to min_cache_imgs
-        logger.debug(len(imgmap))
-        if ( len(imgmap) < min_cache_imgs_before_refill ) :
-
+    while True:  # fill cache up to min_cache_imgs
+        logger.debug("images: %d" % Crawler.info()["images"])
+        if Crawler.info()["images"] < min_cache_imgs_before_refill :
             logger.debug("in mincache condition")
-            while (len(imgmap) < min_cache_imgs):
-                imgmap = random.choice(sources)()
+            while Crawler.info()["images"] < min_cache_imgs:
+                random.choice(sources).crawl()
 
         # sleep for non-invasive threading ;)
         time.sleep(1.337)
@@ -199,24 +74,17 @@ def cache_fill_loop():
 
 # return a img url from map
 def cache_get():
-    url = ""
-
-    # if the cache is not empty, return an object
-    # and add id to blacklist.
-    if imgmap:
-        url = random.choice(imgmap)
-        imgmap.remove(url)
-        logger.debug("delivered: %s - remaining: %d" % (url, len(imgmap)))
-
-    return url
+    return Crawler.get_image()
 
 
 # print status of cache
 def cache_status():
-    msg = "images cached: %d (%d bytes) - already seen: %d (%d bytes)" % (len(imgmap),
-            sys.getsizeof(imgmap), len(blacklist), sys.getsizeof(blacklist))
+    info = Crawler.info()
+    msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" %\
+          (info["images"], info["images_size"], info["blacklist"], info["blacklist_size"])
     logger.info(msg)
     return msg
+
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
@@ -266,14 +134,14 @@ class nichtparasoup(object):
 # main function how to run
 # on start-up, fill the cache and get up the webserver
 def main():
-
-    try :
+    try:
         # start the cache filler tread
         cache_fill_thread = threading.Thread(target=cache_fill_loop)
         cache_fill_thread.daemon = True
         cache_fill_thread.start()
-    except (KeyboardInterrupt, SystemExit) :
+    except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
+        global min_cache_imgs
         min_cache_imgs = -1 # stop cache_fill-inner_loop
 
     # give the cache_fill some time in advance
