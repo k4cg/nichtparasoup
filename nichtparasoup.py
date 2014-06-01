@@ -20,7 +20,6 @@ import templates as tmpl
 from crawler import Crawler
 
 
-
 ## configuration
 nps_port = 5000
 nps_bindip = "0.0.0.0"
@@ -37,8 +36,6 @@ hdlr = logging.FileHandler(logfile)
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
-
-
 
 Crawler.headers({'User-Agent': user_agent})
 Crawler.set_logger(logger)
@@ -62,9 +59,7 @@ def cache_fill_loop():
     sources = [source for source in sources if isinstance(source, Crawler)]
 
     while True:  # fill cache up to min_cache_imgs
-        logger.debug("images: %d" % Crawler.info()["images"])
         if Crawler.info()["images"] < min_cache_imgs_before_refill :
-            logger.debug("in mincache condition")
             while Crawler.info()["images"] < min_cache_imgs:
                 random.choice(sources).crawl()
 
