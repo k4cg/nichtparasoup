@@ -19,8 +19,6 @@ sudo pip install -r requirements.txt
 configure the (hopefully self explaining) config options at the top of `nichtparasoup.py`
 
 ```python
-### configuration
-
 ## configuration
 nps_port = 5000
 nps_bindip = "0.0.0.0"
