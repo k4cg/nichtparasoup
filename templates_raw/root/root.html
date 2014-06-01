@@ -8,7 +8,8 @@
 <body onload="document.getElementById('interval').onchange(); iw.init('wall');">
 	<div id="header">
 		update interval: 1<input type="range" min="1" max="9" step="1" value="5" onchange="iw.setInterval(this.value)" id="interval" />9
-		<a onclick="this.innerHTML = ( iw.toggle() ? 'halt' : 'continue' );" id="toggle" >halt</a><br/>x
+		<a onclick="this.innerHTML = ( iw.toggle() ? 'halt' : 'continue' );" id="toggle" >halt</a>
+		<br/> &#9776;
 	</div>
 	<div id="wall">
 		<span id="wallbreaker"></span>

@@ -19,6 +19,14 @@ def src_is_external(source):
     return source.find('://') > -1
 
 
+def preserveHTMLentities(string):
+    return re.sub(r"&([a-zA-Z0-9#]+?);", r"~pe{\1}~", string)
+
+
+def depreserveHTMLentities(string):
+    return re.sub(r"~pe\{([a-zA-Z0-9#]+?)\}~", r"&\1;", string)
+
+
 if __name__ == '__main__':
 
     file = sys.argv[1]
@@ -28,7 +36,7 @@ if __name__ == '__main__':
 
     directory = path.dirname(file)
 
-    doc = BeautifulSoup(open(file, 'r'), "html5lib")
+    doc = BeautifulSoup(preserveHTMLentities(open(file, 'r').read()), "html5lib")
 
     for strip in doc.find_all(tag_stripOnBuild):
         strip.extract()
@@ -66,14 +74,14 @@ if __name__ == '__main__':
                 link.extract()
 
     ##### debug
-    #print(doc.prettify())
-    #sys.exit(0)
+    # print(depreserveHTMLentities(doc.prettify()))
+    # sys.exit(0)
     #####
 
     doc_string_part_clean = ""
     doc_string_parts_clean = []
     for doc_string_part_raw in doc.prettify().split("\n"):
-        doc_string_part_raw = doc_string_part_raw.strip()
+        doc_string_part_raw = depreserveHTMLentities(doc_string_part_raw.strip())
         if len(doc_string_part_clean) + len(doc_string_part_raw) > 120:
             doc_string_parts_clean.append(doc_string_part_clean)
             doc_string_part_clean = doc_string_part_raw
