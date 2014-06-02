@@ -4,7 +4,7 @@ __all__ = ['Crawler']
 
 import sys
 import random
-
+import time
 
 
 
@@ -18,18 +18,24 @@ class Crawler(object):
 
     __CFtimeout_ = 'timeout'
     __CFheaders_ = 'headers'
+    __CFresetDelay_ = 'resetDelay'
 
     # class vars
 
     __configuration = {
         __CFtimeout_: 2,  # needs to be greater 0
-        __CFheaders_: {}  # additional headers
+        __CFheaders_: {},  # additional headers
+        __CFresetDelay_: 10800  # value in seconds
     }
 
     __blacklist = []
     __images = []
 
     __logger = None
+
+    # instance vars
+
+    __crawlingStarted = None
 
     ## config methods
 
@@ -55,6 +61,10 @@ class Crawler(object):
     @classmethod
     def timeout(cls, value=None):
         return cls.__config_setter_and_getter(cls.__CFtimeout_, value)
+
+    @classmethod
+    def reset_delay(cls, value=None):
+        return cls.__config_setter_and_getter(cls.__CFresetDelay_, value)
 
     # general functions
 
@@ -111,6 +121,14 @@ class Crawler(object):
         }
 
     def crawl(self):
+        now = time.time()
+        if self.__crawlingStarted is None:
+            self.__crawlingStarted = now
+        elif self.__crawlingStarted <= now - Crawler.reset_delay():
+            Crawler._log("debug", "instance %s starts at front" % repr(self))
+            self._restart_at_front()
+            self.__crawlingStarted = now
+
         Crawler._log("debug", "class %s starts crawling" % self.__class__.__name__)
         try:
             self._crawl()
@@ -129,6 +147,9 @@ class Crawler(object):
         raise NotImplementedError("Should have implemented this")
 
     def _crawl(self): #abstractmethod
+        raise NotImplementedError("Should have implemented this")
+
+    def _restart_at_front(self): #abstractmethod
         raise NotImplementedError("Should have implemented this")
 
 

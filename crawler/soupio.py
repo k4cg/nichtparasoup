@@ -30,10 +30,12 @@ class Soupio(Crawler):
     def __build_uri(uri):
         return urlparse.urljoin(uri, "?type=image")
 
+    def _restart_at_front(self):
+        self.__next = ""
 
     def __init__(self, uri):
         self.__uri = Soupio.__build_uri(uri)
-        self.__next = ""
+        self._restart_at_front()
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, self.__next)
