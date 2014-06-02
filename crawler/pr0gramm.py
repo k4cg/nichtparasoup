@@ -25,12 +25,16 @@ from . import Crawler, CrawlerError
 class Pr0gramm(Crawler):
     """ pr0gramm.com image provider """
 
-
-    __uri = ""
-
-    __filter = re.compile('^/static/[\d]+')
+    ## class constants
 
     __base = "http://pr0gramm.com"
+
+    ## properties
+
+    __uri = ""
+    __filter = re.compile('^/static/[\d]+')
+
+    ## functions
 
     def _restart_at_front(self):
         pass  # nothing to do - since we have no paging, yet

@@ -26,7 +26,7 @@ class Imgur(Crawler):
         self._restart_at_front()
 
     def _restart_at_front(self):
-        pass  # nothing to do
+        pass  # nothing to do - since we have no paging, yet
 
     def _crawl(self):  # @todo make the crawler more efficient
         uri = self.__uri
@@ -35,6 +35,6 @@ class Imgur(Crawler):
         request = urllib2.Request(uri, headers=Crawler.headers())
         response = urllib2.urlopen(request, timeout=Crawler.timeout())
 
-        image = BeautifulSoup(response.read()).find("div", {"id" : "image"}).find("img")["src"]
+        image = BeautifulSoup(response.read()).find("div", {"id": "image"}).find("img")["src"]
 
         self._add_image(image)
