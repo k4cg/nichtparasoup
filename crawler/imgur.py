@@ -29,4 +29,4 @@ class Imgur(Crawler):
 
         image = BeautifulSoup(response.read()).find("div", {"id" : "image"}).find("img")["src"]
 
-        Crawler._add_image(image)
+        self._add_image(image)
