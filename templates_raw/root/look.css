@@ -159,12 +159,11 @@ input[type="range"] {
 	text-align: auto; /* fall back to native */
 }
 #wall .img .src a {
+	display: none;
 	word-wrap: break-word;
 	text-decoration: none;
 	color: inherit;
-	display: none;
-	margin: 0.1ex 0.5em 0.1ex 0.1em;
-	padding-right: 2.5ex; /* min-width of parent elem */
+	margin: 0.1ex 0.1em;
 }
 
 #wall .img .src:hover {
@@ -174,5 +173,5 @@ input[type="range"] {
 	left: 0em;
 }
 #wall .img .src:hover a {
-	display: inline;
+	display: block;
 }
