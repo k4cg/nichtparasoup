@@ -25,15 +25,23 @@ from . import Crawler, CrawlerError
 class Pr0gramm(Crawler):
     """ pr0gramm.com image provider """
 
-
-    __uri = ""
-
-    __filter = re.compile('^/static/[\d]+')
+    ## class constants
 
     __base = "http://pr0gramm.com"
 
+    ## properties
+
+    __uri = ""
+    __filter = re.compile('^/static/[\d]+')
+
+    ## functions
+
+    def _restart_at_front(self):
+        pass  # nothing to do - since we have no paging, yet
+
     def __init__(self, uri):
         self.__uri = uri
+        self._restart_at_front()
 
     def _crawl(self):
         uri = self.__uri  # @todo add paging
@@ -55,4 +63,3 @@ class Pr0gramm(Crawler):
         image = BeautifulSoup(response.read()).find("img")["src"]
 
         self._add_image(urlparse.urljoin(Pr0gramm.__base, image))
-

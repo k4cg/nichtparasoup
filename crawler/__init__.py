@@ -4,7 +4,7 @@ __all__ = ['Crawler']
 
 import sys
 import random
-
+import time
 
 
 
@@ -14,22 +14,28 @@ class Crawler(object):
         abstract class Crawler
     """
 
-    # clas constants
+    ## class constants
 
-    __CFtimeout_ = 'timeout'
-    __CFheaders_ = 'headers'
+    __C_timeout_ = 'timeout'
+    __C_headers_ = 'headers'
+    __C_resetDelay_ = 'resetDelay'
 
-    # class vars
+    ## class vars
 
     __configuration = {
-        __CFtimeout_: 2,  # needs to be greater 0
-        __CFheaders_: {}  # additional headers
+        __C_timeout_: 2,  # needs to be greater 0
+        __C_headers_: {},  # additional headers
+        __C_resetDelay_: 10800  # value in seconds
     }
 
     __blacklist = []
     __images = []
 
     __logger = None
+
+    ## properties
+
+    __crawlingStarted = None
 
     ## config methods
 
@@ -50,13 +56,17 @@ class Crawler(object):
 
     @classmethod
     def headers(cls, value=None):
-        return cls.__config_setter_and_getter(cls.__CFheaders_, value)
+        return cls.__config_setter_and_getter(cls.__C_headers_, value)
 
     @classmethod
     def timeout(cls, value=None):
-        return cls.__config_setter_and_getter(cls.__CFtimeout_, value)
+        return cls.__config_setter_and_getter(cls.__C_timeout_, value)
 
-    # general functions
+    @classmethod
+    def reset_delay(cls, value=None):
+        return cls.__config_setter_and_getter(cls.__C_resetDelay_, value)
+
+    ## general functions
 
     @classmethod
     def _blacklist(cls, uri):
@@ -91,9 +101,9 @@ class Crawler(object):
         cls.__logger = logger
 
     @classmethod
-    def _log(cls, logtype, message):
+    def _log(cls, log_type, message):
         if cls.__logger:
-            getattr(cls.__logger, logtype)(message)
+            getattr(cls.__logger, log_type)(message)
 
     @classmethod
     def _debug(cls):
@@ -111,7 +121,15 @@ class Crawler(object):
         }
 
     def crawl(self):
-        Crawler._log("debug", "class %s starts crawling" % self.__class__.__name__)
+        now = time.time()
+        if self.__crawlingStarted is None:
+            self.__crawlingStarted = now
+        elif self.__crawlingStarted <= now - Crawler.reset_delay():
+            Crawler._log("debug", "instance %s starts at front" % repr(self))
+            self._restart_at_front()
+            self.__crawlingStarted = now
+
+        Crawler._log("debug", "instance %s starts crawling" % repr(self))
         try:
             self._crawl()
         except CrawlerError as e:
@@ -123,12 +141,15 @@ class Crawler(object):
     def _add_image(self, uri):
         return Crawler.__add_image(uri + '#' + self.__class__.__name__)
 
-    # abstract functions
+    ## abstract functions
 
-    def __init__(self): #abstractmethod
+    def __init__(self):
         raise NotImplementedError("Should have implemented this")
 
-    def _crawl(self): #abstractmethod
+    def _crawl(self):
+        raise NotImplementedError("Should have implemented this")
+
+    def _restart_at_front(self):
         raise NotImplementedError("Should have implemented this")
 
 

@@ -30,9 +30,12 @@ class Reddit(Crawler):
     def __build_uri(uri):
         return uri + ".json"
 
+    def _restart_at_front(self):
+        self.__next = ""
+
     def __init__(self, uri):
         self.__uri = Reddit.__build_uri(uri)
-        self.__next = ""
+        self._restart_at_front()
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, "?after="+self.__next)
