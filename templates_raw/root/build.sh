@@ -1,5 +1,8 @@
 #!/bin/sh
 
 dir=$(dirname $0)
-$dir/../_lib/buildHTML.sh $dir
+
+$dir/../_bundler/bundler.py $dir/root.html
+
+
 
