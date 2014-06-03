@@ -18,7 +18,7 @@ for builder in */build.sh
 do
 	echo "running $builder ... "
 
-	echo -n $(basename $( dirname $builder )) >> $target
+	echo -n $(basename $(dirname $builder)) >> $target
 	echo ' = """' >> $target
 
 	$builder 1>> $target

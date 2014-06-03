@@ -1,4 +1,4 @@
-# template builder for  UI
+# template builder for UI
 This is just the template builder - not needed to run __nichtparasoup__.
 
 
@@ -9,9 +9,10 @@ Furthermore it would be great to be able to develop the UI without running __nic
 
 
 ## requirements
-* python2+
-* sudo pip install html5lib beautifulsoup4
-* java (optional, but highly suggested for JS and CSS compression)
+```sh
+git submodule update --init --recursive
+```
+for further information: see the `README` of the submodules
 
 
 ## how to use
