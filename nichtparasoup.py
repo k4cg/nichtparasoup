@@ -23,7 +23,7 @@ from crawler import Crawler
 ## configuration
 nps_port = 5000
 nps_bindip = "0.0.0.0"
-min_cache_imgs = 50
+min_cache_imgs = 150
 min_cache_imgs_before_refill = 20
 user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
 
@@ -48,6 +48,11 @@ from crawler.imgur import Imgur
 
 sources = [Reddit("http://www.reddit.com/r/gifs"),
            Reddit("http://www.reddit.com/r/pics"),
+           Reddit("http://www.reddit.com/r/nsfw"),
+           Reddit("http://www.reddit.com/r/aww"),
+           Reddit("http://www.reddit.com/r/aww_gifs"),
+           Reddit("http://www.reddit.com/r/babyanimals"),
+           Reddit("http://www.reddit.com/r/wtf"),
            Soupio("http://soup.io/everyone"),
            Pr0gramm("http://pr0gramm.com/static/"),
            Imgur("http://imgur.com/random")]
