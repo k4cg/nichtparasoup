@@ -44,7 +44,6 @@ Crawler.set_logger(logger)
 from crawler.reddit import Reddit
 from crawler.soupio import Soupio
 from crawler.pr0gramm import Pr0gramm
-from crawler.imgur import Imgur
 
 sources = [Reddit("http://www.reddit.com/r/gifs"),
            Reddit("http://www.reddit.com/r/pics"),

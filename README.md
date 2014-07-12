@@ -1,6 +1,6 @@
 # nichtparasoup
 
-nichtparasoup is a hackerspaces home entertainment system. It randomly displays images/gifs from [soup.io](http://soup.io), [pr0gramm](http://pr0gramm.com), [imgur](http://imgur.com) and [reddit](http://reddit.com).
+nichtparasoup is a hackerspaces home entertainment system. It randomly displays images/gifs from [soup.io](http://soup.io), [pr0gramm](http://pr0gramm.com) and [reddit](http://reddit.com).
 
 at our hackerspace [k4cg](http://k4cg.org) we used [soupcache](https://github.com/exi/soupcache) very often but the project has some issues, so we cannot host ist onsite and decided to write our own.
 
