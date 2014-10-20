@@ -46,20 +46,24 @@ from crawler.soupio import Soupio
 from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import Ninegag
 
-#sources = [Reddit("http://www.reddit.com/r/gifs"),
-#           Reddit("http://www.reddit.com/r/pics"),
-#           Reddit("http://www.reddit.com/r/nsfw"),
-#           Reddit("http://www.reddit.com/r/nsfw_gifs"),
-#           Reddit("http://www.reddit.com/r/aww"),
-#           Reddit("http://www.reddit.com/r/aww_gifs"),
-#           Reddit("http://www.reddit.com/r/reactiongifs"),
-#           Reddit("http://www.reddit.com/r/wtf"),
-#           Reddit("http://www.reddit.com/r/FoodPorn"),
-#           Reddit("http://www.reddit.com/r/cats"),
-#           Reddit("http://www.reddit.com/r/StarWars"),
-#           Soupio("http://soup.io/everyone"),
-#           Pr0gramm("http://pr0gramm.com/static/")]
-sources = [Ninegag("http://9gag.com/girl")]
+sources = [Reddit("http://www.reddit.com/r/gifs"),
+           Reddit("http://www.reddit.com/r/pics"),
+           Reddit("http://www.reddit.com/r/nsfw"),
+           Reddit("http://www.reddit.com/r/nsfw_gifs"),
+           Reddit("http://www.reddit.com/r/aww"),
+           Reddit("http://www.reddit.com/r/aww_gifs"),
+           Reddit("http://www.reddit.com/r/reactiongifs"),
+           Reddit("http://www.reddit.com/r/wtf"),
+           Reddit("http://www.reddit.com/r/FoodPorn"),
+           Reddit("http://www.reddit.com/r/cats"),
+           Reddit("http://www.reddit.com/r/StarWars"),
+           Soupio("http://soup.io/everyone"),
+           Ninegag("http://9gag.com/geeky"),
+           Ninegag("http://9gag.com/wtf"),
+           Ninegag("http://9gag.com/girl"),
+           Ninegag("http://9gag.com/hot"),
+           Ninegag("http://9gag.com/trending"),
+           Pr0gramm("http://pr0gramm.com/static/")]
 
 # wrapper function for cache filling
 def cache_fill_loop():

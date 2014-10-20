@@ -18,7 +18,7 @@ from . import Crawler, CrawlerError
 
 
 
-class ninegag(Crawler):
+class Ninegag(Crawler):
     """ 9gag image provider """
 
     ___uri = ""
@@ -27,13 +27,13 @@ class ninegag(Crawler):
 
     @staticmethod
     def __build_uri(uri):
-        return urlparse.urljoin(uri, "/")
+        return uri
 
     def _restart_at_front(self):
         self.__next = ""
 
     def __init__(self, uri):
-        self.__uri = ninegag.__build_uri(uri)
+        self.__uri = Ninegag.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
