@@ -19,11 +19,11 @@ do
 	echo "running $builder ... "
 
 	echo -n $(basename $(dirname $builder)) >> $target
-	echo ' = """' >> $target
+	echo -n ' = """' >> $target
 
 	$builder 1>> $target
 
-	echo '"""' >> $target
+	echo -n '"""' >> $target
 
 done
 
