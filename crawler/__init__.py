@@ -5,6 +5,7 @@ __all__ = ['Crawler']
 import sys
 import random
 import time
+import re
 
 
 
@@ -79,12 +80,23 @@ class Crawler(object):
         return False
 
     @classmethod
+    def _is_image(cls, uri):
+        r_image = re.compile(".*(jpeg|jpg|png|gif|JPEG|JPG|PNG|GIF)#[a-zA-Z]*$")
+        cls._log("debug", "url crawl match: %s " % (uri))
+        if r_image.match(uri):
+            return True
+        return False
+
+
+    @classmethod
     def __add_image(cls, uri):
         if not cls._is_blacklisted(uri):
-            cls.__images.append(uri)
-            cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-            cls._log("debug", "added: %s" % uri)
-            return True
+            if cls._is_image(uri):
+                cls._blacklist(uri)  # add it to the blacklist to detect duplicates
+                cls.__images.append(uri)
+                cls._log("debug", "added: %s" % uri)
+                return True
+            return False
         return False
 
     @classmethod
