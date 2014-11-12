@@ -1,7 +1,7 @@
 # nichtparasoup
 
-nichtparasoup is a hackerspaces home entertainment system. It randomly displays 
-images/gifs from [soup.io](http://soup.io), [pr0gramm](http://pr0gramm.com), [9gag](http://9gag.com) and 
+nichtparasoup is a hackerspaces home entertainment system. It randomly displays
+images/gifs from [soup.io](http://soup.io), [pr0gramm](http://pr0gramm.com), [9gag](http://9gag.com) and
 [reddit](http://reddit.com).
 
 at our hackerspace [k4cg](http://k4cg.org) we used [soupcache](https://github.com/exi/soupcache) very often but the project has some issues, so we cannot host ist onsite and decided to write our own.
@@ -39,6 +39,19 @@ after that you can just run
 
 # internals
 
+## commands
+
+You can interact with nichtparasoup in an "api" way very easy.
+For example `curl localhost:5000/<command>`. You can insert every command here listed
+below.
+
+* `/get` - gets a image url from the list and prints out the url
+* `/imagelist` - prints out every image url in the cache
+* `/blacklist` - prints out every image url that is blacklisted (e.g. "already seen")
+* `/status` - prints amount of images in cache and blacklist and size im memory of these two lists
+* `/flush` - will delete everything in cache but not in blacklist (*not implemented yet*)
+* `/reset` - deletes everything in cache and blacklist (*not implemented yet*)
+
 ## behavior
 
 when you start nichtparasoup
@@ -55,5 +68,5 @@ shown images. So is not persistent.
 
 ## cache_fill in threads
 
-once you start up nichtparasoup the crawler will initially fill the cache up to `$min_cache_imgs`. this happens in a separate thread in the background. when your configured `$min_cache_imgs_before_refill` get hit, the crawler starts choosing a new random image provider (see at the top) and refills your cache. the crawler thread wakes up every `1.337` seconds and checks the status of the current imgmap. 
+once you start up nichtparasoup the crawler will initially fill the cache up to `$min_cache_imgs`. this happens in a separate thread in the background. when your configured `$min_cache_imgs_before_refill` get hit, the crawler starts choosing a new random image provider (see at the top) and refills your cache. the crawler thread wakes up every `1.337` seconds and checks the status of the current imgmap.
 
