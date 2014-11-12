@@ -82,7 +82,6 @@ class Crawler(object):
     @classmethod
     def _is_image(cls, uri):
         r_image = re.compile(".*(jpeg|jpg|png|gif|JPEG|JPG|PNG|GIF)#[a-zA-Z]*$")
-        cls._log("debug", "url crawl match: %s " % (uri))
         if r_image.match(uri):
             return True
         return False

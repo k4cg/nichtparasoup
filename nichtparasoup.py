@@ -106,11 +106,11 @@ def show_blacklist():
 
 def flush():
     Crawler._flush()
-    return True
+    return "flushed"
 
 def reset():
     Crawler._reset()
-    return True
+    return "resetted"
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above

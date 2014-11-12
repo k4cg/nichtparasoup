@@ -49,8 +49,8 @@ below.
 * `/imagelist` - prints out every image url in the cache
 * `/blacklist` - prints out every image url that is blacklisted (e.g. "already seen")
 * `/status` - prints amount of images in cache and blacklist and size im memory of these two lists
-* `/flush` - will delete everything in cache but not in blacklist (*not implemented yet*)
-* `/reset` - deletes everything in cache and blacklist (*not implemented yet*)
+* `/flush` - will delete everything in cache but not in blacklist
+* `/reset` - deletes everything in cache and blacklist
 
 ## behavior
 
