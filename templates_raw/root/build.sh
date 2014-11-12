@@ -2,7 +2,9 @@
 
 dir=$(dirname $0)
 
-$dir/../_bundler/bundler.py $dir/root.html
+bundler="$dir/../_bundler//bundler.py --strip-tags striponbuild --strip-markers @striponbuild --compress --strip-comments"
+
+$bundler -i $dir/root.html
 
 
 
