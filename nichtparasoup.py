@@ -92,18 +92,25 @@ def cache_status():
     logger.info(msg)
     return msg
 
-# print status of cache
+# print imagelist
 def show_imagelist():
     imagelist = Crawler._show_imagelist()
     imagelist = "\n".join(imagelist)
     return imagelist
 
-# print status of cache
+# print blacklist
 def show_blacklist():
     blacklist = Crawler._show_blacklist()
     blacklist = "\n".join(blacklist)
     return blacklist
 
+def flush():
+    Crawler._flush()
+    return True
+
+def reset():
+    Crawler._reset()
+    return True
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
@@ -117,6 +124,8 @@ class nichtparasoup(object):
             Rule('/get', endpoint='cache_get'),
             Rule('/imagelist', endpoint='show_imagelist'),
             Rule('/blacklist', endpoint='show_blacklist'),
+            Rule('/flush', endpoint='flush'),
+            Rule('/reset', endpoint='reset'),
         ])
 
     # proxy call to the wsgi_app
@@ -150,13 +159,21 @@ class nichtparasoup(object):
     def on_cache_get(self, request):
         return Response(cache_get())
 
-    # map function for getting an image url
+    # map function for showing blacklist
     def on_show_blacklist(self, request):
         return Response(show_blacklist())
 
-    # map function for getting an image url
+    # map function for showing imagelist
     def on_show_imagelist(self, request):
         return Response(show_imagelist())
+
+    # map function for flushing (deleting everything in cache)
+    def on_flush(self, request):
+        return Response(flush())
+
+    # map function for resetting (deleting everythign in cache and blacklist)
+    def on_reset(self, request):
+        return Response(reset())
 
 ### runtime
 # main function how to run

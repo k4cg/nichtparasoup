@@ -141,6 +141,17 @@ class Crawler(object):
         blacklist = cls.__blacklist
         return blacklist
 
+    @classmethod
+    def _flush(cls):
+        cls.__images = []
+        Crawler._log("info", "flushed. cache is now empty")
+
+    @classmethod
+    def _reset(cls):
+        cls.__images = []
+        cls.__blacklist = []
+        Crawler._log("info", "resetted. cache and blacklist are now empty")
+
     def crawl(self):
         now = time.time()
         if self.__crawlingStarted is None:
