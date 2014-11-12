@@ -11,7 +11,6 @@ except:
 
 import json
 
-
 from . import Crawler, CrawlerError
 
 
@@ -34,15 +33,15 @@ class Reddit(Crawler):
         self.__next = ""
 
     def __init__(self, uri):
-        self.__uri = Reddit.__build_uri(uri)
+        self.__uri = self.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, "?after="+self.__next)
-        Crawler._log("debug", "Reddit crawls url: " + uri)
+        self._log("debug", "Reddit crawls url: " + uri)
 
-        request = urllib2.Request(uri, headers=Crawler.headers())
-        response = urllib2.urlopen(request, timeout=Crawler.timeout())
+        request = urllib2.Request(uri, headers=self.headers())
+        response = urllib2.urlopen(request, timeout=self.timeout())
 
         charset = 'utf8'
         try:  # py3

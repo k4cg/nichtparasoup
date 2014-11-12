@@ -136,37 +136,37 @@ class Crawler(object):
     @classmethod
     def flush(cls):
         cls.__images.clear()
-        Crawler._log("info", "flushed. cache is now empty")
+        cls._log("info", "flushed. cache is now empty")
 
     @classmethod
     def reset(cls):
         cls.__images.clear()
         cls.__blacklist.clear()
-        Crawler._log("info", "reset. cache and blacklist are now empty")
+        cls._log("info", "reset. cache and blacklist are now empty")
 
     def crawl(self):
         now = time.time()
         if self.__crawlingStarted is None:
             self.__crawlingStarted = now
         elif self.__crawlingStarted <= now - Crawler.reset_delay():
-            Crawler._log("debug", "instance %s starts at front" % repr(self))
+            self._log("debug", "instance %s starts at front" % repr(self))
             self._restart_at_front()
             self.__crawlingStarted = now
 
-        Crawler._log("debug", "instance %s starts crawling" % repr(self))
+        self._log("debug", "instance %s starts crawling" % repr(self))
         try:
             self._crawl()
         except CrawlerError as e:
-            Crawler._log("exception", "crawler error:" + repr(e))
+            self._log("exception", "crawler error:" + repr(e))
         except:
             e = sys.exc_info()[0]
-            Crawler._log("exception", "unexpected crawler error: " + repr(e))
+            self._log("exception", "unexpected crawler error: " + repr(e))
 
     def _add_image(self, uri):
         if not self._is_image(uri):
-            # Crawler._log("info", uri + " is no image ")
+            # self._log("info", uri + " is no image ")
             return False
-        return Crawler.__add_image(uri + '#' + self.__class__.__name__)
+        return self.__add_image(uri + '#' + self.__class__.__name__)
 
     ## abstract functions
 
