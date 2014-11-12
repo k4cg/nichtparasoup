@@ -120,6 +120,11 @@ class Crawler(object):
             "blacklist_size": sys.getsizeof(blacklist, 0)
         }
 
+    @classmethod
+    def imageslist(cls):
+        images = cls.__images
+        return images
+
     def crawl(self):
         now = time.time()
         if self.__crawlingStarted is None:

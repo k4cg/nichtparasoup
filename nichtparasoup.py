@@ -92,6 +92,13 @@ def cache_status():
     logger.info(msg)
     return msg
 
+# print status of cache
+def cache_list():
+    cachelist = Crawler.imageslist()
+    cachelist = "\n".join(cachelist)
+    return cachelist
+
+
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
@@ -103,6 +110,7 @@ class nichtparasoup(object):
             Rule('/', endpoint='root'),
             Rule('/status', endpoint='cache_status'),
             Rule('/get', endpoint='cache_get'),
+            Rule('/list', endpoint='cache_list'),
         ])
 
     # proxy call to the wsgi_app
@@ -135,6 +143,10 @@ class nichtparasoup(object):
     # map function for getting an image url
     def on_cache_get(self, request):
         return Response(cache_get())
+
+    # map function for getting an image url
+    def on_cache_list(self, request):
+        return Response(cache_list())
 
 
 ### runtime
