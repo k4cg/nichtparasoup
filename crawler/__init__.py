@@ -87,7 +87,6 @@ class Crawler(object):
             return True
         return False
 
-
     @classmethod
     def __add_image(cls, uri):
         if not cls._is_blacklisted(uri):
@@ -133,9 +132,14 @@ class Crawler(object):
         }
 
     @classmethod
-    def imageslist(cls):
-        images = cls.__images
-        return images
+    def _show_imagelist(cls):
+        imagelist = cls.__images
+        return imagelist
+
+    @classmethod
+    def _show_blacklist(cls):
+        blacklist = cls.__blacklist
+        return blacklist
 
     def crawl(self):
         now = time.time()

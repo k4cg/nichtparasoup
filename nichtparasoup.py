@@ -93,11 +93,16 @@ def cache_status():
     return msg
 
 # print status of cache
-def cache_list():
-    cachelist = Crawler.imageslist()
-    cachelist = "\n".join(cachelist)
-    return cachelist
+def show_imagelist():
+    imagelist = Crawler._show_imagelist()
+    imagelist = "\n".join(imagelist)
+    return imagelist
 
+# print status of cache
+def show_blacklist():
+    blacklist = Crawler._show_blacklist()
+    blacklist = "\n".join(blacklist)
+    return blacklist
 
 
 ### werkzeug webserver
@@ -110,7 +115,8 @@ class nichtparasoup(object):
             Rule('/', endpoint='root'),
             Rule('/status', endpoint='cache_status'),
             Rule('/get', endpoint='cache_get'),
-            Rule('/list', endpoint='cache_list'),
+            Rule('/imagelist', endpoint='show_imagelist'),
+            Rule('/blacklist', endpoint='show_blacklist'),
         ])
 
     # proxy call to the wsgi_app
@@ -145,9 +151,12 @@ class nichtparasoup(object):
         return Response(cache_get())
 
     # map function for getting an image url
-    def on_cache_list(self, request):
-        return Response(cache_list())
+    def on_show_blacklist(self, request):
+        return Response(show_blacklist())
 
+    # map function for getting an image url
+    def on_show_imagelist(self, request):
+        return Response(show_imagelist())
 
 ### runtime
 # main function how to run
