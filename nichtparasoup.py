@@ -46,27 +46,21 @@ from crawler.soupio import Soupio
 from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import Ninegag
 
-#for subreddit in config.get("Sites", "Reddit"):
-#    sources = "http://www.reddit.com/r/" + subreddit
+sources = []
 
-sources = [Reddit("http://www.reddit.com/r/gifs"),
-           Reddit("http://www.reddit.com/r/pics"),
-           Reddit("http://www.reddit.com/r/nsfw"),
-           Reddit("http://www.reddit.com/r/nsfw_gifs"),
-           Reddit("http://www.reddit.com/r/aww"),
-           Reddit("http://www.reddit.com/r/aww_gifs"),
-           Reddit("http://www.reddit.com/r/reactiongifs"),
-           Reddit("http://www.reddit.com/r/wtf"),
-           Reddit("http://www.reddit.com/r/FoodPorn"),
-           Reddit("http://www.reddit.com/r/cats"),
-           Reddit("http://www.reddit.com/r/StarWars"),
-           Soupio("http://soup.io/everyone"),
-           Ninegag("http://9gag.com/geeky"),
-           Ninegag("http://9gag.com/wtf"),
-           Ninegag("http://9gag.com/girl"),
-           Ninegag("http://9gag.com/hot"),
-           Ninegag("http://9gag.com/trending"),
-           Pr0gramm("http://pr0gramm.com/static/")]
+if not config.get("Sites","Reddit") == "False":
+    for site in config.get("Sites", "Reddit").split(","):
+        sources.append(Reddit("http://www.reddit.com/r/"+site))
+
+if not config.get("Sites","Ninegag") == "False":
+    for site in config.get("Sites", "Ninegag").split(","):
+        sources.append(Ninegag("http://9gag.com/"+site))
+
+if config.getboolean("Sites", "Pr0gramm"):
+    sources.append(Pr0gramm("http://pr0gramm.com/static/"))
+
+if config.getboolean("Sites", "Soupio"):
+    sources.append(Soupio("http://soup.io/everyone"))
 
 # wrapper function for cache filling
 def cache_fill_loop():
