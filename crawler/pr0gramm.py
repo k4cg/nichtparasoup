@@ -13,13 +13,7 @@ except:
 
 from bs4 import BeautifulSoup
 
-
 from . import Crawler, CrawlerError
-
-
-
-
-
 
 
 class Pr0gramm(Crawler):
@@ -45,21 +39,21 @@ class Pr0gramm(Crawler):
 
     def _crawl(self):
         uri = self.__uri  # @todo add paging
-        Crawler._log("debug", "Pr0gramm crawls url: " + uri)
+        self._log("debug", "Pr0gramm crawls url: " + uri)
 
-        request = urllib2.Request(uri, headers=Crawler.headers())
-        response = urllib2.urlopen(request, timeout=Crawler.timeout())
+        request = urllib2.Request(uri, headers=self.headers())
+        response = urllib2.urlopen(request, timeout=self.timeout())
 
-        pages = BeautifulSoup(response.read()).findAll("a", href=Pr0gramm.__filter)
+        pages = BeautifulSoup(response.read()).findAll("a", href=self.__filter)
         for page in pages:
             self.__crawl_page(urllib2.quote(page["href"]))
 
     def __crawl_page(self, uri):
-        uri = urlparse.urljoin(Pr0gramm.__base, uri)
+        uri = urlparse.urljoin(self.__base, uri)
 
-        request = urllib2.Request(uri, headers=Crawler.headers())
-        response = urllib2.urlopen(request, timeout=Crawler.timeout())
+        request = urllib2.Request(uri, headers=self.headers())
+        response = urllib2.urlopen(request, timeout=self.timeout())
 
         image = BeautifulSoup(response.read()).find("img")["src"]
 
-        self._add_image(urlparse.urljoin(Pr0gramm.__base, image))
+        self._add_image(urlparse.urljoin(self.__base, image))

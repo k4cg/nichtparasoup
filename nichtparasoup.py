@@ -62,6 +62,7 @@ if config.getboolean("Sites", "Pr0gramm"):
 if config.getboolean("Sites", "Soupio"):
     sources.append(Soupio("http://soup.io/everyone"))
 
+
 # wrapper function for cache filling
 def cache_fill_loop():
     global sources
@@ -89,25 +90,28 @@ def cache_status():
     logger.info(msg)
     return msg
 
+
 # print imagelist
 def show_imagelist():
-    imagelist = Crawler._show_imagelist()
-    imagelist = "\n".join(imagelist)
-    return imagelist
+    return "\n".join(Crawler.show_imagelist())
+
 
 # print blacklist
 def show_blacklist():
-    blacklist = Crawler._show_blacklist()
-    blacklist = "\n".join(blacklist)
-    return blacklist
+    return "\n".join(Crawler.show_blacklist())
 
+
+# flush blacklist
 def flush():
-    Crawler._flush()
+    Crawler.flush()
     return "flushed"
 
+
+#reset the crawler
 def reset():
-    Crawler._reset()
-    return "resetted"
+    Crawler.reset()
+    return "reset"
+
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
