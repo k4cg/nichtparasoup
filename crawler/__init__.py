@@ -87,9 +87,11 @@ class Crawler(object):
     def __add_image(cls, uri):
         if not cls._is_blacklisted(uri):
             cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-            cls.__images.append(uri)
-            cls._log("debug", "added: %s" % uri)
-            return True
+            if cls._is_image(uri):
+                cls.__images.append(uri)
+                cls._log("debug", "added: %s" % uri)
+                return True
+            return False
         return False
 
     @classmethod
@@ -163,9 +165,6 @@ class Crawler(object):
             self._log("exception", "unexpected crawler error: " + repr(e))
 
     def _add_image(self, uri):
-        if not self._is_image(uri):
-            # self._log("info", uri + " is no image ")
-            return False
         return self.__add_image(uri + '#' + self.__class__.__name__)
 
     ## abstract functions
