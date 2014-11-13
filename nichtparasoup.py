@@ -5,6 +5,7 @@ import random
 import logging
 import time
 import threading
+import configparser
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -21,18 +22,17 @@ from crawler import Crawler
 
 
 ## configuration
-nps_port = 5000
-nps_bindip = "0.0.0.0"
-min_cache_imgs = 150
-min_cache_imgs_before_refill = 20
-user_agent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/534.3 (KHTML, like Gecko) Chrome/6.0.472.63 Safari/534.3'
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-logfile = "nichtparasoup.log"
-logverbosity = "DEBUG"
-
-### init values
-logger = logging.getLogger('nichtparasoup')
-hdlr = logging.FileHandler(logfile)
+nps_port = config.getint("General", "Port")
+nps_bindip = config.get("General", "IP")
+min_cache_imgs = config.get("Cache", "Images")
+min_cache_imgs_before_refill = config.get("Cache", "Images_min_limit")
+user_agent = config.get("General", "Useragent")
+logverbosity = config.get("Logging", "Verbosity")
+logger = logging.getLogger(config.get("Logging", "Log_name"))
+hdlr = logging.FileHandler(config.get("Logging", "File"))
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
@@ -46,24 +46,21 @@ from crawler.soupio import Soupio
 from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import Ninegag
 
-sources = [Reddit("http://www.reddit.com/r/gifs"),
-           Reddit("http://www.reddit.com/r/pics"),
-           Reddit("http://www.reddit.com/r/nsfw"),
-           Reddit("http://www.reddit.com/r/nsfw_gifs"),
-           Reddit("http://www.reddit.com/r/aww"),
-           Reddit("http://www.reddit.com/r/aww_gifs"),
-           Reddit("http://www.reddit.com/r/reactiongifs"),
-           Reddit("http://www.reddit.com/r/wtf"),
-           Reddit("http://www.reddit.com/r/FoodPorn"),
-           Reddit("http://www.reddit.com/r/cats"),
-           Reddit("http://www.reddit.com/r/StarWars"),
-           Soupio("http://soup.io/everyone"),
-           Ninegag("http://9gag.com/geeky"),
-           Ninegag("http://9gag.com/wtf"),
-           Ninegag("http://9gag.com/girl"),
-           Ninegag("http://9gag.com/hot"),
-           Ninegag("http://9gag.com/trending"),
-           Pr0gramm("http://pr0gramm.com/static/")]
+sources = []
+
+if not config.get("Sites","Reddit") == "False":
+    for site in config.get("Sites", "Reddit").split(","):
+        sources.append(Reddit("http://www.reddit.com/r/"+site))
+
+if not config.get("Sites","Ninegag") == "False":
+    for site in config.get("Sites", "Ninegag").split(","):
+        sources.append(Ninegag("http://9gag.com/"+site))
+
+if config.getboolean("Sites", "Pr0gramm"):
+    sources.append(Pr0gramm("http://pr0gramm.com/static/"))
+
+if config.getboolean("Sites", "Soupio"):
+    sources.append(Soupio("http://soup.io/everyone"))
 
 
 # wrapper function for cache filling
