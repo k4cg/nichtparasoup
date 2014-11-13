@@ -72,7 +72,7 @@ def cache_fill_loop():
     sources = [source for source in sources if isinstance(source, Crawler)]
 
     while True:  # fill cache up to min_cache_imgs
-        if Crawler.info()["images"] < min_cache_imgs_before_refill :
+        if Crawler.info()["images"] < min_cache_imgs_before_refill:
             while Crawler.info()["images"] < min_cache_imgs:
                 random.choice(sources).crawl()
 

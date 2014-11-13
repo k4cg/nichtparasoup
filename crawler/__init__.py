@@ -1,5 +1,5 @@
 
-__all__ = ['Crawler']
+__all__ = ['Crawler', 'CrawlerError']
 
 
 import sys
@@ -70,14 +70,19 @@ class Crawler(object):
     ## general functions
 
     @classmethod
+    def __prepare_for_blacklist(cls, uri):
+        # @TODO maybe strip uri parts: anchor, fragment, queryString - so the uri is plain ...
+        return uri
+
+    @classmethod
     def _blacklist(cls, uri):
+        uri = cls.__prepare_for_blacklist(uri)
         cls.__blacklist.append(uri)
 
     @classmethod
     def _is_blacklisted(cls, uri):
-        if any(uri in s for s in cls.__blacklist):
-            return True
-        return False
+        uri = cls.__prepare_for_blacklist(uri)
+        return any(uri in s for s in cls.__blacklist) is not None
 
     @classmethod
     def _is_image(cls, uri):
@@ -85,16 +90,19 @@ class Crawler(object):
 
     @classmethod
     def __add_image(cls, uri):
-        if not cls._is_blacklisted(uri):
-            cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-            cls.__images.append(uri)
-            cls._log("debug", "added: %s" % uri)
-            return True
-        return False
+        if not cls._is_image(uri):
+            # self._log("info", uri + " is no image ")
+            return False
+        if cls._is_blacklisted(uri):
+            return False
+        cls._blacklist(uri)  # add it to the blacklist to detect duplicates
+        cls.__images.append(uri)
+        cls._log("debug", "added: %s" % uri)
+        return True
 
     @classmethod
     def get_image(cls):
-        images = Crawler.__images
+        images = cls.__images
         if images:
             image = random.choice(images)
             images.remove(image)
@@ -112,7 +120,7 @@ class Crawler(object):
 
     @classmethod
     def _debug(cls):
-        return "<Crawler config:%s info:%s>" % (cls.__configuration, Crawler.info())
+        return "<Crawler config:%s info:%s>" % (cls.__configuration, cls.info())
 
     @classmethod
     def info(cls):
@@ -163,9 +171,6 @@ class Crawler(object):
             self._log("exception", "unexpected crawler error: " + repr(e))
 
     def _add_image(self, uri):
-        if not self._is_image(uri):
-            # self._log("info", uri + " is no image ")
-            return False
         return self.__add_image(uri + '#' + self.__class__.__name__)
 
     ## abstract functions
