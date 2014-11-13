@@ -17,9 +17,8 @@ from . import Crawler, CrawlerError
 class Ninegag(Crawler):
     """ 9gag image provider """
 
-    ___uri = ""
+    __uri = ""
     __next = ""
-
 
     @staticmethod
     def __build_uri(uri):
@@ -29,15 +28,15 @@ class Ninegag(Crawler):
         self.__next = ""
 
     def __init__(self, uri):
-        self.__uri = self.__build_uri(uri)
+        self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, self.__next)
-        self._log("debug", "9gag crawls url: " + uri)
+        self.__class__._log("debug", "9gag crawls url: %s" % (uri))
 
-        request = urllib2.Request(uri, headers=self.headers())
-        response = urllib2.urlopen(request, timeout=self.timeout())
+        request = urllib2.Request(uri, headers=self.__class__.headers())
+        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
 
         page = BeautifulSoup(response.read())
 
@@ -48,6 +47,6 @@ class Ninegag(Crawler):
 
         # for every found imageContainer
         # add img-src to map if not blacklisted
-        for con in page.find_all("div", {"class": "badge-post-container post-container "}):
+        for con in page.find_all("div", {"class": "badge-post-container post-container"}):
             image = con.find('img')['src']
             self._add_image(image)

@@ -30,19 +30,23 @@ class Pr0gramm(Crawler):
 
     ## functions
 
+    @staticmethod
+    def __build_uri(uri):
+        return uri
+
     def _restart_at_front(self):
         pass  # nothing to do - since we have no paging, yet
 
     def __init__(self, uri):
-        self.__uri = uri
+        self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
         uri = self.__uri  # @todo add paging
-        self._log("debug", "Pr0gramm crawls url: " + uri)
+        self.__class__._log("debug", "Pr0gramm crawls url: %s" % (uri))
 
-        request = urllib2.Request(uri, headers=self.headers())
-        response = urllib2.urlopen(request, timeout=self.timeout())
+        request = urllib2.Request(uri, headers=self.__class__.headers())
+        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
 
         pages = BeautifulSoup(response.read()).findAll("a", href=self.__filter)
         for page in pages:
@@ -51,8 +55,8 @@ class Pr0gramm(Crawler):
     def __crawl_page(self, uri):
         uri = urlparse.urljoin(self.__base, uri)
 
-        request = urllib2.Request(uri, headers=self.headers())
-        response = urllib2.urlopen(request, timeout=self.timeout())
+        request = urllib2.Request(uri, headers=self.__class__.headers())
+        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
 
         image = BeautifulSoup(response.read()).find("img")["src"]
 

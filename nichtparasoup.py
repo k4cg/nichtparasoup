@@ -176,10 +176,11 @@ class nichtparasoup(object):
     def on_reset(self, request):
         return Response(reset())
 
+
 ### runtime
 # main function how to run
 # on start-up, fill the cache and get up the webserver
-def main():
+if __name__ == "__main__":
     try:
         # start the cache filler tread
         cache_fill_thread = threading.Thread(target=cache_fill_loop)
@@ -196,6 +197,3 @@ def main():
     # start webserver after a bit of delay
     run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False)
 
-
-if __name__ == "__main__":
-    main()

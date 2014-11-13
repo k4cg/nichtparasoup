@@ -36,7 +36,7 @@ class Crawler(object):
 
     ## properties
 
-    __crawlingStarted = None
+    __crawlingStarted = 0.0
 
     ## config methods
 
@@ -49,7 +49,7 @@ class Crawler(object):
 
     @classmethod
     def __config_setter_and_getter(cls, key, value=None):
-        if value is None :
+        if value is None:
             return cls.__configuration[key]
         cls.configure(key=key, value=value)
 
@@ -70,34 +70,37 @@ class Crawler(object):
     ## general functions
 
     @classmethod
-    def __prepare_for_blacklist(cls, uri):
-        # @TODO maybe strip uri parts: anchor, fragment, queryString - so the uri is plain ...
-        return uri
+    def __blacklist_clear(cls):
+        cls.__blacklist = []  # alternative: cls.__blacklist[:] = [] # be aware: list.clean() is not available in py2
 
     @classmethod
     def _blacklist(cls, uri):
-        uri = cls.__prepare_for_blacklist(uri)
         cls.__blacklist.append(uri)
 
     @classmethod
     def _is_blacklisted(cls, uri):
-        uri = cls.__prepare_for_blacklist(uri)
-        return any(uri in s for s in cls.__blacklist) is not None
+        return uri in cls.__blacklist
 
     @classmethod
     def _is_image(cls, uri):
         return cls.__imageRE.match(uri) is not None
 
     @classmethod
-    def __add_image(cls, uri):
+    def __images_clear(cls):
+        cls.__images = []  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
+
+    @classmethod
+    def __add_image(cls, uri, crawler=None):
         if not cls._is_image(uri):
             # self._log("info", uri + " is no image ")
             return False
+
         if cls._is_blacklisted(uri):
             return False
+
         cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-        cls.__images.append(uri)
-        cls._log("debug", "added: %s" % uri)
+        cls.__images.append("%s#%s" % (uri, crawler))
+        cls._log("debug", "added: %s" % (uri))
         return True
 
     @classmethod
@@ -108,6 +111,7 @@ class Crawler(object):
             images.remove(image)
             cls._log("debug", "delivered: %s - remaining: %d" % (image, len(images)))
             return image
+        return None
 
     @classmethod
     def set_logger(cls, logger):
@@ -143,35 +147,35 @@ class Crawler(object):
 
     @classmethod
     def flush(cls):
-        cls.__images.clear()
+        cls.__images_clear()
         cls._log("info", "flushed. cache is now empty")
 
     @classmethod
     def reset(cls):
-        cls.__images.clear()
-        cls.__blacklist.clear()
+        cls.__images_clear()
+        cls.__blacklist_clear()
         cls._log("info", "reset. cache and blacklist are now empty")
 
     def crawl(self):
         now = time.time()
-        if self.__crawlingStarted is None:
+        if not self.__crawlingStarted:
             self.__crawlingStarted = now
-        elif self.__crawlingStarted <= now - Crawler.reset_delay():
-            self._log("debug", "instance %s starts at front" % repr(self))
+        elif self.__crawlingStarted <= now - self.__class__.reset_delay():
+            self.__class__._log("debug", "instance %s starts at front" % (repr(self)))
+            self.__crawlingStarted = now
             self._restart_at_front()
-            self.__crawlingStarted = now
 
-        self._log("debug", "instance %s starts crawling" % repr(self))
+        self.__class__._log("debug", "instance %s starts crawling" % (repr(self)))
         try:
             self._crawl()
         except CrawlerError as e:
-            self._log("exception", "crawler error:" + repr(e))
+            self.__class__._log("exception", "crawler error: %s" % (repr(e)))
         except:
             e = sys.exc_info()[0]
-            self._log("exception", "unexpected crawler error: " + repr(e))
+            self.__class__._log("exception", "unexpected crawler error: %s" % (repr(e)))
 
     def _add_image(self, uri):
-        return self.__add_image(uri + '#' + self.__class__.__name__)
+        return self.__class__.__add_image(uri, crawler=self.__class__.__name__)
 
     ## abstract functions
 
