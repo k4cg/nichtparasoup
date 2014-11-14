@@ -1,3 +1,2 @@
 Werkzeug
 beautifulsoup4
-configparser

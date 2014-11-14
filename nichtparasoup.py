@@ -5,7 +5,11 @@ import random
 import logging
 import time
 import threading
-import configparser
+
+try:
+    from configparser import RawConfigParser  # py 3
+except:
+    from ConfigParser import RawConfigParser  # py 2
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -22,13 +26,13 @@ from crawler import Crawler
 
 
 ## configuration
-config = configparser.ConfigParser()
+config = RawConfigParser()
 config.read('config.ini')
 
 nps_port = config.getint("General", "Port")
 nps_bindip = config.get("General", "IP")
-min_cache_imgs = config.get("Cache", "Images")
-min_cache_imgs_before_refill = config.get("Cache", "Images_min_limit")
+min_cache_imgs = config.getint("Cache", "Images")
+min_cache_imgs_before_refill = config.getint("Cache", "Images_min_limit")
 user_agent = config.get("General", "Useragent")
 logverbosity = config.get("Logging", "Verbosity")
 logger = logging.getLogger(config.get("Logging", "Log_name"))
@@ -188,7 +192,7 @@ if __name__ == "__main__":
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        min_cache_imgs = -1 # stop cache_fill-inner_loop
+        min_cache_imgs = -1  # stop cache_fill-inner_loop
 
     # give the cache_fill some time in advance
     time.sleep(1.337)
