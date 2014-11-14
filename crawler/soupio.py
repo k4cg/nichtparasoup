@@ -14,10 +14,7 @@ from bs4 import BeautifulSoup
 from . import Crawler, CrawlerError
 
 
-
-
-
-class Soupio(Crawler):
+class SoupIO(Crawler):
     """ soup.io image provider """
 
     ___uri = ""

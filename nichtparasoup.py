@@ -42,25 +42,25 @@ Crawler.set_logger(logger)
 
 ### config the  crawlers
 from crawler.reddit import Reddit
-from crawler.soupio import Soupio
+from crawler.soupio import SoupIO
 from crawler.pr0gramm import Pr0gramm
-from crawler.ninegag import Ninegag
+from crawler.ninegag import NineGag
 
 sources = []
 
-if not config.get("Sites","Reddit") == "False":
+if not config.get("Sites", "Reddit") == "False":
     for site in config.get("Sites", "Reddit").split(","):
         sources.append(Reddit("http://www.reddit.com/r/"+site))
 
-if not config.get("Sites","Ninegag") == "False":
+if not config.get("Sites", "Ninegag") == "False":
     for site in config.get("Sites", "Ninegag").split(","):
-        sources.append(Ninegag("http://9gag.com/"+site))
+        sources.append(NineGag("http://9gag.com/"+site))
 
 if config.getboolean("Sites", "Pr0gramm"):
     sources.append(Pr0gramm("http://pr0gramm.com/static/"))
 
 if config.getboolean("Sites", "Soupio"):
-    sources.append(Soupio("http://soup.io/everyone"))
+    sources.append(SoupIO("http://soup.io/everyone"))
 
 
 # wrapper function for cache filling
@@ -115,7 +115,7 @@ def reset():
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
-class nichtparasoup(object):
+class NichtParasoup(object):
 
     # init webserver with routing
     def __init__(self):
@@ -194,5 +194,5 @@ if __name__ == "__main__":
     time.sleep(1.337)
 
     # start webserver after a bit of delay
-    run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False)
+    run_simple(nps_bindip, nps_port, NichtParasoup(), use_debugger=False)
 

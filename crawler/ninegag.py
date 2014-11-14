@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from . import Crawler, CrawlerError
 
 
-class Ninegag(Crawler):
+class NineGag(Crawler):
     """ 9gag image provider """
 
     __uri = ""
