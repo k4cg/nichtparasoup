@@ -1,5 +1,5 @@
 
-root = """<!DOCTYPE html><html><head><title>nichtparasoup</title><script type="application/javascript">(function (pub, win, udef)
+root = """<!DOCTYPE HTML><html><head><title>nichtparasoup</title><script type="application/javascript">(function (pub, win, udef)
 { "use strict"; var conf, vars, func, req; conf = { interval : 1000 , intervalMinSec : 1 , imgsMax : 100 ,
 source : "./get" , }; pub.setInterval = function ( sec ) { conf.interval = 1000* Math.max(sec, conf.intervalMinSec); };
 vars = { halt : false , target : null , imgs : [] , req : false }; pub.halt = function () { vars.halt = true;
@@ -28,7 +28,7 @@ vars.target = document.getElementById(targetId); func.fetch(); }; })(iw={}, this
 styleE : null , baseId : '' }; func = { createStyle : function () { var styleE , base; if ( ! base ) {
 base = doc.getElementsByTagName('head')[0]; } if ( ! base ) { base = doc.getElementsByTagName('body')[0]; } if ( ! base )
 { base = doc.getElementsByTagName('html')[0]; } if ( ! base ) { base = doc.lastChild; }
-styleE = doc.createElement('style') styleE.setAttribute('type','text/css'); styleE = base.appendChild(styleE);
+styleE = doc.createElement('style'); styleE.setAttribute('type','text/css'); styleE = base.appendChild(styleE);
 return styleE; } , getAdjustmentStr : function () { var style , maxWidth , maxHeight , baseId = vars.baseId
 , imgStyleStr = '' , imgStyle = {}; if ( ! baseId ) { return ''; }
 maxWidth = math.floor(win.innerWidth * conf.imgMaxWidthPerc);

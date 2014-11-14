@@ -38,7 +38,7 @@
 				base = doc.lastChild;
 			}
 
-			styleE = doc.createElement('style')
+			styleE = doc.createElement('style');
 			styleE.setAttribute('type','text/css');
 			styleE = base.appendChild(styleE);
 
