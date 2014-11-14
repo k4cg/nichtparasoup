@@ -14,10 +14,7 @@ from bs4 import BeautifulSoup
 from . import Crawler, CrawlerError
 
 
-
-
-
-class Soupio(Crawler):
+class SoupIO(Crawler):
     """ soup.io image provider """
 
     ___uri = ""
@@ -38,17 +35,17 @@ class Soupio(Crawler):
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, self.__next)
-        self._log("debug", "Soupio crawls url: " + uri)
+        self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.headers())
-        response = urllib2.urlopen(request, timeout=self.timeout())
+        request = urllib2.Request(uri, headers=self.__class__.headers())
+        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
 
         page = BeautifulSoup(response.read())
 
         # get more content ("scroll down")
         # to know what page to parse next
         # update new last URI when we're not on first run
-        self.__next = page.find("div", {"id" : "more_loading"}).find("a")["href"]
+        self.__next = page.find("div", {"id": "more_loading"}).find("a")["href"]
 
         # for every found imageContainer
         # add img-src to map if not blacklisted

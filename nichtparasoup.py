@@ -5,7 +5,11 @@ import random
 import logging
 import time
 import threading
-import configparser
+
+try:
+    from configparser import RawConfigParser  # py 3
+except:
+    from ConfigParser import RawConfigParser  # py 2
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -22,13 +26,13 @@ from crawler import Crawler
 
 
 ## configuration
-config = configparser.ConfigParser()
+config = RawConfigParser()
 config.read('config.ini')
 
 nps_port = config.getint("General", "Port")
 nps_bindip = config.get("General", "IP")
-min_cache_imgs = config.get("Cache", "Images")
-min_cache_imgs_before_refill = config.get("Cache", "Images_min_limit")
+min_cache_imgs = config.getint("Cache", "Images")
+min_cache_imgs_before_refill = config.getint("Cache", "Images_min_limit")
 user_agent = config.get("General", "Useragent")
 logverbosity = config.get("Logging", "Verbosity")
 logger = logging.getLogger(config.get("Logging", "Log_name"))
@@ -42,25 +46,25 @@ Crawler.set_logger(logger)
 
 ### config the  crawlers
 from crawler.reddit import Reddit
-from crawler.soupio import Soupio
+from crawler.soupio import SoupIO
 from crawler.pr0gramm import Pr0gramm
-from crawler.ninegag import Ninegag
+from crawler.ninegag import NineGag
 
 sources = []
 
-if not config.get("Sites","Reddit") == "False":
+if not config.get("Sites", "Reddit") == "False":
     for site in config.get("Sites", "Reddit").split(","):
         sources.append(Reddit("http://www.reddit.com/r/"+site))
 
-if not config.get("Sites","Ninegag") == "False":
+if not config.get("Sites", "Ninegag") == "False":
     for site in config.get("Sites", "Ninegag").split(","):
-        sources.append(Ninegag("http://9gag.com/"+site))
+        sources.append(NineGag("http://9gag.com/"+site))
 
 if config.getboolean("Sites", "Pr0gramm"):
     sources.append(Pr0gramm("http://pr0gramm.com/static/"))
 
 if config.getboolean("Sites", "Soupio"):
-    sources.append(Soupio("http://soup.io/everyone"))
+    sources.append(SoupIO("http://soup.io/everyone"))
 
 
 # wrapper function for cache filling
@@ -69,7 +73,7 @@ def cache_fill_loop():
     sources = [source for source in sources if isinstance(source, Crawler)]
 
     while True:  # fill cache up to min_cache_imgs
-        if Crawler.info()["images"] < min_cache_imgs_before_refill :
+        if Crawler.info()["images"] < min_cache_imgs_before_refill:
             while Crawler.info()["images"] < min_cache_imgs:
                 random.choice(sources).crawl()
 
@@ -115,7 +119,7 @@ def reset():
 
 ### werkzeug webserver
 # class with mapping to cache_* functions above
-class nichtparasoup(object):
+class NichtParasoup(object):
 
     # init webserver with routing
     def __init__(self):
@@ -176,10 +180,11 @@ class nichtparasoup(object):
     def on_reset(self, request):
         return Response(reset())
 
+
 ### runtime
 # main function how to run
 # on start-up, fill the cache and get up the webserver
-def main():
+if __name__ == "__main__":
     try:
         # start the cache filler tread
         cache_fill_thread = threading.Thread(target=cache_fill_loop)
@@ -187,15 +192,11 @@ def main():
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        global min_cache_imgs
-        min_cache_imgs = -1 # stop cache_fill-inner_loop
+        min_cache_imgs = -1  # stop cache_fill-inner_loop
 
     # give the cache_fill some time in advance
     time.sleep(1.337)
 
     # start webserver after a bit of delay
-    run_simple(nps_bindip, nps_port, nichtparasoup(), use_debugger=False)
+    run_simple(nps_bindip, nps_port, NichtParasoup(), use_debugger=False)
 
-
-if __name__ == "__main__":
-    main()
