@@ -33,7 +33,7 @@ class Ninegag(Crawler):
 
     def _crawl(self):
         uri = urlparse.urljoin(self.__uri, self.__next)
-        self.__class__._log("debug", "9gag crawls url: %s" % (uri))
+        self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
         request = urllib2.Request(uri, headers=self.__class__.headers())
         response = urllib2.urlopen(request, timeout=self.__class__.timeout())

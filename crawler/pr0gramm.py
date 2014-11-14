@@ -43,7 +43,7 @@ class Pr0gramm(Crawler):
 
     def _crawl(self):
         uri = self.__uri  # @todo add paging
-        self.__class__._log("debug", "Pr0gramm crawls url: %s" % (uri))
+        self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
         request = urllib2.Request(uri, headers=self.__class__.headers())
         response = urllib2.urlopen(request, timeout=self.__class__.timeout())

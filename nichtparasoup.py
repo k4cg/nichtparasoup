@@ -188,7 +188,6 @@ if __name__ == "__main__":
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        global min_cache_imgs
         min_cache_imgs = -1 # stop cache_fill-inner_loop
 
     # give the cache_fill some time in advance
