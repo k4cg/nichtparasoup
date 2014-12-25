@@ -1,7 +1,10 @@
 # ROOT LAYOUT dev env 
 
 ~ this is a local runnable UI builder environment that needs no web server and no internet connection (just `file://`).
-Ideal to develop on long train rides ;-)
+Ideal for development on long train rides ;-)
+
+~ since this development may require XHttpRequests (= AJAX) you want to use a web browser that supports such requests via `file://` - like FireFox - or start a local web server via
+`python -m SimpleHTTPServer <port>`.
 
 
 
