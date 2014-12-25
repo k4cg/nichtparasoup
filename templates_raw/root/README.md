@@ -30,4 +30,4 @@ Therefore some specialties are needed to know:
 ## how to test 
 
 The ready made UI will normally do a AJAX request to `./get` which should return the URI of an image.
-For testing purposes and local dev, a file `get_local` was prepared which will respond a locally stored image. Since this Image will have the same Size every time, there is also a file `get_remote` which used to respond a random (resolution/content) image. I guess you know how to handle them.
+For testing purposes and local dev, a file `test/get_local` was prepared which will respond a locally stored image. Since this Image will have the same Size every time, there is also a file `test/get_remote` which used to respond a random (resolution/content) image. I guess you know how to handle them.
