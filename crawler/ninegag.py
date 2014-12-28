@@ -48,5 +48,11 @@ class NineGag(Crawler):
         # for every found imageContainer
         # add img-src to map if not blacklisted
         for con in page.find_all("div", {"class": "badge-post-container post-container"}):
-            image = con.find('img')['src']
+            image = con.find("div", { "class": "badge-animated-container-animated",
+                "data-image": True})
+            if image:
+                image = image['data-image']
+            else:
+                image = con.find('img')['src']
+
             self._add_image(image)
