@@ -4,6 +4,3 @@
 [submodule "templates_raw/_foreign/normalize.css"]
 	path = templates_raw/_foreign/normalize.css
 	url = https://github.com/necolas/normalize.css.git
-[submodule "templates_raw/_foreign/jquery"]
-	path = templates_raw/_foreign/jquery
-	url = https://github.com/jquery/jquery.git
