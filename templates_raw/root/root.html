@@ -2,40 +2,89 @@
 <html>
 
 <head>
-	<title>nichtparasoup</title>
+	<meta charset="UTF-8">
 
-	<link rel="stylesheet" href="../_foreign/normalize.css/normalize.css">
+	<title>nicht!parasoup</title>
 
-	<link rel="stylesheet" href="css/sourceIcons.css">
-	<link rel="stylesheet" href="css/look.css">
-	<link rel="stylesheet" href="css/feel.css">
+	<link rel="stylesheet" href="css/normalize.css" />
 
-	<script type="application/javascript" src="js/look.js"></script>
+	<link rel="stylesheet" href="css/sourceIcons.css" />
+	<link rel="stylesheet" href="css/look_stateSwitch.css" />
+	<link rel="stylesheet" href="css/look.css" />
+	<link rel="stylesheet" href="css/feel.css" />
+
+	<style type="text/css">
+		stripOnBuild { display: block; color: black; background-color: yellow; font-size: xx-small; padding: 0.7ex; } /* @stripOnBuild */
+	</style>
+
+	<script type="application/javascript" src="js/helper.js"></script>
+	<script type="application/javascript" src="js/look_maxSizer.js"></script>
+	<script type="application/javascript" src="js/look_stateSwitch.js"></script>
 	<script type="application/javascript" src="js/feel.js"></script>
+
+	<script type="application/javascript">
+		window.helperFuncs.addEvent(window, "load", function ()
+		{
+			this.maxSizer.init('#wall article img');
+			this.stateSwitch.init(this.document.getElementById('c_state'));
+			this.nichtparasoup.init('wall', 2);
+		});
+	</script>
 
 </head>
 
-<body id="wall">
+<body>
 
 <header><!-- top controls -->
-	<div id="controlls">
+	<div id="controls">
+		<!-- not implemented, yet
 		<label for="c_nsfw">nsfw:</label>
 		<input  id="c_nsfw" type="checkbox">
+		-->
 
-		<label     for="c_speed">speed:</label>
-		fast <input id="c_speed" type="range" min="3" max="23"> slow
+		<label for="c_speed" title="set image interval">
+			speed:
+			fast <input id="c_speed" type="range" min="3" max="23" /> slow
+		</label>
+
+		<label for="c_state" id="stateSwitchContainer" title="play/pause">
+			status:
+			<input id="c_state" type="checkbox" checked="checked" />
+		</label>
 	</div>
+
+	<span id="burger">&#9776;</span>
 </header>
 
 <footer><!-- bottom hints -->
 </footer>
 
+<div id="wall">
 <!-- images added here -->
+</div>
 
-<striponbuild>
-
-</striponbuild>
-
+<stripOnBuild id="dbg"><!-- debug area -->
+	<style>
+		#dbg {
+			display: block;
+			overflow: auto;
+			overflow-x: auto;
+			overflow-y: auto;
+			white-space: pre;
+			background-color: white;
+			color: black;
+			border-top: 5px solid yellow;
+			position: absolute;
+			right: 0em;
+			bottom: 0ex;
+			left: 0em;
+			height: 30ex;
+			min-height: 30ex;
+			resize: vertical;
+		}
+	</style>
+	--- DEBUG AREA ---
+</stripOnBuild>
 
 </body>
 
