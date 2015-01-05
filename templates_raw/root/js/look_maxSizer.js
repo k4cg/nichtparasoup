@@ -79,7 +79,7 @@
 				cssString += s +':'+ style[ s ] +';'
 			}
 
-			style = cssSelector +' img {'+ cssString +'}';
+			style = cssSelector +' {'+ cssString +'}';
 
 			return style;
 		},
