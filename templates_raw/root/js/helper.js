@@ -6,7 +6,7 @@
 window.helperFuncs = {
 	log : function () {} , // in case we forget to strip a log
 
-	addEvent : function (obj, event, fn)
+	addEvent : function (obj, event, fn, capture)
 		{ "use strict";
 			if ( obj.attachEvent )
 			{
@@ -14,10 +14,21 @@ window.helperFuncs = {
 			}
 			else if( obj.addEventListener )
 			{
-				obj.addEventListener(event, fn, true);
+				obj.addEventListener(event, fn, capture);
 			}
-		}
+		} ,
 
+	fireEvent : function (obj, event)
+	{
+		if ( obj.dispatchEvent )
+		{
+			obj.dispatchEvent(document.createEvent ? document.createEvent(event) : new Event(event));
+		}
+		else
+		{
+			obj.fireEvent('on' + event);
+		}
+	}
 };
 
 /* @stripOnBuild */ window.helperFuncs.log = function () {

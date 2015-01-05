@@ -253,6 +253,28 @@
 		log("setState", which, status, '->', this._state); // @stripOnBuild
 		var state0 = (this._state == 0 );
 
+		// not sure it this is the right place for this ... but i had to put it somewhere ...
+		if ( which == this.constants.stateBS.boss )
+		{
+			var rootElem = document.documentElement;
+			if ( status )
+			{
+				rootElem.className += ' boss';
+				try
+				{
+					window.blur();
+				}
+				catch ( ex )
+				{
+					// nothing to do ... .
+				}
+			}
+			else
+			{
+				rootElem.className = rootElem.className.replace(/\bboss\b/gi,'');
+			}
+		}
+
 		if ( state0 != oldState0 )
 		{ // state changed
 			if (this._state == 0)
@@ -304,6 +326,7 @@
 		});
 		this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 );
 
+		/* blur and focus event is broken some time - can not reproduce :-( */
 		addEvent(window, 'blur', function ()
 		{
 			log('!# window blur');

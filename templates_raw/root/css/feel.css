@@ -4,3 +4,11 @@ input[type="range"] {
 	position: relative;
 	top: 5px;
 }
+
+
+
+
+
+html.boss body {
+	visibility: hidden;
+}
