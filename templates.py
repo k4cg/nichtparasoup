@@ -40,10 +40,12 @@ background-color: transparent; color: white; opacity: 0.5; text-align: initial; 
 word-wrap: break-word; text-decoration: none; color: inherit; margin: 0.1ex 0.1em; } #wall article .src:hover {
 opacity: 1; background-color: #606060; background-color: rgba(100, 100, 100, 0.7); left: 0em; }
 #wall article .src:hover a { display: block; }</style><style type="text/css">input[type="range"] { position: relative;
-top: 5px; }</style><style type="text/css"></style><script type="application/javascript">; window.helperFuncs = {
-log : function () {} , addEvent : function (obj, event, fn) { "use strict"; if ( obj.attachEvent ) {
-obj.attachEvent('on'+event, fn); } else if( obj.addEventListener ) { obj.addEventListener(event, fn, true); } } };
-</script><script type="application/javascript">; (function (pub, win) { "use strict"; var log = window.helperFuncs.log;
+top: 5px; } html.boss body { visibility: hidden; }</style><style type="text/css"></style>
+<script type="application/javascript">; window.helperFuncs = { log : function () {} ,
+addEvent : function (obj, event, fn, capture) { "use strict"; if ( obj.attachEvent ) { obj.attachEvent('on'+event, fn); }
+else if( obj.addEventListener ) { obj.addEventListener(event, fn, capture); } } , fireEvent : function (obj, event) {
+if ( obj.dispatchEvent ) { obj.dispatchEvent(new Event(event)); } else { obj.fireEvent('on' + event); } } };</script>
+<script type="application/javascript">; (function (pub, win) { "use strict"; var log = window.helperFuncs.log;
 var vars , func , conf , doc = win.document , math = win.Math ; conf = { imgMaxWidthPerc : 0.9 , imgMaxHeightPerc : 0.9
 }; vars = { styleE : null , cssSelector : '' }; func = { createStyle : function () { var styleE , base; if ( ! base ) {
 base = doc.getElementsByTagName('head')[0]; } if ( ! base ) { base = doc.getElementsByTagName('body')[0]; } if ( ! base )
@@ -99,11 +101,14 @@ np._options = lo; } catch ( ex ) { } } } }; np.setInterval = function (interval)
 this._optionsStorage.save(); }; np.getInterval = function () { return this._options.interval; };
 np.setState = function (which, status) { var oldState0 = ( this._state == 0 );
 this._state = bitset[ status ? "set" : "unset" ](this._state, which); var state0 = (this._state == 0 );
-if ( state0 != oldState0 ) { if (this._state == 0) { this._fetch(); } else { this._fetchRequest.abort(); } } };
-np.getState = function (which) { return bitset.check(this._state, which); }; np.__inited = false;
-np.init = function (imageTargetID, imageFadeInTime) { if ( this.__inited ) { return false; } this.__inited = true;
-this._imageTarget = document.getElementById(imageTargetID); this._imageTarget.appendChild(document.createTextNode(''));
-this._imageFadeInTime = imageFadeInTime; this._optionsStorage.load(); addEvent(window, 'scroll', function () {
+if ( which == this.constants.stateBS.boss ) { var rootElem = document.documentElement; if ( status ) {
+rootElem.className += ' boss'; try { window.blur(); } catch ( ex ) { } } else {
+rootElem.className = rootElem.className.replace(/\bboss\b/gi,''); } } if ( state0 != oldState0 ) { if (this._state == 0)
+{ this._fetch(); } else { this._fetchRequest.abort(); } } }; np.getState = function (which) {
+return bitset.check(this._state, which); }; np.__inited = false; np.init = function (imageTargetID, imageFadeInTime) {
+if ( this.__inited ) { return false; } this.__inited = true; this._imageTarget = document.getElementById(imageTargetID);
+this._imageTarget.appendChild(document.createTextNode('')); this._imageFadeInTime = imageFadeInTime;
+this._optionsStorage.load(); addEvent(window, 'scroll', function () {
 np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0 ); });
 this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 ); addEvent(window, 'blur', function () {
 log('!# window blur'); np.setState(np.constants.stateBS.active, true); }); addEvent(window, 'focus', function () {
@@ -114,6 +119,21 @@ c_speed.value = this.getInterval(); addEvent(c_speed, 'change', function () { np
 var c_state = document.getElementById('c_state'); c_state.checked = ! this.getState(this.constants.stateBS.manual);
 addEvent(c_state, 'change', function () { np.setState(np.constants.stateBS.manual, !this.checked); });
 this.setState(this.constants.stateBS.init, false); }; })(window.nichtparasoup={}, window);</script>
+<script type="application/javascript">; (function (window) { "use strict"; var addEvent = window.helperFuncs.addEvent
+, fireEvent = window.helperFuncs.fireEvent; var log = window.helperFuncs.log; addEvent(window, 'load', function () {
+var c_speed = document.getElementById('c_speed') , min = parseInt(c_speed.getAttribute('min'))
+, max = parseInt(c_speed.getAttribute('max')); var c_state = document.getElementById('c_state');
+addEvent(window, 'keydown', function (event) { var np = this.nichtparasoup; if ( ! np ) { return; }
+if ( ! event ) { event = window.event; } var bubble = true; var document = this.document;
+var kk = event.keyCode || event.which; switch ( kk ) { case 39 : case 37 : bubble = false;
+var speed = parseInt(c_speed.value) + ( kk == 39 ? +1 : -1 ) ; if ( speed < min ) { speed = min; }
+else if ( speed > max ) { speed = max; } c_speed.value = speed; fireEvent(c_speed, 'change'); break; case 32 :
+c_state.blur(); bubble = false; var manualStateConst = np.constants.stateBS.manual; c_state.checked = !c_state.checked;
+fireEvent(c_state, 'change'); break; case 27 : bubble = false; var bossStateConst = np.constants.stateBS.boss;
+np.setState(bossStateConst, !np.getState(bossStateConst)); break; } if ( ! bubble ) { event.cancelBubble = true;
+if ( event.stopPropagation ) { event.stopPropagation(); }
+if ( event.stopImmediatePropagation ) { event.stopImmediatePropagation(); }
+if ( event.preventDefault ) { event.preventDefault(); } } return bubble; }); }); })(window);</script>
 <script type="application/javascript">window.helperFuncs.addEvent(window, "load", function () {
 this.maxSizer.init('#wall article img'); this.stateSwitch.init(this.document.getElementById('c_state'));
 this.nichtparasoup.init('wall', 2); });</script></head><body><header><div id="controls">

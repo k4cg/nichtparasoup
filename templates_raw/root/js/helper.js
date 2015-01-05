@@ -22,7 +22,7 @@ window.helperFuncs = {
 	{
 		if ( obj.dispatchEvent )
 		{
-			obj.dispatchEvent(document.createEvent ? document.createEvent(event) : new Event(event));
+			obj.dispatchEvent(new Event(event));
 		}
 		else
 		{
