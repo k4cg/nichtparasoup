@@ -1,7 +1,7 @@
 ; /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
 
 
-// helper functions for reuse ...
+// helper functions for re-use ...
 
 window.helperFuncs = {
 	log : function () {} , // in case we forget to strip a log

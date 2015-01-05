@@ -24,13 +24,30 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 	  , fireEvent = window.helperFuncs.fireEvent;
 	var log = window.helperFuncs.log;
 
+	var cancelBubble = function (event)
+	{
+		event.cancelBubble = true;
+		if ( event.stopPropagation ) { event.stopPropagation(); }
+		if ( event.stopImmediatePropagation ) { event.stopImmediatePropagation(); }
+		if ( event.preventDefault ) { event.preventDefault(); }
+	};
+
+	var className_forceShow = ' forceShow'
+	  , className_active = ' active';
+
+
 	addEvent(window, 'load', function ()
 	{
-		var c_speed = document.getElementById('c_speed')
-		  , min = parseInt(c_speed.getAttribute('min'))
-		  , max = parseInt(c_speed.getAttribute('max'));
+		var document = this.document;
 
-		var c_state = document.getElementById('c_state');
+		var c_speedE = document.getElementById('c_speed')
+		  , min = parseInt(c_speedE.getAttribute('min'))
+		  , max = parseInt(c_speedE.getAttribute('max'));
+
+		var c_stateE = document.getElementById('c_state');
+
+		var hotkeysE = document.getElementById('hotkeys')
+		  , controlsE = document.getElementById('controls');
 
 		addEvent(window, 'keydown', function (event)
 		{
@@ -41,42 +58,46 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 
 			var bubble = true;
 
-			var document = this.document;
-
 			log('keyDown:', event.keyCode); // @stripOnBuild
 
-			var kk = event.keyCode || event.which;
-			switch ( kk )
+			var keyCode = event.keyCode || event.which;
+			switch ( keyCode )
 			{
 				case 39 : // right : increase speed
 				case 37 : // left : decrease speed
-					bubble = false;
-					var speed = parseInt(c_speed.value) + ( kk == 39 ? +1 : -1 )  ;
+					c_speedE.blur(); // prevent possible double trigger loops ...
+					cancelBubble(event);
+					var speed = parseInt(c_speedE.value) + ( keyCode == 39 ? +1 : -1 )  ;
 					if ( speed < min ) { speed = min; }
 					else if ( speed > max ) { speed = max; }
-					c_speed.value = speed;
-					fireEvent(c_speed, 'change');
+					c_speedE.value = speed;
+					fireEvent(c_speedE, 'change');
 					break;
 				case 32 : // space
-					c_state.blur(); // prevent possible duble trigger loops ...
-					bubble = false;
-					var manualStateConst = np.constants.stateBS.manual;
-					c_state.checked = !c_state.checked; // no xor in JS ? boohoo
-					fireEvent(c_state, 'change');
+					c_stateE.blur(); // prevent possible double trigger loops ...
+					cancelBubble(event);
+					c_stateE.checked = !c_stateE.checked; // no xor in JS ? boohoo
+					fireEvent(c_stateE, 'change');
 					break;
 				case 27 : // escape
-					bubble = false;
+					cancelBubble(event);
 					var bossStateConst = np.constants.stateBS.boss;
 					np.setState(bossStateConst, !np.getState(bossStateConst));
 					break;
 			}
 
-			if ( ! bubble )
+			var hotKeyIndicator = document.getElementById('hk_'+ keyCode );
+			if ( hotKeyIndicator )
 			{
-				event.cancelBubble = true;
-				if ( event.stopPropagation ) { event.stopPropagation(); }
-				if ( event.stopImmediatePropagation ) { event.stopImmediatePropagation(); }
-				if ( event.preventDefault ) { event.preventDefault(); }
+				hotkeysE.className += className_forceShow;
+				controlsE.className += className_forceShow;
+				hotKeyIndicator.className += className_active;
+				window.setTimeout(function ()
+					{
+						hotkeysE.className = hotkeysE.className.replace(className_forceShow, '');
+						controlsE.className = controlsE.className.replace(className_forceShow, '');
+						hotKeyIndicator.className = hotKeyIndicator.className.replace(className_active, '')
+					}, 1800);
 			}
 
 			return bubble;

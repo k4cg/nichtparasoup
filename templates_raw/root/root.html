@@ -10,7 +10,10 @@
 
 	<link rel="stylesheet" href="css/sourceIcons.css" />
 	<link rel="stylesheet" href="css/look_stateSwitch.css" />
+	<link rel="stylesheet" href="css/look_hotkeys.css" />
 	<link rel="stylesheet" href="css/look.css" />
+	<link rel="stylesheet" href="css/look_bossMode.css" />
+
 	<link rel="stylesheet" href="css/feel.css" />
 
 	<style type="text/css">
@@ -36,6 +39,38 @@
 
 <body>
 
+<div id="wall"><!-- images added here --></div>
+
+<stripOnBuild id="dbg"><!-- debug area -->
+	<style>
+		#dbg {
+			display: block;
+			overflow: auto;
+			overflow-x: auto;
+			overflow-y: auto;
+			white-space: pre;
+			background-color: white;
+			color: black;
+			border-bottom: 5px solid yellow;
+			position: fixed;
+			right: 0em;
+			top: 0ex;
+			left: 0em;
+			height: 30ex;
+			min-height: 30ex;
+			resize: vertical;
+			opacity: 0.5;
+		}
+		#dbg:hover { opacity: 1.0; }
+		#dbg { display:none;}
+	</style>
+	<hr/>
+	--- DEBUG AREA ---
+	this area is for debugging without a second debug window, which may trigger pageVisibilityAPI events ...
+	it is mostly not needed, but may come in handy some time ...
+</stripOnBuild>
+
+
 <header><!-- top controls -->
 	<div id="controls">
 		<!-- not implemented, yet
@@ -58,34 +93,20 @@
 </header>
 
 <footer><!-- bottom hints -->
+
+	<dl id="hotkeys">
+		<dd>esc</dd><!-- no key indicator needed, the effect will be clear ;-) -->
+		<dt>boss mode</dt>
+		<dd id="hk_32">space</dd>
+		<dt>play/pause</dt>
+		<dd id="hk_37">&leftarrow;</dd>
+		<dt>faster</dt>
+		<dd id="hk_39">&rightarrow;</dd>
+		<dt>slower</dt>
+	</dl>
+
+	<span id="keys" class="hotkey">hot keys</span>
 </footer>
-
-<div id="wall">
-<!-- images added here -->
-</div>
-
-<stripOnBuild id="dbg"><!-- debug area -->
-	<style>
-		#dbg {
-			display: block;
-			overflow: auto;
-			overflow-x: auto;
-			overflow-y: auto;
-			white-space: pre;
-			background-color: white;
-			color: black;
-			border-top: 5px solid yellow;
-			position: fixed;
-			right: 0em;
-			bottom: 0ex;
-			left: 0em;
-			height: 30ex;
-			min-height: 30ex;
-			resize: vertical;
-		}
-	</style>
-	--- DEBUG AREA ---
-</stripOnBuild>
 
 </body>
 
