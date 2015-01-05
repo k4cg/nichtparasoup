@@ -6,15 +6,16 @@ html {
 	overflow-x: hidden;
 }
 
+
 html, body {
 	color: #ccc;
 	background-color: black;
-	margin: 0ex 0em;
-	padding: 0ex 0em;
 }
 
 
-#header {
+
+
+header {
 	z-index: 99999;
 	display: block;
 	position: fixed;
@@ -23,20 +24,30 @@ html, body {
 	right: 0em;
 	height: 5ex;
 	line-height: 5ex;
-	text-align: right;
+	text-align: left;
 	padding: 0ex 1em;
-	color: #666;
+	color: #999;
 	background-color: transparent;
 	cursor: default;
 	white-space: nowrap;
 }
-#header .fix {
+
+header #burger {
+	color: #eee;
 	position: fixed;
 	top: inherit;
 	right: inherit;
 	margin-right: 1em;
+	text-shadow:
+		-1px -1px 0px black,
+		 1px -1px 0px black,
+		-1px  1px 0px black,
+		 1px  1px 0px black;
 }
-#header .content {
+
+header #controls {
+	padding-left: 3em;
+	padding-right: 3em;
 	position: absolute;
 	top: -7ex; /* neg. height */
 	left: 0em;
@@ -46,60 +57,40 @@ html, body {
 	border-bottom: 1px solid #808080;
 	transition: all 0.6s ease-in-out 0s;
 }
-#header:hover {
-	color: #ccc;
+
+header #stateSwitchContainer {
+	margin-right: 5em;
+	margin-left: 5em;
 }
-#header:hover .content {
+
+header:hover {
+	color: white;
+}
+header:hover #burger {
+	font-weight: bold;
+}
+header:hover #controls {
 	top: 0ex;
 }
 
 
-input[type="range"] {
-	position: relative;
-	top: 5px;
-}
-
-#toggle {
-	margin: 0ex 5em;
-	cursor: pointer;
-	display: inline-block;
-	width: 5em;
-}
-
-#toggle:hover {
-	text-decoration: underline;
-}
 
 
-
-
-#wall {
-	margin-top: 2ex;
-	display: block;
-	height: 100%;
-}
-
-#wallbreaker {
-	clear: both;
-	display: none;
-}
-
-#wall .img {
+#wall article {
 	position: relative;
 	margin: 1ex 1ex;
-	padding: 0ex 0em;
 	border: 1px solid #999;
 	display: inline;
 	display: inline-block;
 	float: left;
-
 }
 
-#wall img {
+
+#wall article img {
 	display: none;
 }
 
-#wall .img {
+#wall article {
 	animation: scaleIn linear 0.5s;
 	-webkit-animation: scaleIn linear 0.5s;
 	-moz-animation: scaleIn linear 0.5s;
@@ -112,6 +103,7 @@ input[type="range"] {
 	-o-transform-origin: top left;
 	-ms-transform-origin: top left;
 }
+
 
 @keyframes scaleIn {
 	from { transform: scale(0); }
@@ -138,15 +130,23 @@ input[type="range"] {
 	to   { -ms-transform: scale(1); }
 }
 
-#wall .img img {
+#wall article img {
 	display: block; /* needed for alignment of the image to its container box ... */
 }
 
-#wall .img .src {
+
+
+
+
+
+
+
+
+#wall article .src {
 	display: block;
 	position: absolute;
 	bottom: 0ex;
-	right: 0ex;
+	right: 0em;
 	line-height: 2.5ex;
 	min-height: 2.5ex;
 	min-width: 2.5ex;
@@ -156,9 +156,9 @@ input[type="range"] {
 	background-color: transparent;
 	color: white;
 	opacity: 0.5;
-	text-align: auto; /* fall back to native */
+	text-align: initial; /* fall back to native */
 }
-#wall .img .src a {
+#wall article .src a {
 	display: none;
 	word-wrap: break-word;
 	text-decoration: none;
@@ -166,12 +166,12 @@ input[type="range"] {
 	margin: 0.1ex 0.1em;
 }
 
-#wall .img .src:hover {
+#wall article .src:hover {
 	opacity: 1;
-	background-color: #999;
+	background-color: #606060;
 	background-color: rgba(100, 100, 100, 0.7);
 	left: 0em;
 }
-#wall .img .src:hover a {
+#wall article .src:hover a {
 	display: block;
 }

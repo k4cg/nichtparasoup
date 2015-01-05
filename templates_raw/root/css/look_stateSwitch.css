@@ -1,0 +1,18 @@
+
+/* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
+#c_state {
+	display: none;
+}
+#stateSwitchContainer.state_0:after {
+	content: 'pausing';
+}
+#stateSwitchContainer.state_1:after {
+	content: 'playing';
+}
+
+#stateSwitchContainer { cursor: pointer; }
+#stateSwitchContainer.state_0:hover:after ,
+#stateSwitchContainer.state_1:hover:after {
+	text-decoration: underline;
+}
