@@ -51,7 +51,7 @@
 			};
 	}
 
-	np.constants = { // a bunch of constants
+	np.constants = { // a bunch of public constants
 		stateBS : { // BitSet positions for states
 			init : 0 , // init play blocker
 			manual : 1 , // manual play/pause
@@ -61,6 +61,9 @@
 			scroll : 5 // window is scrolled away from top
 		}
 	};
+
+	np.__bossMode_className = ' boss';
+	np.__bossMode_className_RE = new RegExp(np.__bossMode_className, 'g');
 
 	np._imageTarget = undefined;
 
@@ -259,7 +262,7 @@
 			var rootElem = document.documentElement;
 			if ( status )
 			{
-				rootElem.className += ' boss';
+				rootElem.className += this.__bossMode_className;
 				try
 				{
 					window.blur();
@@ -271,7 +274,7 @@
 			}
 			else
 			{
-				rootElem.className = rootElem.className.replace(/\bboss\b/gi,'');
+				rootElem.className = rootElem.className.replace(this.__bossMode_className_RE,'');
 			}
 		}
 

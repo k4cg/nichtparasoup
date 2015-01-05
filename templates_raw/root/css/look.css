@@ -1,5 +1,8 @@
 /* remember for development: lines that include the string "@striponbuild" will be stripped on build ;-) */
 
+* { cursor: default; }
+a { cursor: pointer; }
+
 html {
 	direction: ltr;
 	overflow: scroll;
@@ -26,10 +29,11 @@ header {
 	line-height: 5ex;
 	text-align: left;
 	padding: 0ex 1em;
-	color: #999;
+	color: #ccc;
 	background-color: transparent;
 	cursor: default;
 	white-space: nowrap;
+	background-color: rgba(255, 255, 0, 0.5); /* @stripOnBuild */
 }
 
 header #burger {
@@ -69,12 +73,27 @@ header:hover {
 header:hover #burger {
 	font-weight: bold;
 }
-header:hover #controls {
+header:hover #controls ,
+#controls.forceShow {
 	top: 0ex;
 }
+#controls.forceShow {
+	transition: none;
+}
 
-
-
+footer {
+	z-index: 99999;
+	text-align: center;
+	position: fixed;
+	right: 0em;
+	bottom: 0ex;
+	left: 0em;
+	background-color: transparent;
+	color: #ccc;
+	font-size: smaller;
+	height: 4ex;
+	background-color: rgba(255, 255, 0, 0.5); /* @stripOnBuild */
+}
 
 #wall article {
 	position: relative;
