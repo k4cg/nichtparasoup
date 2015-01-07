@@ -5,16 +5,12 @@
 
 	var addEvent = win.helperFuncs.addEvent;
 
-	var classPrefix = 'state_';
-
-	/* there is currently a bug in the builder that does not handle escaped chars right ... */
-	var classRE = new RegExp("\\\\s*\\\\b" + classPrefix +"[01]\\\\b\\\\s*"); // so i have to escape it doubled ..
-	var classRE = new RegExp("\\s*\\b" + classPrefix +"[01]\\b\\s*"); // this would be the correct string // @stripOnBuild
-
+	var classPrefix = ' state_';
+	var classRE = new RegExp(classPrefix +"[01]", "g");
 
 	var setClass = function (domElem, state)
 	{
-		domElem.className = classPrefix + (state ? 1 : 0 ) + " " + domElem.className.replace(classRE, "");
+		domElem.className = domElem.className.replace(classRE, "") + classPrefix + (state ? 1 : 0 );
 	};
 
 	ss.init = function (domElem)

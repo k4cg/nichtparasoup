@@ -96,9 +96,9 @@ styleE.innerHTML = styleE.innerText = styleE.cssText = func.getAdjustmentStr(); 
 addEvent : window.helperFuncs.addEvent }; pub.init = function (cssSelector) { vars.styleE = func.createStyle();
 vars.cssSelector = cssSelector; func.adjustSize(); func.addEvent(win, 'resize', func.adjustSize); };
 })(window.maxSizer={}, window);</script><script type="application/javascript">; (function (ss, win) { "use strict";
-var addEvent = win.helperFuncs.addEvent; var classPrefix = 'state_';
-var classRE = new RegExp("\\\\s*\\\\b" + classPrefix +"[01]\\\\b\\\\s*"); var setClass = function (domElem, state) {
-domElem.className = classPrefix + (state ? 1 : 0 ) + " " + domElem.className.replace(classRE, ""); };
+var addEvent = win.helperFuncs.addEvent; var classPrefix = ' state_'; var classRE = new RegExp(classPrefix +"[01]", "g");
+var setClass = function (domElem, state) {
+domElem.className = domElem.className.replace(classRE, "") + classPrefix + (state ? 1 : 0 ); };
 ss.init = function (domElem) { addEvent(domElem, "change", function () { setClass(this.parentNode, this.checked); });
 setClass(domElem.parentNode, domElem.checked); }; })(window.stateSwitch={}, window);</script>
 <script type="application/javascript">; (function(np, window, undefined) { "use strict";
