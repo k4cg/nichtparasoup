@@ -4,6 +4,10 @@
 #c_state {
 	display: none;
 }
+#stateSwitchContainer:after {
+	display: inline-block;
+	width: 5em;
+}
 #stateSwitchContainer.state_0:after {
 	content: 'pausing';
 }
