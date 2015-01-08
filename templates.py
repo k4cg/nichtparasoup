@@ -33,42 +33,42 @@ background-image: url(data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAA
 background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATVJREFUeNpiZMACzsnqGgCpADThDUaPL19AV8uIReN8IDZgwA5ABiQiG8SIpDkBqpkYADJkAdwAqM3n0VWx8PEycOnqMHy7fIXhz6fP6NKGIJewQDkoNnNpazLI9DYxcGupw8W+XrvJcMsjFFkZSI8hI7rtIFu1Tu1hYObihGv8cvwsA4+lMboBYFewoIc2yMkwzSDwcetehrcLlzI8a/yMLSwCmAiFllRpFthFUvUVWOUxDPh09DjD+z2HUMRALhJPjmIQiYkgbAAIPEjKYXiQWcbw6807FHE2ZQWsBmxAFuCztmQQz81g+HbxMsPLvhkoir/sOYiufwMsHZyHpT5QFKpvX4lh0+OqNoY3S1agpEpgOjDEmpBAhgiE+MNVvp27mOHnk6dYExJ1kjJVMhO52RkgwABgs3aktxfFvgAAAABJRU5ErkJggg==);
 } #wall article .src.ninegag {
 background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAACXCAMAAAAvQTlLAAAAZlBMVEUAAAD///+zs7O2trZ5eXn8/Pz4+Pjg4OCcnJzd3d1hYWGoqKgsLCxlZWXExMTQ0NBtbW3o6OhbW1sbGxvx8fEICAiRkZExMTHKyspRUVGIiIgnJyeioqJycnJWVlY9PT1ISEgUFBR9OlkuAAADwUlEQVR4nO2b6ZKiMBCAA8gliAeHyDGu7/+SC+ooR9IdZ3NM1fb3Fym/mrSd7k6GMYIgCIIgCIIgCIIgCEIzW29rW4FD7gVO4LW2NRbcosAZCaKbbZUph6PzzfFgW+bFqXam1L8jzFIvcOYEXmpbipXV0mrEryyH2S7kWI2EO4tWX7XAamT/ZUvL5S3hNMysWEWw1d0sKk1bbWPUaiQ2G2anTMpqJDsZs7ol+BJOFtPNjViVG/8DqzuNgWx2EWUsiFB3zvgDZSyI/UWnVlL8UMtxikSbFXcrfBPUyPNKSzbDlnDYd7726EeUW3nwV8aPcvCApNtMcZhFSGBF34V9G8EfLDp1UrceDhx/vkGv6sQ5wUZVnkX+BKs9ENs7Vf3JwNA69pw3Jn0IB1X1D+QV8Uv5tjLg5Yq+wM/EfWzuCbdR3V5IQyYshnR7hbzQerMTZVnt6+hkV+FLqTgq9XsNv3m+2bkD3jHxe3SODeeNxkieSKAvGcJsGf5bpHRU5dU2SD2fTZNYi/Yk6vrKHGlh/e78/GQq0Vaq7Hexzix8hFkjU/2r7cN3yG4cD3WhXLOrej6ALJGfSTZwyucWN6S0kkTDPOXy0z5tiqvea0hOYMq058VKLJutWPYGeryGzc/9ZEJRbDaGvIbFlJ8zJWdmzmuo4OXGJ/dO1qQXYx0+q3huAma9WCuu4O8E3bNRNOyFZDPvVTEa92LlQbSY4WQQYd5roOKZzYtYK17suspmwasas+m1Oo7J/iye2/Iawuy9aXIOrKx5sdeArIg4z2x6sfPYzbln3iOrXkM2cwVDSsteQn6rV/9LvQ4LLzvnpWt2Zrz6jPurE3JdzsG0eN2HzZX8PZx0Pc3W4FVmj6ZD+rZLz2mflHu1k4lTLHPbhT/JV+01n7ZJXEMQtOdqvdZHUn4EnajkkajMVumVcociwDUE4GRNnZd4jLvnX0M4QSeRyrygMW7A21Xg8WKmSgtp+5t5mOUN/HG/UuTFLsj5cDhdTGwarfQG1gn5svr75Bo74lZ9/RBbnOf5MHaRQXAs+C+U2Ky8SZFA9DVdb91iYQY/jvXdIO3lBuE8uOdIysihczKI5LOa7QfITukn+LWJ+3ySV/jeHE1d5oOvISytNoasGLc4FtFpD6wZZ2SI+cD/sEVRQY9ks4EYvjCgiw0cZnozFkTbAYuZ2Lzs3tZ8M7+2/Z8e3GNcjVuhPKswM5mxINr5pmk1sOZcX5umD1zZscGzArKUsSCawimsZSyItDK/6RAEQRAEQRAEQRAEQfx3/AVIvysz/+uSlwAAAABJRU5ErkJggg==');
-}</style><style type="text/css">#c_state { display: none; } #stateSwitchContainer.state_0:after { content: 'pausing'; }
-#stateSwitchContainer.state_1:after { content: 'playing'; } #stateSwitchContainer { cursor: pointer; }
-#stateSwitchContainer.state_0:hover:after , #stateSwitchContainer.state_1:hover:after { text-decoration: underline; }
-</style><style type="text/css">#keys { position: absolute; right: 1em; bottom: 0.8ex; } #hotkeys { padding: 0.5ex 1em;
-line-height: 2.8ex; position: absolute; left: 0em; bottom: -5ex; right: 0em; background-color: #111;
-background-color: rgba(23, 23, 23, 0.9); border-top: 1px solid #808080; transition: all 0.6s ease-in-out 0s;
-display: inline; display: inline-block; margin: 0ex 0em; list-style: none; } footer:hover #hotkeys , #hotkeys.forceShow {
-bottom: 0ex; } #hotkeys.forceShow { transition: none; } #hotkeys dd , #hotkeys dt , .hotkey { display: inline;
-display: inline-block; padding: 0.2ex 0.4ex; margin: 0ex 0em; } #hotkeys dd , .hotkey { min-height: 2ex;
-min-width: 2.2ex; vertical-align: middle; background-color: #111; color: #eee; border: 1px solid #ccc;
-border-radius: 0.5ex; } footer:hover #keys { background-color: #ccc; color: #111; font-weight: bold; }
-#hotkeys dd.active { background-color: white; color: black; } #hotkeys dt { margin-right: 1em; }</style>
-<style type="text/css">* { cursor: default; } a { cursor: pointer; } html { direction: ltr; overflow: scroll;
-overflow-x: hidden; } html, body { color: #ccc; background-color: black; } header { z-index: 99999; display: block;
-position: fixed; top: 0ex; left: 0em; right: 0em; height: 5ex; line-height: 5ex; text-align: left; padding: 0ex 1em;
-color: #ccc; background-color: transparent; cursor: default; white-space: nowrap; } header #burger { color: #eee;
-position: fixed; top: inherit; right: inherit; margin-right: 1em; text-shadow: -1px -1px 0px black, 1px -1px 0px black,
--1px 1px 0px black, 1px 1px 0px black; } header #controls { padding-left: 3em; padding-right: 3em; position: absolute;
-top: -7ex; left: 0em; right: 0em; background-color: #111; background-color: rgba(23, 23, 23, 0.9);
-border-bottom: 1px solid #808080; transition: all 0.6s ease-in-out 0s; } header #stateSwitchContainer {
-margin-right: 5em; margin-left: 5em; } header:hover { color: white; } header:hover #burger { font-weight: bold; }
-header:hover #controls , #controls.forceShow { top: 0ex; } #controls.forceShow { transition: none; } footer {
-z-index: 99999; text-align: center; position: fixed; right: 0em; bottom: 0ex; left: 0em; background-color: transparent;
-color: #ccc; font-size: smaller; height: 4ex; } #wall article { position: relative; margin: 1ex 1ex;
-border: 1px solid #999; display: inline; display: inline-block; float: left; } #wall article img { display: none; }
-#wall article { animation: scaleIn linear 0.5s; -webkit-animation: scaleIn linear 0.5s;
--moz-animation: scaleIn linear 0.5s; -o-animation: scaleIn linear 0.5s; -ms-animation: scaleIn linear 0.5s;
-transform-origin: top left; -webkit-transform-origin: top left; -moz-transform-origin: top left;
--o-transform-origin: top left; -ms-transform-origin: top left; } @keyframes scaleIn { from { transform: scale(0); }
-to { transform: scale(1); } } @-webkit-keyframes scaleIn { from { -webkit-transform: scale(0); }
-to { -webkit-transform: scale(1); } } @-moz-keyframes scaleIn { from { -moz-transform: scale(0); }
-to { -moz-transform: scale(1); } } @-o-keyframes scaleIn { from { -o-transform: scale(0); }
-to { -o-transform: scale(1); } } @-ms-keyframes scaleIn { from { -ms-transform: scale(0); }
-to { -ms-transform: scale(1); } } #wall article img { display: block; } #wall article .src { display: block;
-position: absolute; bottom: 0ex; right: 0em; line-height: 2.5ex; min-height: 2.5ex; min-width: 2.5ex;
-background-size: 2.5ex 2.5ex; background-repeat: no-repeat; background-position: right bottom;
+}</style><style type="text/css">#c_state { display: none; } #stateSwitchContainer:after { display: inline-block;
+width: 5em; } #stateSwitchContainer.state_0:after { content: 'pausing'; } #stateSwitchContainer.state_1:after {
+content: 'playing'; } #stateSwitchContainer { cursor: pointer; } #stateSwitchContainer.state_0:hover:after ,
+#stateSwitchContainer.state_1:hover:after { text-decoration: underline; }</style><style type="text/css">#keys {
+position: absolute; right: 1em; bottom: 0.8ex; } #hotkeys { padding: 0.5ex 1em; line-height: 2.8ex; position: absolute;
+left: 0em; bottom: -5ex; right: 0em; background-color: #111; background-color: rgba(23, 23, 23, 0.9);
+border-top: 1px solid #808080; transition: all 0.6s ease-in-out 0s; display: inline; display: inline-block;
+margin: 0ex 0em; list-style: none; } footer:hover #hotkeys , #hotkeys.forceShow { bottom: 0ex; } #hotkeys.forceShow {
+transition: none; } #hotkeys dd , #hotkeys dt , .hotkey { display: inline; display: inline-block; padding: 0.2ex 0.4ex;
+margin: 0ex 0em; } #hotkeys dd , .hotkey { min-height: 2ex; min-width: 2.2ex; vertical-align: middle;
+background-color: #111; color: #eee; border: 1px solid #ccc; border-radius: 0.5ex; } footer:hover #keys {
+background-color: #ccc; color: #111; font-weight: bold; } #hotkeys dd.active { background-color: white; color: black; }
+#hotkeys dt { margin-right: 1em; }</style><style type="text/css">* { cursor: default; } a { cursor: pointer; } html {
+direction: ltr; text-align: left; overflow: scroll; overflow-x: hidden; } html, body { color: #ccc;
+background-color: black; } header { z-index: 99999; display: block; position: fixed; top: 0ex; left: 0em; right: 0em;
+height: 5ex; line-height: 5ex; text-align: left; padding: 0ex 1em; color: #ccc; background-color: transparent;
+cursor: default; white-space: nowrap; } header #burger { color: #eee; position: fixed; top: inherit; right: inherit;
+margin-right: 1em; text-shadow: -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black, 1px 1px 0px black; }
+header #controls { text-align: center; padding-left: 3em; padding-right: 3em; position: absolute; top: -7ex; left: 0em;
+right: 0em; background-color: #111; background-color: rgba(23, 23, 23, 0.9); border-bottom: 1px solid #808080;
+transition: all 0.6s ease-in-out 0s; } header #controls label { text-align: left; margin-right: 1em; margin-left: 1em; }
+header:hover { color: white; } header:hover #burger { font-weight: bold; } header:hover #controls , #controls.forceShow {
+top: 0ex; } #controls.forceShow { transition: none; } footer { z-index: 99999; text-align: center; position: fixed;
+right: 0em; bottom: 0ex; left: 0em; background-color: transparent; color: #ccc; font-size: smaller; height: 4ex; }
+#wall article { position: relative; margin: 1ex 1ex; border: 1px solid #999; display: inline; display: inline-block;
+float: left; } #wall article img { display: none; } #wall article { animation: scaleIn linear 0.5s;
+-webkit-animation: scaleIn linear 0.5s; -moz-animation: scaleIn linear 0.5s; -o-animation: scaleIn linear 0.5s;
+-ms-animation: scaleIn linear 0.5s; transform-origin: top left; -webkit-transform-origin: top left;
+-moz-transform-origin: top left; -o-transform-origin: top left; -ms-transform-origin: top left; } @keyframes scaleIn {
+from { transform: scale(0); } to { transform: scale(1); } } @-webkit-keyframes scaleIn {
+from { -webkit-transform: scale(0); } to { -webkit-transform: scale(1); } } @-moz-keyframes scaleIn {
+from { -moz-transform: scale(0); } to { -moz-transform: scale(1); } } @-o-keyframes scaleIn {
+from { -o-transform: scale(0); } to { -o-transform: scale(1); } } @-ms-keyframes scaleIn {
+from { -ms-transform: scale(0); } to { -ms-transform: scale(1); } } #wall article img { display: block; }
+#wall article .src { display: block; position: absolute; bottom: 0ex; right: 0em; line-height: 2.5ex; min-height: 2.5ex;
+min-width: 2.5ex; background-size: 2.5ex 2.5ex; background-repeat: no-repeat; background-position: right bottom;
 background-color: transparent; color: white; opacity: 0.5; text-align: initial; } #wall article .src a { display: none;
 word-wrap: break-word; text-decoration: none; color: inherit; margin: 0.1ex 0.1em; } #wall article .src:hover {
 opacity: 1; background-color: #606060; background-color: rgba(100, 100, 100, 0.7); left: 0em; }
@@ -134,19 +134,21 @@ if ( image && image.parentNode ) { image.parentNode.removeChild(image); } }; np.
 np._options = lo; } catch ( ex ) { } } } }; np.setInterval = function (interval) { this._options.interval = interval;
 this._optionsStorage.save(); }; np.getInterval = function () { return this._options.interval; };
 np.setState = function (which, status) { var oldState0 = ( this._state == 0 );
-this._state = bitset[ status ? "set" : "unset" ](this._state, which); var state0 = (this._state == 0 );
+this._state = bitset[ status ? "set" : "unset" ](this._state, which); var state0 = ( this._state == 0 );
 if ( which == this.constants.stateBS.boss ) { var rootElem = document.documentElement; if ( status ) {
 rootElem.className += this.__bossMode_className; try { window.blur(); } catch ( ex ) { } } else {
-rootElem.className = rootElem.className.replace(this.__bossMode_className_RE,''); } } if ( state0 != oldState0 ) {
+rootElem.className = rootElem.className.replace(this.__bossMode_className_RE, ''); } } if ( state0 != oldState0 ) {
 if (this._state == 0) { this._fetch(); } else { this._fetchRequest.abort(); } } }; np.getState = function (which) {
 return bitset.check(this._state, which); }; np.__inited = false; np.init = function (imageTargetID, imageFadeInTime) {
 if ( this.__inited ) { return false; } this.__inited = true; this._imageTarget = document.getElementById(imageTargetID);
 this._imageTarget.appendChild(document.createTextNode('')); this._imageFadeInTime = imageFadeInTime;
 this._optionsStorage.load(); addEvent(window, 'scroll', function () {
 np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0 ); });
-this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 ); addEvent(window, 'blur', function () {
-log('!# window blur'); np.setState(np.constants.stateBS.active, true); }); addEvent(window, 'focus', function () {
-log('!# window active'); np.setState(np.constants.stateBS.active, false); }); if ( document.hidden != undefined ) {
+this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 ); var playInBackground = false;
+var c_background = document.getElementById('c_background'); addEvent(c_background, 'change', function () {
+playInBackground = this.checked; }); playInBackground = c_background.checked; addEvent(window, 'blur', function () {
+if ( ! playInBackground ) { np.setState(np.constants.stateBS.active, true); } }); addEvent(window, 'focus', function () {
+np.setState(np.constants.stateBS.active, false); }); if ( document.hidden != undefined ) {
 addEvent(document, 'visibilitychange', function () { np.setState(np.constants.stateBS.presented, this.hidden); });
 this.setState(this.constants.stateBS.presented, document.hidden); } var c_speed = document.getElementById('c_speed');
 c_speed.value = this.getInterval(); addEvent(c_speed, 'change', function () { np.setInterval(this.value); });
@@ -179,8 +181,10 @@ hotKeyIndicator.className = hotKeyIndicator.className.replace(className_active, 
 })(window);</script><script type="application/javascript">window.helperFuncs.addEvent(window, "load", function () {
 this.maxSizer.init('#wall article img'); this.stateSwitch.init(this.document.getElementById('c_state'));
 this.nichtparasoup.init('wall', 2); });</script></head><body><div id="wall"></div><header><div id="controls">
-<label for="c_speed" title="set image interval">speed: fast<input id="c_speed" max="23" min="3" type="range"/>slow
-</label><label for="c_state" id="stateSwitchContainer" title="play/pause">status:
+<label for="c_background" title="keep playing even when the window lost the focus">play in background:
+<input id="c_background" type="checkbox"/></label><label for="c_speed" title="set image interval">speed: fast
+<input id="c_speed" max="23" min="3" type="range"/>slow</label>
+<label for="c_state" id="stateSwitchContainer" title="play/pause">status:
 <input checked="checked" id="c_state" type="checkbox"/></label></div><span id="burger">&#9776;</span></header><footer>
 <dl id="hotkeys"><dd>esc</dd><dt>boss mode</dt><dd id="hk_32">space</dd><dt>play/pause</dt><dd id="hk_37">&leftarrow;
 </dd><dt>faster</dt><dd id="hk_39">&rightarrow;</dd><dt>slower</dt></dl><span class="hotkey" id="keys">hot keys</span>
