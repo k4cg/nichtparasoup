@@ -5,6 +5,7 @@ a { cursor: pointer; }
 
 html {
 	direction: ltr;
+	text-align: left;
 	overflow: scroll;
 	overflow-x: hidden;
 }
@@ -50,6 +51,7 @@ header #burger {
 }
 
 header #controls {
+	text-align: center;
 	padding-left: 3em;
 	padding-right: 3em;
 	position: absolute;
@@ -62,9 +64,10 @@ header #controls {
 	transition: all 0.6s ease-in-out 0s;
 }
 
-header #stateSwitchContainer {
-	margin-right: 5em;
-	margin-left: 5em;
+header #controls label {
+	text-align: left;
+	margin-right: 1em;
+	margin-left: 1em;
 }
 
 header:hover {

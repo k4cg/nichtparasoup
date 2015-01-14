@@ -254,7 +254,7 @@
 		var oldState0 = ( this._state == 0 );
 		this._state = bitset[ status ? "set" : "unset" ](this._state, which);
 		log("setState", which, status, '->', this._state); // @stripOnBuild
-		var state0 = (this._state == 0 );
+		var state0 = ( this._state == 0 );
 
 		// not sure it this is the right place for this ... but i had to put it somewhere ...
 		if ( which == this.constants.stateBS.boss )
@@ -274,7 +274,7 @@
 			}
 			else
 			{
-				rootElem.className = rootElem.className.replace(this.__bossMode_className_RE,'');
+				rootElem.className = rootElem.className.replace(this.__bossMode_className_RE, '');
 			}
 		}
 
@@ -297,8 +297,6 @@
 	{
 		return bitset.check(this._state, which);
 	};
-
-
 
 	np.__inited = false;
 	np.init = function (imageTargetID, imageFadeInTime)
@@ -329,15 +327,28 @@
 		});
 		this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 );
 
+		var playInBackground = false;
+
+		var c_background = document.getElementById('c_background');
+		addEvent(c_background, 'change', function ()
+		{
+			playInBackground = this.checked;
+			log('playInBackground', playInBackground);  // @stripOnBuild
+		});
+		playInBackground = c_background.checked;
+
 		/* blur and focus event is broken some time - can not reproduce :-( */
 		addEvent(window, 'blur', function ()
 		{
-			log('!# window blur');
-			np.setState(np.constants.stateBS.active, true);
+			log('!# window blur'); // @stripOnBuild
+			if ( ! playInBackground )
+			{
+				np.setState(np.constants.stateBS.active, true);
+			}
 		});
 		addEvent(window, 'focus', function ()
 		{
-			log('!# window active');
+			log('!# window active'); // @stripOnBuild
 			np.setState(np.constants.stateBS.active, false);
 		});
 
@@ -364,7 +375,6 @@
 		addEvent(c_state, 'change', function () {
 			np.setState(np.constants.stateBS.manual, !this.checked);
 		});
-
 
 		this.setState(this.constants.stateBS.init, false);
 		log('init ended'); // @stripOnBuild
