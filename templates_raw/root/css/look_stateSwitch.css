@@ -1,22 +1,15 @@
 
 /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
 
-#c_state {
+.stateSwitchContainer > input {
 	display: none;
 }
-#stateSwitchContainer:after {
+.stateSwitchContainer:after {
 	display: inline-block;
-	width: 5em;
+	width: 1.5em;
 }
-#stateSwitchContainer.state_0:after {
-	content: 'pausing';
-}
-#stateSwitchContainer.state_1:after {
-	content: 'playing';
-}
+.stateSwitchContainer.state_0:after { content: 'off'; }
+.stateSwitchContainer.state_1:after { content: 'on'; }
 
-#stateSwitchContainer { cursor: pointer; }
-#stateSwitchContainer.state_0:hover:after ,
-#stateSwitchContainer.state_1:hover:after {
-	text-decoration: underline;
-}
+.stateSwitchContainer { cursor: pointer; }
+

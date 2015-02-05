@@ -4,12 +4,12 @@
 #keys {
 	position: absolute;
 	right: 1em;
-	bottom: 0.8ex;
+	bottom: 1.2ex;
 }
 
 #hotkeys {
 	padding: 0.5ex 1em;
-	line-height: 2.8ex;
+	line-height: 3ex;
 
 	position: absolute;
 	left: 0em;
@@ -44,24 +44,6 @@ footer:hover #hotkeys ,
 	display: inline-block;
 	padding: 0.2ex 0.4ex;
 	margin: 0ex 0em;
-}
-
-#hotkeys dd ,
-.hotkey {
-	min-height: 2ex;
-	min-width: 2.2ex;
-	vertical-align: middle;
-	background-color: #111;
-	color: #eee;
-	border: 1px solid #ccc;
-	border-radius: 0.5ex;
-}
-
-
-footer:hover #keys { /* invert colors */
-	background-color: #ccc;
-	color: #111;
-	font-weight: bold;
 }
 
 
