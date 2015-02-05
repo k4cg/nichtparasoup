@@ -41,6 +41,12 @@ hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
 
+call_flush_timeout = 10  # value in seconds
+call_flush_last = time.time() - call_flush_timeout
+
+call_reset_timeout = 10  # value in seconds
+call_reset_last = time.time() - call_reset_timeout
+
 Crawler.headers({'User-Agent': user_agent})
 Crawler.set_logger(logger)
 
@@ -107,14 +113,24 @@ def show_blacklist():
 
 # flush blacklist
 def flush():
-    Crawler.flush()
-    return "flushed"
+    global call_flush_last
+    time_since_last_call = time.time() - call_flush_last
+    if time_since_last_call >= call_flush_timeout:
+        Crawler.flush()
+        call_flush_last = time.time()
+        time_since_last_call = 0
+    return "%i000" % (call_flush_timeout - time_since_last_call)
 
 
 #reset the crawler
 def reset():
-    Crawler.reset()
-    return "reset"
+    global call_reset_last
+    time_since_last_call = time.time() - call_reset_last
+    if time_since_last_call >= call_reset_timeout:
+        Crawler.reset()
+        call_reset_last = time.time()
+        time_since_last_call = 0
+    return "%i000" % (call_reset_timeout - time_since_last_call)
 
 
 ### werkzeug webserver
