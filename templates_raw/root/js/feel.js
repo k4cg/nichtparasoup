@@ -75,6 +75,8 @@
 	np._state = bitset.set(0, np.constants.stateBS.init);
 
 	np._fetchRequest = new XMLHttpRequest();
+	np._serverResetRequest = new XMLHttpRequest();
+	np._serverFlushRequest = new XMLHttpRequest();
 
 
 	np._options = {
@@ -111,6 +113,34 @@
 		}
 	});
 
+
+	np.__controllableRequestReadystatechange = function ()
+	{
+		var req = this;
+		log("XHR onreadystatechange", req.readyState); // @stripOnBuild
+		if ( req.readyState == 4 && req.status == 200 )
+		{
+			var controlElement = req.controlElement;
+			if ( controlElement )
+			{
+				var sleep = parseFloat(req.responseText);
+				if (isNaN(sleep)) {
+					sleep = 500; // half a second should be enough as a default ... 
+				}
+				window.setTimeout(function ()
+				{
+					controlElement.disabled = false;
+					controlElement.setAttribute('disabled', null);
+					controlElement.removeAttribute('disabled');
+				}, sleep);
+			}
+		}
+	};
+
+	addEvent(np._serverResetRequest, "readystatechange", np.__controllableRequestReadystatechange);
+	addEvent(np._serverFlushRequest, "readystatechange", np.__controllableRequestReadystatechange);
+
+
 	np._fetch = function ()
 	{
 		var req = this._fetchRequest;
@@ -118,7 +148,7 @@
 		if ( r_rs == 4 || r_rs == 0 )
 		{
 			log("triggered fetch"); // @stripOnBuild
-			req.open("GET", './get', false);
+			req.open("GET", './get', true);
 			req.send();
 		}
 	};
@@ -236,6 +266,36 @@
 				}                                   // @stripOnBuild
 			}
 		};
+
+	np.serverReset = function (controlElement)
+	{
+		var req = this._serverResetRequest;
+		var r_rs = req.readyState;
+		if ( r_rs == 4 || r_rs == 0 )
+		{
+			log("triggered serverReset"); // @stripOnBuild
+			req.controlElement = controlElement;
+			controlElement.disabled = true;
+			controlElement.setAttribute('disabled', 'disabled');
+			req.open("GET", './reset', true);
+			req.send();
+		}
+	};
+
+	np.serverFlush = function (controlElement)
+	{
+		var req = this._serverFlushRequest;
+		var r_rs = req.readyState;
+		if ( r_rs == 4 || r_rs == 0 )
+		{
+			log("triggered serverFlush"); // @stripOnBuild
+			req.controlElement = controlElement;
+			controlElement.disabled = true;
+			controlElement.setAttribute('disabled', 'disabled');
+			req.open("GET", './flush', true);
+			req.send();
+		}
+	};
 
 	np.setInterval = function (interval)
 	{
@@ -372,8 +432,30 @@
 
 		var c_state = document.getElementById('c_state');
 		c_state.checked = ! this.getState(this.constants.stateBS.manual);
-		addEvent(c_state, 'change', function () {
+		addEvent(c_state, 'change', function ()
+		{
 			np.setState(np.constants.stateBS.manual, !this.checked);
+		});
+
+
+		var sc_reset = document.getElementById('sc_reset');
+		addEvent(sc_reset, 'click', function ()
+		{
+			var controlElement = this;
+			if ( ! controlElement.disabled )
+			{
+				np.serverReset(controlElement);
+			}
+		});
+
+		var sc_flush = document.getElementById('sc_flush');
+		addEvent(sc_flush, 'click', function ()
+		{
+			var controlElement = this;
+			if ( ! controlElement.disabled )
+			{
+				np.serverFlush(controlElement);
+			}
 		});
 
 		this.setState(this.constants.stateBS.init, false);
