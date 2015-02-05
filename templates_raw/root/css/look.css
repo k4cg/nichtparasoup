@@ -50,9 +50,6 @@ header #burger {
 		 1px  1px 0px black;
 }
 
-header #serverControlls {
-	margin: 0ex 2em;
-}
 
 header #controls {
 	text-align: center;
@@ -66,6 +63,14 @@ header #controls {
 	background-color: rgba(23, 23, 23, 0.9);
 	border-bottom: 1px solid #808080;
 	transition: all 0.6s ease-in-out 0s;
+}
+
+header #controls #serverControls {
+	margin: 0ex 2em;
+}
+
+header #controls #serverControls button {
+	margin-right: 0.5em;
 }
 
 header #controls label {

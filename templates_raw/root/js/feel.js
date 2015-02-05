@@ -115,7 +115,7 @@
 
 
 	np.__controllableRequestReadystatechange = function ()
-	{ debugger;
+	{
 		var req = this;
 		log("XHR onreadystatechange", req.readyState); // @stripOnBuild
 		if ( req.readyState == 4 && req.status == 200 )
@@ -125,7 +125,7 @@
 			{
 				var sleep = parseFloat(req.responseText);
 				if (isNaN(sleep)) {
-					sleep = 10;
+					sleep = 500; // half a second should be enough as a default ... 
 				}
 				window.setTimeout(function ()
 				{
@@ -269,7 +269,6 @@
 
 	np.serverReset = function (controlElement)
 	{
-		debugger;
 		var req = this._serverResetRequest;
 		var r_rs = req.readyState;
 		if ( r_rs == 4 || r_rs == 0 )
@@ -285,7 +284,6 @@
 
 	np.serverFlush = function (controlElement)
 	{
-		debugger;
 		var req = this._serverFlushRequest;
 		var r_rs = req.readyState;
 		if ( r_rs == 4 || r_rs == 0 )
@@ -443,7 +441,6 @@
 		var sc_reset = document.getElementById('sc_reset');
 		addEvent(sc_reset, 'click', function ()
 		{
-			debugger;
 			var controlElement = this;
 			if ( ! controlElement.disabled )
 			{
@@ -454,7 +451,6 @@
 		var sc_flush = document.getElementById('sc_flush');
 		addEvent(sc_flush, 'click', function ()
 		{
-			debugger;
 			var controlElement = this;
 			if ( ! controlElement.disabled )
 			{
@@ -462,7 +458,6 @@
 			}
 		});
 
-		debugger;
 		this.setState(this.constants.stateBS.init, false);
 		log('init ended'); // @stripOnBuild
 	};
