@@ -76,7 +76,14 @@
 		<input  id="c_nsfw" type="checkbox">
 		-->
 
+		<span id="serverControls">
+			<button id="sc_reset" title="reset server">reset</button>
+			<button id="sc_flush" title="flush image cache">flush</button>
+		</span>
+
 		<span class="spacer">&nbsp;</span>
+
+
 
 		<label class="button stateSwitchContainer" for="c_background" title="keep playing even when the window lost the focus">
 			play in background:
@@ -115,13 +122,13 @@
 </footer>
 
 
-<stripOnBuild>
+<stripOnBuild style="display: none;">
 	<style type="text/css">
 		stripOnBuild {
 			display: block;
 			color: black;
 			background-color: yellow;
-			font-size: xx-small; 
+			font-size: xx-small;
 			padding: 0.7ex;
 		}
 	</style>

@@ -50,6 +50,10 @@ header #burger {
 		 1px  1px 0px black;
 }
 
+header #serverControlls {
+	margin: 0ex 2em;
+}
+
 header #controls {
 	text-align: center;
 	padding-left: 3em;
