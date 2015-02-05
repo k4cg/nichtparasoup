@@ -1,3 +1,4 @@
+button ,
 .button {
 	min-height: 2ex;
 	min-width: 2.2ex;
@@ -12,12 +13,22 @@
 	padding: 0.2ex 0.4ex;
 
 	line-height: 2.8ex;
- }
+}
 
-a.button:hover ,
-label.button:hover {
+
+button:hover , button:active , button:focus ,
+a.button:hover , a.button:active , a.button:focus ,
+label.button:hover , label.button:active , label.button:focus {
+	outline: 0
+}
+
+
+button:hover , button:active
+a.button:hover , a.button:active
+label.button:hover , label.button:active  {
  /* invert colors */
 	background-color: #ccc;
 	color: #111;
 	cursor: pointer;
+
 }
