@@ -113,7 +113,6 @@ def get_crawlers(configuration, section):
 
     return crawlers
 
-
 sources = get_crawlers(config, "Sites")
 if not sources:
     raise Exception("no sources configured")
@@ -122,8 +121,6 @@ if not sources:
 # wrapper function for cache filling
 def cache_fill_loop():
     global sources
-    sources = [source for source in sources if isinstance(source, Crawler)]
-
     while True:  # fill cache up to min_cache_imgs
         if Crawler.info()["images"] < min_cache_imgs_before_refill:
             while Crawler.info()["images"] < min_cache_imgs:
