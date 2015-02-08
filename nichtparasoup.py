@@ -57,25 +57,66 @@ from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import NineGag
 from crawler.instagram import Instagram
 
-sources = []
 
-if not config.get("Sites", "Reddit") == "False":
-    for site in config.get("Sites", "Reddit").split(","):
-        sources.append(Reddit("http://www.reddit.com/r/"+site))
+def get_crawlers(configuration, section):
+    """
+    parse the config section for crawlers
+    * does recognize (by name) known and implemented crawlers only
+    * a robust config reading and more freedom for users
 
-if not config.get("Sites", "Ninegag") == "False":
-    for site in config.get("Sites", "Ninegag").split(","):
-        sources.append(NineGag("http://9gag.com/"+site))
+    :param configuration: RawConfigParser
+    :param section: string
+    :return: list
+    """
+    crawlers = []
 
-if config.getboolean("Sites", "Pr0gramm"):
-    sources.append(Pr0gramm("http://pr0gramm.com/static/"))
+    for crawler_class in Crawler.__subclasses__():
+        crawler_class_name = crawler_class.__name__
+        if not configuration.has_option(section, crawler_class_name):
+            continue    # skip crawler if not configured
 
-if config.getboolean("Sites", "Soupio"):
-    sources.append(SoupIO("http://soup.io/everyone"))
+        crawler_config = configuration.get(section, crawler_class_name)
+        if not crawler_config or crawler_config.lower() == "false":
+            continue    # skip crawler if not configured or disabled
 
-if not config.get("Sites", "Instagram") == "False":
-    for site in config.get("Sites", "Instagram").split(","):
-        sources.append(Instagram("http://instagram.com/"+site))
+        crawler_uris = []
+
+        # mimic old behaviours for bool values
+        if crawler_config.lower() == "true":
+            if crawler_class == Pr0gramm:
+                crawler_config = "static"
+            elif crawler_class == SoupIO:
+                crawler_config = "everyone"
+
+        crawler_sites = [site_stripped for site_stripped in
+                         [site.strip() for site in crawler_config.split(",")]   # trim sites
+                         if site_stripped]  # filter stripped list for valid values
+        if not crawler_sites:
+            continue    # skip crawler if no valid sites configured
+
+        logger.info("found configured Crawler: %s = %s" % (crawler_class_name, repr(crawler_sites)))
+
+        if crawler_class == Reddit:
+            crawler_uris = ["http://www.reddit.com/r/%s" % site for site in crawler_sites]
+        elif crawler_class == NineGag:
+            crawler_uris = ["http://9gag.com/%s" % site for site in crawler_sites]
+        elif crawler_class == Pr0gramm:
+            crawler_uris = ["http://pr0gramm.com/%s" % site for site in crawler_sites]
+        elif crawler_class == SoupIO:
+            crawler_uris = [("http://soup.io/%s" if site in ["everyone"]    # public site
+                             else "http://%s.soup.io/") % site              # user site
+                            for site in crawler_sites]
+        elif crawler_class == Instagram:
+            crawler_uris = ["http://instagram.com/%s" % site for site in crawler_sites]
+
+        crawlers += [crawler_class(crawler_uri) for crawler_uri in crawler_uris]
+
+    return crawlers
+
+
+sources = get_crawlers(config, "Sites")
+if not sources:
+    raise Exception("no sources configured")
 
 
 # wrapper function for cache filling
