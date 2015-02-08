@@ -55,6 +55,7 @@ from crawler.reddit import Reddit
 from crawler.soupio import SoupIO
 from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import NineGag
+from crawler.instagram import Instagram
 
 sources = []
 
@@ -71,6 +72,10 @@ if config.getboolean("Sites", "Pr0gramm"):
 
 if config.getboolean("Sites", "Soupio"):
     sources.append(SoupIO("http://soup.io/everyone"))
+
+if not config.get("Sites", "Instagram") == "False":
+    for site in config.get("Sites", "Instagram").split(","):
+        sources.append(Instagram("http://instagram.com/"+site))
 
 
 # wrapper function for cache filling
