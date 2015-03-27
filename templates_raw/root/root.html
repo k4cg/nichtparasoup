@@ -16,12 +16,15 @@
 	<link rel="stylesheet" href="css/look_bossMode.css" />
 
 	<link rel="stylesheet" href="css/feel.css" />
+	<link rel="stylesheet" href="css/jquery.fancybox-1.3.4.css" />
 
 	<script type="application/javascript" src="js/helper.js"></script>
 	<script type="application/javascript" src="js/look_maxSizer.js"></script>
 	<script type="application/javascript" src="js/look_stateSwitch.js"></script>
 	<script type="application/javascript" src="js/feel.js"></script>
 	<script type="application/javascript" src="js/feel_hotkeys.js"></script>
+	<script type="application/javascript" src="js/jquery-1.4.3.min.js"></script>
+	<script type="application/javascript" src="js/jquery.fancybox-1.3.4.pack.js"></script>
 
 	<script type="application/javascript">
 		window.helperFuncs.addEvent(window, "load", function ()
@@ -31,6 +34,9 @@
 			this.stateSwitch.init(this.document.getElementById('c_background'));
 			this.nichtparasoup.init('wall', 2);
 		});
+		document.addEventListener("DOMNodeInserted", function() {
+			$("a.fancybox").fancybox();
+		}, false);
 	</script>
 
 </head>
@@ -59,7 +65,7 @@
 			resize: vertical;
 			opacity: 0.5;
 		}
-		#dbg:hover { opacity: 1.0; }
+		#dbg:hovher { opacity: 1.0; }
 		#dbg { display:none;}
 	</style>
 	<hr/>
