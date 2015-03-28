@@ -179,12 +179,6 @@
 			var imageBox = document.createElement('article');
 			imageBox.appendChild(imageLink);
 			var srcSpan = imageBox.appendChild(document.createElement('section'));
-			//var imageBox = document.createElement('article');
-			//imageBox.appendChild(document.createElement('stripOnBuild')).innerHTML = (new Date()).toUTCString(); // @stripOnBuild
-
-			//imageBox.appendChild(imageDoc);
-
-			//var srcSpan = imageBox.appendChild(document.createElement('section'));
 			srcSpan.className = 'src '+ crawler;
 
 			var srcA = srcSpan.appendChild(document.createElement('a'));
