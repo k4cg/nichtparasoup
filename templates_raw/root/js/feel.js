@@ -58,7 +58,8 @@
 			boss : 2 , // boss mode - not implemented yet
 			presented : 3 , // tab is presented
 			active : 4 ,  // window is presented
-			scroll : 5 // window is scrolled away from top
+			scroll : 5 , // window is scrolled away from top
+			gallery : 6 // image is clicked for gallery-view
 		}
 	};
 
@@ -160,7 +161,6 @@
 		addEvent(imageDoc, "load", function ()
 		{
 			log('loaded', this.src); // @stripOnBuild
-
 			/* structure looks like :
 				<article>
 					<stripOnBuild>{DEBUG_MSG}</stripOnBuild>
@@ -170,12 +170,14 @@
 					</section>
 				</article>
 			*/
-
+			var imageLink = document.createElement('a');
+			imageLink.setAttribute('class', 'fancybox');
+			imageLink.setAttribute('href', uri);
+			imageLink.setAttribute('rel', 'group');
+			imageLink.appendChild(imageDoc);
+			$("a.fancybox").fancybox();
 			var imageBox = document.createElement('article');
-			imageBox.appendChild(document.createElement('stripOnBuild')).innerHTML = (new Date()).toUTCString(); // @stripOnBuild
-
-			imageBox.appendChild(imageDoc);
-
+			imageBox.appendChild(imageLink);
 			var srcSpan = imageBox.appendChild(document.createElement('section'));
 			srcSpan.className = 'src '+ crawler;
 
