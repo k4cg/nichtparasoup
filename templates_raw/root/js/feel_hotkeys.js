@@ -63,11 +63,11 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 			var keyCode = event.keyCode || event.which;
 			switch ( keyCode )
 			{
-				case 39 : // right : increase speed
-				case 37 : // left : decrease speed
+				case 107 : // plus : increase speed
+				case 109 : // minus : decrease speed
 					c_speedE.blur(); // prevent possible double trigger loops ...
 					cancelBubble(event);
-					var speed = parseInt(c_speedE.value) + ( keyCode == 39 ? +1 : -1 )  ;
+					var speed = parseInt(c_speedE.value) + ( keyCode == 107 ? +1 : -1 )  ;
 					if ( speed < min ) { speed = min; }
 					else if ( speed > max ) { speed = max; }
 					c_speedE.value = speed;
