@@ -22,6 +22,8 @@ Therefore some specialties are needed to know:
 * the HTML tag `striponbuild` will be removed on build and may be used for debug/develop purposes
 * each line of CSS or JS that contains the string `@striponbuild` is stripped on build, so this may be used for development purposes also
 
+attention: 
+the `normalize.css` is symlinked. symlinks may not work properly on windows systems.  
 
 
 
