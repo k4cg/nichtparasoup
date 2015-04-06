@@ -7,19 +7,23 @@ window.helperFuncs = {
 	log : function () {} , // in case we forget to strip a log
 
 	addEvent : function (obj, event, fn, capture)
-		{ "use strict";
-			if ( obj.attachEvent )
-			{
-				obj.attachEvent('on'+event, fn);
-			}
-			else if( obj.addEventListener )
-			{
-				obj.addEventListener(event, fn, capture);
-			}
-		} ,
+	{ "use strict";
+		if ( ! obj ) { return; }
+
+		if ( obj.attachEvent )
+		{
+			obj.attachEvent('on'+event, fn);
+		}
+		else if( obj.addEventListener )
+		{
+			obj.addEventListener(event, fn, capture);
+		}
+	} ,
 
 	fireEvent : function (obj, event)
-	{
+	{ "use strict";
+		if ( ! obj ) { return; }
+
 		if ( obj.dispatchEvent )
 		{
 			obj.dispatchEvent(new Event(event));
