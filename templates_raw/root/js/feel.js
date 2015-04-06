@@ -8,7 +8,10 @@
 
 
 
-	var addEvent = window.helperFuncs.addEvent;
+	var addEvent = window.helperFuncs.addEvent
+	  , fireEvent = window.helperFuncs.fireEvent
+	  ;
+
 
 	/*
 	 * put everything public/protected in a single-use object called 'np'
@@ -82,6 +85,7 @@
 
 	np._options = {
 		  interval : 10
+		, playInBackground : false
 		, nsfw : false // not implemented yet
 		};
 
@@ -389,21 +393,23 @@
 		});
 		this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 );
 
-		var playInBackground = false;
 
 		var c_background = document.getElementById('c_background');
+		c_background.checked = this._options.playInBackground;
+		fireEvent(c_background, 'change');
 		addEvent(c_background, 'change', function ()
 		{
-			playInBackground = this.checked;
-			log('playInBackground', playInBackground);  // @stripOnBuild
+			np._options.playInBackground = this.checked;
+			np._optionsStorage.save();
+			log('playInBackground', np._options.playInBackground);  // @stripOnBuild
 		});
-		playInBackground = c_background.checked;
+
 
 		/* blur and focus event is broken some time - can not reproduce :-( */
 		addEvent(window, 'blur', function ()
 		{
 			log('!# window blur'); // @stripOnBuild
-			if ( ! playInBackground )
+			if ( ! np._options.playInBackground )
 			{
 				np.setState(np.constants.stateBS.active, true);
 			}
