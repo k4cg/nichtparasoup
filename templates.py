@@ -257,17 +257,18 @@ addEvent(window, 'focus', function () { np.setState(np.constants.stateBS.active,
 if ( document.hidden != undefined ) { addEvent(document, 'visibilitychange', function () {
 np.setState(np.constants.stateBS.presented, this.hidden); });
 this.setState(this.constants.stateBS.presented, document.hidden); } var c_speed = document.getElementById('c_speed');
-c_speed.value = this.getInterval(); addEvent(c_speed, 'change', function () { np.setInterval(this.value); });
-var c_state = document.getElementById('c_state'); c_state.checked = ! this.getState(this.constants.stateBS.manual);
-addEvent(c_state, 'change', function () { np.setState(np.constants.stateBS.manual, !this.checked); });
-var sc_reset = document.getElementById('sc_reset'); addEvent(sc_reset, 'click', function () { var controlElement = this;
-if ( ! controlElement.disabled ) { np.serverReset(controlElement); } });
-var sc_flush = document.getElementById('sc_flush'); addEvent(sc_flush, 'click', function () { var controlElement = this;
-if ( ! controlElement.disabled ) { np.serverFlush(controlElement); } });
-this.setState(this.constants.stateBS.init, false); }; })(window.nichtparasoup={}, window);</script>
-<script type="application/javascript">; (function (window) { "use strict"; var addEvent = window.helperFuncs.addEvent
-, fireEvent = window.helperFuncs.fireEvent; var log = window.helperFuncs.log; var cancelBubble = function (event) {
-event.cancelBubble = true; if ( event.stopPropagation ) { event.stopPropagation(); }
+c_speed.value = this.getInterval(); addEvent(c_speed, 'change', function () { var newInterval = 25-this.value;
+np.setInterval(newInterval); }); var c_state = document.getElementById('c_state');
+c_state.checked = ! this.getState(this.constants.stateBS.manual); addEvent(c_state, 'change', function () {
+np.setState(np.constants.stateBS.manual, !this.checked); }); var sc_reset = document.getElementById('sc_reset');
+addEvent(sc_reset, 'click', function () { var controlElement = this; if ( ! controlElement.disabled ) {
+np.serverReset(controlElement); } }); var sc_flush = document.getElementById('sc_flush');
+addEvent(sc_flush, 'click', function () { var controlElement = this; if ( ! controlElement.disabled ) {
+np.serverFlush(controlElement); } }); this.setState(this.constants.stateBS.init, false); };
+})(window.nichtparasoup={}, window);</script><script type="application/javascript">; (function (window) { "use strict";
+var addEvent = window.helperFuncs.addEvent , fireEvent = window.helperFuncs.fireEvent; var log = window.helperFuncs.log;
+var cancelBubble = function (event) { event.cancelBubble = true;
+if ( event.stopPropagation ) { event.stopPropagation(); }
 if ( event.stopImmediatePropagation ) { event.stopImmediatePropagation(); }
 if ( event.preventDefault ) { event.preventDefault(); } }; var className_forceShow = ' forceShow'
 , className_active = ' active'; addEvent(window, 'load', function () { var document = this.document;
@@ -276,8 +277,8 @@ var c_speedE = document.getElementById('c_speed') , min = parseInt(c_speedE.getA
 var hotkeysE = document.getElementById('hotkeys') , controlsE = document.getElementById('controls');
 addEvent(window, 'keydown', function (event) { var np = this.nichtparasoup; if ( ! np ) { return; }
 if ( ! event ) { event = window.event; } var bubble = true; var keyCode = event.keyCode || event.which;
-switch ( keyCode ) { case 39 : case 37 : c_speedE.blur(); cancelBubble(event);
-var speed = parseInt(c_speedE.value) + ( keyCode == 39 ? +1 : -1 ) ; if ( speed < min ) { speed = min; }
+switch ( keyCode ) { case 107 : case 109 : c_speedE.blur(); cancelBubble(event);
+var speed = parseInt(c_speedE.value) + ( keyCode == 107 ? +1 : -1 ) ; if ( speed < min ) { speed = min; }
 else if ( speed > max ) { speed = max; } c_speedE.value = speed; fireEvent(c_speedE, 'change'); break; case 32 :
 c_stateE.blur(); cancelBubble(event); c_stateE.checked = !c_stateE.checked; fireEvent(c_stateE, 'change'); break;
 case 27 : cancelBubble(event); var bossStateConst = np.constants.stateBS.boss;
@@ -326,10 +327,10 @@ document.addEventListener("DOMNodeInserted", function() { $("a.fancybox").fancyb
 reset</button><button id="sc_flush" title="flush image cache">flush</button></span><span class="spacer">&nbsp;</span>
 <label class="button stateSwitchContainer" for="c_background" title="keep playing even when the window lost the focus">
 play in background:<input id="c_background" type="checkbox"/></label><label for="c_speed" title="set image interval">
-speed: fast<input id="c_speed" max="23" min="3" type="range"/>slow</label>
+speed: slow<input id="c_speed" max="23" min="3" type="range"/>fast</label>
 <label class="button stateSwitchContainer" for="c_state" title="play/pause">play:
 <input checked="checked" id="c_state" type="checkbox"/></label></div><span id="burger">&#9776;</span></header><footer>
 <span class="spacer">&nbsp;</span><dl id="hotkeys"><dd class="button">esc</dd><dt>boss mode</dt>
-<dd class="button" id="hk_32">space</dd><dt>play/pause</dt><dd class="button" id="hk_37">&leftarrow;</dd><dt>faster</dt>
-<dd class="button" id="hk_39">&rightarrow;</dd><dt>slower</dt></dl><span class="button" id="keys">hot keys</span>
-</footer></body></html>"""
+<dd class="button" id="hk_32">space</dd><dt>play/pause</dt><dd class="button" id="hk_107">+</dd><dt>faster</dt>
+<dd class="button" id="hk_109">-</dd><dt>slower</dt></dl><span class="button" id="keys">hot keys</span></footer></body>
+</html>"""
