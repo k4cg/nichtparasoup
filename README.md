@@ -21,12 +21,6 @@ cd nichtparasoup
 sudo pip install -r requirements.txt
 ```
 
-as the template bundler is a seperate repo you have to execute the following command if you want to use it (to create your own templates)
-
-```bash
-git submodule update --init --recursive
-```
-
 after that you can just run
 
 ```bash
@@ -69,24 +63,29 @@ Verbosity: debug
 
 ### sites
 
-in the site section you can configure what sites are being crawled. 
-basically there are two types of sites. `Soupio` and `Pr0gramm` can only 
-be `True` or `False`. If True content will from this site will be crawled.
+Configuration of your source work like this.
 
 ```
-Soupio: True
-Pr0gramm: True
-```
-
-Reddit and Ninegag crawler have different behavior. they can contain `False` for turning them off or
-have to contain a list of subreddits/subsites in a comma separated list. 
-
-```
-Reddit: nsfw,gifs,pics,nsfw_gifs,aww,aww_gifs,reactiongifs,wtf,FoodPorn,cats,StarWars
-Ninegag: geeky,wtf,girl,hot,trending
+; set to false or remove a Crawler, to disable it
+SoupIO: everyone
+Pr0gramm: static ,new, top
+Reddit: nsfw,gifs,pics,nsfw_gifs,aww,aww_gifs,reactiongifs,wtf,FoodPorn,cats,ImGoingToHellForThis,EarthPorn,facepalm,fffffffuuuuuuuuuuuu,oddlysatisfying
+NineGag: geeky,wtf,girl,hot,trending
+Instagram: cats,animals,pornhub,nerdy_gaming_art,nature,wtf
 ```
 For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http://reddit.com/r/gifs` end up
-being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`
+being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
+
+
+# contribution
+
+basically, check the repo out and initialize the template bundler
+
+As the template bundler is a seperate repo you have to execute the following command if you want to use it (to create your own templates)
+
+```bash
+git submodule update --init --recursive
+```
 
 # internals
 
@@ -114,14 +113,14 @@ when you start nichtparasoup
 * when cache is empty, it will be refilled by the crawler automatically
 * you will (hopefully) get new results.
 
-keep in mind: everytime you restart the python script, the cache forgets about its previous
+keep in mind: everytime you restart nichtparasoup, the cache forgets about its previous
 shown images. So is not persistent.
 
 ## cache_fill in threads
 
-once you start up nichtparasoup the crawler will initially fill the cache up to
-`$min_cache_imgs`. this happens in a separate thread in the background. when your 
-configured `$min_cache_imgs_before_refill` get hit, the crawler starts choosing 
+once you start up nichtparasoup the crawler will initially fill the cache up 
+`Images`. this happens in a separate thread in the background. when your 
+configured `Images_min_limit` get hit, the crawler starts choosing 
 a new random image provider (see at the top) and refills your cache. the crawler 
 thread wakes up every `1.337` seconds and checks the status of the current imgmap.
 
