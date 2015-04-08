@@ -61,13 +61,19 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 			log('keyDown:', event.keyCode); // @stripOnBuild
 
 			var keyCode = event.keyCode || event.which;
+			var plusKey = false;
 			switch ( keyCode )
 			{
 				case 107 : // plus : increase speed
+				case 61: // = +: plus key on firefox
+				case 187: // = +: plus key on opera/safari/chrome (according to the internet http://www.javascripter.net/faq/keycodes.htm)
+					var plusKey = true;
 				case 109 : // minus : decrease speed
+				case 173: // - _: minus key on firefox
+				case 189: // - _: minus key on opera/safari/chrome (according to the internet http://www.javascripter.net/faq/keycodes.htm)
 					c_speedE.blur(); // prevent possible double trigger loops ...
 					cancelBubble(event);
-					var speed = parseInt(c_speedE.value) + ( keyCode == 107 ? +1 : -1 )  ;
+					var speed = parseInt(c_speedE.value) + ( plusKey ? +1 : -1 )  ;
 					if ( speed < min ) { speed = min; }
 					else if ( speed > max ) { speed = max; }
 					c_speedE.value = speed;
@@ -86,7 +92,7 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 					break;
 			}
 
-			var hotKeyIndicator = document.getElementById('hk_'+ keyCode );
+			var hotKeyIndicator = document.querySelector('.hk_'+ keyCode );
 			if ( hotKeyIndicator )
 			{
 				hotkeysE.className += className_forceShow;

@@ -21,6 +21,12 @@ cd nichtparasoup
 sudo pip install -r requirements.txt
 ```
 
+as the template bundler is a seperate repo you have to execute the following command if you want to use it (to create your own templates)
+
+```bash
+git submodule update --init --recursive
+```
+
 after that you can just run
 
 ```bash

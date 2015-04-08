@@ -277,13 +277,13 @@ var c_speedE = document.getElementById('c_speed') , min = parseInt(c_speedE.getA
 var hotkeysE = document.getElementById('hotkeys') , controlsE = document.getElementById('controls');
 addEvent(window, 'keydown', function (event) { var np = this.nichtparasoup; if ( ! np ) { return; }
 if ( ! event ) { event = window.event; } var bubble = true; var keyCode = event.keyCode || event.which;
-switch ( keyCode ) { case 107 : case 109 : c_speedE.blur(); cancelBubble(event);
-var speed = parseInt(c_speedE.value) + ( keyCode == 107 ? +1 : -1 ) ; if ( speed < min ) { speed = min; }
-else if ( speed > max ) { speed = max; } c_speedE.value = speed; fireEvent(c_speedE, 'change'); break; case 32 :
-c_stateE.blur(); cancelBubble(event); c_stateE.checked = !c_stateE.checked; fireEvent(c_stateE, 'change'); break;
-case 27 : cancelBubble(event); var bossStateConst = np.constants.stateBS.boss;
-np.setState(bossStateConst, !np.getState(bossStateConst)); break; }
-var hotKeyIndicator = document.getElementById('hk_'+ keyCode ); if ( hotKeyIndicator ) {
+var plusKey = false; switch ( keyCode ) { case 107 : case 61: case 187: var plusKey = true; case 109 : case 173:
+case 189: c_speedE.blur(); cancelBubble(event); var speed = parseInt(c_speedE.value) + ( plusKey ? +1 : -1 ) ;
+if ( speed < min ) { speed = min; } else if ( speed > max ) { speed = max; } c_speedE.value = speed;
+fireEvent(c_speedE, 'change'); break; case 32 : c_stateE.blur(); cancelBubble(event);
+c_stateE.checked = !c_stateE.checked; fireEvent(c_stateE, 'change'); break; case 27 : cancelBubble(event);
+var bossStateConst = np.constants.stateBS.boss; np.setState(bossStateConst, !np.getState(bossStateConst)); break; }
+var hotKeyIndicator = document.querySelector('.hk_'+ keyCode ); if ( hotKeyIndicator ) {
 hotkeysE.className += className_forceShow; controlsE.className += className_forceShow;
 hotKeyIndicator.className += className_active; window.setTimeout(function () {
 hotkeysE.className = hotkeysE.className.replace(className_forceShow, '');
@@ -331,6 +331,6 @@ speed: slow<input id="c_speed" max="23" min="3" type="range"/>fast</label>
 <label class="button stateSwitchContainer" for="c_state" title="play/pause">play:
 <input checked="checked" id="c_state" type="checkbox"/></label></div><span id="burger">&#9776;</span></header><footer>
 <span class="spacer">&nbsp;</span><dl id="hotkeys"><dd class="button">esc</dd><dt>boss mode</dt>
-<dd class="button" id="hk_32">space</dd><dt>play/pause</dt><dd class="button" id="hk_107">+</dd><dt>faster</dt>
-<dd class="button" id="hk_109">-</dd><dt>slower</dt></dl><span class="button" id="keys">hot keys</span></footer></body>
-</html>"""
+<dd class="button hk_108">space</dd><dt>play/pause</dt><dd class="button hk_107 hk_61 hk_187">+</dd><dt>faster</dt>
+<dd class="button hk_109 hk_173 hk_189">-</dd><dt>slower</dt></dl><span class="button" id="keys">hot keys</span>
+</footer></body></html>"""
