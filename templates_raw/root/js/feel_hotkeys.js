@@ -67,6 +67,7 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 				case 107 : // plus : increase speed
 				case 61: // = +: plus key on firefox
 				case 187: // = +: plus key on opera/safari/chrome (according to the internet http://www.javascripter.net/faq/keycodes.htm)
+				case 171: // seems like this is plus on german keyboard?!
 					var plusKey = true;
 				case 109 : // minus : decrease speed
 				case 173: // - _: minus key on firefox
