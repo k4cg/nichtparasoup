@@ -73,7 +73,7 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 				case 189: // - _: minus key on opera/safari/chrome (according to the internet http://www.javascripter.net/faq/keycodes.htm)
 					c_speedE.blur(); // prevent possible double trigger loops ...
 					cancelBubble(event);
-					var speed = parseInt(c_speedE.value) + ( plusKey ? +1 : -1 )  ;
+					var speed = parseInt(c_speedE.value) + ( plusKey ? -1 : +1 )  ;
 					if ( speed < min ) { speed = min; }
 					else if ( speed > max ) { speed = max; }
 					c_speedE.value = speed;
@@ -89,6 +89,10 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 					cancelBubble(event);
 					var bossStateConst = np.constants.stateBS.boss;
 					np.setState(bossStateConst, !np.getState(bossStateConst));
+					break;
+				case 74: // j
+					cancelBubble(event);
+					np._fetch();
 					break;
 			}
 

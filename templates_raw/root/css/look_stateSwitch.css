@@ -4,12 +4,21 @@
 .stateSwitchContainer > input {
 	display: none;
 }
+
 .stateSwitchContainer:after {
 	display: inline-block;
 	width: 1.5em;
 }
-.stateSwitchContainer.state_0:after { content: 'off'; }
-.stateSwitchContainer.state_1:after { content: 'on'; }
 
-.stateSwitchContainer { cursor: pointer; }
+.stateSwitchContainer.state_0:after {
+	content: 'off';
+}
+
+.stateSwitchContainer.state_1:after {
+	content: 'on';
+}
+
+.stateSwitchContainer {
+	cursor: pointer;
+}
 

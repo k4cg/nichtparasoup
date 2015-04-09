@@ -35,8 +35,6 @@ footer:hover #hotkeys ,
 	transition: none;
 }
 
-
-
 #hotkeys dd ,
 #hotkeys dt ,
 .hotkey {
@@ -45,7 +43,6 @@ footer:hover #hotkeys ,
 	padding: 0.2ex 0.4ex;
 	margin: 0ex 0em;
 }
-
 
 #hotkeys dd.active {
 	background-color: white;

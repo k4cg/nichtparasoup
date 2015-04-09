@@ -435,9 +435,8 @@
 		c_speed.value = this.getInterval();
 		addEvent(c_speed, 'change', function ()
 		{
-			var newInterval = 25-this.value;
-			np.setInterval(newInterval);
-			log('-- interval changed to', 'newInterval:', newInterval); // @stripOnBuild
+			np.setInterval(this.value);
+			log('-- interval changed to', 'this.value:', this.value); // @stripOnBuild
 		});
 
 		var c_state = document.getElementById('c_state');
