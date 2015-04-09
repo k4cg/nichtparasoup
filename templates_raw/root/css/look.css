@@ -16,9 +16,6 @@ html, body {
 	background-color: black;
 }
 
-
-
-
 header {
 	z-index: 99999;
 	display: block;
@@ -49,7 +46,6 @@ header #burger {
 		-1px  1px 0px black,
 		 1px  1px 0px black;
 }
-
 
 header #controls {
 	text-align: center;
@@ -82,13 +78,16 @@ header #controls label {
 header:hover {
 	color: white;
 }
+
 header:hover #burger {
 	font-weight: bold;
 }
+
 header:hover #controls ,
 #controls.forceShow {
 	top: 0ex;
 }
+
 #controls.forceShow {
 	transition: none;
 }
@@ -115,7 +114,6 @@ footer {
 	display: inline-block;
 	float: left;
 }
-
 
 #wall article img {
 	display: none;
@@ -165,14 +163,6 @@ footer {
 	display: block; /* needed for alignment of the image to its container box ... */
 }
 
-
-
-
-
-
-
-
-
 #wall article .src {
 	display: block;
 	position: absolute;
@@ -189,6 +179,7 @@ footer {
 	opacity: 0.5;
 	text-align: initial; /* fall back to native */
 }
+
 #wall article .src a {
 	display: none;
 	word-wrap: break-word;
@@ -203,6 +194,7 @@ footer {
 	background-color: rgba(100, 100, 100, 0.7);
 	left: 0em;
 }
+
 #wall article .src:hover a {
 	display: block;
 }
