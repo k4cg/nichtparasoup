@@ -95,6 +95,12 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 					cancelBubble(event);
 					np._fetch();
 					break;
+				case 75: // k
+					var galleryState = 6;
+					if(!np.getState(galleryState)) {
+						$(".fancybox").eq(1).trigger("click");
+					}
+					break;
 			}
 
 			var hotKeyIndicator = document.querySelector('.hk_'+ keyCode );
