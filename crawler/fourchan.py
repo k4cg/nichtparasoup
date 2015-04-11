@@ -32,7 +32,7 @@ class Fourchan(Crawler):
         self._restart_at_front()
 
     def _crawl(self):
-	self.__class__._log("debug", "uri is: %s, next is: %s" % (self.__uri, self.__next))
+        self.__class__._log("debug", "uri is: %s, next is: %s" % (self.__uri, self.__next))
         uri = self.__uri+'/'+self.__next
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
@@ -46,5 +46,5 @@ class Fourchan(Crawler):
         # update new last URI when we're not on first run
         self.__next =page.find_all("a", {"class": "button"})[-1]["href"]
 
-	for con in page.find_all("a", {"class": "fileThumb"}):
-            self._add_image(con["href"])
+        for con in page.find_all("a", {"class": "fileThumb"}):
+          self._add_image(con["href"])
