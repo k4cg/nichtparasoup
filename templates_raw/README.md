@@ -17,3 +17,7 @@ for further information: see the `README` of the submodules
 
 ## how to use
 just run the `build.sh` so the `templates.py` of __nichtparasoup__ will be built automatically
+
+## attention: symlinks
+some files are symlinked - so be sure your environment supports symlinks, otherwise the outcome may be broken. 
+this is the case on most windows systems. 
