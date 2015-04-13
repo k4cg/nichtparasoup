@@ -333,7 +333,7 @@ speed: slow<input id="c_speed" max="23" min="3" type="range"/>fast</label>
 <label class="button stateSwitchContainer" for="c_state" title="play/pause">play:
 <input checked="checked" id="c_state" type="checkbox"/></label></div><span id="burger">&#9776;</span></header><footer>
 <span class="spacer">&nbsp;</span><dl id="hotkeys"><dd class="button">esc</dd><dt>boss mode</dt>
-<dd class="button hk_108">space</dd><dt>play/pause</dt><dd class="button hk_107 hk_61 hk_171 hk_187">+</dd><dt>faster
+<dd class="button hk_32">space</dd><dt>play/pause</dt><dd class="button hk_107 hk_61 hk_171 hk_187">+</dd><dt>faster
 </dt><dd class="button hk_109 hk_173 hk_189">-</dd><dt>slower</dt><dd class="button">j</dd><dt>next image</dt>
 <dd class="button">k</dd><dt>next-to-last image</dt></dl><span class="button" id="keys">hot keys</span></footer></body>
 </html>"""
