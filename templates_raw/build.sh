@@ -12,22 +12,22 @@ target="../templates.py"
 
 ######################
 
-echo > $target
+printf '\n' > $target
 
 for builder in */build.sh
 do
 	echo "running $builder ... "
 
-	echo -n $(basename $(dirname $builder)) >> $target
-	echo -n ' = """' >> $target
+	printf $(basename $(dirname $builder)) >> $target
+	printf ' = """' >> $target
 
 	$builder 1>> $target
 
-	echo -n '"""' >> $target
+	printf '"""' >> $target
 
 done
 
-echo >> $target
+printf '\n'  >> $target
 
 #####################
 
