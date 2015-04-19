@@ -58,6 +58,10 @@ class Pr0gramm(Crawler):
         request = urllib2.Request(uri, headers=self.__class__.headers())
         response = urllib2.urlopen(request, timeout=self.__class__.timeout())
 
-        image = BeautifulSoup(response.read()).find("img")["src"]
+        try:
+            image = BeautifulSoup(response.read()).find("img")["src"]
+            self._add_image(urlparse.urljoin(self.__base, image))
+        except TypeError:
+            self.__class__._log("debug", "%s Cannot display video: %s" % (self.__class__.__name__, uri))
+            pass
 
-        self._add_image(urlparse.urljoin(self.__base, image))

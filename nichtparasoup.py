@@ -102,7 +102,7 @@ def get_crawlers(configuration, section):
         elif crawler_class == NineGag:
             crawler_uris = ["http://9gag.com/%s" % site for site in crawler_sites]
         elif crawler_class == Pr0gramm:
-            crawler_uris = ["http://pr0gramm.com/%s" % site for site in crawler_sites]
+            crawler_uris = ["http://pr0gramm.com/static/%s" % site for site in crawler_sites]
         elif crawler_class == SoupIO:
             crawler_uris = [("http://soup.io/%s" if site in ["everyone"]    # public site
                              else "http://%s.soup.io/") % site              # user site
