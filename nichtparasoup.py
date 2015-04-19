@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 ### import libraries
+from os import path
 import random
 import logging
 import time
 import threading
+import argparse
 
 try:
     from configparser import RawConfigParser  # py 3
@@ -25,9 +27,26 @@ import templates as tmpl
 from crawler import Crawler
 
 
+_file_path = path.dirname(path.realpath(__file__))
+
+# argument parser
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument('-c', '--config-file', metavar='<file>',
+                        type=argparse.FileType('r'),
+                        default=open(path.join(_file_path, 'config.ini'), 'r'),
+                        help='a file path to the config ini',
+                        dest="config_file")
+args = arg_parser.parse_args()
+
+
 ## configuration
 config = RawConfigParser()
-config.read('config.ini')
+config.read(path.join(_file_path, 'config.defaults.ini'))
+try:
+    config.read_file(args.config_file)  # py3
+except:
+    config.readfp(args.config_file)     # py2
+args.config_file.close()
 
 nps_port = config.getint("General", "Port")
 nps_bindip = config.get("General", "IP")
@@ -39,7 +58,7 @@ logger = logging.getLogger(config.get("Logging", "Log_name"))
 hdlr = logging.FileHandler(config.get("Logging", "File"))
 hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logverbosity.upper())
 
 call_flush_timeout = 10  # value in seconds
 call_flush_last = time.time() - call_flush_timeout
@@ -47,7 +66,7 @@ call_flush_last = time.time() - call_flush_timeout
 call_reset_timeout = 10  # value in seconds
 call_reset_last = time.time() - call_reset_timeout
 
-Crawler.headers({'User-Agent': user_agent})
+Crawler.request_headers({'User-Agent': user_agent})
 Crawler.set_logger(logger)
 
 ### config the  crawlers

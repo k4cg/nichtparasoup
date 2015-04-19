@@ -1,6 +1,5 @@
 
 import re
-
 try:
     import urllib.request as urllib2  # py3
 except:
@@ -11,13 +10,12 @@ try:
 except:
     import urlparse  # py2
 
-from bs4 import BeautifulSoup
 
 from . import Crawler, CrawlerError
 
 
 class Pr0gramm(Crawler):
-    """ pr0gramm.com image provider """
+    """ pr0gramm.com image provider"""
 
     ## class constants
 
@@ -45,23 +43,30 @@ class Pr0gramm(Crawler):
         uri = self.__uri  # @todo add paging
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
+        (page_container, _) = self.__class__._fetch_remote_html(uri)
+        if not page_container:
+            self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return
 
-        pages = BeautifulSoup(response.read()).findAll("a", href=self.__filter)
+        pages = page_container.findAll("a", href=self.__filter)
+        images_added = 0
         for page in pages:
-            self.__crawl_page(urllib2.quote(page["href"]))
+            if self.__crawl_page(urllib2.quote(page["href"])):
+                images_added += 1
+
+        if not images_added:
+            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))
 
     def __crawl_page(self, uri):
         uri = urlparse.urljoin(self.__base, uri)
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
+        (page, _) = self.__class__._fetch_remote_html(uri)
+        if not page:
+            self.__class__._log("debug", "%s sub-crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return False
 
-        try:
-            image = BeautifulSoup(response.read()).find("img")["src"]
-            self._add_image(urlparse.urljoin(self.__base, image))
-        except TypeError:
-            self.__class__._log("debug", "%s Cannot display video: %s" % (self.__class__.__name__, uri))
-            pass
+        image = page.find("img", {"src": True})
+        if not image:
+            return False
 
+        return self._add_image(urlparse.urljoin(self.__base, image["src"]))

@@ -1,8 +1,5 @@
 
-try:
-    import urllib.request as urllib2  # py3
-except:
-    import urllib2  # py2
+
 
 try:
     import urllib.parse as urlparse  # py3
@@ -35,19 +32,21 @@ class Reddit(Crawler):
         uri = urlparse.urljoin(self.__uri, "?after="+self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
+        remote = self.__class__._fetch_remote(uri)
+        if not remote:
+            self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return
 
-        charset = 'utf8'
-        try:  # py3
-            charset = response.info().get_param('charset', charset)
-        except:
-            pass
-
-        data = json.loads(response.read().decode(charset))
+        data = json.loads(remote)
 
         self.__next = data['data']['after']
 
+        images_added = 0
         for child in data['data']['children']:
             image = child['data']['url']
-            self._add_image(image)
+            if image:
+                if self._add_image(image):
+                    images_added += 1
+
+        if not images_added:
+            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))
