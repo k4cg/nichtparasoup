@@ -1,15 +1,10 @@
 
-try:
-    import urllib.request as urllib2  # py3
-except:
-    import urllib2  # py2
 
 try:
     import urllib.parse as urlparse  # py3
 except:
     import urlparse  # py2
 
-from bs4 import BeautifulSoup
 
 from . import Crawler, CrawlerError
 
@@ -22,7 +17,7 @@ class Fourchan(Crawler):
 
     @staticmethod
     def __build_uri(uri):
-        return uri
+        return uri + "/"
 
     def _restart_at_front(self):
         self.__next = ""
@@ -33,18 +28,27 @@ class Fourchan(Crawler):
 
     def _crawl(self):
         self.__class__._log("debug", "uri is: %s, next is: %s" % (self.__uri, self.__next))
-        uri = self.__uri+'/'+self.__next
+        uri = urlparse.urljoin(self.__uri, "./"+self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
-
-        page = BeautifulSoup(response.read())
+        (page, _) = self.__class__._fetch_remote_html(uri)
+        if not page:
+            self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return
 
         # get more content ("scroll down")
         # to know what page to parse next
         # update new last URI when we're not on first run
-        self.__next =page.find_all("a", {"class": "button"})[-1]["href"]
+        _buttons = page.find_all("a", {"class": "button", "href": True})
+        if _buttons:
+            self.__next = _buttons[-1]["href"]
+        else:
+            self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
 
-        for con in page.find_all("a", {"class": "fileThumb"}):
-          self._add_image(con["href"])
+        images_added = 0
+        for con in page.find_all("a", {"class": "fileThumb", "href": True}):
+            if self._add_image(con["href"]):
+                images_added += 1
+
+        if not images_added:
+            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))

@@ -1,17 +1,14 @@
 
 try:
-    import urllib.request as urllib2  # py3
-except:
-    import urllib2  # py2
-
-try:
     import urllib.parse as urlparse  # py3
 except:
     import urlparse  # py2
 
-from bs4 import BeautifulSoup
+import re
+
 
 from . import Crawler, CrawlerError
+
 
 
 class NineGag(Crawler):
@@ -19,6 +16,8 @@ class NineGag(Crawler):
 
     __uri = ""
     __next = ""
+
+    __RE_post_container = re.compile("badge-post-container")
 
     @staticmethod
     def __build_uri(uri):
@@ -35,24 +34,40 @@ class NineGag(Crawler):
         uri = urlparse.urljoin(self.__uri, self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
-
-        page = BeautifulSoup(response.read())
+        (page, _) = self.__class__._fetch_remote_html(uri)
+        if not page:
+            self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return
 
         # get more content ("scroll down")
         # to know what page to parse next
         # update new last URI when we're not on first run
-        self.__next = page.find("div", {"class": "loading"}).find("a", {"class": "btn badge-load-more-post"})["href"]
+        _more = page.find("div", {"class": "loading"})
+        if _more:
+            _more = _more.find("a", {"class": "btn badge-load-more-post", "href": True})
+            if _more:
+                self.__next = _more["href"]
+        if not _more:
+            self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
+
 
         # for every found imageContainer
         # add img-src to map if not blacklisted
-        for con in page.find_all("div", {"class": "badge-post-container post-container"}):
-            image = con.find("div", { "class": "badge-animated-container-animated",
-                "data-image": True})
-            if image:
-                image = image['data-image']
-            else:
-                image = con.find('img')['src']
+        images_added = 0
+        for con in page.find_all("div", {"class": self.__class__.__RE_post_container}):
+            image = None
 
-            self._add_image(image)
+            image_inline = con.find("div", {"class": "badge-animated-container-animated", "data-image": True})
+            if image_inline:
+                image = image_inline['data-image']
+
+            image_src = con.find('img', {"class": "badge-item-img", "src": True})
+            if image_src:
+                image = image_src['src']
+
+            if image:
+                if self._add_image(image):
+                    images_added += 1
+
+        if not images_added:
+            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))

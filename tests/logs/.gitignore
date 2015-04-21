@@ -1,0 +1,3 @@
+# this dir is the target of test logs
+.gitignore
+!.gitignore

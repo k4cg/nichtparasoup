@@ -1,18 +1,12 @@
 
-try:
-    import urllib.request as urllib2  # py3
-except:
-    import urllib2  # py2
 
 try:
     import urllib.parse as urlparse  # py3
 except:
     import urlparse  # py2
 
-import re
 import json
 
-from bs4 import BeautifulSoup
 
 from . import Crawler, CrawlerError
 
@@ -42,22 +36,28 @@ class Instagram(Crawler):
         uri = urlparse.urljoin(self.__uri, "?max_id="+self.__last)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        request = urllib2.Request(uri, headers=self.__class__.headers())
-        response = urllib2.urlopen(request, timeout=self.__class__.timeout())
+        remote = self.__class__._fetch_remote(uri)
+        if not remote:
+            self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
+            return
 
-        charset = 'utf8'
-        try:  # py3
-            charset = response.info().get_param('charset', charset)
-        except:
-            pass
-
-        data = json.loads(response.read().decode(charset))
-        if data["status"] != "ok":
+        data = json.loads(remote)
+        if "status" not in data or data["status"] != "ok":
             raise CrawlerError()
 
-        for item in data['items']:
-            if item["type"] == "image":
-                self.__last = item['id']
-                image = item['images']['standard_resolution']['url']
-                self._add_image(image)
+        images_added = 0
+        for item_image in [item for item in data['items'] if item["type"] == "image"]:
+            if 'id' in item_image:
+                self.__last = item_image['id']
+
+            if 'images' in item_image \
+                    and 'standard_resolution' in item_image['images']\
+                    and 'url' in item_image['images']['standard_resolution']:
+                image = item_image['images']['standard_resolution']['url']
+                if image:
+                    if self._add_image(image):
+                        images_added += 1
+
+        if not images_added:
+            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))
 
