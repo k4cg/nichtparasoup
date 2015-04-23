@@ -76,6 +76,7 @@ from crawler.pr0gramm import Pr0gramm
 from crawler.ninegag import NineGag
 from crawler.instagram import Instagram
 from crawler.fourchan import Fourchan
+from crawler.giphy import Giphy
 
 
 def get_crawlers(configuration, section):
@@ -130,6 +131,8 @@ def get_crawlers(configuration, section):
             crawler_uris = ["http://instagram.com/%s" % site for site in crawler_sites]
         elif crawler_class == Fourchan:
             crawler_uris = ["http://boards.4chan.org/%s" % site for site in crawler_sites]
+        elif crawler_class == Giphy:
+            crawler_uris = ["http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites]
 
         crawlers += [crawler_class(crawler_uri) for crawler_uri in crawler_uris]
 

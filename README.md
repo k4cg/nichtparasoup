@@ -1,7 +1,7 @@
 # nichtparasoup
 
 nichtparasoup is a hackerspaces home entertainment system. It randomly
-displays images/gifs from [soup.io](http://soup.io),
+displays images/gifs from [giphy](http://giphy.com), [soup.io](http://soup.io),
 [pr0gramm](http://pr0gramm.com), [4chan](http://4chan.org),
 [9gag](http://9gag.com) and [reddit](http://reddit.com).
 
@@ -76,6 +76,7 @@ Reddit: nsfw,gifs,pics,nsfw_gifs,aww,aww_gifs,reactiongifs,wtf,FoodPorn,cats,ImG
 NineGag: geeky,wtf,girl,hot,trending
 Instagram: cats,animals,pornhub,nerdy_gaming_art,nature,wtf
 Fourchan: b,sci
+Giphy: feels, alcohol, fail, troll, diy, robot, stars, physics
 ```
 For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http://reddit.com/r/gifs` end up
 being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
