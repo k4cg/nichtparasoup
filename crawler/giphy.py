@@ -16,11 +16,12 @@ class Giphy(Crawler):
 
     __uri = ""
     __next = 0
-    __limit = 10
+    __limit = 50
     __apikey = "dc6zaTOxFJmzC"
 
-    def _build_uri(self, uri):
-        return uri + "&api_key=" + self.__apikey + "&limit=" + str(self.__limit)
+    @classmethod
+    def _build_uri(cls, uri):
+        return uri + "&api_key=" + cls.__apikey + "&limit=" + str(cls.__limit)
 
     def _restart_at_front(self):
         self.__next = 0
@@ -40,7 +41,7 @@ class Giphy(Crawler):
 
         data = json.loads(remote)
 
-        self.__next = self.__next + self.__limit
+        self.__next += self.__limit
 
         images_added = 0
         for child in data['data']:
