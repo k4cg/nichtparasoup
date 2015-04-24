@@ -11,7 +11,7 @@ from . import Crawler, CrawlerError
 class SoupIO(Crawler):
     """ soup.io image provider """
 
-    ___uri = ""
+    __uri = ""
     __next = ""
 
     __base = "http://soup.io/"
@@ -24,7 +24,7 @@ class SoupIO(Crawler):
         self.__next = ""
 
     def __init__(self, uri):
-        self.__uri = self.__build_uri(uri)
+        self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
