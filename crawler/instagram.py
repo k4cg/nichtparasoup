@@ -19,8 +19,8 @@ class Instagram(Crawler):
 
     ## class methods
 
-    @classmethod
-    def __build_uri(cls, uri):
+    @staticmethod
+    def __build_uri(uri):
         return uri +"/media/"
 
     ## instance methods
