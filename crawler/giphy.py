@@ -12,11 +12,13 @@ from . import Crawler, CrawlerError
 
 
 class Giphy(Crawler):
-    """ class def: a crawler for Reddit image threads """
+    """ class def: a crawler for Giphy """
 
     __uri = ""
     __next = 0
+
     __limit = 50
+
     __apikey = "dc6zaTOxFJmzC"
 
     @classmethod
@@ -27,7 +29,7 @@ class Giphy(Crawler):
         self.__next = 0
 
     def __init__(self, uri):
-        self.__uri = self._build_uri(uri)
+        self.__uri = self.__class__._build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
