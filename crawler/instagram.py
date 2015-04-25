@@ -21,7 +21,7 @@ class Instagram(Crawler):
 
     @staticmethod
     def __build_uri(uri):
-        return uri +"/media/"
+        return urlparse.urljoin(uri+"/", "./media/")
 
     ## instance methods
 

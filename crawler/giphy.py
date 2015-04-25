@@ -19,11 +19,11 @@ class Giphy(Crawler):
 
     __limit = 50
 
-    __apikey = "dc6zaTOxFJmzC"
+    __api_key = "dc6zaTOxFJmzC"
 
     @classmethod
     def _build_uri(cls, uri):
-        return uri + "&api_key=" + cls.__apikey + "&limit=" + str(cls.__limit)
+        return uri + "&api_key=" + cls.__api_key + "&limit=" + str(cls.__limit)
 
     def _restart_at_front(self):
         self.__next = 0

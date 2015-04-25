@@ -24,17 +24,17 @@ class NineGag(Crawler):
         return uri
 
     def _restart_at_front(self):
-        self.__next = ""
+        self.__next = self.__uri
 
     def __init__(self, uri):
         self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
-        uri = urlparse.urljoin(self.__uri, self.__next)
+        uri = self.__next
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        (page, _) = self.__class__._fetch_remote_html(uri)
+        (page, base, _) = self.__class__._fetch_remote_html(uri)
         if not page:
             self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
             return
@@ -43,11 +43,14 @@ class NineGag(Crawler):
         # to know what page to parse next
         # update new last URI when we're not on first run
         _more = page.find("div", {"class": "loading"})
+        _next = None
         if _more:
             _more = _more.find("a", {"class": "btn badge-load-more-post", "href": True})
             if _more:
-                self.__next = _more["href"]
-        if not _more:
+                _next = urlparse.urljoin(base, _more["href"])
+        if _next:
+            self.__next = _next
+        else:
             self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
 
 
@@ -66,7 +69,7 @@ class NineGag(Crawler):
                 image = image_src['src']
 
             if image:
-                if self._add_image(image):
+                if self._add_image(urlparse.urljoin(base, image)):
                     images_added += 1
 
         if not images_added:
