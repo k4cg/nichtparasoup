@@ -32,7 +32,7 @@ class Reddit(Crawler):
         uri = urlparse.urljoin(self.__uri, "?after="+self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        remote = self.__class__._fetch_remote(uri)
+        (remote, uri) = self.__class__._fetch_remote(uri)
         if not remote:
             self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
             return

@@ -122,7 +122,7 @@ class Crawler(object):
         return remote document
         :type uri: str
         :type depth_indicator: int
-        :rtype: str | None
+        :rtype: (document: str | None, uri)
         """
 
         cls._log("debug", "fetch remote(%d): %s" % (depth_indicator, uri))
@@ -132,13 +132,15 @@ class Crawler(object):
         if not response:
             return None
 
+        uri = response.geturl()
+
         charset = 'utf8'
         try:  # py3
             charset = response.info().get_param('charset', charset)
         except:
             pass
 
-        return response.read().decode(charset)
+        return response.read().decode(charset), uri
 
     @classmethod
     def _fetch_remote_html(cls, uri, follow_meta_refresh=True, follow_meta_refresh_max=5, bs4features=None):
@@ -154,7 +156,7 @@ class Crawler(object):
         follow_meta_refresh_depth = 1
 
         while True:
-            response = cls._fetch_remote(uri, follow_meta_refresh_depth)
+            (response, uri) = cls._fetch_remote(uri, follow_meta_refresh_depth)
 
             if not response:
                 break

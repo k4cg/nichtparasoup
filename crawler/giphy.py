@@ -36,7 +36,7 @@ class Giphy(Crawler):
         uri = self.__uri + "&offset=" + str(self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        remote = self.__class__._fetch_remote(uri)
+        (remote, uri) = self.__class__._fetch_remote(uri)
         if not remote:
             self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
             return
