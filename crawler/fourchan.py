@@ -17,7 +17,7 @@ class Fourchan(Crawler):
 
     @staticmethod
     def __build_uri(uri):
-        return uri + "/"
+        return uri
 
     def _restart_at_front(self):
         self.__next = self.__uri
