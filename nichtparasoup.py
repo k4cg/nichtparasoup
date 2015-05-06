@@ -9,14 +9,14 @@ import threading
 import argparse
 
 try:
-    from configparser import RawConfigParser  # py 3
-except:
-    from ConfigParser import RawConfigParser  # py 2
+    from configparser import RawConfigParser    # py 3
+except ImportError:
+    from ConfigParser import RawConfigParser    # py 2
 
 try:
-    from urllib.parse import quote_plus as url_quote_plus
-except:
-    from urllib import quote_plus as url_quote_plus
+    from urllib.parse import quote_plus as url_quote_plus   # py3
+except ImportError:
+    from urllib import quote_plus as url_quote_plus         # py2
 
 
 from werkzeug.wrappers import Request, Response
