@@ -1,9 +1,9 @@
 
 
 try:
-    import urllib.parse as urlparse     # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 
 from . import Crawler, CrawlerError
@@ -40,13 +40,13 @@ class Fourchan(Crawler):
         # update new last URI when we're not on first run
         _buttons = page.find_all("a", {"class": "button", "href": True})
         if _buttons:
-            self.__next = urlparse.urljoin(base, _buttons[-1]["href"])
+            self.__next = urljoin(base, _buttons[-1]["href"])
         else:
             self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
 
         images_added = 0
         for con in page.find_all("a", {"class": "fileThumb", "href": True}):
-            if self._add_image(urlparse.urljoin(base, con["href"])):
+            if self._add_image(urljoin(base, con["href"])):
                 images_added += 1
 
         if not images_added:

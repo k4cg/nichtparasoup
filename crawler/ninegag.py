@@ -1,8 +1,8 @@
 
 try:
-    import urllib.parse as urlparse     # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 import re
 
@@ -47,7 +47,7 @@ class NineGag(Crawler):
         if _more:
             _more = _more.find("a", {"class": "btn badge-load-more-post", "href": True})
             if _more:
-                _next = urlparse.urljoin(base, _more["href"])
+                _next = urljoin(base, _more["href"])
         if _next:
             self.__next = _next
         else:
@@ -69,7 +69,7 @@ class NineGag(Crawler):
                 image = image_src['src']
 
             if image:
-                if self._add_image(urlparse.urljoin(base, image)):
+                if self._add_image(urljoin(base, image)):
                     images_added += 1
 
         if not images_added:

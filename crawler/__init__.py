@@ -8,14 +8,14 @@ import time
 import re
 
 try:
-    import urllib.request as urllib2    # py3
+    from urllib.request import Request, urlopen     # py3
 except ImportError:
-    import urllib2                      # py2
+    from urllib2 import Request, urlopen            # py2
 
 try:
-    import urllib.parse as urlparse     # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 
 from bs4 import BeautifulSoup
@@ -126,8 +126,8 @@ class Crawler(object):
         """
 
         cls._log("debug", "fetch remote(%d): %s" % (depth_indicator, uri))
-        request = urllib2.Request(uri, headers=cls.request_headers())
-        response = urllib2.urlopen(request, timeout=cls.request_timeout())
+        request = Request(uri, headers=cls.request_headers())
+        response = urlopen(request, timeout=cls.request_timeout())
 
         if not response:
             return None
@@ -169,7 +169,7 @@ class Crawler(object):
             refresh_uri = cls.__html_find_meta_refresh(document)
             if not refresh_uri:
                 break
-            refresh_uri = urlparse.urljoin(uri, refresh_uri)
+            refresh_uri = urljoin(uri, refresh_uri)
 
             if refresh_uri == uri:
                 break
@@ -189,7 +189,7 @@ class Crawler(object):
 
         doc_base = cls.__html_find_base(document)
         if doc_base:
-            base = urlparse.urljoin(base, doc_base)
+            base = urljoin(base, doc_base)
 
         return document, base, uri
 

@@ -1,10 +1,5 @@
 
 
-try:
-    import urllib.parse as urlparse     # py3
-except ImportError:
-    import urlparse                     # py2
-
 import json
 
 from . import Crawler, CrawlerError

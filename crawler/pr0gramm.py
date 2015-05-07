@@ -2,14 +2,9 @@
 import re
 
 try:
-    import urllib.request as urllib2    # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urllib2                      # py2
-
-try:
-    import urllib.parse as urlparse     # py3
-except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 from . import Crawler, CrawlerError
 
@@ -51,7 +46,7 @@ class Pr0gramm(Crawler):
         pages = page_container.findAll("a", href=self.__filter)
         images_added = 0
         for page in pages:
-            if self.__crawl_page(urlparse.urljoin(base, page["href"])):
+            if self.__crawl_page(urljoin(base, page["href"])):
                 images_added += 1
 
         # @todo add paging: fetch next and stuff ...
@@ -69,4 +64,4 @@ class Pr0gramm(Crawler):
         if not image:
             return False
 
-        return self._add_image(urlparse.urljoin(base, image["src"]))
+        return self._add_image(urljoin(base, image["src"]))

@@ -1,9 +1,9 @@
 
 
 try:
-    import urllib.parse as urlparse     # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 from . import Crawler, CrawlerError
 
@@ -26,7 +26,7 @@ class SoupIO(Crawler):
         self._restart_at_front()
 
     def _crawl(self):
-        uri = urlparse.urljoin(self.__uri, self.__next)
+        uri = urljoin(self.__uri, self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
         (page, base, _) = self.__class__._fetch_remote_html(uri)
@@ -42,7 +42,7 @@ class SoupIO(Crawler):
         if _more:
             _more = _more.find("a", {"href": True})
             if _more:
-                _next = urlparse.urljoin(base, _more["href"])
+                _next = urljoin(base, _more["href"])
         if _next:
             self.__next = _next
         else:
@@ -54,7 +54,7 @@ class SoupIO(Crawler):
         for con in page.find_all("div", {"class": "imagecontainer"}):
             image = con.find('img', {"src": True})
             if image:
-                if self._add_image(urlparse.urljoin(base, image['src'])):
+                if self._add_image(urljoin(base, image['src'])):
                     images_added += 1
 
         if not images_added:

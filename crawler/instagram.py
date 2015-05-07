@@ -1,9 +1,9 @@
 
 
 try:
-    import urllib.parse as urlparse     # py3
+    from urllib.parse import urljoin    # py3
 except ImportError:
-    import urlparse                     # py2
+    from urlparse import urljoin        # py2
 
 import json
 
@@ -21,7 +21,7 @@ class Instagram(Crawler):
 
     @staticmethod
     def __build_uri(uri):
-        return urlparse.urljoin(uri+"/", "./media/")
+        return urljoin(uri+"/", "./media/")
 
     ## instance methods
 
@@ -33,7 +33,7 @@ class Instagram(Crawler):
         self._restart_at_front()
 
     def _crawl(self):
-        uri = urlparse.urljoin(self.__uri, "?max_id="+self.__last)
+        uri = urljoin(self.__uri, "?max_id="+self.__last)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
         (remote, uri) = self.__class__._fetch_remote(uri)
