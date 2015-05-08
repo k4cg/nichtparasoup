@@ -8,16 +8,18 @@ import time
 import re
 
 try:
-    import urllib.request as urllib2  # py3
-except:
-    import urllib2  # py2
+    from urllib.request import Request, urlopen     # py3
+except ImportError:
+    from urllib2 import Request, urlopen            # py2
 
 try:
-    import urllib.parse as urlparse  # py3
-except:
-    import urlparse  # py2
+    from urllib.parse import urljoin    # py3
+except ImportError:
+    from urlparse import urljoin        # py2
+
 
 from bs4 import BeautifulSoup
+
 
 class Crawler(object):
     """
@@ -30,14 +32,14 @@ class Crawler(object):
     __C_headers_ = 'headers'
     __C_resetDelay_ = 'resetDelay'
 
-    __refresh_uriRE = re.compile("^(?:\d*;)?url=(.+)$", flags=re.IGNORECASE)
+    __refresh_uri_RE = re.compile("^(?:\d*;)?url=(.+)$", flags=re.IGNORECASE)
 
-    __imageRE = re.compile(".*\.(?:jpeg|jpg|png|gif)(?:\?.*)?(?:#.*)?$", flags=re.IGNORECASE)
+    __image_RE = re.compile(".*\.(?:jpeg|jpg|png|gif)(?:\?.*)?(?:#.*)?$", flags=re.IGNORECASE)
 
     ## class vars
 
     __configuration = {
-        __C_timeout_: 2,  # needs to be greater 0
+        __C_timeout_: 10,  # needs to be greater 0
         __C_headers_: {},  # additional headers
         __C_resetDelay_: 10800  # value in seconds
     }
@@ -83,7 +85,7 @@ class Crawler(object):
     ## basic document fetcher
 
     @classmethod
-    def __find_meta_refresh(cls, document):
+    def __html_find_meta_refresh(cls, document):
         """
         :type document: BeautifulSoup
         :rtype: str | None
@@ -91,12 +93,28 @@ class Crawler(object):
         refresh_uri = None
 
         # <meta content="0;url=/images?foo=bar&amp;you=awesome" http-equiv="refresh">
-        meta_refresh = document.find("meta", {"http-equiv": "refresh", "content": True})
+        meta_refresh = document.find("meta", {"http-equiv": "refresh", "content": cls.__refresh_uri_RE})
         if meta_refresh:
             # @fixme html-decode !
-            refresh_uri = cls.__refresh_uriRE.search(meta_refresh["content"])
+            refresh_uri = cls.__refresh_uri_RE.match(meta_refresh["content"]).group(1)
 
         return refresh_uri
+
+    @staticmethod
+    def __html_find_base(document):
+        """
+        :type document: BeautifulSoup
+        :rtype: str | None
+        """
+        base_uri = None
+
+        # <base href="http://www.w3schools.com/images/" target="_blank">
+        base_tag = document.find("base", {"href": True})
+        if base_tag:
+            # @fixme html-decode !
+            base_uri = base_tag["href"]
+
+        return base_uri
 
     @classmethod
     def _fetch_remote(cls, uri, depth_indicator=1):
@@ -104,15 +122,17 @@ class Crawler(object):
         return remote document
         :type uri: str
         :type depth_indicator: int
-        :rtype: str | None
+        :rtype: (document: str | None, uri)
         """
 
         cls._log("debug", "fetch remote(%d): %s" % (depth_indicator, uri))
-        request = urllib2.Request(uri, headers=cls.request_headers())
-        response = urllib2.urlopen(request, timeout=cls.request_timeout())
+        request = Request(uri, headers=cls.request_headers())
+        response = urlopen(request, timeout=cls.request_timeout())
 
         if not response:
             return None
+
+        uri = response.geturl()
 
         charset = 'utf8'
         try:  # py3
@@ -120,35 +140,36 @@ class Crawler(object):
         except:
             pass
 
-        return response.read().decode(charset)
+        return response.read().decode(charset), uri
 
     @classmethod
-    def _fetch_remote_html(cls, uri, follow_meta_refresh=True, follow_meta_refresh_max=5):
+    def _fetch_remote_html(cls, uri, follow_meta_refresh=True, follow_meta_refresh_max=5, bs4features=None):
         """
-        returns remote HTML document and actual remote uri
+        returns remote HTML document, actual remote uri and base uri
         :type uri: str
         :type follow_meta_refresh: bool
         :type follow_meta_refresh_max: int
-        :rtype: ( BeautifulSoup | None , str )
+        :rtype: ( document: BeautifulSoup | None , base: str,  uri: str )
         """
 
         document = None
         follow_meta_refresh_depth = 1
 
         while True:
-            response = cls._fetch_remote(uri, follow_meta_refresh_depth)
+            (response, uri) = cls._fetch_remote(uri, follow_meta_refresh_depth)
 
             if not response:
                 break
 
-            document = BeautifulSoup(response)
+            document = BeautifulSoup(response, features=bs4features)
 
             if not follow_meta_refresh:
                 break
 
-            refresh_uri = cls.__find_meta_refresh(document)
+            refresh_uri = cls.__html_find_meta_refresh(document)
             if not refresh_uri:
                 break
+            refresh_uri = urljoin(uri, refresh_uri)
 
             if refresh_uri == uri:
                 break
@@ -164,7 +185,13 @@ class Crawler(object):
         if not document:
             cls._log("debug", "fetch remote HTML: %s is empty" % uri)
 
-        return document, uri
+        base = uri
+
+        doc_base = cls.__html_find_base(document)
+        if doc_base:
+            base = urljoin(base, doc_base)
+
+        return document, base, uri
 
     ## general functions
 
@@ -182,7 +209,7 @@ class Crawler(object):
 
     @classmethod
     def _is_image(cls, uri):
-        return cls.__imageRE.match(uri) is not None
+        return cls.__image_RE.match(uri) is not None
 
     @classmethod
     def __images_clear(cls):
@@ -288,6 +315,9 @@ class Crawler(object):
     ## abstract functions
 
     def __init__(self):
+        # call every abstract method to be sure it is there
+        self._restart_at_front()
+        self._crawl()
         raise NotImplementedError("Should have implemented this")
 
     def _crawl(self):

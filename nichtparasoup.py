@@ -9,9 +9,15 @@ import threading
 import argparse
 
 try:
-    from configparser import RawConfigParser  # py 3
-except:
-    from ConfigParser import RawConfigParser  # py 2
+    from configparser import RawConfigParser    # py 3
+except ImportError:
+    from ConfigParser import RawConfigParser    # py 2
+
+try:
+    from urllib.parse import quote_plus as url_quote_plus   # py3
+except ImportError:
+    from urllib import quote_plus as url_quote_plus         # py2
+
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -109,7 +115,7 @@ def get_crawlers(configuration, section):
             elif crawler_class == SoupIO:
                 crawler_config = "everyone"
 
-        crawler_sites = [site_stripped for site_stripped in
+        crawler_sites = [url_quote_plus(site_stripped) for site_stripped in
                          [site.strip() for site in crawler_config.split(",")]   # trim sites
                          if site_stripped]  # filter stripped list for valid values
         if not crawler_sites:
@@ -124,13 +130,13 @@ def get_crawlers(configuration, section):
         elif crawler_class == Pr0gramm:
             crawler_uris = ["http://pr0gramm.com/static/%s" % site for site in crawler_sites]
         elif crawler_class == SoupIO:
-            crawler_uris = [("http://soup.io/%s" if site in ["everyone"]    # public site
-                             else "http://%s.soup.io/") % site              # user site
+            crawler_uris = [("http://www.soup.io/%s" if site in ["everyone"]    # public site
+                             else "http://%s.soup.io") % site                   # user site
                             for site in crawler_sites]
         elif crawler_class == Instagram:
             crawler_uris = ["http://instagram.com/%s" % site for site in crawler_sites]
         elif crawler_class == Fourchan:
-            crawler_uris = ["http://boards.4chan.org/%s" % site for site in crawler_sites]
+            crawler_uris = ["http://boards.4chan.org/%s/" % site for site in crawler_sites]
         elif crawler_class == Giphy:
             crawler_uris = ["http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites]
 

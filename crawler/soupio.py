@@ -1,9 +1,9 @@
 
 
 try:
-    import urllib.parse as urlparse  # py3
-except:
-    import urlparse  # py2
+    from urllib.parse import urljoin    # py3
+except ImportError:
+    from urlparse import urljoin        # py2
 
 from . import Crawler, CrawlerError
 
@@ -11,27 +11,25 @@ from . import Crawler, CrawlerError
 class SoupIO(Crawler):
     """ soup.io image provider """
 
-    ___uri = ""
+    __uri = ""
     __next = ""
-
-    __base = "http://soup.io/"
 
     @staticmethod
     def __build_uri(uri):
         return urlparse.urljoin(uri, "?type=image")
 
     def _restart_at_front(self):
-        self.__next = ""
+        self.__next = self.__uri
 
     def __init__(self, uri):
-        self.__uri = self.__build_uri(uri)
+        self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
     def _crawl(self):
-        uri = urlparse.urljoin(self.__uri, self.__next)
+        uri = urljoin(self.__uri, self.__next)
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        (page, _) = self.__class__._fetch_remote_html(uri)
+        (page, base, _) = self.__class__._fetch_remote_html(uri)
         if not page:
             self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
             return
@@ -39,12 +37,15 @@ class SoupIO(Crawler):
         # get more content ("scroll down")
         # to know what page to parse next
         # update new last URI when we're not on first run
+        _next = None
         _more = page.find("div", {"id": "more_loading"})
         if _more:
             _more = _more.find("a", {"href": True})
             if _more:
-                self.__next = _more["href"]
-        if not _more:
+                _next = urljoin(base, _more["href"])
+        if _next:
+            self.__next = _next
+        else:
             self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
 
         # for every found imageContainer
@@ -53,7 +54,7 @@ class SoupIO(Crawler):
         for con in page.find_all("div", {"class": "imagecontainer"}):
             image = con.find('img', {"src": True})
             if image:
-                if self._add_image(urlparse.urljoin(self.__base, image['src'])):
+                if self._add_image(urljoin(base, image['src'])):
                     images_added += 1
 
         if not images_added:
