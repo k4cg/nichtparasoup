@@ -32,11 +32,12 @@ after that you can just run
 
 # configuration
 
-configuration takes place in `config.ini`. edit the defaults file to your needs. sections are:
+configuration takes place in `config.ini` - edit the file to your needs or you may write a derived config `myCustom.ini` and start the server via `nichtparasoup.py -c myCustom.ini`. 
+if you do so, you may edit some of the sections. not all is needed since most things are already defined in the `config.defaults.ini` which may be overwritten by your custom config file. sections are:
 
 ### general
 
-specify port, bindaddress and useragent that nichtparasoup uses for visiting the sites on crawler
+specify port, bind address and user agent that nichtparasoup uses for visiting the sites on crawler
 
 ```
 Port: 5000
@@ -82,9 +83,21 @@ For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http:
 being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
 
 
-# contribution
+## contribution
 
-basically, check the repo out and initialize the template bundler
+### server side & crawlers
+
+you find a crawler missing or not wirking? feel free to fill the gaps.
+
+writing a crawler will take less than halfe an hour. just grab one of the existing implementatiosn, copy it, modify it, resr it.
+
+don't forget to write a test config to `tests/configs` and use this for testing your work easily.
+
+if you like, you may also contribute a logo for the frontend. just follow the instructions from the `templates_raw/root/css/sourceIcons.css` file and compile the frontend afterwards.
+
+### frontend 
+
+basically, check out the repo and initialize the template bundler
 
 As the template bundler is a seperate repo you have to execute the following command if you want to use it (to create your own templates)
 
@@ -129,3 +142,7 @@ configured `Images_min_limit` get hit, the crawler starts choosing
 a new random image provider (see at the top) and refills your cache. the crawler
 thread wakes up every `1.337` seconds and checks the status of the current imgmap.
 
+
+# license 
+
+MIT
