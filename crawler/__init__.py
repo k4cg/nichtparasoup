@@ -119,7 +119,7 @@ class Crawler(object):
     @classmethod
     def _fetch_remote(cls, uri, depth_indicator=1):
         """
-        return remote document
+        return remote document and actual remote uri
         :type uri: str
         :type depth_indicator: int
         :rtype: (document: str | None, uri)
@@ -135,9 +135,9 @@ class Crawler(object):
         uri = response.geturl()
 
         charset = 'utf8'
-        try:  # py3
-            charset = response.info().get_param('charset', charset)
-        except:
+        try:
+            charset = response.info().get_param('charset', charset)     # py3
+        except AttributeError:
             pass
 
         return response.read().decode(charset), uri

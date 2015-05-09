@@ -50,7 +50,7 @@ config = RawConfigParser()
 config.read(path.join(_file_path, 'config.defaults.ini'))
 try:
     config.read_file(args.config_file)  # py3
-except:
+except AttributeError:
     config.readfp(args.config_file)     # py2
 args.config_file.close()
 
