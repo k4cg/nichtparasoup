@@ -1,6 +1,7 @@
 
 ## ignore our own log files
 *.log
+logs/*
 
 
 ## ignore python runtime files - based on https://github.com/github/gitignore/blob/master/Python.gitignore

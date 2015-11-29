@@ -33,7 +33,8 @@ after that you can just run
 # configuration
 
 configuration takes place in `config.ini` - edit the file to your needs or you may write a derived config `myCustom.ini` and start the server via `nichtparasoup.py -c myCustom.ini`. 
-if you do so, you may edit some of the sections. not all is needed since most things are already defined in the `config.defaults.ini` which may be overwritten by your custom config file. sections are:
+if you do so, you may edit some of the sections. not all is needed since most things are already defined in the `config.defaults.ini` which may be overwritten by your custom config file. 
+Also we included some sfw and nsfw configs in the repo.
 
 ### general
 
