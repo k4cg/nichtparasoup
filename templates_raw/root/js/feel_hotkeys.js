@@ -97,9 +97,6 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 					break;
 				case 75: // k
 					var galleryState = 6;
-					if(!np.getState(galleryState)) {
-						$(".fancybox").eq(1).trigger("click");
-					}
 					break;
 			}
 
