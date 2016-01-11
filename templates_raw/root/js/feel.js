@@ -6,12 +6,9 @@
 	var log = window.helperFuncs.log;
 	log('feel started'); // @stripOnBuild
 
-
-
 	var addEvent = window.helperFuncs.addEvent
 	  , fireEvent = window.helperFuncs.fireEvent
 	  ;
-
 
 	/*
 	 * put everything public/protected in a single-use object called 'np'
@@ -174,14 +171,8 @@
 					</section>
 				</article>
 			*/
-			var imageLink = document.createElement('a');
-			imageLink.setAttribute('class', 'fancybox');
-			imageLink.setAttribute('href', uri);
-			imageLink.setAttribute('rel', 'group');
-			imageLink.appendChild(imageDoc);
-			$("a.fancybox").fancybox();
 			var imageBox = document.createElement('article');
-			imageBox.appendChild(imageLink);
+			imageBox.appendChild(imageDoc);
 			var srcSpan = imageBox.appendChild(document.createElement('section'));
 			srcSpan.className = 'src '+ crawler;
 
