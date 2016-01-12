@@ -100,10 +100,12 @@ if you like, you may also contribute a logo for the frontend. just follow the in
 
 basically, check out the repo and initialize the template bundler
 
-As the template bundler is a seperate repo you have to execute the following command if you want to use it (to create your own templates)
+As the template bundler is a seperate repo you have to execute the following commands if you want to use it (to create your own templates).
 
 ```bash
 git submodule update --init --recursive
+cd templates_raw/_bundler
+sudo pip install -r requirements.txt
 ```
 
 # internals
