@@ -83,6 +83,14 @@ Giphy: feels, alcohol, fail, troll, diy, robot, stars, physics
 For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http://reddit.com/r/gifs` end up
 being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
 
+Crawlers can be weighted against each other with optional factors ranging from 0.1 to 10.0:  
+```
+SoupIO: everyone-2.5
+Pr0gramm: static-5.0, new-0.5, top
+```
+
+The default factor is 1.
+In the configuration above the images from SoupIO-everyone should be around the half of Pr0gramm-static as well as around five times as much as Pr0gramm-new.
 
 ## contribution
 
