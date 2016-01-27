@@ -48,7 +48,7 @@ class Fourchan(Crawler):
 
         images_added = 0
         for con in page.find_all("a", {"class": "fileThumb", "href": True}):
-            if self._add_image(urljoin(base, con["href"])):
+            if self._add_image(urljoin(base, con["href"]), self.__site):
                 images_added += 1
 
         if not images_added:

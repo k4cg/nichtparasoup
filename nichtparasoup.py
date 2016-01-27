@@ -197,7 +197,6 @@ def cache_status():
     logger.info(msg)
     return msg
 
-
 # print imagelist
 def show_imagelist():
     return "\n".join(Crawler.show_imagelist())

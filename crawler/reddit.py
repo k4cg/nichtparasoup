@@ -46,7 +46,7 @@ class Reddit(Crawler):
         for child in data['data']['children']:
             image = child['data']['url']
             if image:
-                if self._add_image(image):
+                if self._add_image(image, self.__site):
                     images_added += 1
 
         if not images_added:

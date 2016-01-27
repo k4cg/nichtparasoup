@@ -66,4 +66,4 @@ class Pr0gramm(Crawler):
         if not image:
             return False
 
-        return self._add_image(urljoin(base, image["src"]))
+        return self._add_image(urljoin(base, image["src"]), self.__site)

@@ -56,7 +56,7 @@ class SoupIO(Crawler):
         for con in page.find_all("div", {"class": "imagecontainer"}):
             image = con.find('img', {"src": True})
             if image:
-                if self._add_image(urljoin(base, image['src'])):
+                if self._add_image(urljoin(base, image['src']), self.__site):
                     images_added += 1
 
         if not images_added:

@@ -45,7 +45,7 @@ class Giphy(Crawler):
         for child in data['data']:
             image = child['images']['original']['url']
             if image:
-                if self._add_image(image):
+                if self._add_image(image, self.__site):
                     images_added += 1
 
         if not images_added:

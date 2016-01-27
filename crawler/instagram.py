@@ -57,7 +57,7 @@ class Instagram(Crawler):
                     and 'url' in item_image['images']['standard_resolution']:
                 image = item_image['images']['standard_resolution']['url']
                 if image:
-                    if self._add_image(image):
+                    if self._add_image(image, self.__site):
                         images_added += 1
 
         if not images_added:

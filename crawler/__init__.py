@@ -45,7 +45,7 @@ class Crawler(object):
     }
 
     __blacklist = []
-    __images = []
+    __images = {}
 
     __logger = None
 
@@ -213,13 +213,14 @@ class Crawler(object):
 
     @classmethod
     def __images_clear(cls):
-        cls.__images = []  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
+        cls.__images = {}  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
 
     @classmethod
-    def __add_image(cls, uri, crawler=None):
+    def __add_image(cls, uri, crawler, site):
         """
         :type uri: str
-        :type crawler: str | None
+        :type crawler: str
+        :type site: str
         :return: bool
         """
         if not cls._is_image(uri):
@@ -229,18 +230,31 @@ class Crawler(object):
         if cls._is_blacklisted(uri):
             return False
 
+        if crawler not in cls.__images:
+            cls.__images[crawler] = {}
+
+        if site not in cls.__images[crawler]:
+            cls.__images[crawler][site] = []
+
         cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-        cls.__images.append("%s#%s" % (uri, crawler))
-        cls._log("debug", "added: %s" % (uri))
+        cls.__images[crawler][site].append("%s#%s" % (uri, crawler))
+        cls._log("debug", "added %s-%s: %s" % (crawler, site, uri))
         return True
 
     @classmethod
     def get_image(cls):
         images = cls.__images
         if images:
-            image = random.choice(images)
-            images.remove(image)
-            cls._log("debug", "delivered: %s - remaining: %d" % (image, len(images)))
+
+            image_found = False
+            while not image_found:
+                crawler = random.choice(images.keys())
+                site = random.choice(images[crawler].keys())
+                image_found = len(images[crawler][site]) > 0
+
+            image = random.choice(images[crawler][site])
+            images[crawler][site].remove(image)
+            cls._log("debug", "delivered %s-%s: %s - remaining: %d" % (crawler, site, image, len(images)))
             return image
         return None
 
@@ -261,16 +275,32 @@ class Crawler(object):
     def info(cls):
         images = cls.__images
         blacklist = cls.__blacklist
-        return {
-            "images": len(images),
+
+        info = {
             "images_size": sys.getsizeof(images, 0),
             "blacklist": len(blacklist),
             "blacklist_size": sys.getsizeof(blacklist, 0)
         }
 
+        images_count = 0
+        for crawler in images:
+            for site in images[crawler]:
+                site_image_count = len(images[crawler][site])
+                images_count += site_image_count
+                info[crawler + "_" + site] = site_image_count
+
+        info["images"] = images_count
+
+        return info
+
     @classmethod
     def show_imagelist(cls):
-        return cls.__images
+        images = []
+        for crawler in cls.__images:
+            for site in cls.__images[crawler]:
+                images.append(cls.__images[crawler][site])
+
+        return images
 
     @classmethod
     def show_blacklist(cls):
@@ -305,12 +335,13 @@ class Crawler(object):
             e = sys.exc_info()[0]
             self.__class__._log("exception", "unexpected crawler error: %s" % (repr(e)))
 
-    def _add_image(self, uri):
+    def _add_image(self, uri, site):
         """
         :type uri: str
+        :type site: str
         :rtype: bool
         """
-        return self.__class__.__add_image(uri, crawler=self.__class__.__name__)
+        return self.__class__.__add_image(uri, self.__class__.__name__, site)
 
     ## abstract functions
 

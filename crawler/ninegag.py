@@ -71,7 +71,7 @@ class NineGag(Crawler):
                 image = image_src['src']
 
             if image:
-                if self._add_image(urljoin(base, image)):
+                if self._add_image(urljoin(base, image), self.__site):
                     images_added += 1
 
         if not images_added:
