@@ -89,9 +89,9 @@ def get_crawlers(configuration, section):
 
     :param configuration: RawConfigParser
     :param section: string
-    :return: list
+    :return: crawler, factors
     """
-    crawlers = []
+    crawlers = {}
     factors = {}
 
     for crawler_class in Crawler.__subclasses__():
@@ -162,7 +162,10 @@ def get_crawlers(configuration, section):
         elif crawler_class == Giphy:
             crawler_uris = {site: "http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
 
-        crawlers += [crawler_class(crawler_uris[site], site) for site in crawler_uris]
+        if crawler_class_name not in crawlers:
+            crawlers[crawler_class_name] = {}
+
+        crawlers[crawler_class_name] = {site: crawler_class(crawler_uris[site], site) for site in crawler_uris}
 
     return crawlers, factors
 
@@ -175,10 +178,16 @@ if not sources:
 # wrapper function for cache filling
 def cache_fill_loop():
     global sources
-    while True:  # fill cache up to min_cache_imgs
-        if Crawler.info()["images"] < min_cache_imgs_before_refill:
-            while Crawler.info()["images"] < min_cache_imgs:
-                random.choice(sources).crawl()
+    while True:  # fill cache up to min_cache_imgs per site
+
+        info = Crawler.info()
+        for crawler in sources:
+            for site in sources[crawler]:
+                key = crawler + "_" + site
+                if key not in info or info[key] < min_cache_imgs_before_refill:
+                    while key not in info or info[key] < min_cache_imgs:
+                        sources[crawler][site].crawl()
+                        info = Crawler.info()
 
         # sleep for non-invasive threading ;)
         time.sleep(1.337)
@@ -194,6 +203,21 @@ def cache_status():
     info = Crawler.info()
     msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" % \
           (info["images"], info["images_size"], info["blacklist"], info["blacklist_size"])
+    logger.info(msg)
+
+    for crawler in sources:
+        for site in sources[crawler]:
+            key = crawler + "_" + site
+            if key in info:
+
+                factor = 1
+                if crawler in factors and site in factors[crawler]:
+                    factor = factors[crawler][site]
+
+                sitestats = "%15s - %-15s with factor %2d: %d Images" % (crawler, site, factor, info[key])
+                logger.info(sitestats)
+                msg += "\r\n" + sitestats
+
     logger.info(msg)
     return msg
 

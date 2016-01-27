@@ -277,18 +277,20 @@ class Crawler(object):
         blacklist = cls.__blacklist
 
         info = {
-            "images_size": sys.getsizeof(images, 0),
             "blacklist": len(blacklist),
             "blacklist_size": sys.getsizeof(blacklist, 0)
         }
 
         images_count = 0
+        images_size = 0
         for crawler in images:
             for site in images[crawler]:
                 site_image_count = len(images[crawler][site])
                 images_count += site_image_count
+                images_size += sys.getsizeof(images[crawler][site])
                 info[crawler + "_" + site] = site_image_count
 
+        info["images_size"] = images_size
         info["images"] = images_count
 
         return info
