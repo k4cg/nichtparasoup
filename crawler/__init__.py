@@ -47,6 +47,7 @@ class Crawler(object):
     __blacklist = []
     __images = {}
 
+    __factors = None
     __logger = None
 
     ## properties
@@ -244,23 +245,61 @@ class Crawler(object):
     @classmethod
     def get_image(cls):
         images = cls.__images
+        factors = cls.__factors
         if images:
 
-            image_found = False
-            while not image_found:
-                crawler = random.choice(images.keys())
-                site = random.choice(images[crawler].keys())
-                image_found = len(images[crawler][site]) > 0
+            if not factors:
+                # Without factors, return random image from Cache
+                image_found = False
+                while not image_found:
+                    crawler = random.choice(images.keys())
+                    site = random.choice(images[crawler].keys())
+                    image_found = len(images[crawler][site]) > 0
 
-            image = random.choice(images[crawler][site])
-            images[crawler][site].remove(image)
-            cls._log("debug", "delivered %s-%s: %s - remaining: %d" % (crawler, site, image, len(images)))
-            return image
+                image = random.choice(images[crawler][site])
+                images[crawler][site].remove(image)
+                cls._log("debug", "delivered %s-%s: %s - remaining: %d"
+                         % (crawler, site, image, len(images[crawler][site])))
+                return image
+
+            else:
+                # return image respecting factors:
+                # Summing up the Factors till reaching a random number
+
+                max = 0
+                for crawler in images:
+                    for site in images[crawler]:
+                        factor = 1
+                        if crawler in factors and site in factors[crawler]:
+                            factor = factors[crawler][site]
+
+                        max += factor
+
+                rnd = random.uniform(0, max)
+
+                count = 0
+                for crawler in images:
+                    for site in images[crawler]:
+                        factor = 1
+                        if crawler in factors and site in factors[crawler]:
+                            factor = factors[crawler][site]
+
+                        count += factor
+                        if count > rnd:
+                            image = random.choice(images[crawler][site])
+                            images[crawler][site].remove(image)
+                            cls._log("debug", "delivered %s-%s: %s - remaining: %d"
+                                     % (crawler, site, image, len(images[crawler][site])))
+                            return image
         return None
 
     @classmethod
     def set_logger(cls, logger):
         cls.__logger = logger
+
+    @classmethod
+    def set_factors(cls, factors):
+        cls.__factors = factors
 
     @classmethod
     def _log(cls, log_type, message):

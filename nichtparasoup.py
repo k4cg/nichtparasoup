@@ -173,6 +173,8 @@ def get_crawlers(configuration, section):
 (sources, factors) = get_crawlers(config, "Sites")
 if not sources:
     raise Exception("no sources configured")
+if factors:
+    Crawler.set_factors(factors)
 
 
 # wrapper function for cache filling
@@ -214,7 +216,25 @@ def cache_status():
                 if crawler in factors and site in factors[crawler]:
                     factor = factors[crawler][site]
 
-                sitestats = "%15s - %-15s with factor %2d: %d Images" % (crawler, site, factor, info[key])
+                count = info[key]
+
+                # "Drawing" a Bar to visualize the cache status
+                sharps_percent = min_cache_imgs_before_refill * 100 / min_cache_imgs
+                count_percent = count * 100 / min_cache_imgs
+
+                bar = "["
+                for i in range(1,15):
+                    if i * 10 < count_percent:
+                        if i * 10 < sharps_percent:
+                            bar += "#"
+                        else:
+                            bar += "*"
+                    elif i <= 10:
+                        bar += "_"
+                    if i == 10:
+                        bar += "]"
+
+                sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " + bar) % (crawler, site, factor, count)
                 logger.info(sitestats)
                 msg += "\r\n" + sitestats
 
