@@ -66,6 +66,7 @@ hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
 
+factor_separator = "-"
 call_flush_timeout = 10  # value in seconds
 call_flush_last = time.time() - call_flush_timeout
 
@@ -84,7 +85,6 @@ from crawler.instagram import Instagram
 from crawler.fourchan import Fourchan
 from crawler.giphy import Giphy
 
-
 def get_crawlers(configuration, section):
     """
     parse the config section for crawlers
@@ -96,6 +96,7 @@ def get_crawlers(configuration, section):
     :return: list
     """
     crawlers = []
+    factors = {}
 
     for crawler_class in Crawler.__subclasses__():
         crawler_class_name = crawler_class.__name__
@@ -115,13 +116,38 @@ def get_crawlers(configuration, section):
             elif crawler_class == SoupIO:
                 crawler_config = "everyone"
 
-        crawler_sites = [url_quote_plus(site_stripped) for site_stripped in
+        crawler_sites_and_factors = [url_quote_plus(site_stripped) for site_stripped in
                          [site.strip() for site in crawler_config.split(",")]   # trim sites
                          if site_stripped]  # filter stripped list for valid values
-        if not crawler_sites:
+
+        if not crawler_sites_and_factors:
             continue    # skip crawler if no valid sites configured
 
-        logger.info("found configured Crawler: %s = %s" % (crawler_class_name, repr(crawler_sites)))
+        crawler_sites = []
+        factors[crawler_class_name] = {}
+
+        # Separate Site and Factor
+        for factorPair in crawler_sites_and_factors:
+            if factor_separator not in factorPair:
+                # No Factor configured
+                crawler_sites.append(factorPair)
+                continue
+
+            factorPair_parts = [factorPairPart.strip() for factorPairPart in factorPair.split(factor_separator)]
+
+            if not factorPair_parts or not len(factorPair_parts) == 2:
+                continue
+
+            site = factorPair_parts[0]
+            factor = float(factorPair_parts[1])
+
+            crawler_sites.append(site)
+
+            if site not in factors[crawler_class_name] and 0 < factor <= 10:
+                factors[crawler_class_name][site] = factor
+
+        logger.info("found configured Crawler: %s = %s Factors: %s" % (crawler_class_name, repr(crawler_sites), repr(factors[crawler_class_name])))
+
 
         if crawler_class == Reddit:
             crawler_uris = ["http://www.reddit.com/r/%s" % site for site in crawler_sites]
@@ -142,9 +168,9 @@ def get_crawlers(configuration, section):
 
         crawlers += [crawler_class(crawler_uri) for crawler_uri in crawler_uris]
 
-    return crawlers
+    return crawlers, factors
 
-sources = get_crawlers(config, "Sites")
+(sources, factors) = get_crawlers(config, "Sites")
 if not sources:
     raise Exception("no sources configured")
 
