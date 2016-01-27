@@ -15,6 +15,7 @@ class Reddit(Crawler):
 
     __uri = ""
     __next = ""
+    __site = ""
 
     @staticmethod
     def __build_uri(uri):
@@ -23,7 +24,8 @@ class Reddit(Crawler):
     def _restart_at_front(self):
         self.__next = ""
 
-    def __init__(self, uri):
+    def __init__(self, uri, site):
+        self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
