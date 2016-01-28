@@ -48,12 +48,12 @@ Useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/600.1.25 (K
 
 ### cache
 
-`Images` indicates how many images will be loaded on each crawler run
+`Images` indicates how many images will be loaded per crawler on each crawler run
 `Images_min_limit` configures at how many images the crawler starts again collecting new images from the sites.
 
 ```
-Images: 150
-Images_min_limit: 20
+Images: 30
+Images_min_limit: 15
 ```
 
 ### logging
@@ -135,7 +135,7 @@ below.
 
 when you start nichtparasoup
 
-* fill up cache by startup (150 imageurls cached by default)
+* fill up cache by startup (30 imageurls cached per defined crawler by default)
 * starts up the webserver
 * point your browser to the configured `localhost:5000/`
 * startpage will request single image randomly by `/get` and show them
