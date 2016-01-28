@@ -187,8 +187,8 @@ def cache_fill_loop():
             for site in sources[crawler]:
                 key = crawler + "_" + site
 
-                if key not in info or info["images_per_site"][key] < min_cache_imgs_before_refill:
-                    while key not in info or info["images_per_site"][key] < min_cache_imgs:
+                if key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs_before_refill:
+                    while key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs:
                         sources[crawler][site].crawl()
                         info = Crawler.info()
 
