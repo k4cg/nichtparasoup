@@ -186,8 +186,9 @@ def cache_fill_loop():
         for crawler in sources:
             for site in sources[crawler]:
                 key = crawler + "_" + site
-                if key not in info or info[key] < min_cache_imgs_before_refill:
-                    while key not in info or info[key] < min_cache_imgs:
+
+                if key not in info or info["images_per_site"][key] < min_cache_imgs_before_refill:
+                    while key not in info or info["images_per_site"][key] < min_cache_imgs:
                         sources[crawler][site].crawl()
                         info = Crawler.info()
 
@@ -210,13 +211,13 @@ def cache_status():
     for crawler in sources:
         for site in sources[crawler]:
             key = crawler + "_" + site
-            if key in info:
+            if key in info["images_per_site"]:
 
                 factor = 1
                 if crawler in factors and site in factors[crawler]:
                     factor = factors[crawler][site]
 
-                count = info[key]
+                count = info["images_per_site"][key]
 
                 # "Drawing" a Bar to visualize the cache status
                 sharps_percent = min_cache_imgs_before_refill * 100 / min_cache_imgs
