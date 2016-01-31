@@ -61,7 +61,7 @@ hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
 
-factor_separator = "-"
+factor_separator = "*"
 call_flush_timeout = 10  # value in seconds
 call_flush_last = time.time() - call_flush_timeout
 
@@ -112,8 +112,7 @@ def get_crawlers(configuration, section):
             elif crawler_class == SoupIO:
                 crawler_config = "everyone"
 
-        crawler_sites_and_factors = [url_quote_plus(site_stripped) for site_stripped in
-                                     [site.strip() for site in crawler_config.split(",")]  # trim sites
+        crawler_sites_and_factors = [site_stripped for site_stripped in [site.strip() for site in crawler_config.split(",")]  # trim sites
                                      if site_stripped]  # filter stripped list for valid values
 
         if not crawler_sites_and_factors:
@@ -126,7 +125,7 @@ def get_crawlers(configuration, section):
         for factorPair in crawler_sites_and_factors:
             if factor_separator not in factorPair:
                 # No Factor configured
-                crawler_sites.append(factorPair)
+                crawler_sites.append(url_quote_plus(factorPair))
                 continue
 
             factorPair_parts = [factorPairPart.strip() for factorPairPart in factorPair.split(factor_separator)]
@@ -134,7 +133,7 @@ def get_crawlers(configuration, section):
             if not factorPair_parts or not len(factorPair_parts) == 2:
                 continue
 
-            site = factorPair_parts[0]
+            site = url_quote_plus(factorPair_parts[0])
             factor = float(factorPair_parts[1])
 
             crawler_sites.append(site)
@@ -238,8 +237,6 @@ def cache_status():
                 sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " + bar) % (crawler, site, factor, count)
                 logger.info(sitestats)
                 msg += "\r\n" + sitestats
-
-    logger.info(msg)
     return msg
 
 # print imagelist

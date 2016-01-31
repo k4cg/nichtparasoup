@@ -85,8 +85,8 @@ being in the crawler. For 9gag you can add any site that hits the scheme `http:/
 
 Crawlers can be weighted against each other with optional factors ranging from 0.1 to 10.0:  
 ```
-SoupIO: everyone-2.5
-Pr0gramm: static-5.0, new-0.5, top
+SoupIO: everyone*2.5
+Pr0gramm: static*5.0, new*0.5, top
 ```
 
 The default factor is 1.
