@@ -162,7 +162,7 @@ class Crawler(object):
             if not response:
                 break
 
-            document = BeautifulSoup(response, features=bs4features)
+            document = BeautifulSoup(response, "html5lib" ,features=bs4features)
 
             if not follow_meta_refresh:
                 break
