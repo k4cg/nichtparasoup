@@ -105,7 +105,7 @@
             }, np._options.interval * 1000);
             log("Timer Set"); // @stripOnBuild
         }
-	}
+	};
 
 	addEvent(np._fetchRequest, "readystatechange", function ()
 	{
@@ -338,12 +338,12 @@
 		if ( state0 != oldState0 )
 		{
             // state changed
-            this._setTimer()
+            this._setTimer();
 
 			if (this._state == 0)
 			{
 				log('! continue'); // @stripOnBuild
-                this._fetch()
+                this._fetch();
 			}
 			else
 			{
