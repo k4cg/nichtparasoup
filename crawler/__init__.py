@@ -144,7 +144,7 @@ class Crawler(object):
         return response.read().decode(charset), uri
 
     @classmethod
-    def _fetch_remote_html(cls, uri, follow_meta_refresh=True, follow_meta_refresh_max=5, bs4features=None):
+    def _fetch_remote_html(cls, uri, follow_meta_refresh=True, follow_meta_refresh_max=5, bs4features="html5lib"):
         """
         returns remote HTML document, actual remote uri and base uri
         :type uri: str
@@ -162,7 +162,7 @@ class Crawler(object):
             if not response:
                 break
 
-            document = BeautifulSoup(response, "html5lib" ,features=bs4features)
+            document = BeautifulSoup(response, features=bs4features)
 
             if not follow_meta_refresh:
                 break
