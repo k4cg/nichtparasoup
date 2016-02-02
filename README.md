@@ -73,7 +73,7 @@ Configuration of your source work like this.
 ```
 ; set to false or remove a Crawler, to disable it
 SoupIO: everyone
-Pr0gramm: static ,new, top
+Pr0gramm: new,top
 Reddit: nsfw,gifs,pics,nsfw_gifs,aww,aww_gifs,reactiongifs,wtf,FoodPorn,cats,ImGoingToHellForThis,EarthPorn,facepalm,fffffffuuuuuuuuuuuu,oddlysatisfying
 NineGag: geeky,wtf,girl,hot,trending
 Instagram: cats,animals,pornhub,nerdy_gaming_art,nature,wtf
@@ -86,11 +86,11 @@ being in the crawler. For 9gag you can add any site that hits the scheme `http:/
 Crawlers can be weighted against each other with optional factors ranging from 0.1 to 10.0:  
 ```
 SoupIO: everyone*2.5
-Pr0gramm: static*5.0, new*0.5, top
+Pr0gramm: top*5.0,new*0.5
 ```
 
 The default factor is 1.
-In the configuration above the images from SoupIO-everyone should be around the half of Pr0gramm-static as well as around five times as much as Pr0gramm-new.
+In the configuration above the images from SoupIO-everyone should be around the half of Pr0gramm-top as well as around five times as much as Pr0gramm-new.
 
 ## contribution
 
