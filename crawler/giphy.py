@@ -10,6 +10,7 @@ class Giphy(Crawler):
 
     __uri = ""
     __next = 0
+    __site = ""
 
     __limit = 50
 
@@ -22,7 +23,8 @@ class Giphy(Crawler):
     def _restart_at_front(self):
         self.__next = 0
 
-    def __init__(self, uri):
+    def __init__(self, uri, site):
+        self.__site = site
         self.__uri = self.__class__._build_uri(uri)
         self._restart_at_front()
 
@@ -43,7 +45,7 @@ class Giphy(Crawler):
         for child in data['data']:
             image = child['images']['original']['url']
             if image:
-                if self._add_image(image):
+                if self._add_image(image, self.__site):
                     images_added += 1
 
         if not images_added:

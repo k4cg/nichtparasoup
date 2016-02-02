@@ -16,6 +16,7 @@ class NineGag(Crawler):
 
     __uri = ""
     __next = ""
+    __site = ""
 
     __RE_post_container = re.compile("badge-post-container")
 
@@ -26,7 +27,8 @@ class NineGag(Crawler):
     def _restart_at_front(self):
         self.__next = self.__uri
 
-    def __init__(self, uri):
+    def __init__(self, uri, site):
+        self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
@@ -69,7 +71,7 @@ class NineGag(Crawler):
                 image = image_src['src']
 
             if image:
-                if self._add_image(urljoin(base, image)):
+                if self._add_image(urljoin(base, image), self.__site):
                     images_added += 1
 
         if not images_added:

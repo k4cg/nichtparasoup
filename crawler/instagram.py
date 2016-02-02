@@ -16,6 +16,7 @@ class Instagram(Crawler):
 
     __uri = ""
     __last = ""
+    __site = ""
 
     ## class methods
 
@@ -28,7 +29,8 @@ class Instagram(Crawler):
     def _restart_at_front(self):
         self.__last = ""
 
-    def __init__(self, uri):
+    def __init__(self, uri, site):
+        self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
@@ -55,7 +57,7 @@ class Instagram(Crawler):
                     and 'url' in item_image['images']['standard_resolution']:
                 image = item_image['images']['standard_resolution']['url']
                 if image:
-                    if self._add_image(image):
+                    if self._add_image(image, self.__site):
                         images_added += 1
 
         if not images_added:

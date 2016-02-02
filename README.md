@@ -48,12 +48,12 @@ Useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/600.1.25 (K
 
 ### cache
 
-`Images` indicates how many images will be loaded on each crawler run
+`Images` indicates how many images will be loaded per crawler on each crawler run
 `Images_min_limit` configures at how many images the crawler starts again collecting new images from the sites.
 
 ```
-Images: 150
-Images_min_limit: 20
+Images: 30
+Images_min_limit: 15
 ```
 
 ### logging
@@ -83,6 +83,14 @@ Giphy: feels, alcohol, fail, troll, diy, robot, stars, physics
 For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http://reddit.com/r/gifs` end up
 being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
 
+Crawlers can be weighted against each other with optional factors ranging from 0.1 to 10.0:  
+```
+SoupIO: everyone*2.5
+Pr0gramm: static*5.0, new*0.5, top
+```
+
+The default factor is 1.
+In the configuration above the images from SoupIO-everyone should be around the half of Pr0gramm-static as well as around five times as much as Pr0gramm-new.
 
 ## contribution
 
@@ -127,7 +135,7 @@ below.
 
 when you start nichtparasoup
 
-* fill up cache by startup (150 imageurls cached by default)
+* fill up cache by startup (30 imageurls cached per defined crawler by default)
 * starts up the webserver
 * point your browser to the configured `localhost:5000/`
 * startpage will request single image randomly by `/get` and show them

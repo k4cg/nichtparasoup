@@ -9,29 +9,25 @@ import threading
 import argparse
 
 try:
-    from configparser import RawConfigParser    # py 3
+    from configparser import RawConfigParser  # py 3
 except ImportError:
-    from ConfigParser import RawConfigParser    # py 2
+    from ConfigParser import RawConfigParser  # py 2
 
 try:
-    from urllib.parse import quote_plus as url_quote_plus   # py3
+    from urllib.parse import quote_plus as url_quote_plus  # py3
 except ImportError:
-    from urllib import quote_plus as url_quote_plus         # py2
-
+    from urllib import quote_plus as url_quote_plus  # py2
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.serving import run_simple
 
-
 ## import templates
 import templates as tmpl
 
-
 ## import crawler
 from crawler import Crawler
-
 
 _file_path = path.dirname(path.realpath(__file__))
 
@@ -44,14 +40,13 @@ arg_parser.add_argument('-c', '--config-file', metavar='<file>',
                         dest="config_file")
 args = arg_parser.parse_args()
 
-
 ## configuration
 config = RawConfigParser()
 config.read(path.join(_file_path, 'config.defaults.ini'))
 try:
     config.read_file(args.config_file)  # py3
 except AttributeError:
-    config.readfp(args.config_file)     # py2
+    config.readfp(args.config_file)  # py2
 args.config_file.close()
 
 nps_port = config.getint("General", "Port")
@@ -66,6 +61,7 @@ hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
 
+factor_separator = "*"
 call_flush_timeout = 10  # value in seconds
 call_flush_last = time.time() - call_flush_timeout
 
@@ -93,20 +89,21 @@ def get_crawlers(configuration, section):
 
     :param configuration: RawConfigParser
     :param section: string
-    :return: list
+    :return: crawler, factors
     """
-    crawlers = []
+    crawlers = {}
+    factors = {}
 
     for crawler_class in Crawler.__subclasses__():
         crawler_class_name = crawler_class.__name__
         if not configuration.has_option(section, crawler_class_name):
-            continue    # skip crawler if not configured
+            continue  # skip crawler if not configured
 
         crawler_config = configuration.get(section, crawler_class_name)
         if not crawler_config or crawler_config.lower() == "false":
-            continue    # skip crawler if not configured or disabled
+            continue  # skip crawler if not configured or disabled
 
-        crawler_uris = []
+        crawler_uris = {}
 
         # mimic old behaviours for bool values
         if crawler_config.lower() == "true":
@@ -115,47 +112,84 @@ def get_crawlers(configuration, section):
             elif crawler_class == SoupIO:
                 crawler_config = "everyone"
 
-        crawler_sites = [url_quote_plus(site_stripped) for site_stripped in
-                         [site.strip() for site in crawler_config.split(",")]   # trim sites
-                         if site_stripped]  # filter stripped list for valid values
-        if not crawler_sites:
-            continue    # skip crawler if no valid sites configured
+        crawler_sites_and_factors = [site_stripped for site_stripped in [site.strip() for site in crawler_config.split(",")]  # trim sites
+                                     if site_stripped]  # filter stripped list for valid values
 
-        logger.info("found configured Crawler: %s = %s" % (crawler_class_name, repr(crawler_sites)))
+        if not crawler_sites_and_factors:
+            continue  # skip crawler if no valid sites configured
+
+        crawler_sites = []
+        factors[crawler_class_name] = {}
+
+        # Separate Site and Factor
+        for factorPair in crawler_sites_and_factors:
+            if factor_separator not in factorPair:
+                # No Factor configured
+                crawler_sites.append(url_quote_plus(factorPair))
+                continue
+
+            factorPair_parts = [factorPairPart.strip() for factorPairPart in factorPair.split(factor_separator)]
+
+            if not factorPair_parts or not len(factorPair_parts) == 2:
+                continue
+
+            site = url_quote_plus(factorPair_parts[0])
+            factor = float(factorPair_parts[1])
+
+            crawler_sites.append(site)
+
+            if site not in factors[crawler_class_name] and 0 < factor <= 10:
+                factors[crawler_class_name][site] = factor
+
+        logger.info("found configured Crawler: %s = %s Factors: %s" % (
+            crawler_class_name, repr(crawler_sites), repr(factors[crawler_class_name])))
 
         if crawler_class == Reddit:
-            crawler_uris = ["http://www.reddit.com/r/%s" % site for site in crawler_sites]
+            crawler_uris = {site: "http://www.reddit.com/r/%s" % site for site in crawler_sites}
         elif crawler_class == NineGag:
-            crawler_uris = ["http://9gag.com/%s" % site for site in crawler_sites]
+            crawler_uris = {site: "http://9gag.com/%s" % site for site in crawler_sites}
         elif crawler_class == Pr0gramm:
-            crawler_uris = ["http://pr0gramm.com/static/%s" % site for site in crawler_sites]
+            crawler_uris = {site: "http://pr0gramm.com/static/%s" % site for site in crawler_sites}
         elif crawler_class == SoupIO:
-            crawler_uris = [("http://www.soup.io/%s" if site in ["everyone"]    # public site
-                             else "http://%s.soup.io") % site                   # user site
-                            for site in crawler_sites]
+            crawler_uris = {site: ("http://www.soup.io/%s" if site in ["everyone"]  # public site
+                                   else "http://%s.soup.io") % site  # user site
+                            for site in crawler_sites}
         elif crawler_class == Instagram:
-            crawler_uris = ["http://instagram.com/%s" % site for site in crawler_sites]
+            crawler_uris = {site: "http://instagram.com/%s" % site for site in crawler_sites}
         elif crawler_class == Fourchan:
-            crawler_uris = ["http://boards.4chan.org/%s/" % site for site in crawler_sites]
+            crawler_uris = {site: "http://boards.4chan.org/%s/" % site for site in crawler_sites}
         elif crawler_class == Giphy:
-            crawler_uris = ["http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites]
+            crawler_uris = {site: "http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
 
-        crawlers += [crawler_class(crawler_uri) for crawler_uri in crawler_uris]
+        if crawler_class_name not in crawlers:
+            crawlers[crawler_class_name] = {}
 
-    return crawlers
+        crawlers[crawler_class_name] = {site: crawler_class(crawler_uris[site], site) for site in crawler_uris}
 
-sources = get_crawlers(config, "Sites")
+    return crawlers, factors
+
+
+(sources, factors) = get_crawlers(config, "Sites")
 if not sources:
     raise Exception("no sources configured")
+if factors:
+    Crawler.set_factors(factors)
 
 
 # wrapper function for cache filling
 def cache_fill_loop():
     global sources
-    while True:  # fill cache up to min_cache_imgs
-        if Crawler.info()["images"] < min_cache_imgs_before_refill:
-            while Crawler.info()["images"] < min_cache_imgs:
-                random.choice(sources).crawl()
+    while True:  # fill cache up to min_cache_imgs per site
+
+        info = Crawler.info()
+        for crawler in sources:
+            for site in sources[crawler]:
+                key = crawler + "_" + site
+
+                if key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs_before_refill:
+                    while key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs:
+                        sources[crawler][site].crawl()
+                        info = Crawler.info()
 
         # sleep for non-invasive threading ;)
         time.sleep(1.337)
@@ -169,11 +203,41 @@ def cache_get():
 # print status of cache
 def cache_status():
     info = Crawler.info()
-    msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" %\
+    msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" % \
           (info["images"], info["images_size"], info["blacklist"], info["blacklist_size"])
     logger.info(msg)
-    return msg
 
+    for crawler in sources:
+        for site in sources[crawler]:
+            key = crawler + "_" + site
+            if key in info["images_per_site"]:
+
+                factor = 1
+                if crawler in factors and site in factors[crawler]:
+                    factor = factors[crawler][site]
+
+                count = info["images_per_site"][key]
+
+                # "Drawing" a Bar to visualize the cache status
+                sharps_percent = min_cache_imgs_before_refill * 100 / min_cache_imgs
+                count_percent = count * 100 / min_cache_imgs
+
+                bar = "["
+                for i in range(1,15):
+                    if i * 10 < count_percent:
+                        if i * 10 < sharps_percent:
+                            bar += "#"
+                        else:
+                            bar += "*"
+                    elif i <= 10:
+                        bar += "_"
+                    if i == 10:
+                        bar += "]"
+
+                sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " + bar) % (crawler, site, factor, count)
+                logger.info(sitestats)
+                msg += "\r\n" + sitestats
+    return msg
 
 # print imagelist
 def show_imagelist():
@@ -196,7 +260,7 @@ def flush():
     return "%i000" % (call_flush_timeout - time_since_last_call)
 
 
-#reset the crawler
+# reset the crawler
 def reset():
     global call_reset_last
     time_since_last_call = time.time() - call_reset_last
@@ -210,7 +274,6 @@ def reset():
 ### werkzeug webserver
 # class with mapping to cache_* functions above
 class NichtParasoup(object):
-
     # init webserver with routing
     def __init__(self):
         self.url_map = Map([
@@ -289,4 +352,3 @@ if __name__ == "__main__":
 
     # start webserver after a bit of delay
     run_simple(nps_bindip, nps_port, NichtParasoup(), use_debugger=False)
-

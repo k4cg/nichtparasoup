@@ -45,8 +45,9 @@ class Crawler(object):
     }
 
     __blacklist = []
-    __images = []
+    __images = {}
 
+    __factors = None
     __logger = None
 
     ## properties
@@ -213,13 +214,14 @@ class Crawler(object):
 
     @classmethod
     def __images_clear(cls):
-        cls.__images = []  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
+        cls.__images = {}  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
 
     @classmethod
-    def __add_image(cls, uri, crawler=None):
+    def __add_image(cls, uri, crawler, site):
         """
         :type uri: str
-        :type crawler: str | None
+        :type crawler: str
+        :type site: str
         :return: bool
         """
         if not cls._is_image(uri):
@@ -229,24 +231,59 @@ class Crawler(object):
         if cls._is_blacklisted(uri):
             return False
 
+        if crawler not in cls.__images:
+            cls.__images[crawler] = {}
+
+        if site not in cls.__images[crawler]:
+            cls.__images[crawler][site] = []
+
         cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-        cls.__images.append("%s#%s" % (uri, crawler))
-        cls._log("debug", "added: %s" % (uri))
+        cls.__images[crawler][site].append("%s#%s" % (uri, crawler))
+        cls._log("debug", "added %s-%s: %s" % (crawler, site, uri))
         return True
 
     @classmethod
     def get_image(cls):
         images = cls.__images
+        factors = cls.__factors
         if images:
-            image = random.choice(images)
-            images.remove(image)
-            cls._log("debug", "delivered: %s - remaining: %d" % (image, len(images)))
-            return image
+            # return image respecting factors:
+            # Summing up the Factors till reaching a random number
+
+            max = 0
+            for crawler in images:
+                for site in images[crawler]:
+                    factor = 1
+                    if crawler in factors and site in factors[crawler]:
+                        factor = factors[crawler][site]
+
+                    max += factor
+
+            rnd = random.uniform(0, max)
+
+            count = 0
+            for crawler in images:
+                for site in images[crawler]:
+                    factor = 1
+                    if crawler in factors and site in factors[crawler]:
+                        factor = factors[crawler][site]
+
+                    count += factor
+                    if count > rnd:
+                        image = random.choice(images[crawler][site])
+                        images[crawler][site].remove(image)
+                        cls._log("debug", "delivered %s-%s: %s - remaining: %d"
+                                 % (crawler, site, image, len(images[crawler][site])))
+                        return image
         return None
 
     @classmethod
     def set_logger(cls, logger):
         cls.__logger = logger
+
+    @classmethod
+    def set_factors(cls, factors):
+        cls.__factors = factors
 
     @classmethod
     def _log(cls, log_type, message):
@@ -261,16 +298,35 @@ class Crawler(object):
     def info(cls):
         images = cls.__images
         blacklist = cls.__blacklist
-        return {
-            "images": len(images),
-            "images_size": sys.getsizeof(images, 0),
+
+        info = {
             "blacklist": len(blacklist),
-            "blacklist_size": sys.getsizeof(blacklist, 0)
+            "blacklist_size": sys.getsizeof(blacklist, 0),
+            "images_per_site": {}
         }
+
+        images_count = 0
+        images_size = 0
+        for crawler in images:
+            for site in images[crawler]:
+                site_image_count = len(images[crawler][site])
+                images_count += site_image_count
+                images_size += sys.getsizeof(images[crawler][site])
+                info["images_per_site"][crawler + "_" + site] = site_image_count
+
+        info["images_size"] = images_size
+        info["images"] = images_count
+
+        return info
 
     @classmethod
     def show_imagelist(cls):
-        return cls.__images
+        images = []
+        for crawler in cls.__images:
+            for site in cls.__images[crawler]:
+                images.append(cls.__images[crawler][site])
+
+        return images
 
     @classmethod
     def show_blacklist(cls):
@@ -305,12 +361,13 @@ class Crawler(object):
             e = sys.exc_info()[0]
             self.__class__._log("exception", "unexpected crawler error: %s" % (repr(e)))
 
-    def _add_image(self, uri):
+    def _add_image(self, uri, site):
         """
         :type uri: str
+        :type site: str
         :rtype: bool
         """
-        return self.__class__.__add_image(uri, crawler=self.__class__.__name__)
+        return self.__class__.__add_image(uri, self.__class__.__name__, site)
 
     ## abstract functions
 

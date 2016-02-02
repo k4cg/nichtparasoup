@@ -14,6 +14,7 @@ class Fourchan(Crawler):
 
     __uri = ""
     __next = ""
+    __site = ""
 
     @staticmethod
     def __build_uri(uri):
@@ -22,7 +23,8 @@ class Fourchan(Crawler):
     def _restart_at_front(self):
         self.__next = self.__uri
 
-    def __init__(self, uri):
+    def __init__(self, uri, site):
+        self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
         self._restart_at_front()
 
@@ -46,7 +48,7 @@ class Fourchan(Crawler):
 
         images_added = 0
         for con in page.find_all("a", {"class": "fileThumb", "href": True}):
-            if self._add_image(urljoin(base, con["href"])):
+            if self._add_image(urljoin(base, con["href"]), self.__site):
                 images_added += 1
 
         if not images_added:
