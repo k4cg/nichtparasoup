@@ -51,7 +51,6 @@ args.config_file.close()
 
 nps_port = config.getint("General", "Port")
 nps_bindip = config.get("General", "IP")
-min_cache_imgs = config.getint("Cache", "Images")
 min_cache_imgs_before_refill = config.getint("Cache", "Images_min_limit")
 user_agent = config.get("General", "Useragent")
 logverbosity = config.get("Logging", "Verbosity")
@@ -187,9 +186,12 @@ def cache_fill_loop():
                 key = crawler + "_" + site
 
                 if key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs_before_refill:
-                    while key not in info["images_per_site"] or info["images_per_site"][key] < min_cache_imgs:
+                    try:
                         sources[crawler][site].crawl()
                         info = Crawler.info()
+                    except Exception, e:
+                        logger.error("Error in crawler %s - %s: %s" % (crawler, site, e))
+                        break
 
         # sleep for non-invasive threading ;)
         time.sleep(1.337)
@@ -218,21 +220,12 @@ def cache_status():
 
                 count = info["images_per_site"][key]
 
-                # "Drawing" a Bar to visualize the cache status
-                sharps_percent = min_cache_imgs_before_refill * 100 / min_cache_imgs
-                count_percent = count * 100 / min_cache_imgs
-
-                bar = "["
-                for i in range(1,15):
-                    if i * 10 < count_percent:
-                        if i * 10 < sharps_percent:
-                            bar += "#"
-                        else:
-                            bar += "*"
-                    elif i <= 10:
-                        bar += "_"
-                    if i == 10:
-                        bar += "]"
+                bar = "|"
+                for i in range(0, count / 5):
+                    if i < min_cache_imgs_before_refill / 5:
+                        bar += "#"
+                    else:
+                        bar += "*"
 
                 sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " + bar) % (crawler, site, factor, count)
                 logger.info(sitestats)
@@ -345,7 +338,7 @@ if __name__ == "__main__":
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        min_cache_imgs = -1  # stop cache_fill-inner_loop
+        min_cache_imgs_before_refill -1;
 
     # give the cache_fill some time in advance
     time.sleep(1.337)
