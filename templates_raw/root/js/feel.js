@@ -89,8 +89,6 @@
 
 	np._setTimer = function(){
 
-        // TODO active parameter raus, hier prüfen ob aktiv oder nicht!
-
         log("Timer refresh called"); // @stripOnBuild
 
         if(np.__intervall)
