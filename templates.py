@@ -125,12 +125,12 @@ manual : 1 , boss : 2 , presented : 3 , active : 4 , scroll : 5 , gallery : 6 } 
 np.__bossMode_className_RE = new RegExp(np.__bossMode_className, 'g'); np._imageTarget = undefined;
 np._imageFadeInTime = 1000; np._images = []; np._imagesMax = 50; np._state = bitset.set(0, np.constants.stateBS.init);
 np._fetchRequest = new XMLHttpRequest(); np._serverResetRequest = new XMLHttpRequest();
-np._serverFlushRequest = new XMLHttpRequest(); np._options = { interval : 10 , playInBackground : false , nsfw : false };
-np.__timeout = 0; addEvent(np._fetchRequest, "readystatechange", function () { var req = this;
-if ( req.readyState == 4 && req.status == 200 ) { var imageURI = req.responseText; if ( imageURI ) {
-var src = imageURI.split('#', 2) , uri = src[0] , crawler = (""+ src[1]).toLowerCase();
-np._pushImage(uri, crawler, function (added) { if ( added && ! np.__timeout ) {
-np.__timeout = window.setTimeout(function () { np.__timeout = 0; np._fetch(); }, np._options.interval * 1000); } }); } }
+np._serverFlushRequest = new XMLHttpRequest(); np._options = { interval : 10 , playInBackground : false };
+np.__intervall = 0; np._setTimer = function(){ if(np.__intervall) { window.clearInterval(np.__intervall); }
+if(this._state == 0) { np.__intervall = window.setInterval(function () { np._fetch(); }, np._options.interval * 1000); }
+}; addEvent(np._fetchRequest, "readystatechange", function () { var req = this;
+if ( req.readyState == 4 && req.status == 200) { var imageURI = req.responseText; if (imageURI) {
+var src = imageURI.split('#', 2) , uri = src[0] , crawler = ("" + src[1]).toLowerCase(); np._pushImage(uri, crawler); } }
 }); np.__controllableRequestReadystatechange = function () { var req = this;
 if ( req.readyState == 4 && req.status == 200 ) { var controlElement = req.controlElement; if ( controlElement ) {
 var sleep = parseFloat(req.responseText); if (isNaN(sleep)) { sleep = 500; } window.setTimeout(function () {
@@ -144,11 +144,10 @@ addEvent(imageDoc, "load", function () { var imageBox = document.createElement('
 imageBox.appendChild(imageDoc); var srcSpan = imageBox.appendChild(document.createElement('section'));
 srcSpan.className = 'src '+ crawler; var srcA = srcSpan.appendChild(document.createElement('a'));
 srcA.href = srcA.innerHTML = srcA.innerText = this.src; if ( typeof onReady == "function" ) { onReady(imageBox); } });
-imageDoc.src = uri; }; np._pushImage = function (uri, crawler, onReady) { if ( this._imageTarget ) {
+imageDoc.src = uri; }; np._pushImage = function (uri, crawler) { if ( this._imageTarget ) {
 this._mkImage(uri, crawler, function (image) { var add = ( np._state == 0 ); if ( add ) { np._images.push(image);
 np._imageTarget.insertBefore(image, np._imageTarget.firstChild); if ( np._images.length > np._imagesMax ) {
-np._popImage(); } } if ( typeof onReady == "function" ) { window.setTimeout(function () { onReady(add);
-}, np._imageFadeInTime); } }); } }; np._popImage = function () { var image = this._images.shift();
+np._popImage(); } } }); } }; np._popImage = function () { var image = this._images.shift();
 if ( image && image.parentNode ) { image.parentNode.removeChild(image); } }; np._optionsStorage = { target : "np_store"
 , save : function () { log('options saved'); localStorage.setItem(this.target, JSON.stringify(np._options)); }
 , load : function () { var lo = localStorage.getItem(this.target); if ( lo ) { try { lo = JSON.parse(lo);
@@ -159,17 +158,17 @@ req.open("GET", './reset', true); req.send(); } }; np.serverFlush = function (co
 var req = this._serverFlushRequest; var r_rs = req.readyState; if ( r_rs == 4 || r_rs == 0 ) {
 req.controlElement = controlElement; controlElement.disabled = true; controlElement.setAttribute('disabled', 'disabled');
 req.open("GET", './flush', true); req.send(); } }; np.setInterval = function (interval) {
-this._options.interval = interval; this._optionsStorage.save(); }; np.getInterval = function () {
+this._options.interval = interval; this._optionsStorage.save(); np._setTimer(); }; np.getInterval = function () {
 return this._options.interval; }; np.setState = function (which, status) { var oldState0 = ( this._state == 0 );
 this._state = bitset[ status ? "set" : "unset" ](this._state, which); var state0 = ( this._state == 0 );
 if ( which == this.constants.stateBS.boss ) { var rootElem = document.documentElement; if ( status ) {
 rootElem.className += this.__bossMode_className; try { window.blur(); } catch ( ex ) { } } else {
 rootElem.className = rootElem.className.replace(this.__bossMode_className_RE, ''); } } if ( state0 != oldState0 ) {
-if (this._state == 0) { this._fetch(); } else { this._fetchRequest.abort(); } } }; np.getState = function (which) {
-return bitset.check(this._state, which); }; np.__inited = false; np.init = function (imageTargetID, imageFadeInTime) {
-if ( this.__inited ) { return false; } this.__inited = true; this._imageTarget = document.getElementById(imageTargetID);
-this._imageTarget.appendChild(document.createTextNode('')); this._imageFadeInTime = imageFadeInTime;
-this._optionsStorage.load(); addEvent(window, 'scroll', function () {
+this._setTimer(); if (this._state == 0) { this._fetch(); } else { this._fetchRequest.abort(); } } };
+np.getState = function (which) { return bitset.check(this._state, which); }; np.__inited = false;
+np.init = function (imageTargetID, imageFadeInTime) { if ( this.__inited ) { return false; } this.__inited = true;
+this._imageTarget = document.getElementById(imageTargetID); this._imageTarget.appendChild(document.createTextNode(''));
+this._imageFadeInTime = imageFadeInTime; this._optionsStorage.load(); addEvent(window, 'scroll', function () {
 np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0 ); });
 this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 );
 var c_background = document.getElementById('c_background'); c_background.checked = this._options.playInBackground;
@@ -205,7 +204,7 @@ if ( speed < min ) { speed = min; } else if ( speed > max ) { speed = max; } c_s
 fireEvent(c_speedE, 'change'); break; case 32 : c_stateE.blur(); cancelBubble(event);
 c_stateE.checked = !c_stateE.checked; fireEvent(c_stateE, 'change'); break; case 27 : cancelBubble(event);
 var bossStateConst = np.constants.stateBS.boss; np.setState(bossStateConst, !np.getState(bossStateConst)); break;
-case 74: cancelBubble(event); np._fetch(); break; case 75: var galleryState = 6; break; }
+case 74: cancelBubble(event); np._fetch(); np._setTimer(); break; case 75: var galleryState = 6; break; }
 var hotKeyIndicator = document.querySelector('.hk_'+ keyCode ); if ( hotKeyIndicator ) {
 hotkeysE.className += className_forceShow; controlsE.className += className_forceShow;
 hotKeyIndicator.className += className_active; window.setTimeout(function () {

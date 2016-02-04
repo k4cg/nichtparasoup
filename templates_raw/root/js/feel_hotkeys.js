@@ -94,6 +94,7 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 				case 74: // j
 					cancelBubble(event);
 					np._fetch();
+					np._setTimer();
 					break;
 				case 75: // k
 					var galleryState = 6;

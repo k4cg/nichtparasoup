@@ -83,38 +83,43 @@
 	np._options = {
 		  interval : 10
 		, playInBackground : false
-		, nsfw : false // not implemented yet
 		};
 
-	np.__timeout = 0;
+	np.__intervall = 0;
+
+	np._setTimer = function(){
+
+        log("Timer refresh called"); // @stripOnBuild
+
+        if(np.__intervall)
+        {
+            window.clearInterval(np.__intervall);
+            log("Timer Cleared"); // @stripOnBuild
+        }
+
+        if(this._state == 0) {
+            np.__intervall = window.setInterval(function () {
+                np._fetch();
+            }, np._options.interval * 1000);
+            log("Timer Set"); // @stripOnBuild
+        }
+	};
 
 	addEvent(np._fetchRequest, "readystatechange", function ()
 	{
 		var req = this;
 		log("XHR onreadystatechange", req.readyState); // @stripOnBuild
-		if ( req.readyState == 4 && req.status == 200 )
-		{
-			var imageURI = req.responseText;
-			if ( imageURI )
-			{
-				var src = imageURI.split('#', 2)
-				  , uri = src[0]
-				  , crawler = (""+ src[1]).toLowerCase();
-				np._pushImage(uri, crawler, function (added)
-				{
-					if ( added && ! np.__timeout )
-					{
-						np.__timeout = window.setTimeout(function ()
-						{
-							np.__timeout = 0;
-							np._fetch();
-						}, np._options.interval * 1000);
-					}
-				});
-			}
-		}
-	});
+		if ( req.readyState == 4 && req.status == 200) {
+				var imageURI = req.responseText;
+				if (imageURI) {
+					var src = imageURI.split('#', 2)
+						, uri = src[0]
+						, crawler = ("" + src[1]).toLowerCase();
+					np._pushImage(uri, crawler);
+				}
+        }
 
+	});
 
 	np.__controllableRequestReadystatechange = function ()
 	{
@@ -141,7 +146,6 @@
 
 	addEvent(np._serverResetRequest, "readystatechange", np.__controllableRequestReadystatechange);
 	addEvent(np._serverFlushRequest, "readystatechange", np.__controllableRequestReadystatechange);
-
 
 	np._fetch = function ()
 	{
@@ -187,7 +191,7 @@
 		imageDoc.src = uri;
 	};
 
-	np._pushImage = function (uri, crawler, onReady)
+	np._pushImage = function (uri, crawler)
 	{
 		if ( this._imageTarget )
 		{
@@ -209,13 +213,6 @@
 					{                                                           // @stripOnBuild
 						log('image not loaded, since _state != 0', np._state);  // @stripOnBuild
 					}                                                           // @stripOnBuild
-
-					if ( typeof onReady == "function" )
-					{
-						window.setTimeout(function () {
-							onReady(add);
-						}, np._imageFadeInTime);
-					}
 				});
 		}
 		else                                                                        // @stripOnBuild
@@ -299,6 +296,7 @@
 		log('set interval', interval); // @stripOnBuild
 		this._options.interval = interval;
 		this._optionsStorage.save();
+        np._setTimer();
 	};
 
 	np.getInterval = function ()
@@ -336,11 +334,14 @@
 		}
 
 		if ( state0 != oldState0 )
-		{ // state changed
+		{
+            // state changed
+            this._setTimer();
+
 			if (this._state == 0)
 			{
 				log('! continue'); // @stripOnBuild
-				this._fetch();
+                this._fetch();
 			}
 			else
 			{

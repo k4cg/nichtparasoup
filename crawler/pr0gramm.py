@@ -21,6 +21,7 @@ class Pr0gramm(Crawler):
     __site = ""
 
     __filter = re.compile('^/static/[\d]+')
+    __filterNextPage = ""
 
     ## functions
 
@@ -34,6 +35,7 @@ class Pr0gramm(Crawler):
     def __init__(self, uri, site):
         self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
+        self.__filterNextPage = re.compile('^/static/' + self.__site + '/[\d]+')
         self._restart_at_front()
 
     def _crawl(self):
@@ -51,7 +53,11 @@ class Pr0gramm(Crawler):
             if self.__crawl_page(urljoin(base, page["href"])):
                 images_added += 1
 
-        # @todo add paging: fetch next and stuff ...
+        # Paging
+        nextPageLink = page_container.find("a", href=self.__filterNextPage)
+        self.__next = urljoin(base, nextPageLink["href"])
+
+        self.__class__._log("debug", "%s set next Page: %s" % (self.__class__.__name__, self.__next))
 
         if not images_added:
             self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))
