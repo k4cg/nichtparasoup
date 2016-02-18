@@ -1,5 +1,5 @@
 
-import re
+import re, json
 
 try:
     from urllib.parse import urljoin    # py3
@@ -19,6 +19,8 @@ class Pr0gramm(Crawler):
     __uri = ""
     __next = ""
     __site = ""
+    __image_base_url = "http://img.pr0gramm.com/"
+    __api_base_url = ""
 
     __filter = re.compile('^/static/[\d]+')
     __filterNextPage = ""
@@ -35,6 +37,7 @@ class Pr0gramm(Crawler):
     def __init__(self, uri, site):
         self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
+        self.__api_base_url = self.__uri
         self.__filterNextPage = re.compile('^/static/' + self.__site + '/[\d]+')
         self._restart_at_front()
 
@@ -42,34 +45,30 @@ class Pr0gramm(Crawler):
         uri = self.__next
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
-        (page_container, base, _) = self.__class__._fetch_remote_html(uri)
-        if not page_container:
+
+        (remote, uri) = self.__class__._fetch_remote(uri)
+        if not remote:
             self.__class__._log("debug", "%s crawled EMPTY url: %s" % (self.__class__.__name__, uri))
             return
 
-        pages = page_container.findAll("a", href=self.__filter)
+        data = json.loads(remote)
+
+        last_id = 0
         images_added = 0
-        for page in pages:
-            if self.__crawl_page(urljoin(base, page["href"])):
+        for item in data["items"]:
+
+            if item["promoted"] == 0:
+                continue
+
+            if item["image"].lower().endswith(".webm"):
+                continue
+
+            last_id = item["id"]
+
+            if self._add_image(urljoin(self.__image_base_url, item["image"]), self.__site):
                 images_added += 1
 
-        # Paging
-        nextPageLink = page_container.find("a", href=self.__filterNextPage)
-        self.__next = urljoin(base, nextPageLink["href"])
 
-        self.__class__._log("debug", "%s set next Page: %s" % (self.__class__.__name__, self.__next))
+        self.__next = self.__api_base_url + "?older=" + str(last_id)
 
-        if not images_added:
-            self.__class__._log("debug", "%s found no images on url: %s" % (self.__class__.__name__, uri))
-
-    def __crawl_page(self, uri):
-        (page, base, _) = self.__class__._fetch_remote_html(uri)
-        if not page:
-            self.__class__._log("debug", "%s sub-crawled EMPTY url: %s" % (self.__class__.__name__, uri))
-            return False
-
-        image = page.find("img", {"src": True})
-        if not image:
-            return False
-
-        return self._add_image(urljoin(base, image["src"]), self.__site)
+        self.__class__._log("debug", "%s added %s images on url: %s" % (self.__class__.__name__, images_added, uri))

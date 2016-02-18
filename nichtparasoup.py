@@ -106,9 +106,7 @@ def get_crawlers(configuration, section):
 
         # mimic old behaviours for bool values
         if crawler_config.lower() == "true":
-            if crawler_class == Pr0gramm:
-                crawler_config = "static"
-            elif crawler_class == SoupIO:
+            if crawler_class == SoupIO:
                 crawler_config = "everyone"
 
         crawler_sites_and_factors = [site_stripped for site_stripped in [site.strip() for site in crawler_config.split(",")]  # trim sites
@@ -148,7 +146,7 @@ def get_crawlers(configuration, section):
         elif crawler_class == NineGag:
             crawler_uris = {site: "http://9gag.com/%s" % site for site in crawler_sites}
         elif crawler_class == Pr0gramm:
-            crawler_uris = {site: "http://pr0gramm.com/static/%s" % site for site in crawler_sites}
+            crawler_uris = {crawler_sites[0]: "http://pr0gramm.com/api/items/get"}
         elif crawler_class == SoupIO:
             crawler_uris = {site: ("http://www.soup.io/%s" if site in ["everyone"]  # public site
                                    else "http://%s.soup.io") % site  # user site
