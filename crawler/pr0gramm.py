@@ -27,6 +27,37 @@ class Pr0gramm(Crawler):
 
     ## functions
 
+    """
+        JSON From API
+        {
+            atEnd: <bool>
+            atStart: <bool>
+            error: ?
+            items: [
+                        ...
+                        {
+                            id: <int>
+                            promoted: <int>
+                            up: <int>
+                            down: <int>
+                            created: <int>
+                            image: <string> z.B.: 2016/02/18/047b2e356d059074.jpg
+                            thumb: <string>
+                            fullsize: <string>
+                            source: <string>
+                            flags: <int>
+                            user: <string>
+                            mark: <int>
+                        }
+                        ...
+                    ]
+            ts: <int>
+            cache: <string>
+            rt: <int>
+            qc: <int>
+        }
+    """
+
     @staticmethod
     def __build_uri(uri):
         return uri
