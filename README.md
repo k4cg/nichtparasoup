@@ -7,9 +7,21 @@ displays images/gifs from [giphy](http://giphy.com), [soup.io](http://soup.io),
 
 At our hackerspace [k4cg](http://k4cg.org) we
 use it since 2 years now. It turns out to be a very non-invasive way of
-entertaining a crowd as a
+entertaining a crowd of nerds without having the noise and interuptions of
+videos or other stuff.
+
+Here is what it looks like in your browser
 
 <img src="https://github.com/k4cg/nichtparasoup/raw/master/screenshot.png">
+
+and even better, on a beamer in you local hackerspace!
+
+<img src="https://github.com/k4cg/nichtparasoup/raw/master/hackerspace.jpg">
+
+
+# demo
+
+Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 
 # setup
 
