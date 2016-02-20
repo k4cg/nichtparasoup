@@ -1,18 +1,13 @@
 # nichtparasoup
 
-nichtparasoup is a hackerspaces home entertainment system. It randomly
+nichtparasoup is a hackerspaces entertainment system. It randomly
 displays images/gifs from [giphy](http://giphy.com), [soup.io](http://soup.io),
 [pr0gramm](http://pr0gramm.com), [4chan](http://4chan.org),
 [9gag](http://9gag.com) and [reddit](http://reddit.com).
 
-at our hackerspace [k4cg](http://k4cg.org) we used
-[soupcache](https://github.com/exi/soupcache) very often but the project
-has some issues, so we cannot host ist onsite and decided to write our own.
-
-the idea behind nichtparasoup is to keep it as simple as possible by just
-requiring 3 python libraries. you should just be able to download, install
-`werkzeug`, `configparser` and `bs4` and point your browser to the
-configured port of your machine
+At our hackerspace [k4cg](http://k4cg.org) we
+use it since 2 years now. It turns out to be a very non-invasive way of
+entertaining a crowd as a
 
 <img src="https://github.com/k4cg/nichtparasoup/raw/master/screenshot.png">
 
@@ -32,13 +27,18 @@ after that you can just run
 
 # configuration
 
-configuration takes place in `config.ini` - edit the file to your needs or you may write a derived config `myCustom.ini` and start the server via `nichtparasoup.py -c myCustom.ini`. 
-if you do so, you may edit some of the sections. not all is needed since most things are already defined in the `config.defaults.ini` which may be overwritten by your custom config file. 
-Also we included some sfw and nsfw configs in the repo.
+configuration takes place in `config.ini` - edit the file to your needs or
+you may write a derived config `myCustom.ini` and start the server via
+`nichtparasoup.py -c myCustom.ini`. if you do so, you may edit some of the
+sections. not all is needed since most things are already defined in the
+`config.defaults.ini` which may be overwritten by your custom config file.
+
+Some example config files are included in the `configs` directory.
 
 ### general
 
-specify port, bind address and user agent that nichtparasoup uses for visiting the sites on crawler
+specify port, bind address and user agent that nichtparasoup uses for
+visiting the sites on crawler
 
 ```
 Port: 5000
@@ -80,17 +80,22 @@ Instagram: cats,animals,pornhub,nerdy_gaming_art,nature,wtf
 Fourchan: b,sci
 Giphy: feels, alcohol, fail, troll, diy, robot, stars, physics
 ```
-For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and `http://reddit.com/r/gifs` end up
-being in the crawler. For 9gag you can add any site that hits the scheme `http://9gag.com/<topic>`.
 
-Crawlers can be weighted against each other with optional factors ranging from 0.1 to 10.0:  
+For example Reddit: wtf,gifs will end up in `http://reddit.com/r/wtf` and
+`http://reddit.com/r/gifs` end up being in the crawler. For 9gag you can
+add any site that hits the scheme `http://9gag.com/<topic>`.
+
+Crawlers can be weighted against each other with optional factors ranging
+from 0.1 to 10.0:
+
 ```
 SoupIO: everyone*2.5
 Pr0gramm: top*5.0,new*0.5
 ```
 
-The default factor is 1.
-In the configuration above the images from SoupIO-everyone should be around the half of Pr0gramm-top as well as around five times as much as Pr0gramm-new.
+The default factor is 1. In the configuration above the images from
+SoupIO-everyone should be around the half of Pr0gramm-top as well as around
+five times as much as Pr0gramm-new.
 
 ## contribution
 
@@ -98,17 +103,22 @@ In the configuration above the images from SoupIO-everyone should be around the 
 
 you find a crawler missing or not wirking? feel free to fill the gaps.
 
-writing a crawler will take less than halfe an hour. just grab one of the existing implementatiosn, copy it, modify it, resr it.
+writing a crawler will take less than halfe an hour. just grab one of the
+existing implementatiosn, copy it, modify it, resr it.
 
-don't forget to write a test config to `tests/configs` and use this for testing your work easily.
+don't forget to write a test config to `tests/configs` and use this for
+testing your work easily.
 
-if you like, you may also contribute a logo for the frontend. just follow the instructions from the `templates_raw/root/css/sourceIcons.css` file and compile the frontend afterwards.
+if you like, you may also contribute a logo for the frontend. just follow
+the instructions from the `templates_raw/root/css/sourceIcons.css` file and
+compile the frontend afterwards.
 
-### frontend 
+### frontend
 
 basically, check out the repo and initialize the template bundler
 
-As the template bundler is a seperate repo you have to execute the following commands if you want to use it (to create your own templates).
+As the template bundler is a seperate repo you have to execute the
+following commands if you want to use it (to create your own templates).
 
 ```bash
 git submodule update --init --recursive
@@ -154,6 +164,6 @@ a new random image provider (see at the top) and refills your cache. the crawler
 thread wakes up every `1.337` seconds and checks the status of the current imgmap.
 
 
-# license 
+# license
 
 MIT
