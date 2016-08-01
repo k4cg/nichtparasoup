@@ -30,6 +30,9 @@ class Fourchan(Crawler):
 
     def _crawl(self):
         uri = self.__next
+        if not uri:
+            return
+        
         self.__class__._log("debug", "%s crawls url: %s" % (self.__class__.__name__, uri))
 
         (page, base, _) = self.__class__._fetch_remote_html(uri)
@@ -45,6 +48,7 @@ class Fourchan(Crawler):
             self.__next = urljoin(base, _buttons[-1]["href"])
         else:
             self.__class__._log("debug", "%s found no `next` on url: %s" % (self.__class__.__name__, uri))
+            self.__next = ""
 
         images_added = 0
         for con in page.find_all("a", {"class": "fileThumb", "href": True}):
