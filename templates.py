@@ -2,7 +2,7 @@
 root = """<!DOCTYPE html><html><head><script type="text/javascript">document.write([ "\<script src='",
 ("https:" == document.location.protocol) ? "https://" : "http://",
 "ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' type='text/javascript'>\<\/script>" ].join(''));</script>
-<meta charset="utf-8"/><title>nicht!parasoup</title><style type="text/css">html { font-family: sans-serif;
+<meta charset="utf-8"/><title>nichtparasoup - Hackerspace Entertainment System</title><style type="text/css">html { font-family: sans-serif;
 -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; } body { margin: 0; } article, aside, details, figcaption,
 figure, footer, header, hgroup, main, menu, nav, section, summary { display: block; } audio, canvas, progress, video {
 display: inline-block; vertical-align: baseline; } audio:not([controls]) { display: none; height: 0; } [hidden],
