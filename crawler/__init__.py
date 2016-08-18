@@ -13,6 +13,11 @@ except ImportError:
     from urllib2 import Request, urlopen            # py2
 
 try:
+    from urllib.request import URLError as HTTPError    # py3
+except ImportError:
+    from urllib2 import HTTPError            # py2
+
+try:
     from urllib.parse import urljoin    # py3
 except ImportError:
     from urlparse import urljoin        # py2
@@ -128,7 +133,11 @@ class Crawler(object):
 
         cls._log("debug", "fetch remote(%d): %s" % (depth_indicator, uri))
         request = Request(uri, headers=cls.request_headers())
-        response = urlopen(request, timeout=cls.request_timeout())
+        try:
+            response = urlopen(request, timeout=cls.request_timeout())
+        except HTTPError:
+            cls._log("warn", "Could not fetch: %s" % uri)
+            return None
 
         if not response:
             return None
@@ -355,6 +364,9 @@ class Crawler(object):
         self.__class__._log("debug", "instance %s starts crawling" % (repr(self)))
         try:
             self._crawl()
+        except TypeError:
+            # Catch empty returns from crawling (returns nonetype)
+            pass
         except CrawlerError as e:
             self.__class__._log("exception", "crawler error: %s" % (repr(e)))
         except:
