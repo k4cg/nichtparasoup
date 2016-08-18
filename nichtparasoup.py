@@ -60,6 +60,11 @@ hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
 
+try:
+    urlpath = config.get("General", "Urlpath")
+except:
+    urlpath = ''
+
 factor_separator = "*"
 call_flush_timeout = 10  # value in seconds
 call_flush_last = time.time() - call_flush_timeout
@@ -268,13 +273,13 @@ class NichtParasoup(object):
     # init webserver with routing
     def __init__(self):
         self.url_map = Map([
-            Rule('/', endpoint='root'),
-            Rule('/status', endpoint='cache_status'),
-            Rule('/get', endpoint='cache_get'),
-            Rule('/imagelist', endpoint='show_imagelist'),
-            Rule('/blacklist', endpoint='show_blacklist'),
-            Rule('/flush', endpoint='flush'),
-            Rule('/reset', endpoint='reset'),
+            Rule('/' + urlpath + '/', endpoint='root'),
+            Rule('/' + urlpath + '/status', endpoint='cache_status'),
+            Rule('/' + urlpath + '/get', endpoint='cache_get'),
+            Rule('/' + urlpath + '/imagelist', endpoint='show_imagelist'),
+            Rule('/' + urlpath + '/blacklist', endpoint='show_blacklist'),
+            Rule('/' + urlpath + '/flush', endpoint='flush'),
+            Rule('/' + urlpath + '/reset', endpoint='reset'),
         ])
 
     # proxy call to the wsgi_app
