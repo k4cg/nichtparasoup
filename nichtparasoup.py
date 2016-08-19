@@ -273,13 +273,13 @@ class NichtParasoup(object):
     # init webserver with routing
     def __init__(self):
         self.url_map = Map([
-            Rule('/' + urlpath + '/', endpoint='root'),
-            Rule('/' + urlpath + '/status', endpoint='cache_status'),
-            Rule('/' + urlpath + '/get', endpoint='cache_get'),
-            Rule('/' + urlpath + '/imagelist', endpoint='show_imagelist'),
-            Rule('/' + urlpath + '/blacklist', endpoint='show_blacklist'),
-            Rule('/' + urlpath + '/flush', endpoint='flush'),
-            Rule('/' + urlpath + '/reset', endpoint='reset'),
+            Rule(urlpath + '/', endpoint='root'),
+            Rule(urlpath + '/status', endpoint='cache_status'),
+            Rule(urlpath + '/get', endpoint='cache_get'),
+            Rule(urlpath + '/imagelist', endpoint='show_imagelist'),
+            Rule(urlpath + '/blacklist', endpoint='show_blacklist'),
+            Rule(urlpath + '/flush', endpoint='flush'),
+            Rule(urlpath + '/reset', endpoint='reset'),
         ])
 
     # proxy call to the wsgi_app

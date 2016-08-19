@@ -56,11 +56,11 @@ visiting the sites on crawler
 Port: 5000
 IP: 0.0.0.0
 Useragent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/600.1.25 (KHTML, like Gecko) Version/8.0 Safari/600.1.25
-Urlpath: sfw
+Urlpath: /sfw
 ```
 
 the `Urlpath` parameter specifies where the application should listen on.
-For example the value `sfw` would configure the webserver listening on
+For example the value `/sfw` would configure the webserver listening on
 `http://localhost:5000/sfw/`
 
 ### cache
