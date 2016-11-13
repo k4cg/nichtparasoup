@@ -4,6 +4,7 @@
 from os import path
 import random
 import logging
+import logging.handlers
 import time
 import threading
 import argparse
@@ -23,6 +24,8 @@ from werkzeug.routing import Map, Rule
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.serving import run_simple
 
+
+
 ## import templates
 import templates as tmpl
 
@@ -40,8 +43,11 @@ arg_parser.add_argument('-c', '--config-file', metavar='<file>',
                         dest="config_file")
 args = arg_parser.parse_args()
 
-## configuration
+### configuration
+# init config parser
 config = RawConfigParser()
+
+# read defaults
 config.read(path.join(_file_path, 'config.defaults.ini'))
 try:
     config.read_file(args.config_file)  # py3
@@ -49,16 +55,29 @@ except AttributeError:
     config.readfp(args.config_file)  # py2
 args.config_file.close()
 
+# get actual config items
 nps_port = config.getint("General", "Port")
 nps_bindip = config.get("General", "IP")
+
 min_cache_imgs_before_refill = config.getint("Cache", "Images_min_limit")
 user_agent = config.get("General", "Useragent")
+
+# crawler logging config
 logverbosity = config.get("Logging", "Verbosity")
-logger = logging.getLogger(config.get("Logging", "Log_name"))
-hdlr = logging.FileHandler(config.get("Logging", "File"))
-hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+logger = logging.getLogger("nichtparasoup")
+
+if config.get("Logging", "Destination").lower() == 'syslog':
+    hdlr = logging.handlers.SysLogHandler()
+else:
+    hdlr = logging.FileHandler(config.get("Logging", "File"))
+    hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
+
+# werkzeug logging config
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.CRITICAL)
 
 try:
     urlpath = config.get("General", "Urlpath")
