@@ -7,14 +7,14 @@ displays images/gifs from [giphy](http://giphy.com), [soup.io](http://soup.io),
 
 At our hackerspace [k4cg](http://k4cg.org) we
 use it since 2 years now. It turns out to be a very non-invasive way of
-entertaining a crowd of nerds without having the noise and interuptions of
+entertaining a crowd of nerds without having the noise and interruptions of
 videos or other stuff.
 
 Here is what it looks like in your browser
 
 <img src="https://github.com/k4cg/nichtparasoup/raw/master/screenshot.png">
 
-and even better, on a beamer in you local hackerspace!
+and even better, on a beamer in your local hackerspace!
 
 <img src="https://github.com/k4cg/nichtparasoup/raw/master/hackerspace.jpg">
 
@@ -75,7 +75,7 @@ Images_min_limit: 15
 
 ### logging
 
-logging section is mostly selfexplaining
+logging section is mostly self-explaining
 
 ```
 Log_name: nichtparasoup
@@ -118,10 +118,10 @@ five times as much as Pr0gramm-new.
 
 ### server side & crawlers
 
-you find a crawler missing or not wirking? feel free to fill the gaps.
+you find a crawler missing or not working? feel free to fill the gaps.
 
-writing a crawler will take less than halfe an hour. just grab one of the
-existing implementatiosn, copy it, modify it, resr it.
+writing a crawler will take less than half an hour. just grab one of the
+existing implementations, copy it, modify it, resr it.
 
 don't forget to write a test config to `tests/configs` and use this for
 testing your work easily.
@@ -134,7 +134,7 @@ compile the frontend afterwards.
 
 basically, check out the repo and initialize the template bundler
 
-As the template bundler is a seperate repo you have to execute the
+As the template bundler is a separate repo you have to execute the
 following commands if you want to use it (to create your own templates).
 
 ```bash
@@ -154,7 +154,7 @@ below.
 * `/get` - gets a image url from the list and prints out the url
 * `/imagelist` - prints out every image url in the cache
 * `/blacklist` - prints out every image url that is blacklisted (e.g. "already seen")
-* `/status` - prints amount of images in cache and blacklist and size im memory of these two lists
+* `/status` - prints number of images in cache and blacklist and size in memory of these two lists
 * `/flush` - will delete everything in cache but not in blacklist
 * `/reset` - deletes everything in cache and blacklist
 
@@ -169,7 +169,7 @@ when you start nichtparasoup
 * when cache is empty, it will be refilled by the crawler automatically
 * you will (hopefully) get new results.
 
-keep in mind: everytime you restart nichtparasoup, the cache forgets about its previous
+keep in mind: every time you restart nichtparasoup, the cache forgets about its previous
 shown images. So is not persistent.
 
 ## cache_fill in threads
