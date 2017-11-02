@@ -226,12 +226,11 @@ class Crawler(object):
         cls.__images = {}  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
 
     @classmethod
-    def __add_image(cls, uri, crawler, site, threadurl=None):
+    def __add_image(cls, uri, crawler, site, threadurl):
         """
         :type uri: str
         :type crawler: str
         :type site: str
-        :type threadurl: str
         :return: bool
         """
         if not cls._is_image(uri):
@@ -374,13 +373,14 @@ class Crawler(object):
             e = sys.exc_info()[0]
             self.__class__._log("exception", "unexpected crawler error: %s" % (repr(e)))
 
-    def _add_image(self, uri, site):
+    def _add_image(self, uri, site, threadurl=None):
         """
         :type uri: str
         :type site: str
+        :type threadurl: str
         :rtype: bool
         """
-        return self.__class__.__add_image(uri, self.__class__.__name__, site)
+        return self.__class__.__add_image(uri, self.__class__.__name__, site, threadurl)
 
     ## abstract functions
 
