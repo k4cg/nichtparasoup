@@ -182,14 +182,14 @@
 			srcSpan.className = 'src '+ crawler;
 
 			var srcA = srcSpan.appendChild(document.createElement('a'));
-			srcA.href = srcA.innerHTML = srcA.innerText = this.src;
+			srcA.href = srcA.innerHTML = srcA.innerText = threadUri != "None" ? threadUri :  this.src;
 
 			if ( typeof onReady == "function" )
 			{
 				onReady(imageBox);
 			}
 		});
-		imageDoc.src = threadUri != "None" ? threadUri :  uri;
+		imageDoc.src = uri;
 	};
 
 	np._pushImage = function (uri, crawler, threadUri)
