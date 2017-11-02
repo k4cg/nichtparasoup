@@ -226,11 +226,12 @@ class Crawler(object):
         cls.__images = {}  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
 
     @classmethod
-    def __add_image(cls, uri, crawler, site):
+    def __add_image(cls, uri, crawler, site, threadurl=None):
         """
         :type uri: str
         :type crawler: str
         :type site: str
+        :type threadurl: str
         :return: bool
         """
         if not cls._is_image(uri):
@@ -247,8 +248,8 @@ class Crawler(object):
             cls.__images[crawler][site] = []
 
         cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-        cls.__images[crawler][site].append("%s#%s" % (uri, crawler))
-        cls._log("debug", "added %s-%s: %s" % (crawler, site, uri))
+        cls.__images[crawler][site].append("%s#%s#%s" % (uri, crawler, threadurl))
+        cls._log("debug", "added %s-%s-%s: %s" % (crawler, site, threadurl, uri))
         return True
 
     @classmethod
