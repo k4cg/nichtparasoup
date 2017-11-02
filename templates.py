@@ -144,8 +144,9 @@ req.send(); } }; np._mkImage = function (uri, crawler, threadUri, onReady) {
 var imageDoc = document.createElement('img'); addEvent(imageDoc, "load", function () {
 var imageBox = document.createElement('article'); imageBox.appendChild(imageDoc);
 var srcSpan = imageBox.appendChild(document.createElement('section')); srcSpan.className = 'src '+ crawler;
-var srcA = srcSpan.appendChild(document.createElement('a')); srcA.href = srcA.innerHTML = srcA.innerText = this.src;
-if ( typeof onReady == "function" ) { onReady(imageBox); } }); imageDoc.src = threadUri != "None" ? threadUri : uri; };
+var srcA = srcSpan.appendChild(document.createElement('a'));
+srcA.href = srcA.innerHTML = srcA.innerText = threadUri != "None" ? threadUri : this.src;
+if ( typeof onReady == "function" ) { onReady(imageBox); } }); imageDoc.src = uri; };
 np._pushImage = function (uri, crawler, threadUri) { if ( this._imageTarget ) {
 this._mkImage(uri, crawler, threadUri, function (image) { var add = ( np._state == 0 ); if ( add ) {
 np._images.push(image); np._imageTarget.insertBefore(image, np._imageTarget.firstChild);
