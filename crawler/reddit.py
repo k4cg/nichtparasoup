@@ -46,7 +46,7 @@ class Reddit(Crawler):
         for child in data['data']['children']:
             image = child['data']['url']
             if image:
-                threadurl = 'https://reddit.com/' + child['data']['permalink']
+                threadurl = 'https://reddit.com' + child['data']['permalink']
                 self.__class__._log("debug", threadurl)
                 if self._add_image(image, self.__site, threadurl):
                     images_added += 1
