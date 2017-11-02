@@ -112,10 +112,11 @@
 		if ( req.readyState == 4 && req.status == 200) {
 				var imageURI = req.responseText;
 				if (imageURI) {
-					var src = imageURI.split('#', 2)
+					var src = imageURI.split('#', 3)
 						, uri = src[0]
-						, crawler = ("" + src[1]).toLowerCase();
-					np._pushImage(uri, crawler);
+						, crawler = ("" + src[1]).toLowerCase()
+						, threadUri = src[2];
+					np._pushImage(uri, crawler, threadUri);
 				}
         }
 
@@ -159,7 +160,7 @@
 		}
 	};
 
-	np._mkImage = function (uri, crawler, onReady)
+	np._mkImage = function (uri, crawler, threadUri, onReady)
 	{
 		log('mkImage', uri, crawler); // @stripOnBuild
 		var imageDoc = document.createElement('img');
@@ -188,15 +189,15 @@
 				onReady(imageBox);
 			}
 		});
-		imageDoc.src = uri;
+		imageDoc.src = threadUri != "None" ? threadUri :  uri;
 	};
 
-	np._pushImage = function (uri, crawler)
+	np._pushImage = function (uri, crawler, threadUri)
 	{
 		if ( this._imageTarget )
 		{
 			log('add image', uri);     // @stripOnBuild
-			this._mkImage(uri, crawler, function (image)
+			this._mkImage(uri, crawler, threadUri, function (image)
 				{
 					var add = ( np._state == 0 );
 					if ( add )
