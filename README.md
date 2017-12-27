@@ -5,6 +5,8 @@ displays images/gifs from [giphy](http://giphy.com), [soup.io](http://soup.io),
 [pr0gramm](http://pr0gramm.com), [4chan](http://4chan.org),
 [9gag](http://9gag.com) and [reddit](http://reddit.com).
 
+<img src="https://github.com/k4cg/nichtparasoup/raw/master/logo.png">
+
 At our hackerspace [k4cg](http://k4cg.org) we
 use it since 2 years now. It turns out to be a very non-invasive way of
 entertaining a crowd of nerds without having the noise and interruptions of
@@ -184,3 +186,7 @@ thread wakes up every `1.337` seconds and checks the status of the current imgma
 # license
 
 MIT
+
+# credits
+
+parts of the logo from <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
