@@ -1,5 +1,5 @@
 
-root = """<!DOCTYPE html><html><head><script type="text/javascript">document.write([ "\<script src='",
+root = """<!DOCTYPE html><html><head><meta name="referrer" content="no-referrer" /><script type="text/javascript">document.write([ "\<script src='",
 ("https:" == document.location.protocol) ? "https://" : "http://",
 "ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' type='text/javascript'>\<\/script>" ].join(''));</script>
 <meta charset="utf-8"/><title>nichtparasoup - Hackerspace Entertainment System</title><style type="text/css">html {
