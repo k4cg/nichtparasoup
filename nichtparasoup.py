@@ -211,7 +211,7 @@ def cache_fill_loop():
                     try:
                         sources[crawler][site].crawl()
                         info = Crawler.info()
-                    except Exception, e:
+                    except Exception as e:
                         logger.error("Error in crawler %s - %s: %s" % (crawler, site, e))
                         break
 
