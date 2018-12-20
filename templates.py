@@ -215,7 +215,7 @@ hotkeysE.className = hotkeysE.className.replace(className_forceShow, '');
 controlsE.className = controlsE.className.replace(className_forceShow, '');
 hotKeyIndicator.className = hotKeyIndicator.className.replace(className_active, '') }, 1800); } return bubble; }); });
 })(window);</script><script type="application/javascript">var snowStorm = (function(window, document) {
-this.autoStart = true; this.excludeMobile = true; this.flakesMax = 512; this.flakesMaxActive = 256;
+this.autoStart = false; this.excludeMobile = true; this.flakesMax = 256; this.flakesMaxActive = 128;
 this.animationInterval = 33; this.useGPU = true; this.className = null; this.excludeMobile = true;
 this.flakeBottom = null; this.followMouse = true; this.snowColor = '#fff'; this.snowCharacter = '&bull;';
 this.snowStick = true; this.targetElement = null; this.useMeltEffect = true; this.useTwinkleEffect = false;
@@ -350,9 +350,9 @@ if (screenX && screenY && !storm.disabled) { storm.init(); storm.active = true; 
 window.setTimeout(function() { storm.start(true); }, 20);
 storm.events.remove(isIE?document:window,'mousemove',doDelayedStart); } function doStart() {
 if (!storm.excludeMobile || !isMobile) { doDelayedStart(); } storm.events.remove(window, 'load', doStart); }
-if (storm.autoStart) { storm.events.add(window, 'load', doStart, false); } return this; }(window, document));</script>
-<script type="application/javascript">$(document).ready(function(){ var d = new Date(); n = d.getMonth(); if (n <= 10) {
-snowStorm.freeze() } });</script><script type="application/javascript">
+this.doStart = doStart; if (storm.autoStart) { storm.events.add(window, 'load', doStart, false); } return this;
+}(window, document));</script><script type="application/javascript">$(document).ready(function(){ var d = new Date();
+var n = d.getMonth(); if (n >= 10) { snowStorm.doStart() } });</script><script type="application/javascript">
 window.helperFuncs.addEvent(window, "load", function () { this.maxSizer.init('#wall article img');
 this.stateSwitch.init(this.document.getElementById('c_state'));
 this.stateSwitch.init(this.document.getElementById('c_background')); this.nichtparasoup.init('wall', 2); });</script>
