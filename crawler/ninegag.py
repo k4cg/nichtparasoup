@@ -18,7 +18,7 @@ class NineGag(Crawler):
     __next = ""
     __site = ""
 
-    __RE_post_container = re.compile("badge-post-container")
+    __RE_post_container = re.compile(r'badge-post-container')
 
     @staticmethod
     def __build_uri(uri):

@@ -19,10 +19,10 @@ class Pr0gramm(Crawler):
     __uri = ""
     __next = ""
     __site = ""
-    __image_base_url = "http://img.pr0gramm.com/"
+    __image_base_url = "https://img.pr0gramm.com/"
     __api_base_url = ""
 
-    __filter = re.compile('^/static/[\d]+')
+    __filter = re.compile(r'^/static/[\d]+')
     __filterNextPage = ""
 
     ## functions
@@ -69,7 +69,7 @@ class Pr0gramm(Crawler):
         self.__site = site
         self.__uri = self.__class__.__build_uri(uri)
         self.__api_base_url = self.__uri
-        self.__filterNextPage = re.compile('^/static/' + self.__site + '/[\d]+')
+        self.__filterNextPage = re.compile(r'^/static/' + re.escape(self.__site) + r'/[\d]+')
         self._restart_at_front()
 
     def _crawl(self):

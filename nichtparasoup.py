@@ -10,14 +10,14 @@ import threading
 import argparse
 
 try:
-    from configparser import RawConfigParser  # py 3
+    from configparser import RawConfigParser  # py3
 except ImportError:
-    from ConfigParser import RawConfigParser  # py 2
+    from ConfigParser import RawConfigParser  # py2
 
 try:
     from urllib.parse import quote_plus as url_quote_plus  # py3
 except ImportError:
-    from urllib import quote_plus as url_quote_plus  # py2
+    from urllib import quote_plus as url_quote_plus        # py2
 
 from werkzeug.wrappers import Request, Response
 from werkzeug.routing import Map, Rule
@@ -52,7 +52,7 @@ config.read(path.join(_file_path, 'config.defaults.ini'))
 try:
     config.read_file(args.config_file)  # py3
 except AttributeError:
-    config.readfp(args.config_file)  # py2
+    config.readfp(args.config_file)     # py2
 args.config_file.close()
 
 # get actual config items
@@ -166,21 +166,21 @@ def get_crawlers(configuration, section):
             crawler_class_name, repr(crawler_sites), repr(factors[crawler_class_name])))
 
         if crawler_class == Reddit:
-            crawler_uris = {site: "http://www.reddit.com/r/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://www.reddit.com/r/%s" % site for site in crawler_sites}
         elif crawler_class == NineGag:
-            crawler_uris = {site: "http://9gag.com/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://9gag.com/%s" % site for site in crawler_sites}
         elif crawler_class == Pr0gramm:
-            crawler_uris = {crawler_sites[0]: "http://pr0gramm.com/api/items/get"}
+            crawler_uris = {crawler_sites[0]: "https://pr0gramm.com/api/items/get"}
         elif crawler_class == SoupIO:
             crawler_uris = {site: ("http://www.soup.io/%s" if site in ["everyone"]  # public site
                                    else "http://%s.soup.io") % site  # user site
                             for site in crawler_sites}
         elif crawler_class == Instagram:
-            crawler_uris = {site: "http://instagram.com/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://instagram.com/%s" % site for site in crawler_sites}
         elif crawler_class == Fourchan:
-            crawler_uris = {site: "http://boards.4chan.org/%s/" % site for site in crawler_sites}
+            crawler_uris = {site: "https://boards.4chan.org/%s/" % site for site in crawler_sites}
         elif crawler_class == Giphy:
-            crawler_uris = {site: "http://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
 
         if crawler_class_name not in crawlers:
             crawlers[crawler_class_name] = {}
@@ -360,7 +360,7 @@ if __name__ == "__main__":
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        min_cache_imgs_before_refill -1;
+        min_cache_imgs_before_refill -1
 
     # give the cache_fill some time in advance
     time.sleep(1.337)
