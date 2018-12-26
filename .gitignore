@@ -3,6 +3,10 @@
 *.log
 logs/*
 
+## ignore our own custom config
+./config.ini
+
+
 
 ## ignore python runtime files - based on https://github.com/github/gitignore/blob/master/Python.gitignore
 

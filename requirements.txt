@@ -5,5 +5,5 @@ Werkzeug
 beautifulsoup4
 
 ### advanced html/xml parser & tree builders
-# html5lib
-# lxml
+html5lib
+lxml

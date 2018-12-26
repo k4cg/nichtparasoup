@@ -15,7 +15,7 @@ except ImportError:
 try:
     from urllib.request import URLError as HTTPError    # py3
 except ImportError:
-    from urllib2 import HTTPError            # py2
+    from urllib2 import HTTPError                       # py2
 
 try:
     from urllib.parse import urljoin    # py3
@@ -37,9 +37,9 @@ class Crawler(object):
     __C_headers_ = 'headers'
     __C_resetDelay_ = 'resetDelay'
 
-    __refresh_uri_RE = re.compile("^(?:\d*;)?url=(.+)$", flags=re.IGNORECASE)
+    __refresh_uri_RE = re.compile(r'^(?:\d*;)?url=(.+)$', flags=re.IGNORECASE)
 
-    __image_RE = re.compile(".*\.(?:jpeg|jpg|png|gif)(?:\?.*)?(?:#.*)?$", flags=re.IGNORECASE)
+    __image_RE = re.compile(r'.*\.(?:jpeg|jpg|png|gif)(?:\?.*)?(?:#.*)?$', flags=re.IGNORECASE)
 
     ## class vars
 
@@ -207,7 +207,7 @@ class Crawler(object):
 
     @classmethod
     def __blacklist_clear(cls):
-        cls.__blacklist = []  # alternative: cls.__blacklist[:] = [] # be aware: list.clean() is not available in py2
+        cls.__blacklist = []  # be aware: list.clean() is not available in py2
 
     @classmethod
     def _blacklist(cls, uri):
@@ -223,7 +223,7 @@ class Crawler(object):
 
     @classmethod
     def __images_clear(cls):
-        cls.__images = {}  # alternative: cls.__images[:] = [] # be aware: list.clean() is not available in py2
+        cls.__images = {}  # be aware: dict.clean() is not available in py2
 
     @classmethod
     def __add_image(cls, uri, crawler, site, threadurl):
