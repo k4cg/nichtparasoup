@@ -1,6 +1,6 @@
 # nichtparasoup
 
-nichtparasoup is a hackerspaces entertainment system.
+nichtparasoup is a hackspaces entertainment system.
 It randomly displays images/gifs from
 [giphy](https://giphy.com),
 [soup.io](http://soup.io),
@@ -11,16 +11,16 @@ It randomly displays images/gifs from
 
 ![logo](images/logo.png)
 
-At our hackerspace [k4cg](https://k4cg.org) we
+At our hackspace [k4cg](https://k4cg.org) we
 use it since 2 years now. It turns out to be a very non-invasive way of
 entertaining a crowd of nerds without having the noise and interruptions of
 videos or other stuff.
 
-Here is what it looks like in your browser  
+Here is what it looks like in your browser
 ![screenshot](images/screenshot.png)
 
-and even better, on a beamer in your local hackerspace!  
-![hackerspace](images/hackerspace.jpg)
+and even better, on a beamer in your local hackspace!
+![hackspace](images/hackspace.jpg)
 
 ## demo
 
@@ -127,7 +127,7 @@ five times as much as Pr0gramm-new.
 
 ## contribution
 
-/!\ attention:  
+/!\ attention:
 keep the code compatible for py2 and py3.
 
 ### server side & crawlers
