@@ -17,7 +17,7 @@
 
 	{ // some helper variables and shortcuts
 		var document = window.document
-		  , localStorage = window.localStorage
+		  , localStorage = window.helperFuncs.storageFactory()
 		  ;
 	}
 
@@ -107,19 +107,23 @@
 
 	addEvent(np._fetchRequest, "readystatechange", function ()
 	{
-		var req = this;
+		var req = this, imageData = undefined;
 		log("XHR onreadystatechange", req.readyState); // @stripOnBuild
-		if ( req.readyState == 4 && req.status == 200) {
-				var imageURI = req.responseText;
-				if (imageURI) {
-					var src = imageURI.split('#', 3)
-						, uri = src[0]
-						, crawler = ("" + src[1]).toLowerCase()
-						, threadUri = src[2];
-					np._pushImage(uri, crawler, threadUri);
+		if ( req.readyState == 4 && req.status == 200)
+		{
+				try
+				{
+					imageData = JSON.parse(req.responseText);
 				}
-        }
-
+				catch (e)
+				{
+					log("JSON.parse error", e, req.responseText);  // @stripOnBuild
+				}
+				if (imageData)
+				{
+					np._pushImage(imageData);
+				}
+		}
 	});
 
 	np.__controllableRequestReadystatechange = function ()
@@ -133,7 +137,7 @@
 			{
 				var sleep = parseFloat(req.responseText);
 				if (isNaN(sleep)) {
-					sleep = 500; // half a second should be enough as a default ... 
+					sleep = 500; // half a second should be enough as a default ...
 				}
 				window.setTimeout(function ()
 				{
@@ -160,9 +164,11 @@
 		}
 	};
 
-	np._mkImage = function (uri, crawler, threadUri, onReady)
+	np._mkImage = function (imageData, onReady)
 	{
-		log('mkImage', uri, crawler); // @stripOnBuild
+		log('mkImage', imageData); // @stripOnBuild
+		if (! imageData.uri) { return; }
+
 		var imageDoc = document.createElement('img');
 		addEvent(imageDoc, "load", function ()
 		{
@@ -179,25 +185,24 @@
 			var imageBox = document.createElement('article');
 			imageBox.appendChild(imageDoc);
 			var srcSpan = imageBox.appendChild(document.createElement('section'));
-			srcSpan.className = 'src '+ crawler;
-
+			srcSpan.className = 'src '+ imageData.crawler.toLowerCase();
 			var srcA = srcSpan.appendChild(document.createElement('a'));
-			srcA.href = srcA.innerHTML = srcA.innerText = threadUri != "None" ? threadUri :  this.src;
+			srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || this.src;
 
 			if ( typeof onReady == "function" )
 			{
 				onReady(imageBox);
 			}
 		});
-		imageDoc.src = uri;
+		imageDoc.src = imageData.uri;
 	};
 
-	np._pushImage = function (uri, crawler, threadUri)
+	np._pushImage = function (imageData)
 	{
 		if ( this._imageTarget )
 		{
-			log('add image', uri);     // @stripOnBuild
-			this._mkImage(uri, crawler, threadUri, function (image)
+			log('add image', imageData);     // @stripOnBuild
+			this._mkImage(imageData, function (image)
 				{
 					var add = ( np._state == 0 );
 					if ( add )
@@ -210,16 +215,16 @@
 							np._popImage();
 						}
 					}
-					else                                                        // @stripOnBuild
-					{                                                           // @stripOnBuild
-						log('image not loaded, since _state != 0', np._state);  // @stripOnBuild
-					}                                                           // @stripOnBuild
+					else                                                       // @stripOnBuild
+					{                                                          // @stripOnBuild
+						log('image not loaded, since _state != 0', np._state);   // @stripOnBuild
+					}                                                          // @stripOnBuild
 				});
 		}
-		else                                                                        // @stripOnBuild
-		{                                                                           // @stripOnBuild
+		else                                                             // @stripOnBuild
+		{                                                                // @stripOnBuild
 			log('! image not added', 'no target', this._imageTarget);      // @stripOnBuild
-		}                                                                           // @stripOnBuild
+		}                                                                // @stripOnBuild
 	};
 
 	np._popImage = function ()
