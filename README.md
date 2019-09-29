@@ -173,7 +173,8 @@ listed below.
 * `/blacklist` - prints out every image url that is blacklisted
    (e.g. "already seen")
 * `/status` - prints number of images in cache and blacklist and size in
-   memory of these two lists
+   memory of these two lists in a readable way.
+   pass parameter `t=json` to get a JSON response.
 * `/flush` - will delete everything in cache but not in blacklist
 * `/reset` - deletes everything in cache and blacklist
 
