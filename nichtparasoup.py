@@ -8,6 +8,7 @@ import logging.handlers
 import time
 import threading
 import argparse
+import json
 
 try:
     from configparser import RawConfigParser  # py3
@@ -219,7 +220,7 @@ def cache_fill_loop():
         time.sleep(1.337)
 
 
-# return a img url from map
+# return image data from map
 def cache_get():
     return Crawler.get_image()
 
@@ -330,7 +331,7 @@ class NichtParasoup(object):
 
     # map function for getting an image url
     def on_cache_get(self, request):
-        return Response(cache_get())
+        return Response(json.dumps(cache_get()), mimetype='application/json')
 
     # map function for showing blacklist
     def on_show_blacklist(self, request):
@@ -344,7 +345,7 @@ class NichtParasoup(object):
     def on_flush(self, request):
         return Response(flush())
 
-    # map function for resetting (deleting everythign in cache and blacklist)
+    # map function for resetting (deleting everything in cache and blacklist)
     def on_reset(self, request):
         return Response(reset())
 
