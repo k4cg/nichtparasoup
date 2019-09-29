@@ -2,6 +2,7 @@
 
 ### import libraries
 from os import path
+import math
 import random
 import logging
 import logging.handlers
@@ -244,7 +245,7 @@ def cache_status():
                 count = info["images_per_site"][key]
 
                 bar = "|"
-                for i in range(0, count / 5):
+                for i in range(0, int(math.ceil(count / 5))):
                     if i < min_cache_imgs_before_refill / 5:
                         bar += "#"
                     else:
