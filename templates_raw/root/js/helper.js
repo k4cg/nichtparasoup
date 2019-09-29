@@ -32,7 +32,31 @@ window.helperFuncs = {
 		{
 			obj.fireEvent('on' + event);
 		}
+	},
+
+	storageFactory : function ()
+	{
+		try
+		{
+			var ls = window.localStorage;
+			var lst = "test";
+			ls.setItem(lst, lst);
+			if (lst != ls.getItem(lst)) { throw "ls.getItem"; }
+			ls.removeItem(lst);
+			return ls;
+		}
+		catch (e)
+		{
+			debugger;
+			return { // temp storage to emulate local storage in dev mode
+				// only needed functions are implemented
+					_store : {}
+				, setItem    : function (k,v) { this._store[k]=v; }
+				, getItem    : function (k) { return this._store[k]; }
+			};
+		}
 	}
+
 };
 
 /* @stripOnBuild */ window.helperFuncs.log = function () {
