@@ -175,17 +175,27 @@
 			log('loaded', this.src); // @stripOnBuild
 			/* structure looks like :
 				<article>
-					<stripOnBuild>{DEBUG_MSG}</stripOnBuild>
 					<img src="{uri}" />
-					<section class="src {crawler}">
+					<section role="source" data-crawler="{crawler}" data-source="{source}">
 						<a href="{uri}">{uri}</a>
 					</section>
 				</article>
 			*/
+
 			var imageBox = document.createElement('article');
 			imageBox.appendChild(imageDoc);
+
 			var srcSpan = imageBox.appendChild(document.createElement('section'));
-			srcSpan.className = 'src '+ imageData.crawler.toLowerCase();
+			srcSpan.setAttribute("role", "source");
+
+			// not all browsers support dataset property - so use setAttribute function
+			srcSpan.setAttribute("data-crawler", imageData.crawler.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
+			srcSpan.setAttribute("data-site", imageData.site);
+			if ( imageData.source )
+			{ // this one is optional
+				srcSpan.setAttribute("data-source", imageData.source);
+			}
+
 			var srcA = srcSpan.appendChild(document.createElement('a'));
 			srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || this.src;
 

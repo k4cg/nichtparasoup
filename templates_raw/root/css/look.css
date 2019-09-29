@@ -163,7 +163,7 @@ footer {
 	display: block; /* needed for alignment of the image to its container box ... */
 }
 
-#wall article .src {
+#wall article section[role="source"] {
 	display: block;
 	position: absolute;
 	bottom: 0ex;
@@ -180,7 +180,7 @@ footer {
 	text-align: initial; /* fall back to native */
 }
 
-#wall article .src a {
+#wall article section[role="source"] a {
 	display: none;
 	word-wrap: break-word;
 	text-decoration: none;
@@ -188,13 +188,13 @@ footer {
 	margin: 0.1ex 0.1em;
 }
 
-#wall article .src:hover {
+#wall article section[role="source"]:hover {
 	opacity: 1;
 	background-color: #606060;
 	background-color: rgba(100, 100, 100, 0.7);
 	left: 0em;
 }
 
-#wall article .src:hover a {
+#wall article section[role="source"]:hover a {
 	display: block;
 }
