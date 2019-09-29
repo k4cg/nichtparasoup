@@ -92,7 +92,10 @@ opacity: 1; background-color: #606060; background-color: rgba(100, 100, 100, 0.7
 addEvent : function (obj, event, fn, capture) { "use strict"; if ( ! obj ) { return; } if ( obj.attachEvent ) {
 obj.attachEvent('on'+event, fn); } else if( obj.addEventListener ) { obj.addEventListener(event, fn, capture); } } ,
 fireEvent : function (obj, event) { "use strict"; if ( ! obj ) { return; } if ( obj.dispatchEvent ) {
-obj.dispatchEvent(new Event(event)); } else { obj.fireEvent('on' + event); } } };</script>
+obj.dispatchEvent(new Event(event)); } else { obj.fireEvent('on' + event); } }, storageFactory : function () { try {
+var ls = window.localStorage; var lst = "test"; ls.setItem(lst, lst); if (lst != ls.getItem(lst)) { throw "ls.getItem"; }
+ls.removeItem(lst); return ls; } catch (e) { debugger; return { _store : {}
+, setItem : function (k,v) { this._store[k]=v; } , getItem : function (k) { return this._store[k]; } }; } } };</script>
 <script type="application/javascript">; (function (pub, win) { "use strict"; var log = window.helperFuncs.log;
 var vars , func , conf , doc = win.document , math = win.Math ; conf = { imgMaxWidthPerc : 0.9 , imgMaxHeightPerc : 0.9
 }; vars = { styleE : null , cssSelector : '' }; func = { createStyle : function () { var styleE , base; if ( ! base ) {
@@ -118,54 +121,52 @@ ss.init = function (domElem) { addEvent(domElem, "change", function () { setClas
 setClass(domElem.parentNode, domElem.checked); }; })(window.stateSwitch={}, window);</script>
 <script type="application/javascript">; (function(np, window, undefined) { "use strict";
 var log = window.helperFuncs.log; var addEvent = window.helperFuncs.addEvent , fireEvent = window.helperFuncs.fireEvent ;
-{ var document = window.document , localStorage = window.localStorage ; } { var bitset = { "gen": function (bit) {
-var r = 1 << bit; return r; } , "check": function (int, bit) { var tar = this.gen(bit) , r = ( (int & tar) == tar );
-return r; } , "set": function (int, bit) { var r = int | this.gen(bit); return r; } , "unset": function (int, bit) {
-var r = this.check(int, bit) ? int ^ this.gen(bit) : int; return r; } }; } np.constants = { stateBS : { init : 0 ,
-manual : 1 , boss : 2 , presented : 3 , active : 4 , scroll : 5 , gallery : 6 } }; np.__bossMode_className = ' boss';
-np.__bossMode_className_RE = new RegExp(np.__bossMode_className, 'g'); np._imageTarget = undefined;
-np._imageFadeInTime = 1000; np._images = []; np._imagesMax = 50; np._state = bitset.set(0, np.constants.stateBS.init);
-np._fetchRequest = new XMLHttpRequest(); np._serverResetRequest = new XMLHttpRequest();
-np._serverFlushRequest = new XMLHttpRequest(); np._options = { interval : 10 , playInBackground : false };
-np.__intervall = 0; np._setTimer = function(){ if(np.__intervall) { window.clearInterval(np.__intervall); }
-if(this._state == 0) { np.__intervall = window.setInterval(function () { np._fetch(); }, np._options.interval * 1000); }
-}; addEvent(np._fetchRequest, "readystatechange", function () { var req = this;
-if ( req.readyState == 4 && req.status == 200) { var imageURI = req.responseText; if (imageURI) {
-var src = imageURI.split('#', 3) , uri = src[0] , crawler = ("" + src[1]).toLowerCase() , threadUri = src[2];
-np._pushImage(uri, crawler, threadUri); } } }); np.__controllableRequestReadystatechange = function () { var req = this;
-if ( req.readyState == 4 && req.status == 200 ) { var controlElement = req.controlElement; if ( controlElement ) {
-var sleep = parseFloat(req.responseText); if (isNaN(sleep)) { sleep = 500; } window.setTimeout(function () {
-controlElement.disabled = false; controlElement.setAttribute('disabled', null);
-controlElement.removeAttribute('disabled'); }, sleep); } } };
+{ var document = window.document , localStorage = window.helperFuncs.storageFactory() ; } { var bitset = {
+"gen": function (bit) { var r = 1 << bit; return r; } , "check": function (int, bit) { var tar = this.gen(bit)
+, r = ( (int & tar) == tar ); return r; } , "set": function (int, bit) { var r = int | this.gen(bit); return r; }
+, "unset": function (int, bit) { var r = this.check(int, bit) ? int ^ this.gen(bit) : int; return r; } }; }
+np.constants = { stateBS : { init : 0 , manual : 1 , boss : 2 , presented : 3 , active : 4 , scroll : 5 , gallery : 6 }
+}; np.__bossMode_className = ' boss'; np.__bossMode_className_RE = new RegExp(np.__bossMode_className, 'g');
+np._imageTarget = undefined; np._imageFadeInTime = 1000; np._images = []; np._imagesMax = 50;
+np._state = bitset.set(0, np.constants.stateBS.init); np._fetchRequest = new XMLHttpRequest();
+np._serverResetRequest = new XMLHttpRequest(); np._serverFlushRequest = new XMLHttpRequest(); np._options = {
+interval : 10 , playInBackground : false }; np.__intervall = 0; np._setTimer = function(){ if(np.__intervall) {
+window.clearInterval(np.__intervall); } if(this._state == 0) { np.__intervall = window.setInterval(function () {
+np._fetch(); }, np._options.interval * 1000); } }; addEvent(np._fetchRequest, "readystatechange", function () {
+var req = this, imageData = undefined; if ( req.readyState == 4 && req.status == 200) { try {
+imageData = JSON.parse(req.responseText); } catch (e) { } if (imageData) { np._pushImage(imageData); } } });
+np.__controllableRequestReadystatechange = function () { var req = this; if ( req.readyState == 4 && req.status == 200 )
+{ var controlElement = req.controlElement; if ( controlElement ) { var sleep = parseFloat(req.responseText);
+if (isNaN(sleep)) { sleep = 500; } window.setTimeout(function () { controlElement.disabled = false;
+controlElement.setAttribute('disabled', null); controlElement.removeAttribute('disabled'); }, sleep); } } };
 addEvent(np._serverResetRequest, "readystatechange", np.__controllableRequestReadystatechange);
 addEvent(np._serverFlushRequest, "readystatechange", np.__controllableRequestReadystatechange); np._fetch = function () {
 var req = this._fetchRequest; var r_rs = req.readyState; if ( r_rs == 4 || r_rs == 0 ) { req.open("GET", './get', true);
-req.send(); } }; np._mkImage = function (uri, crawler, threadUri, onReady) {
+req.send(); } }; np._mkImage = function (imageData, onReady) { if (! imageData.uri) { return; }
 var imageDoc = document.createElement('img'); addEvent(imageDoc, "load", function () {
 var imageBox = document.createElement('article'); imageBox.appendChild(imageDoc);
-var srcSpan = imageBox.appendChild(document.createElement('section')); srcSpan.className = 'src '+ crawler;
-var srcA = srcSpan.appendChild(document.createElement('a'));
-srcA.href = srcA.innerHTML = srcA.innerText = threadUri != "None" ? threadUri : this.src;
-if ( typeof onReady == "function" ) { onReady(imageBox); } }); imageDoc.src = uri; };
-np._pushImage = function (uri, crawler, threadUri) { if ( this._imageTarget ) {
-this._mkImage(uri, crawler, threadUri, function (image) { var add = ( np._state == 0 ); if ( add ) {
-np._images.push(image); np._imageTarget.insertBefore(image, np._imageTarget.firstChild);
-if ( np._images.length > np._imagesMax ) { np._popImage(); } } }); } }; np._popImage = function () {
-var image = this._images.shift(); if ( image && image.parentNode ) { image.parentNode.removeChild(image); } };
-np._optionsStorage = { target : "np_store" , save : function () { log('options saved');
-localStorage.setItem(this.target, JSON.stringify(np._options)); } , load : function () {
-var lo = localStorage.getItem(this.target); if ( lo ) { try { lo = JSON.parse(lo); np._options = lo; } catch ( ex ) { } }
-} }; np.serverReset = function (controlElement) { var req = this._serverResetRequest; var r_rs = req.readyState;
-if ( r_rs == 4 || r_rs == 0 ) { req.controlElement = controlElement; controlElement.disabled = true;
-controlElement.setAttribute('disabled', 'disabled'); req.open("GET", './reset', true); req.send(); } };
-np.serverFlush = function (controlElement) { var req = this._serverFlushRequest; var r_rs = req.readyState;
-if ( r_rs == 4 || r_rs == 0 ) { req.controlElement = controlElement; controlElement.disabled = true;
-controlElement.setAttribute('disabled', 'disabled'); req.open("GET", './flush', true); req.send(); } };
-np.setInterval = function (interval) { this._options.interval = interval; this._optionsStorage.save(); np._setTimer(); };
-np.getInterval = function () { return this._options.interval; }; np.setState = function (which, status) {
-var oldState0 = ( this._state == 0 ); this._state = bitset[ status ? "set" : "unset" ](this._state, which);
-var state0 = ( this._state == 0 ); if ( which == this.constants.stateBS.boss ) { var rootElem = document.documentElement;
-if ( status ) { rootElem.className += this.__bossMode_className; try { window.blur(); } catch ( ex ) { } } else {
+var srcSpan = imageBox.appendChild(document.createElement('section'));
+srcSpan.className = 'src '+ imageData.crawler.toLowerCase(); var srcA = srcSpan.appendChild(document.createElement('a'));
+srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || this.src; if ( typeof onReady == "function" ) {
+onReady(imageBox); } }); imageDoc.src = imageData.uri; }; np._pushImage = function (imageData) { if ( this._imageTarget )
+{ this._mkImage(imageData, function (image) { var add = ( np._state == 0 ); if ( add ) { np._images.push(image);
+np._imageTarget.insertBefore(image, np._imageTarget.firstChild); if ( np._images.length > np._imagesMax ) {
+np._popImage(); } } }); } }; np._popImage = function () { var image = this._images.shift();
+if ( image && image.parentNode ) { image.parentNode.removeChild(image); } }; np._optionsStorage = { target : "np_store"
+, save : function () { log('options saved'); localStorage.setItem(this.target, JSON.stringify(np._options)); }
+, load : function () { var lo = localStorage.getItem(this.target); if ( lo ) { try { lo = JSON.parse(lo);
+np._options = lo; } catch ( ex ) { } } } }; np.serverReset = function (controlElement) {
+var req = this._serverResetRequest; var r_rs = req.readyState; if ( r_rs == 4 || r_rs == 0 ) {
+req.controlElement = controlElement; controlElement.disabled = true; controlElement.setAttribute('disabled', 'disabled');
+req.open("GET", './reset', true); req.send(); } }; np.serverFlush = function (controlElement) {
+var req = this._serverFlushRequest; var r_rs = req.readyState; if ( r_rs == 4 || r_rs == 0 ) {
+req.controlElement = controlElement; controlElement.disabled = true; controlElement.setAttribute('disabled', 'disabled');
+req.open("GET", './flush', true); req.send(); } }; np.setInterval = function (interval) {
+this._options.interval = interval; this._optionsStorage.save(); np._setTimer(); }; np.getInterval = function () {
+return this._options.interval; }; np.setState = function (which, status) { var oldState0 = ( this._state == 0 );
+this._state = bitset[ status ? "set" : "unset" ](this._state, which); var state0 = ( this._state == 0 );
+if ( which == this.constants.stateBS.boss ) { var rootElem = document.documentElement; if ( status ) {
+rootElem.className += this.__bossMode_className; try { window.blur(); } catch ( ex ) { } } else {
 rootElem.className = rootElem.className.replace(this.__bossMode_className_RE, ''); } } if ( state0 != oldState0 ) {
 this._setTimer(); if (this._state == 0) { this._fetch(); } else { this._fetchRequest.abort(); } } };
 np.getState = function (which) { return bitset.check(this._state, which); }; np.__inited = false;
