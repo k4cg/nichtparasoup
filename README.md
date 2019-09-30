@@ -37,7 +37,7 @@ pip install -r requirements.txt
 after that you can just run
 
 ```sh
-./nichtparasoup.py &
+./nichtparasoup.py -c configs/sfw.ini
 ```
 
 ## configuration
@@ -48,6 +48,8 @@ you may write a derived config `myCustom.ini` and start the server via
 sections. not all is needed since most things are already defined in the
 [`config.defaults.ini`](config.defaults.ini) which may be overwritten by your
 custom config file.
+
+**Important: a configuration file is required**
 
 Some example config files are included in the [`configs`](configs) directory.
 
@@ -182,13 +184,13 @@ listed below.
 
 when you start nichtparasoup
 
-* system will fill up cache by startup 
+* system will fill up cache by startup
   (30 image urls cached per defined crawler by default)
 * system starts up the webserver
-* point your browser to the configured `localhost:5000/` 
+* point your browser to the configured `localhost:5000/`
   or whatever is configured in the config
 * start page will request single images randomly by `/get` and show it
-* when system's cache is empty, it will be refilled by the crawler 
+* when system's cache is empty, it will be refilled by the crawler
   automatically
 * you will (hopefully) get new results.
 
