@@ -1,5 +1,5 @@
 
-__all__ = ['Crawler', 'CrawlerError']
+__all__ = ['Crawler', 'CrawlerError', 'ImageData']
 
 
 import sys
@@ -21,7 +21,6 @@ try:
     from urllib.parse import urljoin    # py3
 except ImportError:
     from urlparse import urljoin        # py2
-
 
 from bs4 import BeautifulSoup
 
@@ -226,12 +225,14 @@ class Crawler(object):
         cls.__images = {}  # be aware: dict.clean() is not available in py2
 
     @classmethod
-    def __add_image(cls, uri, crawler, site, threadurl):
+    def __add_image(cls, uri, crawler, site, source, more):
         """
         :type uri: str
         :type crawler: str
         :type site: str
-        :return: bool
+        :type source: str|None
+        :type more: dict
+        :rtype: bool
         """
         if not cls._is_image(uri):
             # self._log("info", uri + " is no image ")
@@ -247,12 +248,15 @@ class Crawler(object):
             cls.__images[crawler][site] = []
 
         cls._blacklist(uri)  # add it to the blacklist to detect duplicates
-        cls.__images[crawler][site].append("%s#%s#%s" % (uri, crawler, threadurl))
-        cls._log("debug", "added %s-%s-%s: %s" % (crawler, site, threadurl, uri))
+        cls.__images[crawler][site].append(ImageData(uri, source, more))
+        cls._log("debug", "added %s-%s-%s: %s" % (crawler, site, source, uri))
         return True
 
     @classmethod
     def get_image(cls):
+        """
+        :rtype: dict
+        """
         images = cls.__images
         factors = cls.__factors
         if images:
@@ -276,14 +280,22 @@ class Crawler(object):
                     factor = 1
                     if crawler in factors and site in factors[crawler]:
                         factor = factors[crawler][site]
-
                     count += factor
-                    if count > rnd:
-                        image = random.choice(images[crawler][site])
-                        images[crawler][site].remove(image)
-                        cls._log("debug", "delivered %s-%s: %s - remaining: %d"
-                                 % (crawler, site, image, len(images[crawler][site])))
-                        return image
+                    if count <= rnd:
+                        continue
+
+                    image = random.choice(images[crawler][site])
+                    if not image:
+                        continue
+
+                    images[crawler][site].remove(image)
+                    cls._log("debug", "delivered %s-%s: %s - remaining: %d"
+                                % (crawler, site, image.uri, len(images[crawler][site])))
+
+                    result = image.asDict()
+                    result['crawler'] = crawler
+                    result['site'] = site
+                    return result
         return None
 
     @classmethod
@@ -330,12 +342,12 @@ class Crawler(object):
 
     @classmethod
     def show_imagelist(cls):
-        images = []
+        imagelist = []
         for crawler in cls.__images:
             for site in cls.__images[crawler]:
-                images.append(cls.__images[crawler][site])
-
-        return images
+                for imageData in cls.__images[crawler][site]:
+                    imagelist.append(imageData.uri)
+        return imagelist
 
     @classmethod
     def show_blacklist(cls):
@@ -373,14 +385,15 @@ class Crawler(object):
             e = sys.exc_info()[0]
             self.__class__._log("exception", "unexpected crawler error: %s" % (repr(e)))
 
-    def _add_image(self, uri, site, threadurl=None):
+    def _add_image(self, uri, site, source=None, **kwargs):
         """
         :type uri: str
         :type site: str
-        :type threadurl: str
+        :type source: str|None
+        :type kwargs: dict
         :rtype: bool
         """
-        return self.__class__.__add_image(uri, self.__class__.__name__, site, threadurl)
+        return self.__class__.__add_image(uri, self.__class__.__name__, site, source, kwargs)
 
     ## abstract functions
 
@@ -399,3 +412,31 @@ class Crawler(object):
 
 class CrawlerError(Exception):
     pass
+
+
+class ImageData(object):
+    """ class def: image data """
+
+    uri = ""
+    source = None
+    more = {}
+
+    def __init__(self, uri, source=None, more={}):
+        """
+        :type uri: str
+        :type source: str|None
+        :type more: dict
+        """
+        self.uri = uri
+        self.source = source
+        self.more = more
+
+    def asDict(self):
+        """
+        :rtype: dict
+        """
+        return {
+                "uri": self.uri ,
+                "source": self.source ,
+                "more": self.more ,
+            }

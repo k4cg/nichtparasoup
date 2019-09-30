@@ -168,12 +168,13 @@ You can interact with nichtparasoup in an "api" way very easy.
 For example `curl localhost:5000/<command>`. You can insert every command here
 listed below.
 
-* `/get` - gets a image url from the list and prints out the url
+* `/get` - gets a JSON with an image uri and other information
 * `/imagelist` - prints out every image url in the cache
 * `/blacklist` - prints out every image url that is blacklisted
    (e.g. "already seen")
 * `/status` - prints number of images in cache and blacklist and size in
-   memory of these two lists
+   memory of these two lists in a readable way.
+   pass parameter `t=json` to get a JSON response.
 * `/flush` - will delete everything in cache but not in blacklist
 * `/reset` - deletes everything in cache and blacklist
 
@@ -181,11 +182,14 @@ listed below.
 
 when you start nichtparasoup
 
-* fill up cache by startup (30 imageurls cached per defined crawler by default)
-* starts up the webserver
-* point your browser to the configured `localhost:5000/`
-* startpage will request single image randomly by `/get` and show them
-* when cache is empty, it will be refilled by the crawler automatically
+* system will fill up cache by startup 
+  (30 image urls cached per defined crawler by default)
+* system starts up the webserver
+* point your browser to the configured `localhost:5000/` 
+  or whatever is configured in the config
+* start page will request single images randomly by `/get` and show it
+* when system's cache is empty, it will be refilled by the crawler 
+  automatically
 * you will (hopefully) get new results.
 
 keep in mind: every time you restart nichtparasoup, the cache forgets about its
@@ -198,7 +202,7 @@ once you start up nichtparasoup the crawler will initially fill the cache up
 configured `Images_min_limit` get hit, the crawler starts choosing
 a new random image provider (see at the top) and refills your cache. the
 crawler thread wakes up every `1.337` seconds and checks the status of the
-current imgmap.
+current image map.
 
 ## license
 

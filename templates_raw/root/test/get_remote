@@ -1,1 +1,7 @@
-http://hhhhold.com/r#noCrawler#http://nicht.parasoup.de/demo/
+{
+    "uri": "http://hhhhold.com/r",
+    "crawler": "noCrawler",
+    "site": "get_remote",
+    "source": "http://nicht.parasoup.de/demo/", 
+    "more": {}
+}

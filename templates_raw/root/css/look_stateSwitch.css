@@ -2,23 +2,23 @@
 /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
 
 .stateSwitchContainer > input {
-	display: none;
+  display: none;
 }
 
 .stateSwitchContainer:after {
-	display: inline-block;
-	width: 1.5em;
+  display: inline-block;
+  width: 1.5em;
 }
 
 .stateSwitchContainer.state_0:after {
-	content: 'off';
+  content: 'off';
 }
 
 .stateSwitchContainer.state_1:after {
-	content: 'on';
+  content: 'on';
 }
 
 .stateSwitchContainer {
-	cursor: pointer;
+  cursor: pointer;
 }
 

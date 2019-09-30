@@ -2,12 +2,14 @@
 
 ### import libraries
 from os import path
+import math
 import random
 import logging
 import logging.handlers
 import time
 import threading
 import argparse
+import json
 
 try:
     from configparser import RawConfigParser  # py3
@@ -219,14 +221,27 @@ def cache_fill_loop():
         time.sleep(1.337)
 
 
-# return a img url from map
+# return image data from map
 def cache_get():
     return Crawler.get_image()
 
+# get status of cache
+def cache_status_dict():
+    info = Crawler.info()
+    return {
+        "crawler" : Crawler.info() ,
+        "factors" : factors ,
+        "min_cache_imgs_before_refill" : min_cache_imgs_before_refill ,
+    }
 
 # print status of cache
-def cache_status():
-    info = Crawler.info()
+def cache_status_text():
+    status = cache_status_dict()
+    info = status['crawler']
+
+    bar_reps = 5
+    bar_repr_refill = status['min_cache_imgs_before_refill'] / bar_reps
+
     msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" % \
           (info["images"], info["images_size"], info["blacklist"], info["blacklist_size"])
     logger.info(msg)
@@ -243,8 +258,8 @@ def cache_status():
                 count = info["images_per_site"][key]
 
                 bar = "|"
-                for i in range(0, count / 5):
-                    if i < min_cache_imgs_before_refill / 5:
+                for i in range(0, int(math.ceil(count / bar_reps))):
+                    if i < bar_repr_refill:
                         bar += "#"
                     else:
                         bar += "*"
@@ -326,11 +341,13 @@ class NichtParasoup(object):
 
     # map function for print the status
     def on_cache_status(self, request):
-        return Response(cache_status())
+        if request.values.get('t') == 'json':
+            return Response(json.dumps(cache_status_dict()), mimetype='application/json')
+        return Response(cache_status_text())
 
     # map function for getting an image url
     def on_cache_get(self, request):
-        return Response(cache_get())
+        return Response(json.dumps(cache_get()), mimetype='application/json')
 
     # map function for showing blacklist
     def on_show_blacklist(self, request):
@@ -344,7 +361,7 @@ class NichtParasoup(object):
     def on_flush(self, request):
         return Response(flush())
 
-    # map function for resetting (deleting everythign in cache and blacklist)
+    # map function for resetting (deleting everything in cache and blacklist)
     def on_reset(self, request):
         return Response(reset())
 

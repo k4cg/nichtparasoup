@@ -1,1 +1,7 @@
-test/testimg.png#noCrawler#http://nicht.parasoup.de/demo/
+{
+    "uri": "./test/testimg.png",
+    "crawler": "noCrawler",
+    "site": "get_local",
+    "source": "http://nicht.parasoup.de/demo/", 
+    "more": {}
+}
