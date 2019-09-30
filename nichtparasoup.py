@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 
 ### import libraries
+from crawler.giphy import Giphy
+from crawler.fourchan import Fourchan
+from crawler.instagram import Instagram
+from crawler.ninegag import NineGag
+from crawler.pr0gramm import Pr0gramm
+from crawler.soupio import SoupIO
+from crawler.reddit import Reddit
 from os import path
 import math
 import random
@@ -27,7 +34,6 @@ from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.serving import run_simple
 
 
-
 ## import templates
 import templates as tmpl
 
@@ -45,7 +51,7 @@ arg_parser.add_argument('-c', '--config-file', metavar='<file>',
                         dest="config_file")
 args = arg_parser.parse_args()
 
-### configuration
+# configuration
 # init config parser
 config = RawConfigParser()
 
@@ -72,7 +78,8 @@ if config.get("Logging", "Destination").lower() == 'syslog':
     hdlr = logging.handlers.SysLogHandler()
 else:
     hdlr = logging.FileHandler(config.get("Logging", "File"))
-    hdlr.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
+    hdlr.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s %(message)s'))
 
 logger.addHandler(hdlr)
 logger.setLevel(logverbosity.upper())
@@ -96,14 +103,7 @@ call_reset_last = time.time() - call_reset_timeout
 Crawler.request_headers({'User-Agent': user_agent})
 Crawler.set_logger(logger)
 
-### config the  crawlers
-from crawler.reddit import Reddit
-from crawler.soupio import SoupIO
-from crawler.pr0gramm import Pr0gramm
-from crawler.ninegag import NineGag
-from crawler.instagram import Instagram
-from crawler.fourchan import Fourchan
-from crawler.giphy import Giphy
+# config the  crawlers
 
 
 def get_crawlers(configuration, section):
@@ -151,7 +151,8 @@ def get_crawlers(configuration, section):
                 crawler_sites.append(url_quote_plus(factorPair))
                 continue
 
-            factorPair_parts = [factorPairPart.strip() for factorPairPart in factorPair.split(factor_separator)]
+            factorPair_parts = [factorPairPart.strip(
+            ) for factorPairPart in factorPair.split(factor_separator)]
 
             if not factorPair_parts or not len(factorPair_parts) == 2:
                 continue
@@ -168,26 +169,32 @@ def get_crawlers(configuration, section):
             crawler_class_name, repr(crawler_sites), repr(factors[crawler_class_name])))
 
         if crawler_class == Reddit:
-            crawler_uris = {site: "https://www.reddit.com/r/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://www.reddit.com/r/%s" %
+                            site for site in crawler_sites}
         elif crawler_class == NineGag:
-            crawler_uris = {site: "https://9gag.com/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://9gag.com/%s" %
+                            site for site in crawler_sites}
         elif crawler_class == Pr0gramm:
-            crawler_uris = {crawler_sites[0]: "https://pr0gramm.com/api/items/get"}
+            crawler_uris = {crawler_sites[0]                            : "https://pr0gramm.com/api/items/get"}
         elif crawler_class == SoupIO:
             crawler_uris = {site: ("http://www.soup.io/%s" if site in ["everyone"]  # public site
                                    else "http://%s.soup.io") % site  # user site
                             for site in crawler_sites}
         elif crawler_class == Instagram:
-            crawler_uris = {site: "https://instagram.com/%s" % site for site in crawler_sites}
+            crawler_uris = {site: "https://instagram.com/%s" %
+                            site for site in crawler_sites}
         elif crawler_class == Fourchan:
-            crawler_uris = {site: "https://boards.4chan.org/%s/" % site for site in crawler_sites}
+            crawler_uris = {site: "https://boards.4chan.org/%s/" %
+                            site for site in crawler_sites}
         elif crawler_class == Giphy:
-            crawler_uris = {site: "https://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
+            crawler_uris = {
+                site: "https://api.giphy.com/v1/gifs/search?q=%s" % site for site in crawler_sites}
 
         if crawler_class_name not in crawlers:
             crawlers[crawler_class_name] = {}
 
-        crawlers[crawler_class_name] = {site: crawler_class(crawler_uris[site], site) for site in crawler_uris}
+        crawlers[crawler_class_name] = {site: crawler_class(
+            crawler_uris[site], site) for site in crawler_uris}
 
     return crawlers, factors
 
@@ -214,7 +221,8 @@ def cache_fill_loop():
                         sources[crawler][site].crawl()
                         info = Crawler.info()
                     except Exception as e:
-                        logger.error("Error in crawler %s - %s: %s" % (crawler, site, e))
+                        logger.error("Error in crawler %s - %s: %s" %
+                                     (crawler, site, e))
                         break
 
         # sleep for non-invasive threading ;)
@@ -226,15 +234,19 @@ def cache_get():
     return Crawler.get_image()
 
 # get status of cache
+
+
 def cache_status_dict():
     info = Crawler.info()
     return {
-        "crawler" : Crawler.info() ,
-        "factors" : factors ,
-        "min_cache_imgs_before_refill" : min_cache_imgs_before_refill ,
+        "crawler": Crawler.info(),
+        "factors": factors,
+        "min_cache_imgs_before_refill": min_cache_imgs_before_refill,
     }
 
 # print status of cache
+
+
 def cache_status_text():
     status = cache_status_dict()
     info = status['crawler']
@@ -243,7 +255,8 @@ def cache_status_text():
     bar_repr_refill = status['min_cache_imgs_before_refill'] / bar_reps
 
     msg = "images cached: %d (%d bytes) - already crawled: %d (%d bytes)" % \
-          (info["images"], info["images_size"], info["blacklist"], info["blacklist_size"])
+          (info["images"], info["images_size"],
+           info["blacklist"], info["blacklist_size"])
     logger.info(msg)
 
     for crawler in sources:
@@ -264,12 +277,15 @@ def cache_status_text():
                     else:
                         bar += "*"
 
-                sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " + bar) % (crawler, site, factor, count)
+                sitestats = ("%15s - %-15s with factor %4.1f: %2d Images " +
+                             bar) % (crawler, site, factor, count)
                 logger.info(sitestats)
                 msg += "\r\n" + sitestats
     return msg
 
 # print imagelist
+
+
 def show_imagelist():
     return "\n".join(Crawler.show_imagelist())
 
@@ -301,7 +317,7 @@ def reset():
     return "%i000" % (call_reset_timeout - time_since_last_call)
 
 
-### werkzeug webserver
+# werkzeug webserver
 # class with mapping to cache_* functions above
 class NichtParasoup(object):
     # init webserver with routing
@@ -366,7 +382,7 @@ class NichtParasoup(object):
         return Response(reset())
 
 
-### runtime
+# runtime
 # main function how to run
 # on start-up, fill the cache and get up the webserver
 if __name__ == "__main__":
@@ -377,7 +393,7 @@ if __name__ == "__main__":
         cache_fill_thread.start()
     except (KeyboardInterrupt, SystemExit):
         # end the cache filler thread properly
-        min_cache_imgs_before_refill -1
+        min_cache_imgs_before_refill - 1
 
     # give the cache_fill some time in advance
     time.sleep(1.337)
