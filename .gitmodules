@@ -1,6 +1,0 @@
-[submodule "templates_raw/_bundler"]
-	path = templates_raw/_bundler
-	url = https://github.com/jkowalleck/HTML_bundler.git
-[submodule "templates_raw/_foreign/normalize.css"]
-	path = templates_raw/_foreign/normalize.css
-	url = https://github.com/necolas/normalize.css.git

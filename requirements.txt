@@ -1,9 +1,0 @@
-### the webserver toolkit
-Werkzeug
-
-### basic HTML/XML toolkit
-beautifulsoup4
-
-### advanced html/xml parser & tree builders
-html5lib
-lxml

@@ -1,5 +1,14 @@
 # nichtparasoup
 
+---
+
+:construction:  THIS FILE IS OUTDATED
+:construction:  DUE TO A REWRITE
+
+---
+
+
+
 nichtparasoup is a hackspaces entertainment system.
 It randomly displays images/gifs from
 [giphy](https://giphy.com),
