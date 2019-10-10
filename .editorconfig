@@ -3,31 +3,42 @@ root = true
 [*]
 end_of_line = LF
 
+[.editorconfig]
+trim_trailing_whitespace = true
+insert_final_newline = true
+
 [*.py]
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.css]
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.js]
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[{*.ini, setup.cfg, .coveragerc,.pylintrc,.flake8}]
+[*.html]
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{yml,yaml}]
+
+[*.css]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.js]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.ini]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{yml, yaml}]
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
@@ -37,4 +48,8 @@ insert_final_newline = true
 indent_style = space
 indent_size = 3
 trim_trailing_whitespace = false
+insert_final_newline = true
+
+[{*.cfg, .coveragerc, .pylintrc, .flake8}]
+trim_trailing_whitespace = true
 insert_final_newline = true

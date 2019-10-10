@@ -1,29 +1,47 @@
-import setuptools
+from functools import reduce
 
-setuptools.setup(
+from nichtparasoup import __version__
+
+REQUIREMENTS = dict(
+    config=[],
+    core=[],
+    imagecrawler=[],
+    webserver=["werkzeug"],
+)
+
+SETUP = dict(
     name="nichtparasoup",
-    version="2.0.dev0",  # TODO: set versions
+    version=__version__,  # use setuptools-scm ?
+    license="MIT",
+    setup_requires=["setuptools"],
     packages=["nichtparasoup"],
-    package_dir={"": "src"},
-    python_requires=">=3.5",
-    install_requires=[
-        "werkzeug",
-    ],
-    extras_require={
-        "development": [
-            "tox",  # really needed ?
+    package_data=dict(
+        nichtparasoup=[
+            "webserver/htdocs",  # TODO: check if this is done right. are the files included in dist
         ],
-        "testing": [
+    ),
+    python_requires=">=3.5",
+    install_requires=reduce(lambda r1, r2: r1 + r2, REQUIREMENTS.values(), []),
+    extras_require=dict(
+        development=[
+            "tox",
+            "isort",
+        ],
+        testing=[
             "flake8",
-            # 'flake8-annotations;python_version>="3.6"',
-            # 'flake8-bugbear;python_version="3.5"',
-            # flake8-isort;python_version>="3.5"  # enable when we have a auto-fixer in place
-            # 'flake8-pep3101;python_version>="3.5"',
+            'flake8-annotations;python_version>="3.6"',
+            'flake8-bugbear',
+            "flake8-isort",
+            'flake8-pep3101',
             "pep8-naming",
             "mypy",
-            "pytest",
             "coverage",
+            "pytest",
             "ddt",
         ],
-    }
+    ),
 )
+
+if __name__ == "__main__":
+    import setuptools
+    setuptools.setup(**SETUP)
