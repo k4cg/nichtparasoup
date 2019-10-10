@@ -1,0 +1,15 @@
+language: python
+
+cache: pip
+
+install: pip install --upgrade tox setuptools virtualenv
+script: python -m tox
+
+matrix:
+  include:
+    - python: "3.5"
+      env: TOXENV=py35-codecov
+    - python: "3.6"
+      env: TOXENV=py36-codecov
+    - python: "3.7"
+      env: TOXENV=py37-codecov

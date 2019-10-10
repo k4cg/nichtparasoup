@@ -1,7 +1,0 @@
-{
-    "uri": "./test/testimg.png",
-    "crawler": "noCrawler",
-    "site": "get_local",
-    "source": "http://nicht.parasoup.de/demo/", 
-    "more": {}
-}
