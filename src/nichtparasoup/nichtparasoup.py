@@ -41,9 +41,10 @@ class Crawler(object):
                 self._image_added(image_crawled)
 
     def get_random_image(self) -> Optional[Image]:
-        self.crawl()  # for demo and debugging # TODO: remove this line
         if not self.images:
-            return None
+            self.crawl()  # for demo and debugging # TODO: remove this line
+            if not self.images:
+                return None
         image = random_choice(list(self.images))
         self.images.discard(image)
         return image
