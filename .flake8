@@ -1,0 +1,22 @@
+[flake8]
+
+show-source  = True
+
+
+ignore =
+    # ignore self markers of https://github.com/python-discord/flake8-annotations
+    TYP101
+    TYP102
+
+exclude =
+    .git,
+    __pycache__,
+    old,
+    build,
+    dist,
+    .tox
+    *_cache
+
+max-complexity = 10
+max-line-length = 119
+
