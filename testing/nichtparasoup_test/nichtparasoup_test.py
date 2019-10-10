@@ -1,14 +1,9 @@
 import unittest
 
 from nichtparasoup.nichtparasoup import NichtParasoup
-from nichtparasoup.imagecrawler import Images, Image, ImageCrawler
+from nichtparasoup.imagecrawler import Image
 
-
-class _EmptyImageCrawler(ImageCrawler):
-    """ imagecrawler that finds nothing. use it for mocking ... """
-
-    def crawl(self) -> Images:
-        return Images()
+from . import _EmptyImageCrawler
 
 
 class NichtParasoupTest(unittest.TestCase):
@@ -46,9 +41,11 @@ class NichtParasoupTest(unittest.TestCase):
 
         # act
         nichtparasoup.add_imagecrawler(imagecrawler, 1)
+        nichtparasoup.add_imagecrawler(imagecrawler, 1)
 
         # assert
         self.assertIn(
             imagecrawler,
             (crawler.imagecrawler for crawler in nichtparasoup.crawlers),
             'expected imagecrawler in list')
+        self.assertEqual(1, len(nichtparasoup.crawlers))

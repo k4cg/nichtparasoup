@@ -1,7 +1,7 @@
 __all__ = ["NichtParasoup", "Crawler", "CrawlerWeight", "Crawlers", "Blacklist"]
 
-from typing import Any, Union, Set, Callable, Optional
-from random import choice as random_choice
+from typing import Any, Union, Set, Callable, Optional, List
+from random import choice as random_choice, uniform as random_float
 
 from .imagecrawler import Images, Image, ImageUri, ImageCrawler
 
@@ -57,15 +57,19 @@ class Crawler(object):
         return image
 
 
-class Crawlers(Set[Crawler]):
+class Crawlers(List[Crawler]):
+
+    def _random_weight(self) -> CrawlerWeight:
+        return random_float(0, sum(crawler.weight for crawler in self))
 
     def get_random(self) -> Optional[Crawler]:
-        if not self:
-            return None
-        crawlers = list(self)
-        # TODO: add weighted random
-        crawler = random_choice(crawlers)  # type: Crawler
-        return crawler
+        cum_weight_goal = self._random_weight()
+        cum_weight = 0  # type: CrawlerWeight
+        for crawler in self:
+            cum_weight += crawler.weight
+            if cum_weight >= cum_weight_goal:
+                return crawler
+        return None
 
 
 class NichtParasoup(object):
@@ -83,10 +87,11 @@ class NichtParasoup(object):
         self.blacklist.add(image.uri)
 
     def add_imagecrawler(self, imagecrawler: ImageCrawler, weight: CrawlerWeight) -> None:
-        self.crawlers.add(Crawler(
-            imagecrawler, weight,
-            self._is_image_not_in_blacklist, self._add_image_to_blacklist
-        ))
+        if imagecrawler not in (crawler.imagecrawler for crawler in self.crawlers):
+            self.crawlers.append(Crawler(
+                imagecrawler, weight,
+                self._is_image_not_in_blacklist, self._add_image_to_blacklist
+            ))
 
     def get_random_image(self) -> Optional[Image]:
         crawler = self.crawlers.get_random()
