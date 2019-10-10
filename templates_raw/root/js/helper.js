@@ -47,7 +47,6 @@ window.helperFuncs = {
     }
     catch (e)
     {
-      debugger;
       return { // temp storage to emulate local storage in dev mode
         // only needed functions are implemented
           _store : {}
