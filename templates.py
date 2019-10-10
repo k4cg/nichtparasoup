@@ -95,16 +95,15 @@ obj.addEventListener(event, fn, capture); } } , fireEvent : function (obj, event
 if ( ! obj ) { return; } if ( obj.dispatchEvent ) { obj.dispatchEvent(new Event(event)); } else {
 obj.fireEvent("on" + event); } }, storageFactory : function () { try { var ls = window.localStorage; var lst = "test";
 ls.setItem(lst, lst); if (lst != ls.getItem(lst)) { throw "ls.getItem"; } ls.removeItem(lst); return ls; } catch (e) {
-debugger; return { _store : {} , setItem : function (k,v) { this._store[k]=v; }
-, getItem : function (k) { return this._store[k]; } }; } } };</script><script type="application/javascript">;
-(function (pub, win) { "use strict"; var log = window.helperFuncs.log; var vars , func , conf
-, doc = win.document , math = win.Math ; conf = { imgMaxWidthPerc : 0.9 , imgMaxHeightPerc : 0.9 }; vars = {
-styleE : null , cssSelector : "" }; func = { createStyle : function () { var styleE , base; if ( ! base ) {
-base = doc.getElementsByTagName("head")[0]; } if ( ! base ) { base = doc.getElementsByTagName("body")[0]; } if ( ! base )
-{ base = doc.getElementsByTagName("html")[0]; } if ( ! base ) { base = doc.lastChild; }
-styleE = doc.createElement("style"); styleE.setAttribute("type","text/css"); styleE = base.appendChild(styleE);
-return styleE; } , getAdjustmentStr : function () { var maxWidth , maxHeight , cssSelector = vars.cssSelector
-, cssString = "" , style = {}; if ( ! cssSelector ) { return ""; }
+return { _store : {} , setItem : function (k,v) { this._store[k]=v; } , getItem : function (k) { return this._store[k]; }
+}; } } };</script><script type="application/javascript">; (function (pub, win) { "use strict";
+var log = window.helperFuncs.log; var vars , func , conf , doc = win.document , math = win.Math ; conf = {
+imgMaxWidthPerc : 0.9 , imgMaxHeightPerc : 0.9 }; vars = { styleE : null , cssSelector : "" }; func = {
+createStyle : function () { var styleE , base; if ( ! base ) { base = doc.getElementsByTagName("head")[0]; }
+if ( ! base ) { base = doc.getElementsByTagName("body")[0]; } if ( ! base ) { base = doc.getElementsByTagName("html")[0];
+} if ( ! base ) { base = doc.lastChild; } styleE = doc.createElement("style"); styleE.setAttribute("type","text/css");
+styleE = base.appendChild(styleE); return styleE; } , getAdjustmentStr : function () { var maxWidth , maxHeight
+, cssSelector = vars.cssSelector , cssString = "" , style = {}; if ( ! cssSelector ) { return ""; }
 maxWidth = math.floor(win.innerWidth * conf.imgMaxWidthPerc);
 maxHeight = math.floor(win.innerHeight * conf.imgMaxHeightPerc); if ( maxWidth > 0 ) {
 style["max-width"] = maxWidth +"px"; style["width"] = "auto"; } if ( maxHeight > 0 ) {
