@@ -25,7 +25,7 @@ class Crawler(object):
                  on_image_added: Optional[_OnImageAdded] = None
                  ) -> None:
         self.imagecrawler = imagecrawler
-        self.weight = weight if weight > 0 else 1  # typing: CrawlerWeight
+        self.weight = weight if weight > 0 else 1  # type: CrawlerWeight
         self.images = Images()
         self._is_image_addable = is_image_addable
         self._image_added = on_image_added
@@ -82,7 +82,7 @@ class NichtParasoup(object):
         # must be compatible to: _OnImageAdded
         self.blacklist.add(image.uri)
 
-    def add_imagerawler(self, imagecrawler: ImageCrawler, weight: CrawlerWeight) -> None:
+    def add_imagecrawler(self, imagecrawler: ImageCrawler, weight: CrawlerWeight) -> None:
         self.crawlers.add(Crawler(
             imagecrawler, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist

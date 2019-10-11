@@ -45,7 +45,7 @@ class NichtParasoupTest(unittest.TestCase):
         imagecrawler = _EmptyImageCrawler("test")
 
         # act
-        nichtparasoup.add_imagerawler(imagecrawler, 1)
+        nichtparasoup.add_imagecrawler(imagecrawler, 1)
 
         # assert
         self.assertIn(
