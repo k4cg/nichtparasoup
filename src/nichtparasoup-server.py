@@ -15,6 +15,7 @@ if __name__ == "__main__":
     from nichtparasoup.nichtparasoup import NichtParasoup
     from nichtparasoup.server import Server
     from nichtparasoup.imagecrawler.dummy import Dummy as DummyCrawler
+    from nichtparasoup.imagecrawler.picsum import Picsum as PicsumCrawler
 
     class WebServer(Server):
         def __init__(self, nichtparasoup: NichtParasoup):
@@ -51,7 +52,7 @@ if __name__ == "__main__":
 
     # TODO: write this foo based on some proper settings
     nichtparasoup.add_imagerawler(DummyCrawler('dummy1'), 1)
-    nichtparasoup.add_imagerawler(DummyCrawler('dummy2'), 1)
+    nichtparasoup.add_imagerawler(PicsumCrawler('800/600'), 1)
 
     webserver = WebServer(nichtparasoup)
 
