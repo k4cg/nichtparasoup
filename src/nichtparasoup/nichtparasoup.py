@@ -25,7 +25,7 @@ class Crawler(object):
                  on_image_added: Optional[_OnImageAdded] = None
                  ) -> None:
         self.imagecrawler = imagecrawler
-        self.weight = weight if weight > 0 else 1  # typing: CrawlerWeight
+        self.weight = weight if weight > 0 else 1  # type: CrawlerWeight
         self.images = Images()
         self._is_image_addable = is_image_addable
         self._image_added = on_image_added
