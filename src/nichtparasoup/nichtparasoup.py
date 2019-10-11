@@ -82,7 +82,7 @@ class NichtParasoup(object):
         # must be compatible to: _OnImageAdded
         self.blacklist.add(image.uri)
 
-    def add_imagerawler(self, imagecrawler: ImageCrawler, weight: CrawlerWeight) -> None:
+    def add_imagecrawler(self, imagecrawler: ImageCrawler, weight: CrawlerWeight) -> None:
         self.crawlers.add(Crawler(
             imagecrawler, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist
