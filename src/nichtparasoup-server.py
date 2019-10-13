@@ -51,7 +51,7 @@ if __name__ == "__main__":
     nichtparasoup = NichtParasoup()
 
     # TODO: write this foo based on some proper settings
-    nichtparasoup.add_imagecrawler(DummyCrawler('dummy1'), 1)
+    nichtparasoup.add_imagecrawler(DummyCrawler('dummy1'), 0.5)
     nichtparasoup.add_imagecrawler(PicsumCrawler('800/600'), 1)
 
     webserver = WebServer(nichtparasoup)
