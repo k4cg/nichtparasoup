@@ -9,7 +9,7 @@ source =
 
 [paths]
 source =
-    src/
+    ./nichtparasoup
     .tox/*/lib/python*/site-packages/nichtparasoup
     .tox/pypy/site-packages/nichtparasoup
 
