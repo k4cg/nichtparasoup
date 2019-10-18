@@ -20,6 +20,14 @@ class ImageTest(unittest.TestCase):
         # assert
         self.assertEqual(image1, image2)
 
+    def test_unequal_other_types(self) -> None:
+        # arrange
+        image = Image("testA")
+        other_types = [None, True, 23, 4.2, "", [], (), {}, self]  # type: ignore
+        # assert
+        for other_type in other_types:
+            self.assertNotEqual(image, other_type)
+
     def test_equal(self) -> None:
         # arrange
         image1 = Image("testA")

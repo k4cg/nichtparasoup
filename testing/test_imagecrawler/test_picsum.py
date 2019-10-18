@@ -3,21 +3,95 @@ import unittest
 from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
 from nichtparasoup.imagecrawler.picsum import Picsum
 
+_picsum_right_config = dict(width=800, height=600)
 
-class PicsumTest(unittest.TestCase):
 
-    def test_get_config(self) -> None:
+class PicsumConfigCorrect(unittest.TestCase):
+
+    def test__check_config_right_value(self) -> None:
         # arrange
-        config_in = dict(height=800, width=212)
-        crawler = Picsum(**config_in)
+        config_in = _picsum_right_config.copy()
         # act
-        config_out = crawler.get_config()
+        config_out = Picsum.check_config(config_in)
         # assert
         self.assertDictEqual(config_in, config_out)
 
+
+class PicsumConfigWidthTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self._picsum_right_config_wo_width = _picsum_right_config.copy()
+        del self._picsum_right_config_wo_width["width"]
+
+    def tearDown(self) -> None:
+        del self._picsum_right_config_wo_width
+
+    def test__check_config_missing_value(self) -> None:
+        # assert
+        with self.assertRaises(KeyError):
+            Picsum.check_config(self._picsum_right_config_wo_width)
+
+    def test__check_config_wrong_type(self) -> None:
+        wrong_types = [None, True, "", [], (), {}, self]  # type: ignore
+        for wrong_type in wrong_types:
+            # arrange
+            config_in = self._picsum_right_config_wo_width
+            config_in["width"] = wrong_type  # type: ignore
+            # assert
+            with self.assertRaises(TypeError):
+                Picsum.check_config(config_in)
+
+    def test__check_config_wrong_value(self) -> None:
+        wrong_values = [0, -1]
+        for wrong_value in wrong_values:
+            # arrange
+            config_in = self._picsum_right_config_wo_width
+            config_in["width"] = wrong_value
+            # assert
+            with self.assertRaises(ValueError):
+                Picsum.check_config(config_in)
+
+
+class PicsumConfigHeightTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self._picsum_right_config_wo_height = _picsum_right_config.copy()
+        del self._picsum_right_config_wo_height["height"]
+
+    def tearDown(self) -> None:
+        del self._picsum_right_config_wo_height
+
+    def test__check_config_missing_value(self) -> None:
+        # assert
+        with self.assertRaises(KeyError):
+            Picsum.check_config(self._picsum_right_config_wo_height)
+
+    def test__check_config_wrong_type(self) -> None:
+        wrong_types = [None, True, "", [], (), {}, self]  # type: ignore
+        for wrong_type in wrong_types:
+            # arrange
+            config_in = self._picsum_right_config_wo_height
+            config_in["height"] = wrong_type  # type: ignore
+            # assert
+            with self.assertRaises(TypeError):
+                Picsum.check_config(config_in)
+
+    def test__check_config_wrong_value(self) -> None:
+        wrong_values = [0, -1]
+        for wrong_value in wrong_values:
+            # arrange
+            config_in = self._picsum_right_config_wo_height
+            config_in["height"] = wrong_value
+            # assert
+            with self.assertRaises(ValueError):
+                Picsum.check_config(config_in)
+
+
+class PicsumCrawlTest(unittest.TestCase):
+
     def test_crawl(self) -> None:
         # arrange
-        crawler = Picsum(height=320, width=480)
+        crawler = Picsum(**_picsum_right_config)
         # act
         images_crawled = crawler.crawl()
         images_crawled_len = len(images_crawled)
@@ -28,7 +102,7 @@ class PicsumTest(unittest.TestCase):
             self.assertTrue(image_crawled.is_generic, 'this is not generic')
 
 
-class LoaderTest(unittest.TestCase):
+class PicsumLoaderTest(unittest.TestCase):
     def test_get_imagecrawler_class(self) -> None:
         # act
         imagecrawler_class = get_imagecrawler_class("Picsum")

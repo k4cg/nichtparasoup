@@ -13,7 +13,7 @@ class ImageCrawlerConfig(Dict[str, Any]):
 class BaseImageCrawler(ABC):
 
     def __init__(self, **config: Any) -> None:
-        self._config = self._check_config(config)
+        self._config = self.check_config(config)
 
     def __eq__(self, other: Any) -> bool:
         if type(self) is type(other):
@@ -21,12 +21,12 @@ class BaseImageCrawler(ABC):
             return self._config == other_imagecrawler._config
         return False
 
-    def get_config(self) -> ImageCrawlerConfig:
+    def get_config(self) -> ImageCrawlerConfig:  # pragma: no cover
         return ImageCrawlerConfig(self._config)
 
     @staticmethod
     @abstractmethod
-    def _check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:  # pragma: no cover
+    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:  # pragma: no cover
         pass
 
     @abstractmethod
