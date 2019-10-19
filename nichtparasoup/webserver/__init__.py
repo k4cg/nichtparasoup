@@ -74,3 +74,4 @@ class WebServer(BaseServer):
             processes=1, threaded=False,  # TODO: finish implement everything thread safe
             use_reloader=False,
             use_debugger=use_debugger)
+        self.tearDown()

@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Set, Union
 from weakref import ref as waek_ref
 
 from nichtparasoup import __version__
+from nichtparasoup._internals import _log, _logger_date_time_string
 from nichtparasoup.core import Crawler, NPCore
 
 
@@ -53,19 +54,22 @@ class BaseServer(ABC):
         return old_len
 
     def setUp(self) -> None:
+        _log("info", " * setting up {}".format(type(self).__name__))
         self.refiller.refill()  # initial fill
         self.refiller.start()  # start threaded periodical refill
 
     def tearDown(self) -> None:
-        pass
+        _log("info", "\r\n * tearing down {}".format(type(self).__name__))
+        self.refiller.stop()
 
 
 class ServerRefiller(Thread):
     def __init__(self, server: BaseServer, keep: int, sleep: Union[int, float]) -> None:  # pragma: no cover
-        super().__init__(daemon=True)
+        super().__init__(daemon=False)
         self._wr_server = waek_ref(server)
         self._keep = keep
         self._sleep = sleep
+        self.__stopped = False
 
     def refill_crawler(self, crawler: Crawler) -> int:
         cum_refilled = 0
@@ -73,6 +77,8 @@ class ServerRefiller(Thread):
             refilled = crawler.crawl()
             if 0 == refilled:
                 break  # while
+            _log("info", "{} refilled {}({}) by {}".format(
+                _logger_date_time_string(), type(crawler.imagecrawler).__name__, id(crawler.imagecrawler), refilled))
             cum_refilled += refilled
         return cum_refilled
 
@@ -84,7 +90,7 @@ class ServerRefiller(Thread):
         crawlers = server.np_core.crawlers.copy()
         del server
         for crawler in crawlers:
-            filler = Thread(target=self.refill_crawler, args=(crawler,), daemon=True)
+            filler = Thread(target=self.refill_crawler, args=(crawler,), daemon=False)
             fillers.add(filler)
             filler.start()
         del crawlers
@@ -93,9 +99,22 @@ class ServerRefiller(Thread):
         return True
 
     def run(self) -> None:
-        while self.refill():
+        while True:
+            if not self.refill():
+                break
+            if self.__stopped:
+                break
             # each service worker has some delay from time to time
             sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
+
+    def start(self) -> None:
+        _log("info", " * starting {}".format(type(self).__name__))
+        self.__stopped = False
+        super().start()
+
+    def stop(self) -> None:
+        _log("info", " * stopping {}".format(type(self).__name__))
+        self.__stopped = True
 
 
 class ServerStatistics(object):
