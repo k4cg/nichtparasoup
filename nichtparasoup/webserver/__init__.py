@@ -66,11 +66,11 @@ class WebServer(BaseServer):
         status = status_what(self)
         return Response(json_encode(status), mimetype='application/json')
 
-    def run(self, hostname: str, port: int, **kwargs: Any) -> None:
+    def run(self, hostname: str, port: int, use_debugger: bool = False) -> None:
         self.setUp()
         run_simple(
             hostname, port,
             self, static_files={"/": self._htdocs},
+            processes=1, threaded=False,  # TODO: finish implement everything thread safe
             use_reloader=False,
-            threaded=False,  # TODO: finish implement everything thread safe
-            **kwargs)
+            use_debugger=use_debugger)

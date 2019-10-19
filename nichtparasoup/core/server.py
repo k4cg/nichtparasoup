@@ -4,7 +4,7 @@ from abc import ABC
 from copy import copy
 from random import uniform
 from sys import getsizeof
-from threading import Thread
+from threading import Lock, Thread
 from time import sleep
 from typing import Any, Dict, List, Optional, Set, Union
 from weakref import ref as waek_ref
@@ -23,6 +23,7 @@ class BaseServer(ABC):
         self.np_core = np_core
         self.stats = ServerStatistics()
         self.refiller = ServerRefiller(self, crawler_upkeep, 1.0)
+        self._lock_stats = Lock()
 
     def get_image(self) -> Optional[Dict[str, Any]]:
         crawler = self.np_core.crawlers.get_random()
@@ -31,7 +32,9 @@ class BaseServer(ABC):
         image = copy(crawler.pop_random_image())
         if not image:
             return None
+        self._lock_stats.acquire()
         self.stats.count_images_served += 1
+        self._lock_stats.release()
         return dict(
             uri=image.uri,
             is_generic=image.is_generic,
@@ -40,7 +43,14 @@ class BaseServer(ABC):
             crawler=id(crawler),
         )
 
-    # TODO: write the other needed server functions
+    def flush_blacklist(self) -> int:
+        old_len = len(self.np_core.blacklist)
+        self.np_core.blacklist.clear()
+        self._lock_stats.acquire()
+        # TODO: log timestamp
+        self.stats.cum_blacklist_on_flush += old_len
+        self._lock_stats.release()
+        return old_len
 
     def setUp(self) -> None:
         self.refiller.refill()  # initial fill
@@ -51,16 +61,20 @@ class BaseServer(ABC):
 
 
 class ServerRefiller(Thread):
-    def __init__(self, server: BaseServer, keep: int, sleep: Union[int, float]) -> None:
+    def __init__(self, server: BaseServer, keep: int, sleep: Union[int, float]) -> None:  # pragma: no cover
         super().__init__(daemon=True)
         self._wr_server = waek_ref(server)
         self._keep = keep
         self._sleep = sleep
 
-    def refill_crawler(self, crawler: Crawler) -> None:
-        crawled = 1
-        while crawled > 0 and len(crawler.images) < self._keep:
-            crawled = crawler.crawl()
+    def refill_crawler(self, crawler: Crawler) -> int:
+        cum_refilled = 0
+        while len(crawler.images) < self._keep:
+            refilled = crawler.crawl()
+            if 0 == refilled:
+                break  # while
+            cum_refilled += refilled
+        return cum_refilled
 
     def refill(self) -> bool:
         fillers = set()  # type: Set[Thread]

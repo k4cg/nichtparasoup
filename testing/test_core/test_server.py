@@ -34,7 +34,7 @@ class ServerGetImageTest(unittest.TestCase):
         # arrange
         image_crawled = Image('testURI', is_generic=True, source='testSource', bla=1, foo="bar")
         imagecrawler = MockableImageCrawler()
-        imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))    # type: ignore
+        imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
         self.server.np_core.add_imagecrawler(imagecrawler, 1)
         # act
         self.server.np_core.crawlers[0].crawl()
@@ -47,3 +47,36 @@ class ServerGetImageTest(unittest.TestCase):
             self.assertEqual(image_got.get("source"), image_crawled.source)
             self.assertEqual(image_got.get("more"), image_crawled.more)
             self.assertIsInstance(image_got.get("crawler"), int)
+
+
+class ServerFlushBlacklistTest(unittest.TestCase):
+
+    def test_flush_first(self) -> None:
+        # arrange
+        np_core = NPCore()
+        server = BaseServer(np_core)
+        for image_rri in ("test1", "test2", "test3"):
+            np_core.blacklist.add(image_rri)
+        blacklist_len_old = len(np_core.blacklist)
+        # act
+        removed = server.flush_blacklist()
+        # assert
+        self.assertEqual(0, len(np_core.blacklist))
+        self.assertEqual(blacklist_len_old, removed)
+        self.assertEqual(blacklist_len_old, server.stats.cum_blacklist_on_flush)
+
+    def test_flush_nth(self) -> None:
+        # arrange
+        initial_cum_blacklist_on_flush = 7
+        np_core = NPCore()
+        server = BaseServer(np_core)
+        server.stats.cum_blacklist_on_flush = initial_cum_blacklist_on_flush
+        for image_rri in ("test1", "test2", "test3"):
+            np_core.blacklist.add(image_rri)
+        blacklist_len_old = len(np_core.blacklist)
+        # act
+        removed = server.flush_blacklist()
+        # assert
+        self.assertEqual(0, len(np_core.blacklist))
+        self.assertEqual(blacklist_len_old, removed)
+        self.assertEqual(initial_cum_blacklist_on_flush + blacklist_len_old, server.stats.cum_blacklist_on_flush)

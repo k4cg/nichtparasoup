@@ -162,9 +162,10 @@ class CrawlerCrawlCase(unittest.TestCase):
 
     def test_crawl_default(self) -> None:
         # act
-        self.crawler.crawl()
+        crawled = self.crawler.crawl()
         # assert
         self.assertSetEqual(self.images, self.crawler.images)
+        self.assertEqual(len(self.images), crawled)
 
     def test_crawl_is_addable_true(self) -> None:
         called_is_image_addable_with = ImageCollection()
@@ -175,9 +176,10 @@ class CrawlerCrawlCase(unittest.TestCase):
 
         self.crawler.get_is_image_addable = MagicMock(return_value=on_is_addable_true)  # type: ignore
         # act
-        self.crawler.crawl()
+        crawled = self.crawler.crawl()
         # assert
         self.assertSetEqual(self.images, called_is_image_addable_with)
+        self.assertEqual(len(self.images), crawled)
 
     def test_crawl_is_addable_false(self) -> None:
         # arrange
@@ -189,9 +191,10 @@ class CrawlerCrawlCase(unittest.TestCase):
 
         self.crawler.get_is_image_addable = MagicMock(return_value=on_is_addable_false)  # type: ignore
         # act
-        self.crawler.crawl()
+        crawled = self.crawler.crawl()
         # assert
         self.assertSetEqual(self.images, called_is_image_addable_with)
+        self.assertEqual(len(self.images), crawled)
 
     def test_crawl_image_added_called(self) -> None:
         # arrange
@@ -203,9 +206,7 @@ class CrawlerCrawlCase(unittest.TestCase):
 
         self.crawler.get_image_added = MagicMock(return_value=on_get_image_added)  # type: ignore
         # act
-        self.crawler.crawl()
+        crawled = self.crawler.crawl()
         # assert
         self.assertSetEqual(self.images, called_image_added_with)
-
-
-# TODO: write rest of the tests for Crawler
+        self.assertEqual(len(self.images), crawled)
