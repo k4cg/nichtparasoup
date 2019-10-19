@@ -49,27 +49,28 @@ class WebServer(BaseServer):
         image = self.get_image()
         return Response(json_encode(image), mimetype='application/json')
 
-    __status_whats = dict(
+    _status_whats = dict(
         server=ServerStatus.server,
         blacklist=ServerStatus.blacklist,
         crawlers=ServerStatus.crawlers,
     )
 
     def on_status(self, _: Request) -> Response:
-        status = dict((what, getter(self)) for what, getter in self.__status_whats.items())
+        status = dict((what, getter(self)) for what, getter in self._status_whats.items())
         return Response(json_encode(status), mimetype='application/json')
 
-    def on_status_what(self, _: Request, what: str = 'all') -> Response:
-        status_what = self.__status_whats.get(what)
+    def on_status_what(self, _: Request, what: str) -> Response:
+        status_what = self._status_whats.get(what)
         if not status_what:
             raise NotFound()
         status = status_what(self)
         return Response(json_encode(status), mimetype='application/json')
 
     def run(self, hostname: str, port: int, **kwargs: Any) -> None:
+        self.setUp()
         run_simple(
             hostname, port,
-            self,
-            static_files={"/": self._htdocs},
-            **kwargs
-        )
+            self, static_files={"/": self._htdocs},
+            use_reloader=False,
+            threaded=False,  # TODO: finish implement everything thread safe
+            **kwargs)

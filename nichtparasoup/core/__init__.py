@@ -61,7 +61,7 @@ class Crawler(object):
     def get_image_added(self) -> Optional[_OnImageAdded]:
         return self.__wr_image_added() if self.__wr_image_added else None
 
-    def crawl(self) -> None:
+    def crawl(self) -> int:
         images_crawled = self.imagecrawler.crawl()
         is_image_addable = self.get_is_image_addable()
         image_added = self.get_image_added()
@@ -72,10 +72,9 @@ class Crawler(object):
             self.images.add(image_crawled)
             if image_added:
                 image_added(image_crawled)
+        return len(images_crawled)
 
     def get_random_image(self) -> Optional[Image]:
-        if not self.images:  # for demo and debugging # TODO: remove this line
-            self.crawl()
         if not self.images:
             return None
         image = random_choice(list(self.images))

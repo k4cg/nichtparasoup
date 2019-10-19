@@ -7,10 +7,10 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from .dummy import Dummy
 from .picsum import Picsum
 
-_imagecrawlers = dict()
-_imagecrawlers["GNAA"] = BaseImageCrawler
-_imagecrawlers["Dummy"] = Dummy
-_imagecrawlers["Picsum"] = Picsum
+_imagecrawlers = dict(
+    Dummy=Dummy,
+    Picsum=Picsum,
+)
 
 
 def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:
