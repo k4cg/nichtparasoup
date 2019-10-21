@@ -1,4 +1,4 @@
-__all__ = ["BaseServer", "ServerStatistics", "ServerStatus", "ServerRefiller", "BaseServerLocks"]
+__all__ = ["BaseServer", "ServerStatistics", "ServerStatus", "ServerRefiller", "ServerLocks"]
 
 from abc import ABC
 from copy import copy
@@ -21,14 +21,14 @@ class BaseServer(ABC):
     """
 
     def __init__(self, np_core: NPCore, crawler_upkeep: int = 30,
-                 reset_delay: int = 60 * 60) -> None:  # pragma: no cover
+                 reset_timeout: int = 60 * 60) -> None:  # pragma: no cover
         self._np_core = np_core
         self._keep = crawler_upkeep
         self._stats = ServerStatistics()
         self._refiller = ServerRefiller(self, 1.337)
         self._trigger_reset = False
-        self._reset_delay = reset_delay
-        self._locks = BaseServerLocks()
+        self._reset_timeout = reset_timeout
+        self._locks = ServerLocks()
 
     def get_image(self) -> Optional[Dict[str, Any]]:
         crawler = self._np_core.crawlers.get_random()
@@ -48,7 +48,8 @@ class BaseServer(ABC):
             crawler=id(crawler),
         )
 
-    def _log_refill_crawler(self, crawler: Crawler, refilled: int) -> None:
+    @staticmethod
+    def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
         # must be compatible to nichtparasoup.core._OnFill
         if refilled > 0:
             _log("info", "{} filled {}({}) by {}".format(
@@ -56,31 +57,37 @@ class BaseServer(ABC):
                 type(crawler.imagecrawler).__name__, id(crawler.imagecrawler),
                 refilled))
 
-    def _reset(self) -> bool:
-        self._locks.reset.acquire()
-        self._stats.cum_blacklist_on_flush += self._np_core.reset()
-        self._stats.count_reset += 1
-        self._stats.time_last_reset = int(time())
-        self._locks.reset.release()
-        return True
-
     def refill(self) -> Dict[str, bool]:
         self._locks.refill.acquire()
         self._np_core.fill_up_to(self._keep, self._log_refill_crawler)
         self._locks.refill.release()
         return dict(refilled=True)
 
-    def reset(self) -> Union[bool, int]:
-        # TODO write proper json Dict return
+    def _reset(self) -> None:
+        self._locks.reset.acquire()
+        self._stats.cum_blacklist_on_flush += self._np_core.reset()
+        self._stats.count_reset += 1
+        self._stats.time_last_reset = int(time())
+        self._locks.reset.release()
+
+    def request_reset(self) -> Dict[str, Any]:
         time_started = self._stats.time_started
-        if time_started is not None:
-            delay = self._reset_delay
-            now = int(time())
+        now = int(time())
+        if time_started is None:
+            request_valid = True
+            timeout = 0
+        else:
+            timeout_base = self._reset_timeout
             time_last_reset = self._stats.time_last_reset
-            reset_after = delay + (time_started if time_last_reset is None else time_last_reset)
-            if reset_after > now:
-                return reset_after - now
-        return self._reset()
+            reset_after = timeout_base + (time_started if time_last_reset is None else time_last_reset)
+            request_valid = now > reset_after
+            timeout = timeout_base if request_valid else (reset_after - now)
+        if request_valid:
+            self._reset()
+        return dict(
+            requested=request_valid,
+            timeout=timeout
+        )
 
     def setUp(self) -> None:
         self._locks.run.acquire()
@@ -95,35 +102,6 @@ class BaseServer(ABC):
         _log("info", "\r\n * tearing down {}".format(type(self).__name__))
         self._refiller.stop()
         self._locks.run.release()
-
-
-class ServerRefiller(Thread):
-    def __init__(self, server: BaseServer, sleep: Union[int, float]) -> None:  # pragma: no cover
-        super().__init__(daemon=True)
-        self._wr_server = weak_ref(server)
-        self._sleep = sleep
-        self._stopped = False
-
-    def run(self) -> None:
-        while not self._stopped:
-            server = self._wr_server()
-            if server:
-                server.refill()
-            else:
-                _log("info", " * server gone. stopping {}".format(type(self).__name__))
-                self._stopped = True
-            if not self._stopped:
-                # each service worker has some delay from time to time
-                sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
-
-    def start(self) -> None:
-        _log("info", " * starting {}".format(type(self).__name__))
-        self._stopped = False
-        super().start()
-
-    def stop(self) -> None:
-        _log("info", " * stopping {}".format(type(self).__name__))
-        self._stopped = True
 
 
 class ServerStatus(ABC):
@@ -178,6 +156,35 @@ class ServerStatus(ABC):
         return status
 
 
+class ServerRefiller(Thread):
+    def __init__(self, server: BaseServer, sleep: Union[int, float]) -> None:  # pragma: no cover
+        super().__init__(daemon=True)
+        self._wr_server = weak_ref(server)
+        self._sleep = sleep
+        self._stopped = False
+
+    def run(self) -> None:
+        while not self._stopped:
+            server = self._wr_server()
+            if server:
+                server.refill()
+            else:
+                _log("info", " * server gone. stopping {}".format(type(self).__name__))
+                self._stopped = True
+            if not self._stopped:
+                # each service worker has some delay from time to time
+                sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
+
+    def start(self) -> None:
+        _log("info", " * starting {}".format(type(self).__name__))
+        self._stopped = False
+        super().start()
+
+    def stop(self) -> None:
+        _log("info", " * stopping {}".format(type(self).__name__))
+        self._stopped = True
+
+
 class ServerStatistics(object):
     def __init__(self) -> None:  # pragma: no cover
         self.time_started = None  # type: Optional[int]
@@ -187,7 +194,7 @@ class ServerStatistics(object):
         self.cum_blacklist_on_flush = 0  # type: int
 
 
-class BaseServerLocks(object):
+class ServerLocks(object):
     def __init__(self) -> None:
         self.stats_get_image = Lock()
         self.reset = Lock()

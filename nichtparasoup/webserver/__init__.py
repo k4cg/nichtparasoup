@@ -69,7 +69,7 @@ class WebServer(BaseServer):
         return Response(json_encode(status), mimetype='application/json')
 
     def on_reset(self, _: Request) -> Response:
-        reset = self.reset()
+        reset = self.request_reset()
         return Response(json_encode(reset), mimetype='application/json')
 
     def run(self, hostname: str, port: int, use_debugger: bool = False) -> None:
