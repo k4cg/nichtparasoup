@@ -6,7 +6,7 @@ from random import uniform
 from sys import getsizeof
 from threading import Lock, Thread
 from time import sleep, time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
 from nichtparasoup import __version__
@@ -48,40 +48,25 @@ class BaseServer(ABC):
             crawler=id(crawler),
         )
 
-    def _refill_crawler(self, crawler: Crawler) -> int:
-        cum_refilled = crawler.fill_up_to(self._keep)
-        if cum_refilled > 0:
-            _log("info", "{} refilled {}({}) by {}".format(
+    def _log_refill_crawler(self, crawler: Crawler, refilled: int) -> None:
+        # must be compatible to nichtparasoup.core._OnFill
+        if refilled > 0:
+            _log("info", "{} filled {}({}) by {}".format(
                 _logger_date_time_string(),
                 type(crawler.imagecrawler).__name__, id(crawler.imagecrawler),
-                cum_refilled))
-        return cum_refilled
+                refilled))
 
     def _reset(self) -> bool:
         self._locks.reset.acquire()
-        reset_treads = list()  # type: List[Thread]
-        for crawler in self._np_core.crawlers.copy():
-            reset_tread = Thread(target=crawler.reset, daemon=True)
-            reset_treads.append(reset_tread)
-            reset_tread.start()
-        self._stats.cum_blacklist_on_flush += len(self._np_core.blacklist)
-        self._np_core.blacklist.clear()
+        self._stats.cum_blacklist_on_flush += self._np_core.reset()
         self._stats.count_reset += 1
         self._stats.time_last_reset = int(time())
-        for reset_tread in reset_treads:
-            reset_tread.join()
         self._locks.reset.release()
         return True
 
     def refill(self) -> Dict[str, bool]:
         self._locks.refill.acquire()
-        fill_treads = list()  # type: List[Thread]
-        for crawler in self._np_core.crawlers.copy():
-            fill_tread = Thread(target=self._refill_crawler, args=(crawler,), daemon=True)
-            fill_treads.append(fill_tread)
-            fill_tread.start()
-        for fill_tread in fill_treads:
-            fill_tread.join()
+        self._np_core.fill_up_to(self._keep, self._log_refill_crawler)
         self._locks.refill.release()
         return dict(refilled=True)
 

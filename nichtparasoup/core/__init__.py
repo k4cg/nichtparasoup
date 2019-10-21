@@ -1,6 +1,7 @@
 __all__ = ["Crawler", "CrawlerCollection", "NPCore"]
 
 from random import choice as random_choice, uniform as random_float
+from threading import Thread
 from types import MethodType
 from typing import Callable, List, Optional, Set, TypeVar, Union
 from weakref import ReferenceType, WeakMethod
@@ -18,6 +19,8 @@ class _Blacklist(Set[ImageUri]):
 _IsImageAddable = Callable[[Image], bool]
 
 _OnImageAdded = Callable[[Image], None]
+
+_OnFill = Callable[["Crawler", int], None]
 
 _ImageCrawler = TypeVar("_ImageCrawler", bound=BaseImageCrawler)
 
@@ -78,12 +81,14 @@ class Crawler(object):
                 image_added(image_crawled)
         return len(images_crawled)
 
-    def fill_up_to(self, to: int) -> int:
+    def fill_up_to(self, to: int, filled_by: Optional[_OnFill] = None) -> int:
         cum_refilled = 0
         while len(self.images) < to:
             refilled = self.crawl()
             if 0 == refilled:
                 break  # while
+            if filled_by:
+                filled_by(self, refilled)
             cum_refilled += refilled
         return cum_refilled
 
@@ -144,3 +149,24 @@ class NPCore(object):
             imagecrawler, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist
         ))
+
+    def fill_up_to(self, to: int, on_refill: Optional[_OnFill]) -> None:
+        fill_treads = list()  # type: List[Thread]
+        for crawler in self.crawlers:
+            fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill), daemon=True)
+            fill_treads.append(fill_tread)
+            fill_tread.start()
+        for fill_tread in fill_treads:
+            fill_tread.join()
+
+    def reset(self) -> int:
+        reset_treads = list()  # type: List[Thread]
+        for crawler in self.crawlers.copy():
+            reset_tread = Thread(target=crawler.reset, daemon=True)
+            reset_treads.append(reset_tread)
+            reset_tread.start()
+        blacklist_len = len(self.blacklist)
+        self.blacklist.clear()
+        for reset_tread in reset_treads:
+            reset_tread.join()
+        return blacklist_len
