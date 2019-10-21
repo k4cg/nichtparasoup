@@ -1,0 +1,11 @@
+/* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
+input[type="range"] {
+  position: relative;
+  top: 5px;
+  direction: rtl;
+}
+
+
+
+
