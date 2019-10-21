@@ -3,7 +3,7 @@ import unittest
 from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 
 
-class BaseImageCrawlerTest(unittest.TestCase):
+class BaseImageCrawlerEqualTest(unittest.TestCase):
 
     def test_equal(self) -> None:
         # arrange
@@ -37,3 +37,15 @@ class BaseImageCrawlerTest(unittest.TestCase):
         self.assertNotEqual(c3, c4)
         self.assertNotEqual(c3, c5)
         self.assertNotEqual(c4, c5)
+
+
+class BaseImageCrawlerResetTest(unittest.TestCase):
+
+    def test_reset_set(self) -> None:
+        # arrange
+        c = MockableImageCrawler()
+        c._reset_before_next_crawl = False
+        # act
+        c.reset()
+        # assert
+        self.assertTrue(c._reset_before_next_crawl)

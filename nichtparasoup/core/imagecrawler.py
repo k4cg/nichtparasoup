@@ -53,6 +53,7 @@ class BaseImageCrawler(ABC):
         this function is intended to find and fetch ImageURIs
 
         when implementing:
+        make sure to honor self._reset_before_next_crawl == True and in case, reset implementation dependent
         make sure to set after crawl: self._reset_before_next_crawl = False
         """
         self._reset_before_next_crawl = False
