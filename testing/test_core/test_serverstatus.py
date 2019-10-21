@@ -22,6 +22,11 @@ class ServerStatusStableTest(unittest.TestCase):
         # assert
         self.assertIsInstance(status, dict)
         self.assertIsInstance(status.get("version"), str)
+        self.assertIsInstance(status.get("uptime"), int)
+        self.assertIsInstance(status.get("reset"), dict)
+        status_reser = status["reset"]  # type: Dict[Any, Any]
+        self.assertIsInstance(status_reser.get("since"), int)
+        self.assertIsInstance(status_reser.get("count"), int)
         self.assertIsInstance(status.get("images"), dict)
         status_images = status["images"]  # type: Dict[Any, Any]
         self.assertIsInstance(status_images.get("served"), int)
@@ -39,10 +44,10 @@ class ServerStatusStableTest(unittest.TestCase):
         # act
         status = ServerStatus.crawlers(self.server)
         # assert
-        self.assertIsInstance(status, list)
-        for crawler_status in status:
+        self.assertIsInstance(status, dict)
+        for (crawler_id, crawler_status) in status.items():
+            self.assertIsInstance(crawler_id, int)
             self.assertIsInstance(crawler_status, dict)
-            self.assertIsInstance(crawler_status.get("id"), int)
             self.assertIsInstance(crawler_status.get("type"), str)
             self.assertIsInstance(crawler_status.get("config"), dict)
             self.assertIsInstance(crawler_status.get("images"), dict)

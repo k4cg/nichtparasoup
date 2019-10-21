@@ -210,3 +210,12 @@ class CrawlerCrawlCase(unittest.TestCase):
         # assert
         self.assertSetEqual(self.images, called_image_added_with)
         self.assertEqual(len(self.images), crawled)
+
+
+class ServerRefillTest(unittest.TestCase):
+
+    def test_fill_up_to(self) -> None:
+        self.skipTest("write the test - use Random3Crawler")
+
+    def test_refill_null_crawler(self) -> None:
+        self.skipTest("write the test - use NullCrawler")
