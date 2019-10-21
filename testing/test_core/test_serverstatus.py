@@ -10,8 +10,11 @@ from .mockable_imagecrawler import MockableImageCrawler
 class ServerStatusStableTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.server = BaseServer(NPCore())
-        self.server._np_core.add_imagecrawler(MockableImageCrawler(), 1)
+        core = NPCore()
+        self.imagecrawlers = ((MockableImageCrawler(t=1), 1), (MockableImageCrawler(t=2), 1))
+        for (imagecrawler, weight) in self.imagecrawlers:
+            core.add_imagecrawler(imagecrawler, weight)
+        self.server = BaseServer(core)
 
     def tearDown(self) -> None:
         del self.server
@@ -45,10 +48,14 @@ class ServerStatusStableTest(unittest.TestCase):
         status = ServerStatus.crawlers(self.server)
         # assert
         self.assertIsInstance(status, dict)
-        for (crawler_id, crawler_status) in status.items():
-            self.assertIsInstance(crawler_id, int)
+        self.assertEqual(len(self.imagecrawlers), len(status))
+        for crawler in self.server._np_core.crawlers:
+            crawler_id = id(crawler)
+            self.assertIsInstance(status.get(crawler_id), dict)
+            crawler_status = status[crawler_id]  # type: Dict[Any, Any]
             self.assertIsInstance(crawler_status, dict)
             self.assertIsInstance(crawler_status.get("type"), str)
+            self.assertIsInstance(crawler_status.get("weight"), (int, float))
             self.assertIsInstance(crawler_status.get("config"), dict)
             self.assertIsInstance(crawler_status.get("images"), dict)
             crawler_status_images = crawler_status["images"]  # type: Dict[Any, Any]
