@@ -175,13 +175,13 @@ class ServerStatus(ABC):
         )
 
     @staticmethod
-    def crawlers(server: BaseServer) -> List[Dict[str, Any]]:
-        status = list()
+    def crawlers(server: BaseServer) -> Dict[int, Dict[str, Any]]:
+        status = dict()
         for crawler in server._np_core.crawlers.copy():
+            crawler_id = id(crawler)
             crawler = copy(crawler)
             images = crawler.images.copy()
-            status.append(dict(
-                id=id(crawler),
+            status[crawler_id] = dict(
                 type=str(type(crawler.imagecrawler).__name__),
                 weight=crawler.weight,
                 config=crawler.imagecrawler.get_config().copy(),
@@ -189,7 +189,7 @@ class ServerStatus(ABC):
                     len=len(images),
                     size=getsizeof(images),
                 ),
-            ))
+            )
         return status
 
 
