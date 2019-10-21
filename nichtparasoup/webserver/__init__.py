@@ -23,6 +23,8 @@ class WebServer(BaseServer):
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
+            Rule('/reset', endpoint='reset'),
+
         ])
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
@@ -66,12 +68,16 @@ class WebServer(BaseServer):
         status = status_what(self)
         return Response(json_encode(status), mimetype='application/json')
 
+    def on_reset(self, _: Request) -> Response:
+        reset = self.reset()
+        return Response(json_encode(reset), mimetype='application/json')
+
     def run(self, hostname: str, port: int, use_debugger: bool = False) -> None:
         self.setUp()
         run_simple(
             hostname, port,
             self, static_files={"/": self._htdocs},
-            processes=1, threaded=False,  # TODO: finish implement everything thread safe
+            processes=1, threaded=True,
             use_reloader=False,
             use_debugger=use_debugger)
         self.tearDown()

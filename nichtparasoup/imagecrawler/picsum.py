@@ -38,4 +38,5 @@ class Picsum(BaseImageCrawler):
                 self._get_image_uri(),
                 is_generic=True,
             ))
+        self._reset_before_next_crawl = False
         return images

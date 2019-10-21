@@ -11,7 +11,7 @@ class ServerStatusStableTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.server = BaseServer(NPCore())
-        self.server.np_core.add_imagecrawler(MockableImageCrawler(), 1)
+        self.server._np_core.add_imagecrawler(MockableImageCrawler(), 1)
 
     def tearDown(self) -> None:
         del self.server

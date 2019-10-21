@@ -102,6 +102,18 @@ class PicsumCrawlTest(unittest.TestCase):
             self.assertTrue(image_crawled.is_generic, 'this is not generic')
 
 
+class PicsumResetTest(unittest.TestCase):
+
+    def test_reset_done(self) -> None:
+        # arrange
+        crawler = Picsum(**_picsum_right_config)
+        crawler._reset_before_next_crawl = True
+        # act
+        crawler.crawl()
+        # assert
+        self.assertFalse(crawler._reset_before_next_crawl)
+
+
 class PicsumLoaderTest(unittest.TestCase):
     def test_get_imagecrawler_class(self) -> None:
         # act

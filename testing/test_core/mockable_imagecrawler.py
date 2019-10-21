@@ -14,6 +14,7 @@ class MockableImageCrawler(BaseImageCrawler):
         return ImageCrawlerConfig(config)
 
     def crawl(self) -> ImageCollection:
+        self._reset_before_next_crawl = True
         return ImageCollection()
 
 

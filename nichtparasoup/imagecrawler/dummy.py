@@ -26,4 +26,5 @@ class Dummy(BaseImageCrawler):
             is_generic=True,
             this_is_a_dummy=True,
         ))
+        self._reset_before_next_crawl = False
         return images

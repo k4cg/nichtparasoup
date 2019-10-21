@@ -1,10 +1,12 @@
 import unittest
+from random import randint
 from unittest.mock import MagicMock
 
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.server import BaseServer
 
+from .mockable_crawler import NullCrawler, Random3Crawler
 from .mockable_imagecrawler import MockableImageCrawler
 
 
@@ -24,7 +26,7 @@ class ServerGetImageTest(unittest.TestCase):
 
     def test_get_image_no_images(self) -> None:
         # arrange
-        self.server.np_core.add_imagecrawler(MockableImageCrawler(), 1)
+        self.server._np_core.add_imagecrawler(MockableImageCrawler(), 1)
         # act
         image = self.server.get_image()
         # assert
@@ -35,9 +37,9 @@ class ServerGetImageTest(unittest.TestCase):
         image_crawled = Image('testURI', is_generic=True, source='testSource', bla=1, foo="bar")
         imagecrawler = MockableImageCrawler()
         imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
-        self.server.np_core.add_imagecrawler(imagecrawler, 1)
+        self.server._np_core.add_imagecrawler(imagecrawler, 1)
         # act
-        self.server.np_core.crawlers[0].crawl()
+        self.server._np_core.crawlers[0].crawl()
         image_got = self.server.get_image()
         # assert
         self.assertIsInstance(image_got, dict)
@@ -49,34 +51,30 @@ class ServerGetImageTest(unittest.TestCase):
             self.assertIsInstance(image_got.get("crawler"), int)
 
 
-class ServerFlushBlacklistTest(unittest.TestCase):
+class ServerRefillTest(unittest.TestCase):
 
-    def test_flush_first(self) -> None:
+    def test_refill_crawler(self) -> None:
         # arrange
-        np_core = NPCore()
-        server = BaseServer(np_core)
-        for image_rri in ("test1", "test2", "test3"):
-            np_core.blacklist.add(image_rri)
-        blacklist_len_old = len(np_core.blacklist)
+        crawler = Random3Crawler(MockableImageCrawler(), 1)
+        images_per_crawl = 3
+        intended_crawl_runs = randint(images_per_crawl * 2, 20 * images_per_crawl)
+        intended_crawls = (images_per_crawl * intended_crawl_runs)
+        keep = intended_crawls - 1
+        server = BaseServer(NPCore(), keep)
         # act
-        removed = server.flush_blacklist()
+        crawled = server._refill_crawler(crawler)
         # assert
-        self.assertEqual(0, len(np_core.blacklist))
-        self.assertEqual(blacklist_len_old, removed)
-        self.assertEqual(blacklist_len_old, server.stats.cum_blacklist_on_flush)
+        self.assertGreaterEqual(len(crawler.images), keep)
+        self.assertEqual(intended_crawls, crawled)
+        self.assertEqual(intended_crawl_runs, crawler.crawl_call_count)
 
-    def test_flush_nth(self) -> None:
+    def test_refill_null_crawler(self) -> None:
         # arrange
-        initial_cum_blacklist_on_flush = 7
-        np_core = NPCore()
-        server = BaseServer(np_core)
-        server.stats.cum_blacklist_on_flush = initial_cum_blacklist_on_flush
-        for image_rri in ("test1", "test2", "test3"):
-            np_core.blacklist.add(image_rri)
-        blacklist_len_old = len(np_core.blacklist)
+        crawler = NullCrawler(MockableImageCrawler(), 1)
+        keep = 25  # using a 3ImageCrawler - use a number that is k%3 > 0
+        server = BaseServer(NPCore(), keep)
         # act
-        removed = server.flush_blacklist()
+        crawled = server._refill_crawler(crawler)
         # assert
-        self.assertEqual(0, len(np_core.blacklist))
-        self.assertEqual(blacklist_len_old, removed)
-        self.assertEqual(initial_cum_blacklist_on_flush + blacklist_len_old, server.stats.cum_blacklist_on_flush)
+        self.assertGreaterEqual(crawled, 0)
+        self.assertEqual(1, crawler.crawl_call_count)

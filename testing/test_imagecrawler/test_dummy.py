@@ -34,6 +34,18 @@ class DummyConfigImageUriTest(unittest.TestCase):
                 Dummy.check_config(dict(image_uri=wrong_value))
 
 
+class DummyResetTest(unittest.TestCase):
+
+    def test_reset_done(self) -> None:
+        # arrange
+        crawler = Dummy(image_uri="test")
+        crawler._reset_before_next_crawl = True
+        # act
+        crawler.crawl()
+        # assert
+        self.assertFalse(crawler._reset_before_next_crawl)
+
+
 class DummyCrawlTest(unittest.TestCase):
 
     def test_crawl(self) -> None:

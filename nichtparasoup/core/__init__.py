@@ -61,6 +61,10 @@ class Crawler(object):
     def get_image_added(self) -> Optional[_OnImageAdded]:
         return self.__wr_image_added() if self.__wr_image_added else None
 
+    def reset(self) -> None:
+        self.images.clear()
+        self.imagecrawler.reset()
+
     def crawl(self) -> int:
         images_crawled = self.imagecrawler.crawl()
         is_image_addable = self.get_is_image_addable()
@@ -73,6 +77,15 @@ class Crawler(object):
             if image_added:
                 image_added(image_crawled)
         return len(images_crawled)
+
+    def fill_up_to(self, to: int) -> int:
+        cum_refilled = 0
+        while len(self.images) < to:
+            refilled = self.crawl()
+            if 0 == refilled:
+                break  # while
+            cum_refilled += refilled
+        return cum_refilled
 
     def get_random_image(self) -> Optional[Image]:
         if not self.images:

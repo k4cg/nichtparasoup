@@ -13,10 +13,14 @@ class _LoggingCrawler(Crawler):
                  on_image_added: Optional[_OnImageAdded] = None) -> None:
         super().__init__(imagecrawler, weight, is_image_addable, on_image_added)
         self.crawl_call_count = 0
+        self.reset_call_count = 0
 
     def crawl(self) -> int:
         self.crawl_call_count += 1
         return 0
+
+    def reset(self) -> None:
+        self.reset_call_count += 1
 
 
 class NullCrawler(_LoggingCrawler):
