@@ -1,4 +1,5 @@
 import unittest
+from typing import Any, Dict
 from unittest.mock import MagicMock
 
 from nichtparasoup.core import NPCore
@@ -36,6 +37,7 @@ class ServerGetImageTest(unittest.TestCase):
         imagecrawler = MockableImageCrawler()
         imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
         self.server._np_core.add_imagecrawler(imagecrawler, 1)
+        crawler = self.server._np_core.crawlers[0]
         # act
         self.server._np_core.crawlers[0].crawl()
         image_got = self.server.get_image()
@@ -46,4 +48,7 @@ class ServerGetImageTest(unittest.TestCase):
             self.assertEqual(image_got.get("is_generic"), image_crawled.is_generic)
             self.assertEqual(image_got.get("source"), image_crawled.source)
             self.assertEqual(image_got.get("more"), image_crawled.more)
-            self.assertIsInstance(image_got.get("crawler"), int)
+            self.assertIsInstance(image_got.get("crawler"), dict)
+            image_got_crawler = image_got["crawler"]  # type: Dict[str, Any]
+            self.assertEqual(image_got_crawler.get("id"), id(crawler))
+            self.assertEqual(image_got_crawler.get("type"), type(imagecrawler).__name__)

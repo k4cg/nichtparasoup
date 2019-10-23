@@ -45,7 +45,10 @@ class BaseServer(ABC):
             is_generic=image.is_generic,
             source=image.source,
             more=image.more,
-            crawler=id(crawler),
+            crawler=dict(
+                id=id(crawler),
+                type=str(type(crawler.imagecrawler).__name__),
+            ),
         )
 
     @staticmethod

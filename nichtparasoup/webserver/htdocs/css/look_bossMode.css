@@ -1,0 +1,7 @@
+
+
+/* @TODO write a good looking bos mode that is not totally suspicious */
+
+html.boss * {
+  visibility: hidden;
+}
