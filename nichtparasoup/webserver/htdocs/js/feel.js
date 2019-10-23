@@ -77,8 +77,6 @@
 
   np._fetchRequest = new XMLHttpRequest();
   np._serverResetRequest = new XMLHttpRequest();
-  np._serverFlushRequest = new XMLHttpRequest();
-
 
   np._options = {
       interval : 10
@@ -150,7 +148,6 @@
   };
 
   addEvent(np._serverResetRequest, "readystatechange", np.__controllableRequestReadystatechange);
-  addEvent(np._serverFlushRequest, "readystatechange", np.__controllableRequestReadystatechange);
 
   np._fetch = function ()
   {
@@ -288,21 +285,6 @@
       controlElement.disabled = true;
       controlElement.setAttribute("disabled", "disabled");
       req.open("GET", "./reset", true);
-      req.send();
-    }
-  };
-
-  np.serverFlush = function (controlElement)
-  {
-    var req = this._serverFlushRequest;
-    var r_rs = req.readyState;
-    if ( r_rs == 4 || r_rs == 0 )
-    {
-
-      req.controlElement = controlElement;
-      controlElement.disabled = true;
-      controlElement.setAttribute("disabled", "disabled");
-      req.open("GET", "./flush", true);
       req.send();
     }
   };
@@ -462,16 +444,6 @@
       if ( ! controlElement.disabled )
       {
         np.serverReset(controlElement);
-      }
-    });
-
-    var sc_flush = document.getElementById("sc_flush");
-    addEvent(sc_flush, "click", function ()
-    {
-      var controlElement = this;
-      if ( ! controlElement.disabled )
-      {
-        np.serverFlush(controlElement);
       }
     });
 
