@@ -1,4 +1,4 @@
-; /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
 
 
 
@@ -6,7 +6,7 @@
 { "use strict";
 
   var log = window.helperFuncs.log;
-  log("look started"); // @stripOnBuild
+
 
   // define vars and shortcuts up here to get the compressor shorten them
   var vars , func , conf
@@ -61,7 +61,7 @@
 
       maxWidth  = math.floor(win.innerWidth  * conf.imgMaxWidthPerc);
       maxHeight = math.floor(win.innerHeight * conf.imgMaxHeightPerc);
-      log("sizeMax:", "h=",maxHeight, "w=",maxWidth); // @stripOnBuild
+
 
       if ( maxWidth > 0 )
       {
@@ -107,7 +107,7 @@
   };
 
 
-  log("look done"); // @stripOnBuild
+
 
 
 })(window.maxSizer={}, window);

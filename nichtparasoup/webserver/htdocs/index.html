@@ -59,35 +59,6 @@
 
 <div id="wall"><!-- images added here --></div>
 
-<stripOnBuild id="dbg"><!-- debug area -->
-  <style>
-    #dbg {
-      display: block;
-      overflow: auto;
-      overflow-x: auto;
-      overflow-y: auto;
-      white-space: pre;
-      background-color: white;
-      color: black;
-      border-bottom: 5px solid yellow;
-      position: fixed;
-      right: 0em;
-      top: 0ex;
-      left: 0em;
-      height: 30ex;
-      min-height: 30ex;
-      resize: vertical;
-      opacity: 0.5;
-    }
-    #dbg:hover { opacity: 1.0; }
-    #dbg { display:none;}
-  </style>
-  <hr/>
-  --- DEBUG AREA ---
-  this area is for debugging without a second debug window, which may trigger pageVisibilityAPI events ...
-  it is mostly not needed, but may come in handy some time ...
-</stripOnBuild>
-
 
 <header><!-- top controls -->
   <div id="controls">
@@ -145,18 +116,6 @@
   <span class="button" id="keys" class="hotkey">hot keys</span>
 </footer>
 
-
-<stripOnBuild style="display: none;">
-  <style type="text/css">
-    stripOnBuild {
-      display: block;
-      color: black;
-      background-color: yellow;
-      font-size: xx-small;
-      padding: 0.7ex;
-    }
-  </style>
-</stripOnBuild>
 
 </body>
 

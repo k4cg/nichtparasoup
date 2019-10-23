@@ -1,10 +1,10 @@
-; /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
 
 (function(np, window, undefined)
 { "use strict";
 
   var log = window.helperFuncs.log;
-  log("feel started"); // @stripOnBuild
+
 
   var addEvent = window.helperFuncs.addEvent
     , fireEvent = window.helperFuncs.fireEvent
@@ -26,14 +26,14 @@
         "gen": function (bit)
         {
           var r =  1 << bit;
-      //    log("BS gen", bit ,"->", r); // @stripOnBuild
+
           return r;
         }
       , "check": function (int, bit)
         {
           var tar = this.gen(bit)
             , r = ( (int & tar) == tar );
-      //    log("BS check", int, bit, " against:", tar, "->", r); // @stripOnBuild
+
           return r;
         }
       , "set": function (int, bit)
@@ -89,26 +89,26 @@
 
   np._setTimer = function(){
 
-    log("Timer refresh called"); // @stripOnBuild
+
 
     if(np.__intervall)
     {
         window.clearInterval(np.__intervall);
-        log("Timer Cleared"); // @stripOnBuild
+
     }
 
     if(this._state == 0) {
         np.__intervall = window.setInterval(function () {
             np._fetch();
         }, np._options.interval * 1000);
-        log("Timer Set"); // @stripOnBuild
+
     }
   };
 
   addEvent(np._fetchRequest, "readystatechange", function ()
   {
     var req = this, imageData = undefined;
-    log("XHR onreadystatechange", req.readyState); // @stripOnBuild
+
     if ( req.readyState == 4 && req.status == 200)
     {
         try
@@ -117,7 +117,7 @@
         }
         catch (e)
         {
-          log("JSON.parse error", e, req.responseText);  // @stripOnBuild
+
         }
         if (imageData)
         {
@@ -129,7 +129,7 @@
   np.__controllableRequestReadystatechange = function ()
   {
     var req = this;
-    log("XHR onreadystatechange", req.readyState); // @stripOnBuild
+
     if ( req.readyState == 4 && req.status == 200 )
     {
       var controlElement = req.controlElement;
@@ -158,7 +158,7 @@
     var r_rs = req.readyState;
     if ( r_rs == 4 || r_rs == 0 )
     {
-      log("triggered fetch"); // @stripOnBuild
+
       req.open("GET", "./get", true);
       req.send();
     }
@@ -166,13 +166,13 @@
 
   np._mkImage = function (imageData, onReady)
   {
-    log("mkImage", imageData); // @stripOnBuild
+
     if (! imageData.uri) { return; }
 
     var imageDoc = document.createElement("img");
     addEvent(imageDoc, "load", function ()
     {
-      log("loaded", this.src); // @stripOnBuild
+
       /* structure looks like :
         <article>
           <img src="{uri}" />
@@ -211,7 +211,7 @@
   {
     if ( this._imageTarget )
     {
-      log("add image", imageData);     // @stripOnBuild
+
       this._mkImage(imageData, function (image)
         {
           var add = ( np._state == 0 );
@@ -219,22 +219,22 @@
           {
             np._images.push(image);
             np._imageTarget.insertBefore(image, np._imageTarget.firstChild);
-            log("added image", image);     // @stripOnBuild
+
             if ( np._images.length > np._imagesMax )
             {
               np._popImage();
             }
           }
-          else                                                       // @stripOnBuild
-          {                                                          // @stripOnBuild
-            log("image not loaded, since _state != 0", np._state);   // @stripOnBuild
-          }                                                          // @stripOnBuild
+
+
+
+
         });
     }
-    else                                                             // @stripOnBuild
-    {                                                                // @stripOnBuild
-      log("! image not added", "no target", this._imageTarget);      // @stripOnBuild
-    }                                                                // @stripOnBuild
+
+
+
+
   };
 
   np._popImage = function ()
@@ -244,7 +244,7 @@
     {
       image.parentNode.removeChild(image);
     }
-    log("popped an image ... if there was one ... "); // @stripOnBuild
+
   };
 
   np._optionsStorage = {
@@ -262,18 +262,18 @@
           try
           {
             lo = JSON.parse(lo);
-            log("options loaded"); // @stripOnBuild
+
             np._options = lo;
           }
           catch ( ex )
           {
-            log("ERROR:", ex); // @stripOnBuild
+
           }
         }
-        else                                // @stripOnBuild
-        {                                   // @stripOnBuild
-          log("options load failed");     // @stripOnBuild
-        }                                   // @stripOnBuild
+
+
+
+
       }
     };
 
@@ -283,7 +283,7 @@
     var r_rs = req.readyState;
     if ( r_rs == 4 || r_rs == 0 )
     {
-      log("triggered serverReset"); // @stripOnBuild
+
       req.controlElement = controlElement;
       controlElement.disabled = true;
       controlElement.setAttribute("disabled", "disabled");
@@ -298,7 +298,7 @@
     var r_rs = req.readyState;
     if ( r_rs == 4 || r_rs == 0 )
     {
-      log("triggered serverFlush"); // @stripOnBuild
+
       req.controlElement = controlElement;
       controlElement.disabled = true;
       controlElement.setAttribute("disabled", "disabled");
@@ -309,7 +309,7 @@
 
   np.setInterval = function (interval)
   {
-    log("set interval", interval); // @stripOnBuild
+
     this._options.interval = interval;
     this._optionsStorage.save();
         np._setTimer();
@@ -324,7 +324,7 @@
   {
     var oldState0 = ( this._state == 0 );
     this._state = bitset[ status ? "set" : "unset" ](this._state, which);
-    log("setState", which, status, "->", this._state); // @stripOnBuild
+
     var state0 = ( this._state == 0 );
 
     // not sure it this is the right place for this ... but i had to put it somewhere ...
@@ -356,12 +356,12 @@
 
       if (this._state == 0)
       {
-        log("! continue"); // @stripOnBuild
+
         this._fetch();
       }
       else
       {
-        log("! halt"); // @stripOnBuild
+
         this._fetchRequest.abort();
       }
     }
@@ -377,26 +377,26 @@
   {
     if ( this.__inited )
     {
-      log("init ran already"); // @stripOnBuild
+
       return false;
     }
 
     this.__inited = true;
-    log("init started"); // @stripOnBuild
+
 
     this._imageTarget = document.getElementById(imageTargetID);
     this._imageTarget.appendChild(document.createTextNode("")); // to prevent issues with insertBefore()
-    log("imageTarget:", this._imageTarget); // @stripOnBuild
+
 
     this._imageFadeInTime = imageFadeInTime;
-    log("imageFadeInTime", this._imageFadeInTime); // @stripOnBuild
+
 
     this._optionsStorage.load();
 
 
     addEvent(window, "scroll", function ()
     {
-      log("scroll detected", "offset:", this.pageYOffset); // @stripOnBuild
+
       np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0 );
     });
     this.setState(this.constants.stateBS.scroll, window.pageYOffset > 0 );
@@ -409,14 +409,14 @@
     {
       np._options.playInBackground = this.checked;
       np._optionsStorage.save();
-      log("playInBackground", np._options.playInBackground);  // @stripOnBuild
+
     });
 
 
     /* blur and focus event is broken some time - can not reproduce :-( */
     addEvent(window, "blur", function ()
     {
-      log("!# window blur"); // @stripOnBuild
+
       if ( ! np._options.playInBackground )
       {
         np.setState(np.constants.stateBS.active, true);
@@ -424,7 +424,7 @@
     });
     addEvent(window, "focus", function ()
     {
-      log("!# window active"); // @stripOnBuild
+
       np.setState(np.constants.stateBS.active, false);
     });
 
@@ -433,7 +433,7 @@
       // document. // scroll to top
       addEvent(document, "visibilitychange", function ()
       {
-        log("-- visibility change detected", "hidden:", this.hidden); // @stripOnBuild
+
         np.setState(np.constants.stateBS.presented, this.hidden);
       });
       this.setState(this.constants.stateBS.presented, document.hidden);
@@ -444,7 +444,7 @@
     addEvent(c_speed, "change", function ()
     {
       np.setInterval(this.value);
-      log("-- interval changed to", "this.value:", this.value); // @stripOnBuild
+
     });
 
     var c_state = document.getElementById("c_state");
@@ -476,10 +476,10 @@
     });
 
     this.setState(this.constants.stateBS.init, false);
-    log("init ended"); // @stripOnBuild
+
   };
 
 
 
-  log("feel done"); // @stripOnBuild
+
 })(window.nichtparasoup={}, window);

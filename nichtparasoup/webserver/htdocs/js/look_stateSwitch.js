@@ -1,4 +1,4 @@
-; /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
 
 (function (ss, win)
 { "use strict";

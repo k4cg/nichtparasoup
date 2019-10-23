@@ -1,4 +1,4 @@
-; /* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
+
 
 
 /* hot keys coming soon.
@@ -58,7 +58,7 @@ hot keys need to be marked in the <footer> or somewhere noticeable ...
 
       var bubble = true;
 
-      log('keyDown:', event.keyCode); // @stripOnBuild
+
 
       var keyCode = event.keyCode || event.which;
       var plusKey = false;
