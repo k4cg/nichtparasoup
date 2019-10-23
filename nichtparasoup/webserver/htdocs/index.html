@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html>
-<script type="text/javascript">
-    document.write([
-        "\<script src='",
-        ("https:" == document.location.protocol) ? "https://" : "http://",
-        "ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' type='text/javascript'>\<\/script>"
-    ].join(''));
-</script>
 <head>
   <meta charset="UTF-8">
   <meta name="referrer" content="no-referrer" />
@@ -28,19 +21,6 @@
   <script type="application/javascript" src="js/look_stateSwitch.js"></script>
   <script type="application/javascript" src="js/feel.js"></script>
   <script type="application/javascript" src="js/feel_hotkeys.js"></script>
-  <script type="application/javascript" src="js/snowstorm.js"></script>
-
-  <!-- Only enable Snowstorm for november and december. Other months, do freeze() -->
-  <script type="application/javascript">
-    $(document).ready(function(){
-      var d = new Date();
-      var n = d.getMonth();
-
-      if (n >= 10) {
-        snowStorm.doStart()
-      }
-    });
-  </script>
 
 
   <script type="application/javascript">
