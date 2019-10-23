@@ -163,8 +163,12 @@
   {
     if (! imageData.uri) { return; }
 
-    // generic images need some extra to trick in-site caching
-    imageData.genericMarker = imageData.is_generic ? "#is_generic_"+Date.now() : "";
+    imageData.genericMarker = "";
+    if ( imageData.is_generic )
+    {
+        // generic images need some extra to trick in-site caching
+        imageData.genericMarker = (imageData.uri.indexOf("?")<0 ? "?" : "&") + "is_generic="+Math.random();
+    }
 
     var imageDoc = document.createElement("img");
     addEvent(imageDoc, "load", function ()

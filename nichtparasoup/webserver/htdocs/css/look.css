@@ -202,7 +202,7 @@ footer {
 #wall article section[role="source"][data-is_generic="true"] a::after {
     content: "generic";
     vertical-align: text-top;
-    font-size: x-small;
+    font-size: small;
     font-variant: small-caps;
     line-height: 1.5ex;
     color: #f06030;
