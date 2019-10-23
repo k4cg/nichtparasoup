@@ -166,7 +166,6 @@
 
   np._mkImage = function (imageData, onReady)
   {
-
     if (! imageData.uri) { return; }
 
     var imageDoc = document.createElement("img");
@@ -189,8 +188,7 @@
       srcSpan.setAttribute("role", "source");
 
       // not all browsers support dataset property - so use setAttribute function
-      srcSpan.setAttribute("data-crawler", imageData.crawler.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
-      srcSpan.setAttribute("data-site", imageData.site);
+      srcSpan.setAttribute("data-crawler", imageData.crawler.type.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
       if ( imageData.source )
       { // this one is optional
         srcSpan.setAttribute("data-source", imageData.source);
@@ -219,22 +217,13 @@
           {
             np._images.push(image);
             np._imageTarget.insertBefore(image, np._imageTarget.firstChild);
-
             if ( np._images.length > np._imagesMax )
             {
               np._popImage();
             }
           }
-
-
-
-
         });
     }
-
-
-
-
   };
 
   np._popImage = function ()
