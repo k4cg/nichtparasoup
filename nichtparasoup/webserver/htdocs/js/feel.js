@@ -168,6 +168,9 @@
   {
     if (! imageData.uri) { return; }
 
+    // generic images need some extra to trick in-site caching
+    imageData.genericMarker = imageData.is_generic ? "#is_generic_"+Date.now() : "";
+
     var imageDoc = document.createElement("img");
     addEvent(imageDoc, "load", function ()
     {
@@ -175,7 +178,7 @@
       /* structure looks like :
         <article>
           <img src="{uri}" />
-          <section role="source" data-crawler="{crawler}" data-source="{source}">
+          <section role="source" data-crawler="{crawler}" data-source="{source}" data-is_generic="{is_generic}">
             <a href="{uri}">{uri}</a>
           </section>
         </article>
@@ -194,15 +197,23 @@
         srcSpan.setAttribute("data-source", imageData.source);
       }
 
+      srcSpan.setAttribute("data-is_generic", imageData.is_generic);
+
+      var src = this.src;
+      if (imageData.is_generic)
+      {
+        src = src.replace(imageData.genericMarker,'');
+      }
+
       var srcA = srcSpan.appendChild(document.createElement("a"));
-      srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || this.src;
+      srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || src;
 
       if ( typeof onReady == "function" )
       {
         onReady(imageBox);
       }
     });
-    imageDoc.src = imageData.uri;
+    imageDoc.src = imageData.uri + imageData.genericMarker;
   };
 
   np._pushImage = function (imageData)

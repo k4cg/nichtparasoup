@@ -28,7 +28,7 @@ class Picsum(BaseImageCrawler):
     _bunch = 10
 
     def _get_image_uri(self) -> ImageUri:
-        return "https://picsum.photos/{}/{}/".format(
+        return "https://picsum.photos/{}/{}".format(
             self._config["width"], self._config["height"])
 
     def crawl(self) -> ImageCollection:
