@@ -133,16 +133,14 @@
       var controlElement = req.controlElement;
       if ( controlElement )
       {
-        var sleep = parseFloat(req.responseText);
-        if (isNaN(sleep)) {
-          sleep = 500; // half a second should be enough as a default ...
-        }
+        var response = JSON.parse(req.responseText);
+        var timeout = response.timeout * 1000;
         window.setTimeout(function ()
         {
           controlElement.disabled = false;
           controlElement.setAttribute("disabled", null);
           controlElement.removeAttribute("disabled");
-        }, sleep);
+        }, timeout);
       }
     }
   };

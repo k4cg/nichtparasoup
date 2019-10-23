@@ -7,11 +7,9 @@ button ,
   color: #eee;
   border: 1px solid #ccc;
   border-radius: 0.5ex;
-
   display: inline;
   display: inline-block;
   padding: 0.2ex 0.4ex;
-
   line-height: 2.8ex;
 }
 
@@ -23,8 +21,8 @@ label.button:hover , label.button:active , label.button:focus {
 }
 
 
-button:hover , button:active
-a.button:hover , a.button:active
+button:hover , button:active ,
+a.button:hover , a.button:active ,
 label.button:hover , label.button:active  {
  /* invert colors */
   background-color: #ccc;
@@ -38,6 +36,5 @@ button[disabled] ,
 .button[disabled] {
   opacity: 0.4;
   filter: alpha(opacity=40); /* For IE8 and earlier */
-
-  cursor: default !important;
+  cursor: not-allowed !important;
 }
