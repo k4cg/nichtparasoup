@@ -1,0 +1,14 @@
+webserver: include('Webserver', strict=True)
+server: include('Server', strict=True)
+---
+Webserver:
+  host: any(str(min=1), ip())
+  port: int(min=1, max=65535)
+Server:
+  crawler_upkeep: int(min=10)
+  crawlers: list(include('Crawler'), min=1)
+Crawler:
+  type: str(min=1)
+  weight: num(min=0.0001, required=False)
+  config: map()
+

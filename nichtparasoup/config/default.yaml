@@ -1,0 +1,16 @@
+webserver:
+  host: "0.0.0.0"
+  port: 5000
+
+server:
+  crawler_upkeep: 30
+  crawlers:
+    - type: "Picsum"
+      weight: 13.37
+      config:
+        width: 800
+        height: 600
+    - type: "Dummy"
+      weight: 0.1
+      config:
+        image_uri: "https://media.giphy.com/media/a6OnFHzHgCU1O/giphy.gif"

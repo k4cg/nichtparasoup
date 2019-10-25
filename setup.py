@@ -3,7 +3,7 @@ from functools import reduce
 from nichtparasoup import __version__
 
 REQUIREMENTS = dict(
-    config=[],
+    config=["yamale"],
     core=[],
     imagecrawler=[],
     webserver=["werkzeug"],
@@ -17,7 +17,9 @@ SETUP = dict(
     packages=["nichtparasoup"],
     package_data=dict(
         nichtparasoup=[
-            "webserver/htdocs",  # TODO: check if this is done right. are the files included in dist
+            # TODO: check if this is done right. are the files included in dist
+            "webserver/htdocs",
+            "config/*.yaml",
         ],
     ),
     python_requires=">=3.5",
@@ -38,6 +40,7 @@ SETUP = dict(
             "coverage",
             "pytest",
             "ddt",
+            "yamale",
         ],
     ),
 )
