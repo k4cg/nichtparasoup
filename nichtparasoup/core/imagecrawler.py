@@ -27,7 +27,7 @@ class BaseImageCrawler(ABC):
 
     @staticmethod
     @abstractmethod
-    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:  # pragma: no cover
+    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:  # pragma: no cover
         """
         this function is intended to check if a config is valid and to strip unused config.
 

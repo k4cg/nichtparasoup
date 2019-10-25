@@ -9,7 +9,7 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
 class Dummy(BaseImageCrawler):
 
     @staticmethod
-    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:
+    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
         image_uri = config["image_uri"]
         if type(image_uri) is not str:
             raise TypeError("image_uri {} is not str".format(image_uri))

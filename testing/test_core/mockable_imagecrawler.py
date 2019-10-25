@@ -10,7 +10,7 @@ class MockableImageCrawler(BaseImageCrawler):
     """ imagecrawler that does nothing. use it for mocking ... """
 
     @staticmethod
-    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:
+    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
         return ImageCrawlerConfig(config)
 
     def crawl(self) -> ImageCollection:

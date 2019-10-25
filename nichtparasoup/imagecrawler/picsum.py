@@ -9,7 +9,7 @@ __all__ = ["Picsum"]
 class Picsum(BaseImageCrawler):
 
     @staticmethod
-    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:
+    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
         width = config["width"]
         height = config["height"]
         if type(width) is not int:
