@@ -56,9 +56,13 @@ parser.add_argument(parser.prefix_chars * 2 + 'dump-config',
                     action='dump_configfile',
                     help='dump default YAML config and exit')
 
+# TODO> option to validate a config
+
 parser.add_argument(parser.prefix_chars * 2 + 'list-imagecrawlers',
                     action='list_imagecrawlers',
                     help='list available image crawlers and exit')
+
+# TODO: arg to show a crawlers config
 
 parser.add_argument(parser.prefix_chars * 2 + 'version',
                     action='version',
