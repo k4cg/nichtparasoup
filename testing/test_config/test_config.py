@@ -13,7 +13,3 @@ class ConfigTest(unittest.TestCase):
         config = parse_yaml_file(file)
         # assert
         self.assertIsNotNone(config)
-
-    def write_test(self) -> None:
-        # TODO: write tests
-        self.skipTest('TODO: write the test')
