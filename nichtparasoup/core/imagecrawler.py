@@ -1,12 +1,20 @@
-__all__ = ["ImageCrawlerConfig", "BaseImageCrawler"]
+__all__ = ["ImageCrawlerConfig", "BaseImageCrawler", "ImageCrawlerDescription"]
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
 from nichtparasoup.core.image import ImageCollection
 
+ImageCrawlerConfigKey = str
 
-class ImageCrawlerConfig(Dict[str, Any]):
+
+class ImageCrawlerDescription(object):
+    def __init__(self, text: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:
+        self.text = text
+        self.config = config
+
+
+class ImageCrawlerConfig(Dict[ImageCrawlerConfigKey, Any]):
     pass
 
 
@@ -27,6 +35,16 @@ class BaseImageCrawler(ABC):
 
     @staticmethod
     @abstractmethod
+    def describe() -> ImageCrawlerDescription:  # pragma: no cover
+        return ImageCrawlerDescription(
+            text="Some textual description about what this ImageCrawler does.",
+            config=dict(
+                param1="meaning of param1",
+                paramN="meaning of paramN",
+            ))
+
+    @ staticmethod
+    @ abstractmethod
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:  # pragma: no cover
         """
         this function is intended to check if a config is valid and to strip unused config.

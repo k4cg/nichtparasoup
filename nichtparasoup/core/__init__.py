@@ -139,10 +139,6 @@ class NPCore(object):
             self.blacklist.add(image.uri)
 
     def add_imagecrawler(self, imagecrawler: _ImageCrawler, weight: _CrawlerWeight) -> None:
-        # TODO: write type check for `ImageCrawler`, if not done by something ahead already
-        # TODO: write type check for `weight`, if not done by config already
-        # TODO: write  check for `weight`<=0, if not done by config already
-        # IDEA: maybe do these checks in `Crawler` class ?
         if imagecrawler in [crawler.imagecrawler for crawler in self.crawlers]:
             raise Warning('imagecrawler already exists')
         self.crawlers.append(Crawler(

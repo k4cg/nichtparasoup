@@ -1,4 +1,4 @@
-from os.path import dirname, join as path_join
+from os.path import dirname, join as path_join, realpath
 from typing import List
 
 from yamale import YamaleTestCase  # type: ignore
@@ -9,7 +9,7 @@ from nichtparasoup.config import _defaults_file as config_defaults_file
 class YamlSchemaTest(YamaleTestCase):  # type: ignore
 
     def setUp(self) -> None:
-        self.base_dir = path_join(dirname(__file__), "..", "..")
+        self.base_dir = realpath(path_join(dirname(__file__), "..", ".."))
         self.schema = path_join("nichtparasoup", "config", 'schema.yaml')
         self.yaml = []  # type: List[str]  # override this in your test
 

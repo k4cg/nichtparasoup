@@ -3,11 +3,18 @@ __all__ = ["MockableImageCrawler", "YetAnotherImageCrawler"]
 from typing import Any, Dict
 
 from nichtparasoup.core.image import ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
+from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerDescription
 
 
 class MockableImageCrawler(BaseImageCrawler):
     """ imagecrawler that does nothing. use it for mocking ... """
+
+    @staticmethod
+    def describe() -> ImageCrawlerDescription:
+        return ImageCrawlerDescription(
+            text='a mock',
+            config=dict(),
+        )
 
     @staticmethod
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:

@@ -1,12 +1,22 @@
 from typing import Any, Dict
 
 from nichtparasoup.core.image import Image, ImageCollection, ImageUri
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
+from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerDescription
 
 __all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):
+
+    @staticmethod
+    def describe() -> ImageCrawlerDescription:
+        return ImageCrawlerDescription(
+            text='Find images from https://picsum.photos',
+            config=dict(
+                width='width(px) of the image to find',
+                height='height(px) of the image to find',
+            )
+        )
 
     @staticmethod
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
