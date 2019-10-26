@@ -3,7 +3,7 @@ from functools import reduce
 from nichtparasoup import __version__
 
 REQUIREMENTS = dict(
-    config=["yamale"],
+    config=['ruamel.yaml', "yamale"],
     core=[],
     imagecrawler=[],
     webserver=["werkzeug"],
@@ -25,6 +25,9 @@ SETUP = dict(
     python_requires=">=3.5",
     install_requires=reduce(lambda r1, r2: r1 + r2, REQUIREMENTS.values(), []),
     extras_require=dict(
+        colors=[
+            "termcolor",
+        ],
         development=[
             "tox",
             "isort",

@@ -2,31 +2,29 @@ if __name__ == "__main__":
     from nichtparasoup.core import NPCore
     from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
     from nichtparasoup.webserver import WebServer
+    from nichtparasoup.config import get_defaults, parse_yaml_file
+    from nichtparasoup.config.argparse import parser as argparser
 
-    # TODO: write this foo based on some proper settings
-    config = dict(
-        host='127.0.0.1',
-        port=5000,
-        imagecrawlers=[
-            dict(type="Dummy", weight=0.5, config=dict(image_uri='/images/dummy.png')),
-            dict(type="Picsum", weight=1, config=dict(width=800, height=600)),
-        ]
-    )
+    config = get_defaults()
+
+    args = argparser.parse_args()
+    if args.config_file:
+        config_from_file = parse_yaml_file(args.config_file)
+        if config_from_file:
+            config = config_from_file
+    del args
 
     np_core = NPCore()
 
-    for imagecrawler_config in config['imagecrawlers']:  # type: ignore
-        imagecrawler_class = get_imagecrawler_class(imagecrawler_config["type"])
-        if not imagecrawler_class:
-            raise Exception("unknown crawler type: {}".format(imagecrawler_config["type"]))
-        imagecrawler_obj = imagecrawler_class(**imagecrawler_config["config"])
-        np_core.add_imagecrawler(imagecrawler_obj, imagecrawler_config['weight'])
+    for crawler_config in config['crawlers']:
+        imagecrawler_class = get_imagecrawler_class(crawler_config["type"])
+        if imagecrawler_class:
+            imagecrawler_obj = imagecrawler_class(**crawler_config["config"])
+            np_core.add_imagecrawler(imagecrawler_obj, crawler_config['weight'])
 
-    webserver = WebServer(np_core)
-
-    # TODO: cleanup unused foo
+    webserver = WebServer(np_core, crawler_upkeep=config['server']['crawler_upkeep'])
 
     webserver.run(
-        config['host'], config['port'],  # type: ignore
+        config['webserver']['host'], config['webserver']['port'],
         use_debugger=False
     )

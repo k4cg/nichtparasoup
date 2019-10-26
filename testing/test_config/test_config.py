@@ -1,19 +1,18 @@
 import unittest
-from os.path import dirname, join as path_join
 
-from nichtparasoup.config import validate_yaml_file
+from nichtparasoup.config import _defaults_file as config_defaults_file, parse_yaml_file
 
 
 class ConfigTest(unittest.TestCase):
 
-    def test_validate_yaml_file(self) -> None:
+    def test_parse_yaml_file(self) -> None:
         """ validate the defaults (again) - this file is supposed to be correct """
         # arrange
-        file = path_join(dirname(__file__), '..', '..', 'nichtparasoup', 'config', 'default.yaml')
+        file = config_defaults_file
         # act
-        valid = validate_yaml_file(file)
+        config = parse_yaml_file(file)
         # assert
-        self.assertTrue(valid)
+        self.assertIsNotNone(config)
 
     def write_test(self) -> None:
         # TODO: write tests

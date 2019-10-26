@@ -3,6 +3,8 @@ from typing import List
 
 from yamale import YamaleTestCase  # type: ignore
 
+from nichtparasoup.config import _defaults_file as config_defaults_file
+
 
 class YamlSchemaTest(YamaleTestCase):  # type: ignore
 
@@ -17,7 +19,7 @@ class YamlSchemaTest(YamaleTestCase):  # type: ignore
         del self.yaml
 
     def test_default(self) -> None:
-        self.yaml = [path_join("nichtparasoup", "config", 'default.yaml')]
+        self.yaml = [config_defaults_file]
         self.assertTrue(self.validate())
 
     def test_examples(self) -> None:

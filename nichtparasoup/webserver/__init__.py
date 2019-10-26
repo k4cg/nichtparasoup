@@ -16,8 +16,8 @@ from nichtparasoup.core.server import BaseServer, ServerStatus
 class WebServer(BaseServer):
     _htdocs = path_join(dirname(__file__), "htdocs")  # remember to put as package_data in setup.py
 
-    def __init__(self, np_core: NPCore) -> None:  # pragma: no cover
-        super().__init__(np_core)
+    def __init__(self, np_core: NPCore, crawler_upkeep: int) -> None:  # pragma: no cover
+        super().__init__(np_core, crawler_upkeep=crawler_upkeep)
         self.url_map = Map([
             Rule("/", redirect_to="/index.html"),
             Rule('/get', endpoint='get'),

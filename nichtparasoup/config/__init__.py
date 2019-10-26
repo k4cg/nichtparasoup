@@ -1,22 +1,44 @@
-__all__ = ["validate_yaml_file", "parse_yaml_file"]
-
+__all__ = ["parse_yaml_file"]
 
 from os.path import dirname, join as path_join
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 _schema_file = path_join(dirname(__file__), "schema.yaml")
-_schema = None
+_schema = None  # type: Optional[Dict[str, Any]]
+
+_defaults_file = path_join(dirname(__file__), "defaults.yaml")
+_defaults = None  # type: Optional[Dict[str, Any]]
 
 
-def validate_yaml_file(file_path: str) -> bool:
-    import yamale   # type: ignore
+def parse_yaml_file(file_path: str) -> Optional[Dict[str, Any]]:
+    import yamale  # type: ignore
+    from nichtparasoup.imagecrawler import get_class as get_crawler
     global _schema
     if not _schema:
-        _schema = yamale.make_schema(_schema_file)
-    data = yamale.make_data(file_path)
-    return yamale.validate(_schema, data) is not None  # throws all the errors
+        _schema = yamale.make_schema(_schema_file, parser='ruamel')
+    data = yamale.make_data(file_path, parser='ruamel')
+    config_valid = yamale.validate(_schema, data, strict=True)
+    if not config_valid:
+        return None
+    config = config_valid[0][0]  # type: Dict[str, Any]
+    crawlers = config['crawlers']  # type: List[Dict[Any, Any]]
+    for crawler in crawlers:
+        crawler.setdefault("weight", 1)
+        imagecrawler = get_crawler(crawler['type'])
+        if not imagecrawler:
+            raise ValueError('unknown crawler type: {}'.format(crawler['type']))
+        imagecrawler.check_config(crawler['config'])
+    return config
 
 
-def parse_yaml_file(file_path: str) -> Any:
-    from ruamel.yaml import safe_load as yaml_import  # type: ignore
-    return yaml_import(open(file_path, "r"))
+def get_defaults() -> Dict[str, Any]:
+    from copy import deepcopy
+    global _defaults
+    if not _defaults:
+        _defaults = parse_yaml_file(_defaults_file)
+    return deepcopy(_defaults) if _defaults else dict()
+
+
+def dump_defaults(file_path: str) -> None:
+    from shutil import copyfile
+    copyfile(_defaults_file, file_path)

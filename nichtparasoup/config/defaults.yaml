@@ -1,0 +1,14 @@
+## this is a config file for nichtprasoup
+
+webserver:
+  host: "0.0.0.0"
+  port: 5000
+
+server:
+  crawler_upkeep: 30
+
+crawlers:
+  - type: "Dummy"     # one of the available crawlers
+    weight: 1         # optional, defaults to 1
+    config:
+      image_uri: "/images/dummy.png"  # path to shipped dummy image
