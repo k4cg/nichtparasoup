@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.server import BaseServer
+from nichtparasoup.core.server import Server
 
 from .mockable_imagecrawler import MockableImageCrawler
 
@@ -12,7 +12,7 @@ from .mockable_imagecrawler import MockableImageCrawler
 class ServerGetImageTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.server = BaseServer(NPCore())
+        self.server = Server(NPCore())
 
     def tearDown(self) -> None:
         del self.server
@@ -25,7 +25,7 @@ class ServerGetImageTest(unittest.TestCase):
 
     def test_get_image_no_images(self) -> None:
         # arrange
-        self.server._np_core.add_imagecrawler(MockableImageCrawler(), 1)
+        self.server.core.add_imagecrawler(MockableImageCrawler(), 1)
         # act
         image = self.server.get_image()
         # assert
@@ -36,10 +36,10 @@ class ServerGetImageTest(unittest.TestCase):
         image_crawled = Image('testURI', is_generic=True, source='testSource', bla=1, foo="bar")
         imagecrawler = MockableImageCrawler()
         imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
-        self.server._np_core.add_imagecrawler(imagecrawler, 1)
-        crawler = self.server._np_core.crawlers[0]
+        self.server.core.add_imagecrawler(imagecrawler, 1)
+        crawler = self.server.core.crawlers[0]
         # act
-        self.server._np_core.crawlers[0].crawl()
+        self.server.core.crawlers[0].crawl()
         image_got = self.server.get_image()
         # assert
         self.assertIsInstance(image_got, dict)

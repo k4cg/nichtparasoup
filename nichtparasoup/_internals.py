@@ -1,7 +1,7 @@
 from time import strftime
-from typing import Any, Optional
+from typing import Any, List, NoReturn, Optional, TextIO, Union
 
-_logger = None
+__logger = None
 
 
 # TODO: question - do we need multiple log pipelines, one for each cause?
@@ -14,12 +14,27 @@ def _logger_date_time_string() -> str:
 
 
 def _log(type: str, message: str, cause: Optional[Any] = None, *args: Any, **kwargs: Any) -> None:
-    global _logger
-    if _logger is None:
+    del cause  # currently not used, kept for the future
+    global __logger
+    if __logger is None:
         import logging
-        _logger = logging.getLogger('nichtparasoup')
-        if not logging.root.handlers and _logger.level == logging.NOTSET:
-            _logger.setLevel(logging.INFO)
+        __logger = logging.getLogger('nichtparasoup')
+        if not logging.root.handlers and __logger.level == logging.NOTSET:
+            __logger.setLevel(logging.INFO)
             handler = logging.StreamHandler()
-            _logger.addHandler(handler)
-    getattr(_logger, type)(message.rstrip(), *args, **kwargs)
+            __logger.addHandler(handler)
+    getattr(__logger, type)(message.rstrip(), *args, **kwargs)
+
+
+def _exit(status: int = 0,
+          message: Optional[Union[str, List[str]]] = None, exception: Optional[Exception] = None,
+          file: Optional[TextIO] = None) -> NoReturn:
+    import sys
+    newline = '\r\n'
+    if message:
+        if type(message) == list:
+            message = newline.join(message)
+        (file if file else (sys.stderr if status > 0 else sys.stdout)).write('{0}{eot}'.format(message, eot=newline))
+    if exception:
+        (file if file else sys.stderr).write('{0.__name__}: {1}{eot}'.format(type(exception), exception, eot=newline))
+    sys.exit(status)

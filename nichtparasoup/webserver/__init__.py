@@ -9,15 +9,17 @@ from werkzeug.routing import Map, Rule
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup.core import NPCore
-from nichtparasoup.core.server import BaseServer, ServerStatus
+from nichtparasoup._internals import _exit
+from nichtparasoup.core.server import Server, ServerStatus
 
 
-class WebServer(BaseServer):
+class WebServer(object):
     _htdocs = path_join(dirname(__file__), "htdocs")  # remember to put as package_data in setup.py
 
-    def __init__(self, np_core: NPCore, crawler_upkeep: int) -> None:  # pragma: no cover
-        super().__init__(np_core, crawler_upkeep=crawler_upkeep)
+    def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
+        self.imageserver = imageserver
+        self.hostname = hostname
+        self.port = port
         self.url_map = Map([
             Rule("/", redirect_to="/index.html"),
             Rule('/get', endpoint='get'),
@@ -48,7 +50,7 @@ class WebServer(BaseServer):
         return response(environ, start_response)
 
     def on_get(self, _: Request) -> Response:
-        image = self.get_image()
+        image = self.imageserver.get_image()
         return Response(json_encode(image), mimetype='application/json')
 
     _status_whats = dict(
@@ -58,26 +60,31 @@ class WebServer(BaseServer):
     )
 
     def on_status(self, _: Request) -> Response:
-        status = dict((what, getter(self)) for what, getter in self._status_whats.items())
+        status = dict((what, getter(self.imageserver)) for what, getter in self._status_whats.items())
         return Response(json_encode(status), mimetype='application/json')
 
     def on_status_what(self, _: Request, what: str) -> Response:
         status_what = self._status_whats.get(what)
         if not status_what:
             raise NotFound()
-        status = status_what(self)
+        status = status_what(self.imageserver)
         return Response(json_encode(status), mimetype='application/json')
 
     def on_reset(self, _: Request) -> Response:
-        reset = self.request_reset()
+        reset = self.imageserver.request_reset()
         return Response(json_encode(reset), mimetype='application/json')
 
-    def run(self, hostname: str, port: int, use_debugger: bool = False) -> None:
-        self.setUp()
-        run_simple(
-            hostname, port,
-            self, static_files={"/": self._htdocs},
-            processes=1, threaded=True,
-            use_reloader=False,
-            use_debugger=use_debugger)
-        self.tearDown()
+    def run(self, use_debugger: bool = False) -> None:
+        try:
+            self.imageserver.setUp()
+            run_simple(
+                self.hostname, self.port,
+                self, static_files={"/": self._htdocs},
+                processes=1, threaded=True,
+                use_reloader=False,
+                use_debugger=use_debugger)
+        except PermissionError:
+            _exit(status=1,
+                  message='ERROR: cannot start {} on port {}\r\n'.format(type(self).__name__, self.port))
+        finally:
+            self.imageserver.tearDown()

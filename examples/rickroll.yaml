@@ -1,10 +1,10 @@
 ## this is a config file for nichtprasoup
 
 webserver:
-  host: "0.0.0.0"
+  hostname: "0.0.0.0"
   port: 8080
 
-server:
+imageserver:
   crawler_upkeep: 10
 
 crawlers:

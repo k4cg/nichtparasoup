@@ -1,4 +1,4 @@
-__all__ = ["BaseServer", "ServerStatistics", "ServerStatus", "ServerRefiller", "ServerLocks"]
+__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller", "ServerLocks"]
 
 from abc import ABC
 from copy import copy
@@ -14,24 +14,24 @@ from nichtparasoup._internals import _log, _logger_date_time_string
 from nichtparasoup.core import Crawler, NPCore
 
 
-class BaseServer(ABC):
+class Server(object):
     """
     this class intended to be a stable interface.
     its public methods return base types only.
     """
 
-    def __init__(self, np_core: NPCore, crawler_upkeep: int = 30,
+    def __init__(self, core: NPCore, crawler_upkeep: int = 30,
                  reset_timeout: int = 60 * 60) -> None:  # pragma: no cover
-        self._np_core = np_core
-        self._keep = crawler_upkeep
+        self.core = core
+        self.keep = crawler_upkeep
+        self.reset_timeout = reset_timeout
         self._stats = ServerStatistics()
         self._refiller = ServerRefiller(self, 1.337)
         self._trigger_reset = False
-        self._reset_timeout = reset_timeout
         self._locks = ServerLocks()
 
     def get_image(self) -> Optional[Dict[str, Any]]:
-        crawler = self._np_core.crawlers.get_random()
+        crawler = self.core.crawlers.get_random()
         if not crawler:
             return None
         image = copy(crawler.pop_random_image())
@@ -62,13 +62,13 @@ class BaseServer(ABC):
 
     def refill(self) -> Dict[str, bool]:
         self._locks.refill.acquire()
-        self._np_core.fill_up_to(self._keep, self._log_refill_crawler)
+        self.core.fill_up_to(self.keep, self._log_refill_crawler)
         self._locks.refill.release()
         return dict(refilled=True)
 
     def _reset(self) -> None:
         self._locks.reset.acquire()
-        self._stats.cum_blacklist_on_flush += self._np_core.reset()
+        self._stats.cum_blacklist_on_flush += self.core.reset()
         self._stats.count_reset += 1
         self._stats.time_last_reset = int(time())
         self._locks.reset.release()
@@ -80,7 +80,7 @@ class BaseServer(ABC):
             request_valid = True
             timeout = 0
         else:
-            timeout_base = self._reset_timeout
+            timeout_base = self.reset_timeout
             time_last_reset = self._stats.time_last_reset
             reset_after = timeout_base + (time_started if time_last_reset is None else time_last_reset)
             request_valid = now > reset_after
@@ -115,7 +115,7 @@ class ServerStatus(ABC):
     """
 
     @staticmethod
-    def server(server: BaseServer) -> Dict[str, Any]:
+    def server(server: Server) -> Dict[str, Any]:
         stats = copy(server._stats)
         now = int(time())
         uptime = (now - stats.time_started) if stats.time_started else 0
@@ -128,22 +128,22 @@ class ServerStatus(ABC):
             ),
             images=dict(
                 served=stats.count_images_served,
-                crawled=stats.cum_blacklist_on_flush + len(server._np_core.blacklist),
+                crawled=stats.cum_blacklist_on_flush + len(server.core.blacklist),
             ),
         )
 
     @staticmethod
-    def blacklist(server: BaseServer) -> Dict[str, Any]:
-        blacklist = server._np_core.blacklist.copy()
+    def blacklist(server: Server) -> Dict[str, Any]:
+        blacklist = server.core.blacklist.copy()
         return dict(
             len=len(blacklist),
             size=getsizeof(blacklist),
         )
 
     @staticmethod
-    def crawlers(server: BaseServer) -> Dict[int, Dict[str, Any]]:
+    def crawlers(server: Server) -> Dict[int, Dict[str, Any]]:
         status = dict()
-        for crawler in server._np_core.crawlers.copy():
+        for crawler in server.core.crawlers.copy():
             crawler_id = id(crawler)
             crawler = copy(crawler)
             images = crawler.images.copy()
@@ -160,7 +160,7 @@ class ServerStatus(ABC):
 
 
 class ServerRefiller(Thread):
-    def __init__(self, server: BaseServer, sleep: Union[int, float]) -> None:  # pragma: no cover
+    def __init__(self, server: Server, sleep: Union[int, float]) -> None:  # pragma: no cover
         super().__init__(daemon=True)
         self._wr_server = weak_ref(server)
         self._sleep = sleep

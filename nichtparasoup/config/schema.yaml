@@ -1,12 +1,12 @@
 webserver: include('Webserver', strict=True)
-server: include('Server', strict=True)
+imageserver: include('ImageServer', strict=True)
 crawlers: list(include('Crawler', strict=True), min=1)
 ---
 Webserver:
-  host: str(min=1)
+  hostname: str(min=1)
   port: int(min=1, max=65535)
 ---
-Server:
+ImageServer:
   crawler_upkeep: int(min=10)
 ---
 Crawler:

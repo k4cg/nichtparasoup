@@ -6,7 +6,7 @@ from yamale import YamaleTestCase  # type: ignore
 from nichtparasoup.config import _defaults_file as config_defaults_file
 
 
-class YamlSchemaTest(YamaleTestCase):  # type: ignore
+class ShippedConfigFilesTest(YamaleTestCase):  # type: ignore
 
     def setUp(self) -> None:
         self.base_dir = realpath(path_join(dirname(__file__), "..", ".."))

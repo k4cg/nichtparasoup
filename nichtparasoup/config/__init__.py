@@ -1,16 +1,16 @@
-__all__ = ["parse_yaml_file"]
+__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults"]
 
-from os.path import dirname, join as path_join
+from os.path import dirname, join as path_join, realpath
 from typing import Any, Dict, List, Optional
 
-_schema_file = path_join(dirname(__file__), "schema.yaml")
-_schema = None  # type: Optional[Dict[str, Any]]
+_schema_file = realpath(path_join(dirname(__file__), "schema.yaml"))
+_schema = None  # type: Optional[Any]
 
-_defaults_file = path_join(dirname(__file__), "defaults.yaml")
+_defaults_file = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
-def parse_yaml_file(file_path: str) -> Optional[Dict[str, Any]]:
+def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     import yamale  # type: ignore
     from nichtparasoup.imagecrawler import get_class as get_crawler
     global _schema
@@ -19,8 +19,9 @@ def parse_yaml_file(file_path: str) -> Optional[Dict[str, Any]]:
     data = yamale.make_data(file_path, parser='ruamel')
     config_valid = yamale.validate(_schema, data, strict=True)
     if not config_valid:
-        return None
+        raise ValueError('empty config')
     config = config_valid[0][0]  # type: Dict[str, Any]
+
     crawlers = config['crawlers']  # type: List[Dict[Any, Any]]
     for crawler in crawlers:
         crawler.setdefault("weight", 1)
@@ -28,6 +29,7 @@ def parse_yaml_file(file_path: str) -> Optional[Dict[str, Any]]:
         if not imagecrawler:
             raise ValueError('unknown crawler type: {}'.format(crawler['type']))
         imagecrawler.check_config(crawler['config'])
+
     return config
 
 
@@ -36,7 +38,7 @@ def get_defaults() -> Dict[str, Any]:
     global _defaults
     if not _defaults:
         _defaults = parse_yaml_file(_defaults_file)
-    return deepcopy(_defaults) if _defaults else dict()
+    return deepcopy(_defaults)
 
 
 def dump_defaults(file_path: str) -> None:
