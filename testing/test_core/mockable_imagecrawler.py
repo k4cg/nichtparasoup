@@ -12,7 +12,7 @@ class MockableImageCrawler(BaseImageCrawler):
     @staticmethod
     def describe() -> ImageCrawlerDescription:
         return ImageCrawlerDescription(
-            text='a mock',
+            purpose='a mock',
             config=dict(),
         )
 

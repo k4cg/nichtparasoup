@@ -9,7 +9,7 @@ from weakref import ReferenceType, WeakMethod
 from nichtparasoup.core.image import Image, ImageCollection, ImageUri
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
-_CrawlerWeight = Union[int, float]
+_CrawlerWeight = Union[int, float]  # constraint: > 0
 
 
 class _Blacklist(Set[ImageUri]):
@@ -27,11 +27,14 @@ _ImageCrawler = TypeVar("_ImageCrawler", bound=BaseImageCrawler)
 
 class Crawler(object):
 
-    def __init__(self, imagecrawler: _ImageCrawler, weight: _CrawlerWeight,
+    def __init__(self, imagecrawler: _ImageCrawler,
+                 weight: Optional[_CrawlerWeight] = None,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:  # pragma: no cover
+        if weight is not None and weight <= 0:
+            raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
-        self.weight = weight
+        self.weight = weight if weight else 1  # type: _CrawlerWeight
         self.images = ImageCollection()
         self.__wr_is_image_addable = None  # type: Optional[ReferenceType[_IsImageAddable]]
         self.__wr_image_added = None  # type: Optional[ReferenceType[_OnImageAdded]]

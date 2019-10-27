@@ -114,6 +114,15 @@ class PicsumResetTest(unittest.TestCase):
         self.assertFalse(crawler._reset_before_next_crawl)
 
 
+class DummyDescriptionTest(unittest.TestCase):
+    def test_description_congig(self) -> None:
+        # act
+        description = Picsum.describe()
+        # assert
+        for config_key in _picsum_right_config.keys():
+            self.assertTrue(config_key in description.config)
+
+
 class PicsumLoaderTest(unittest.TestCase):
     def test_get_imagecrawler_class(self) -> None:
         # act

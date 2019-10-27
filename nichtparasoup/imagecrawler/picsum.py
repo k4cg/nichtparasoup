@@ -11,7 +11,7 @@ class Picsum(BaseImageCrawler):
     @staticmethod
     def describe() -> ImageCrawlerDescription:
         return ImageCrawlerDescription(
-            text='Find images from https://picsum.photos',
+            purpose='Find images from https://picsum.photos',
             config=dict(
                 width='width(px) of the image to find',
                 height='height(px) of the image to find',

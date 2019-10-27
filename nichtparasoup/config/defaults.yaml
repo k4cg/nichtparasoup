@@ -12,8 +12,8 @@ crawlers:
   # ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
   # for a list of available types see the commandline help: --list-imagecrawlers
   - type: "Dummy"     # type: string
-    weight: 0.1       # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional, defaults to 1
-    config:           # the crawler's own config # type: dictionary
+    weight: 0.1       # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional
+    config:           # the crawler's own config # type: dictionary # optional
       # to get the config right, see the commandline help: --desc-imagecrawler <type>
       image_uri: "/images/dummy.png"    # path to shipped dummy image
   - type: "Picsum"

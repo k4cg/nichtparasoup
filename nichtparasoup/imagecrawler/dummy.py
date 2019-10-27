@@ -11,7 +11,7 @@ class Dummy(BaseImageCrawler):
     @staticmethod
     def describe() -> ImageCrawlerDescription:
         return ImageCrawlerDescription(
-            text='"Finds" the same image ... again ... and again.',
+            purpose='"Finds" the same image ... again ... and again.',
             config=dict(
                 image_uri='the uro to the image to "find"',
             )

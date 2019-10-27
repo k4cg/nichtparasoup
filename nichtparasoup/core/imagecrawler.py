@@ -9,8 +9,8 @@ ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerDescription(object):
-    def __init__(self, text: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
-        self.text = text
+    def __init__(self, purpose: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
+        self.purpose = purpose
         self.config = config
 
 
@@ -37,7 +37,7 @@ class BaseImageCrawler(ABC):
     @abstractmethod
     def describe() -> ImageCrawlerDescription:  # pragma: no cover
         return ImageCrawlerDescription(
-            text="Some textual description about what this ImageCrawler does.",
+            purpose="Some textual description about what this ImageCrawler does.",
             config=dict(
                 param1="meaning of param1",
                 paramN="meaning of paramN",

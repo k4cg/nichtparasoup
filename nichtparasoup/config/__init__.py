@@ -31,19 +31,19 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
         _schema = yamale.make_schema(_schema_file, parser='ruamel')
     data = yamale.make_data(file_path, parser='ruamel')
     config_valid = yamale.validate(_schema, data, strict=True)
-    if not config_valid or not config_valid[0] or not config_valid[0][0]:
-        raise ValueError('empty config')
     config = config_valid[0][0]  # type: Dict[str, Any]
     for config_crawler in config['crawlers']:
-        config_crawler.setdefault("weight", 1)
+        config_crawler.setdefault("weight", None)
+        if config_crawler.get('config') is None:
+            config_crawler["config"] = dict()
     return config
 
 
 def get_defaults() -> Dict[str, Any]:
-    from copy import deepcopy
     global _defaults
     if not _defaults:
         _defaults = parse_yaml_file(_defaults_file)
+    from copy import deepcopy
     return deepcopy(_defaults)
 
 
