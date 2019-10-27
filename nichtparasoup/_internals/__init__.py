@@ -7,6 +7,11 @@ its internal foo that is not for public use.
 from time import strftime
 from typing import Any, List, NoReturn, Optional, TextIO, Union
 
+try:
+    from termcolor import colored
+except ImportError:
+    colored = None  # type: ignore
+
 __logger = None
 
 
@@ -43,11 +48,14 @@ def _message(message: Union[str, List[str]], file: Optional[TextIO] = None) -> N
 
 
 def _message_exception(exception: Exception, file: Optional[TextIO] = None) -> None:
-    # IDEA: have the exception name colored red, if colors are available
     if not file:
         from sys import stderr
         file = stderr
-    _message('{0.__name__}: {1}'.format(type(exception), exception), file=file)
+    exception_name = type(exception).__name__
+    if colored:
+        color = 'yellow' if isinstance(exception, Warning) else 'red'
+        exception_name = colored(exception_name, color=color)
+    _message('{}: {}'.format(exception_name, exception), file=file)
 
 
 def _exit(status: int = 0,

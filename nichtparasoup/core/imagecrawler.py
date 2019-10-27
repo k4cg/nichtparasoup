@@ -9,7 +9,7 @@ ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerDescription(object):
-    def __init__(self, text: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:
+    def __init__(self, text: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
         self.text = text
         self.config = config
 
@@ -20,7 +20,7 @@ class ImageCrawlerConfig(Dict[ImageCrawlerConfigKey, Any]):
 
 class BaseImageCrawler(ABC):
 
-    def __init__(self, **config: Any) -> None:
+    def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)
         self._reset_before_next_crawl = True
 

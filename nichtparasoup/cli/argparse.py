@@ -45,7 +45,7 @@ class _DescribeImageCrawlersAction(Action):
             _exit(status=1, exception=e)
 
 
-class _ValidateConfigFileAction(Action):
+class _CheckConfigFileAction(Action):
     def __init__(self, option_strings: List[str], dest: str = SUPPRESS, metavar: Optional[str] = None,
                  help: Optional[str] = None) -> None:  # pragma: no cover
         del dest
@@ -59,18 +59,18 @@ class _ValidateConfigFileAction(Action):
         file_path = str(values)
         try:
             config = parse_yaml_file(file_path)
+            imagecrawlers = list()  # type: List[Any]
+            for crawler_config in config['crawlers']:
+                imagecrawler = get_config_imagecrawler(crawler_config)
+                if imagecrawler in imagecrawlers:
+                    _message_exception(
+                        Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
+                                .format(type=type(imagecrawler), config=imagecrawler.get_config())))
+                    continue
+                imagecrawlers.append(imagecrawler)
         except Exception as e:
             config = dict()  # for the linters
             _exit(status=1, exception=e)
-        imagecrawlers = list()  # type: List[Any]
-        for crawler_config in config['crawlers']:
-            imagecrawler = get_config_imagecrawler(crawler_config)
-            if imagecrawler in imagecrawlers:
-                _message_exception(
-                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
-                            .format(type=type(imagecrawler), config=imagecrawler.get_config())))
-                continue
-            imagecrawlers.append(imagecrawler)
         _exit()
 
 
@@ -99,7 +99,7 @@ parser = ArgumentParser(
     add_help=True
 )
 
-parser.register('action', 'check_configfile', _ValidateConfigFileAction)
+parser.register('action', 'check_configfile', _CheckConfigFileAction)
 parser.register('action', 'dump_configfile', _DumpConfigFileAction)
 parser.register('action', 'list_imagecrawlers', _ListImageCrawlersAction)
 parser.register('action', 'desc_imagecrawler', _DescribeImageCrawlersAction)

@@ -6,7 +6,7 @@ from yamale import YamaleTestCase  # type: ignore
 from nichtparasoup.config import _defaults_file as config_defaults_file
 
 
-class ShippedConfigFilesTest(YamaleTestCase):  # type: ignore
+class ParseShippedConfigFilesTest(YamaleTestCase):  # type: ignore
 
     def setUp(self) -> None:
         self.base_dir = realpath(path_join(dirname(__file__), "..", ".."))
@@ -23,5 +23,6 @@ class ShippedConfigFilesTest(YamaleTestCase):  # type: ignore
         self.assertTrue(self.validate())
 
     def test_examples(self) -> None:
-        self.yaml = [path_join("examples", "*.yaml")]
+        self.yaml = [path_join("examples", "*.yml"), path_join("examples", '**', "*.yml"),
+                     path_join("examples", "*.yaml"), path_join("examples", '**', "*.yaml")]
         self.assertTrue(self.validate())
