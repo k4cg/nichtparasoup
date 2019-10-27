@@ -1,34 +1,14 @@
 import unittest
-from os.path import dirname, join as path_join, realpath
 
-from nichtparasoup.config import parse_yaml_file
+from nichtparasoup.config import _defaults_file as config_defaults_file, parse_yaml_file
 
 
-class ConfigParserTest(unittest.TestCase):
+class ConfigParserDefaultsTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        config_root_path = realpath(path_join(dirname(__file__), 'config_files'))
-        self.config_paths = dict(
-            root=config_root_path,
-            positive=path_join(config_root_path, 'positive'),
-        )
-
-    def tearDown(self) -> None:
-        del self.config_paths
-
-    def test_optional_crawler_weight(self) -> None:
+    def test_defaults(self) -> None:
         # arrange
-        file = path_join(self.config_paths['positive'], 'crawler_weight_optional.yaml')
+        file = config_defaults_file
         # act
         config = parse_yaml_file(file)
         # assert
-        for crawler in config['crawlers']:
-            self.assertEqual(1, crawler['weight'])
-
-    def test_multiple_crawlers(self) -> None:
-        # arrange
-        file = path_join(self.config_paths['positive'], 'multiple_crawlers.yaml')
-        # act
-        config = parse_yaml_file(file)
-        # assert
-        self.assertEqual(3, len(config['crawlers']))
+        self.assertIsInstance(config, dict)

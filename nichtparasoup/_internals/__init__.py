@@ -1,3 +1,9 @@
+__all__ = ['_logger_date_time_string', '_log', '_message', '_exit']
+"""
+yes, everything is underscored.
+its internal foo that is not for public use.
+"""
+
 from time import strftime
 from typing import Any, List, NoReturn, Optional, TextIO, Union
 
@@ -26,15 +32,33 @@ def _log(type: str, message: str, cause: Optional[Any] = None, *args: Any, **kwa
     getattr(__logger, type)(message.rstrip(), *args, **kwargs)
 
 
+def _message(message: Union[str, List[str]], file: Optional[TextIO] = None) -> None:
+    from sys import stdout
+    newline = '\r\n'
+    if type(message) == list:
+        message = newline.join(message)
+    if not file:
+        file = stdout
+    file.write('{}{}'.format(message, newline))
+
+
+def _message_exception(exception: Exception, file: Optional[TextIO] = None) -> None:
+    # IDEA: have the exception name colored red, if colors are available
+    if not file:
+        from sys import stderr
+        file = stderr
+    _message('{0.__name__}: {1}'.format(type(exception), exception), file=file)
+
+
 def _exit(status: int = 0,
           message: Optional[Union[str, List[str]]] = None, exception: Optional[Exception] = None,
           file: Optional[TextIO] = None) -> NoReturn:
-    import sys
-    newline = '\r\n'
+    if not file:
+        from sys import stderr
+        file = stderr if status > 0 else None
     if message:
-        if type(message) == list:
-            message = newline.join(message)
-        (file if file else (sys.stderr if status > 0 else sys.stdout)).write('{0}{eot}'.format(message, eot=newline))
+        _message(message, file=file)
     if exception:
-        (file if file else sys.stderr).write('{0.__name__}: {1}{eot}'.format(type(exception), exception, eot=newline))
-    sys.exit(status)
+        _message_exception(exception, file=file)
+    from sys import exit
+    exit(status)

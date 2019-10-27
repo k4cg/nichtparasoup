@@ -84,7 +84,9 @@ class WebServer(object):
                 use_reloader=False,
                 use_debugger=use_debugger)
         except PermissionError:
-            _exit(status=1,
-                  message='ERROR: cannot start {} on port {}\r\n'.format(type(self).__name__, self.port))
+            _exit(status=32,
+                  message='ERROR: cannot start {} on port {}'.format(type(self).__name__, self.port))
+        except Exception as e:
+            _exit(status=33, exception=e)
         finally:
             self.imageserver.tearDown()

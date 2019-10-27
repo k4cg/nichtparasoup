@@ -1,14 +1,18 @@
-## this is a config file for nichtprasoup
+## this is a config file for nichtprasoup (v2.x)
 
 webserver:
-  hostname: "0.0.0.0"
-  port: 5000
+  hostname: "0.0.0.0"   # hostname the webserver recognizes # type: string
+  port: 5000            # port the webserver uns on # type: integer # constraint: > 0
 
 imageserver:
-  crawler_upkeep: 30
+  crawler_upkeep: 30    # number of images the server must keep at all time # type: integer # constraint: >= 10
 
 crawlers:
-  - type: "Dummy"     # one of the available crawlers
-    weight: 1         # optional, defaults to 1
-    config:
+  # list of ImageCrawlers to use.
+  # ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
+  # for a list of available types see the commandline help: --list-imagecrawlers
+  - type: "Dummy"     # type: string
+    weight: 1         # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional, defaults to 1
+    config:           # the crawler's own config # type: dictionary
+      # to get the config right, see the commandline help: --desc-imagecrawler <type>
       image_uri: "/images/dummy.png"  # path to shipped dummy image

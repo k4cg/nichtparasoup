@@ -1,4 +1,4 @@
-## this is a config file for nichtprasoup
+## this is a config file for nichtprasoup (v2.x)
 
 webserver:
   hostname: "0.0.0.0"

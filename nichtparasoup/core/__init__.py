@@ -138,9 +138,10 @@ class NPCore(object):
         if not image.is_generic:
             self.blacklist.add(image.uri)
 
+    def has_imagecrawler(self, imagecrawler: _ImageCrawler) -> bool:
+        return imagecrawler in [crawler.imagecrawler for crawler in self.crawlers]
+
     def add_imagecrawler(self, imagecrawler: _ImageCrawler, weight: _CrawlerWeight) -> None:
-        if imagecrawler in [crawler.imagecrawler for crawler in self.crawlers]:
-            raise Warning('imagecrawler already exists')
         self.crawlers.append(Crawler(
             imagecrawler, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist

@@ -1,7 +1,9 @@
-__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults"]
+__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults", "get_config_imagecrawler"]
 
 from os.path import dirname, join as path_join, realpath
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 _schema_file = realpath(path_join(dirname(__file__), "schema.yaml"))
 _schema = None  # type: Optional[Any]
@@ -10,26 +12,30 @@ _defaults_file = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
+def get_config_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
+    from nichtparasoup.imagecrawler import get_class as get_crawler_class
+    imagecrawler_class = get_crawler_class(config_crawler['type'])
+    if not imagecrawler_class:
+        raise ValueError('unknown crawler type {type!r}'.format(type=config_crawler['type']))
+    try:
+        imagecrawler_obj = imagecrawler_class(**config_crawler['config'])
+    except Exception as e:
+        raise Exception('{error!r}\r\n\twith config {config!r}'.format(error=e, config=config_crawler['config']))
+    return imagecrawler_obj
+
+
 def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     import yamale  # type: ignore
-    from nichtparasoup.imagecrawler import get_class as get_crawler
     global _schema
     if not _schema:
         _schema = yamale.make_schema(_schema_file, parser='ruamel')
     data = yamale.make_data(file_path, parser='ruamel')
     config_valid = yamale.validate(_schema, data, strict=True)
-    if not config_valid:
+    if not config_valid or not config_valid[0] or not config_valid[0][0]:
         raise ValueError('empty config')
     config = config_valid[0][0]  # type: Dict[str, Any]
-
-    crawlers = config['crawlers']  # type: List[Dict[Any, Any]]
-    for crawler in crawlers:
-        crawler.setdefault("weight", 1)
-        imagecrawler = get_crawler(crawler['type'])
-        if not imagecrawler:
-            raise ValueError('unknown crawler type: {}'.format(crawler['type']))
-        imagecrawler.check_config(crawler['config'])
-
+    for config_crawler in config['crawlers']:
+        config_crawler.setdefault("weight", 1)
     return config
 
 
