@@ -19,7 +19,7 @@ SETUP = dict(
         nichtparasoup=[
             # TODO: check if this is done right. are the files included in dist
             "webserver/htdocs",
-            "config/*.yaml",
+            "config/*.yaml", "config/*.yml",
         ],
     ),
     python_requires=">=3.5",
