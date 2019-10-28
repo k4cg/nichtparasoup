@@ -26,7 +26,7 @@ class Server(object):
         self.keep = crawler_upkeep
         self.reset_timeout = reset_timeout
         self._stats = ServerStatistics()
-        self._refiller = ServerRefiller(self, 1.337)
+        self._refiller = None
         self._trigger_reset = False
         self._locks = ServerLocks()
 
@@ -97,6 +97,7 @@ class Server(object):
         _log("info", " * setting up {}".format(type(self).__name__))
         self._stats.time_started = int(time())
         self.refill()  # initial fill
+        self._refiller = ServerRefiller(self, 1.337)
         self._refiller.start()  # start threaded periodical refill
         self._locks.run.release()
 
@@ -104,6 +105,7 @@ class Server(object):
         self._locks.run.acquire()
         _log("info", "\r\n * tearing down {}".format(type(self).__name__))
         self._refiller.stop()
+        self._refiller = None
         self._locks.run.release()
 
 
@@ -167,16 +169,17 @@ class ServerRefiller(Thread):
         self._stopped = False
 
     def run(self) -> None:
-        while not self._stopped:
+        while True:
             server = self._wr_server()
             if server:
                 server.refill()
             else:
                 _log("info", " * server gone. stopping {}".format(type(self).__name__))
                 self._stopped = True
-            if not self._stopped:
-                # each service worker has some delay from time to time
-                sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
+            if self._stopped:
+                break  # while
+            # each service worker has some delay from time to time
+            sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
 
     def start(self) -> None:
         _log("info", " * starting {}".format(type(self).__name__))
