@@ -20,7 +20,8 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     try:
         imagecrawler_obj = imagecrawler_class(**config_crawler['config'])
     except Exception as e:
-        raise Exception('{error!r}\r\n\twith config {config!r}'.format(error=e, config=config_crawler['config']))
+        raise Exception('{error!r}\r\n\twith crawler config {config!r}'.format(
+            error=e, config=config_crawler['config']))
     return imagecrawler_obj
 
 
@@ -31,7 +32,7 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
         _schema = yamale.make_schema(_schema_file, parser='ruamel')
     data = yamale.make_data(file_path, parser='ruamel')
     config_valid = yamale.validate(_schema, data, strict=True)
-    config = config_valid[0][0]  # type: Dict[str, Any]
+    config = config_valid[0][0]  # type: Dict[str, Any] # type is enforced by schema
     for config_crawler in config['crawlers']:
         config_crawler.setdefault("weight", None)
         if config_crawler.get('config') is None:

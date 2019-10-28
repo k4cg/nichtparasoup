@@ -65,7 +65,7 @@ class DummyCrawlTest(unittest.TestCase):
 class DummyDescriptionTest(unittest.TestCase):
     def test_description_congig(self) -> None:
         # act
-        description = Dummy.describe()
+        description = Dummy.info()
         # assert
         self.assertTrue('image_uri' in description.config)
 

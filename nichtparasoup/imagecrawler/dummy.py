@@ -3,15 +3,15 @@ __all__ = ["Dummy"]
 from typing import Any, Dict
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerDescription
+from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Dummy(BaseImageCrawler):
 
     @staticmethod
-    def describe() -> ImageCrawlerDescription:
-        return ImageCrawlerDescription(
-            purpose='"Finds" the same image ... again ... and again.',
+    def info() -> ImageCrawlerInfo:
+        return ImageCrawlerInfo(
+            desc='"Finds" the same image ... again ... and again.',
             config=dict(
                 image_uri='the uro to the image to "find"',
             )
@@ -28,12 +28,14 @@ class Dummy(BaseImageCrawler):
             image_uri=image_uri,
         )
 
-    def crawl(self) -> ImageCollection:
+    def _reset(self) -> None:  # pragma: no cover
+        pass
+
+    def _crawl(self) -> ImageCollection:
         images = ImageCollection()
         images.add(Image(
             self._config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))
-        self._reset_before_next_crawl = False
         return images

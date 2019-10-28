@@ -19,5 +19,10 @@ crawlers:
   - type: "Picsum"
     weight: 1
     config:
-      width: 800
+      width: 400
+      height: 300
+  - type: "Picsum"
+    weight: 2
+    config:
+      width: 300
       height: 600

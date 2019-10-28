@@ -1,17 +1,19 @@
 from typing import Any, Dict
 
 from nichtparasoup.core.image import Image, ImageCollection, ImageUri
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerDescription
+from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 __all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):
 
+    _bunch = 10
+
     @staticmethod
-    def describe() -> ImageCrawlerDescription:
-        return ImageCrawlerDescription(
-            purpose='Find images from https://picsum.photos',
+    def info() -> ImageCrawlerInfo:
+        return ImageCrawlerInfo(
+            desc='Find images from https://picsum.photos',
             config=dict(
                 width='width(px) of the image to find',
                 height='height(px) of the image to find',
@@ -35,18 +37,18 @@ class Picsum(BaseImageCrawler):
             height=height,
         )
 
-    _bunch = 10
-
     def _get_image_uri(self) -> ImageUri:
         return "https://picsum.photos/{}/{}".format(
             self._config["width"], self._config["height"])
 
-    def crawl(self) -> ImageCollection:
+    def _reset(self) -> None:  # pragma: no cover
+        pass
+
+    def _crawl(self) -> ImageCollection:
         images = ImageCollection()
         for _ in range(0, self._bunch):
             images.add(Image(
                 self._get_image_uri(),
                 is_generic=True,
             ))
-        self._reset_before_next_crawl = False
         return images

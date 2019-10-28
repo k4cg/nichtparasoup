@@ -1,20 +1,21 @@
-__all__ = ["ImageCrawlerConfig", "BaseImageCrawler", "ImageCrawlerDescription"]
+__all__ = ["ImageCrawlerConfig", "BaseImageCrawler", "ImageCrawlerInfo"]
 
 from abc import ABC, abstractmethod
+from threading import Lock
 from typing import Any, Dict
 
 from nichtparasoup.core.image import ImageCollection
 
-ImageCrawlerConfigKey = str
+_ImageCrawlerConfigKey = str
 
 
-class ImageCrawlerDescription(object):
-    def __init__(self, purpose: str, config: Dict[ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
-        self.purpose = purpose
+class ImageCrawlerInfo(object):
+    def __init__(self, desc: str, config: Dict[_ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
+        self.desc = desc
         self.config = config
 
 
-class ImageCrawlerConfig(Dict[ImageCrawlerConfigKey, Any]):
+class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
     pass
 
 
@@ -23,6 +24,7 @@ class BaseImageCrawler(ABC):
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)
         self._reset_before_next_crawl = True
+        self._crawl_lock = Lock()
 
     def __eq__(self, other: Any) -> bool:
         if type(self) is type(other):
@@ -35,10 +37,11 @@ class BaseImageCrawler(ABC):
 
     @staticmethod
     @abstractmethod
-    def describe() -> ImageCrawlerDescription:  # pragma: no cover
-        return ImageCrawlerDescription(
-            purpose="Some textual description about what this ImageCrawler does.",
+    def info() -> ImageCrawlerInfo:  # pragma: no cover
+        return ImageCrawlerInfo(
+            desc="Some textual description about what this ImageCrawler does.",
             config=dict(
+                # leave the dict empty, if there is nothing to configure
                 param1="meaning of param1",
                 paramN="meaning of paramN",
             ))
@@ -62,17 +65,27 @@ class BaseImageCrawler(ABC):
         """
         return ImageCrawlerConfig(config)
 
+    @abstractmethod
+    def _reset(self) -> None:  # pragma: no cover
+        """
+        this function is intended to reset the crawler to restart at front
+        """
+
+    @abstractmethod
+    def _crawl(self) -> ImageCollection:  # pragma: no cover
+        """
+        this function is intended to find and fetch ImageURIs
+        """
+        return ImageCollection()
+
     def reset(self) -> None:
         self._reset_before_next_crawl = True
 
-    @abstractmethod
     def crawl(self) -> ImageCollection:  # pragma: no cover
-        """
-        this function is intended to find and fetch ImageURIs
-
-        when implementing:
-        make sure to honor self._reset_before_next_crawl == True and in case, reset implementation dependent
-        make sure to set after crawl: self._reset_before_next_crawl = False
-        """
-        self._reset_before_next_crawl = False
-        return ImageCollection()
+        self._crawl_lock.acquire()
+        if self._reset_before_next_crawl:
+            self._reset()
+            self._reset_before_next_crawl = False
+        images = self._crawl()
+        self._crawl_lock.release()
+        return images

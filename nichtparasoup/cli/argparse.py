@@ -37,15 +37,15 @@ class _DescribeImageCrawlersAction(Action):
         try:
             if not imagecrawler_class:
                 raise ValueError('Unknown ImageCrawler: {}'.format(values))
-            description = imagecrawler_class.describe()
-            if description.config:
+            info = imagecrawler_class.info()
+            if info.config:
                 info_config = '\r\n* ' + '\r\n* '.join([
-                    '{:10}: {}'.format(key, key_desc) for key, key_desc in description.config.items()]) + "\r\n"
+                    '{:10}: {}'.format(key, key_desc) for key, key_desc in info.config.items()]) + "\r\n"
             else:
                 info_config = 'None'
             _exit(message='Purpose: {}\r\n'
                           'Config:  {}'.
-                  format(description.purpose, info_config))
+                  format(info.desc, info_config))
         except Exception as e:
             _exit(status=1, exception=e)
 

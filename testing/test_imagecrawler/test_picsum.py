@@ -117,7 +117,7 @@ class PicsumResetTest(unittest.TestCase):
 class DummyDescriptionTest(unittest.TestCase):
     def test_description_congig(self) -> None:
         # act
-        description = Picsum.describe()
+        description = Picsum.info()
         # assert
         for config_key in _picsum_right_config.keys():
             self.assertTrue(config_key in description.config)
