@@ -6,7 +6,7 @@ from typing import List
 
 from yamale import YamaleTestCase  # type: ignore
 
-from nichtparasoup.config import _defaults_file as config_defaults_file, get_config_imagecrawler, parse_yaml_file
+from nichtparasoup.config import _defaults_file as config_defaults_file, get_imagecrawler, parse_yaml_file
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 
@@ -44,7 +44,7 @@ class ConfigParserDefaultsTest(unittest.TestCase):
         # assert
         self.assertIsInstance(config, dict, file)
         for crawler_config in config['crawlers']:
-            self.assertIsInstance(get_config_imagecrawler(crawler_config), BaseImageCrawler, file)
+            self.assertIsInstance(get_imagecrawler(crawler_config), BaseImageCrawler, file)
 
     def test_defaults(self) -> None:
         # arrange

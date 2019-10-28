@@ -1,4 +1,4 @@
-__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults", "get_config_imagecrawler"]
+__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults", "get_imagecrawler"]
 
 from os.path import dirname, join as path_join, realpath
 from typing import Any, Dict, Optional
@@ -12,7 +12,7 @@ _defaults_file = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
-def get_config_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
+def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     from nichtparasoup.imagecrawler import get_class as get_crawler_class
     imagecrawler_class = get_crawler_class(config_crawler['type'])
     if not imagecrawler_class:

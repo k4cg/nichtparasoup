@@ -1,6 +1,6 @@
 from nichtparasoup._internals import _exit
 from nichtparasoup.cli.argparse import parser as argparser
-from nichtparasoup.config import get_config_imagecrawler, get_defaults, parse_yaml_file
+from nichtparasoup.config import get_defaults, get_imagecrawler, parse_yaml_file
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.server import Server as ImageServer
 from nichtparasoup.webserver import WebServer
@@ -25,7 +25,7 @@ if not config:
 
 imageserver = ImageServer(NPCore(), **config['imageserver'])
 for crawler_config in config['crawlers']:
-    imagecrawler = get_config_imagecrawler(crawler_config)
+    imagecrawler = get_imagecrawler(crawler_config)
     if not imageserver.core.has_imagecrawler(imagecrawler):
         imageserver.core.add_imagecrawler(imagecrawler, crawler_config['weight'])
     del imagecrawler

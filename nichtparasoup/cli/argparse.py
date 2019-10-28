@@ -59,14 +59,14 @@ class _CheckConfigFileAction(Action):
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: Any,
                  option_string: Optional[str] = None) -> NoReturn:
-        from nichtparasoup.config import get_config_imagecrawler, parse_yaml_file
+        from nichtparasoup.config import get_imagecrawler, parse_yaml_file
         from nichtparasoup._internals import _exit, _message_exception
         file_path = str(values)
         try:
             config = parse_yaml_file(file_path)
             imagecrawlers = list()  # type: List[Any]
             for crawler_config in config['crawlers']:
-                imagecrawler = get_config_imagecrawler(crawler_config)
+                imagecrawler = get_imagecrawler(crawler_config)
                 if imagecrawler in imagecrawlers:
                     _message_exception(
                         Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
