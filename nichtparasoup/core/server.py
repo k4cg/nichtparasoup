@@ -1,4 +1,4 @@
-__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller", "ServerLocks"]
+__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
 
 from abc import ABC
 from copy import copy
@@ -26,9 +26,10 @@ class Server(object):
         self.keep = crawler_upkeep
         self.reset_timeout = reset_timeout
         self._stats = ServerStatistics()
-        self._refiller = None
+        self._refiller = None  # type: Optional[ServerRefiller]
         self._trigger_reset = False
-        self._locks = ServerLocks()
+        self._locks = _ServerLocks()
+        self.__running = False
 
     def get_image(self) -> Optional[Dict[str, Any]]:
         crawler = self.core.crawlers.get_random()
@@ -47,7 +48,7 @@ class Server(object):
             more=image.more,
             crawler=dict(
                 id=id(crawler),
-                type=str(type(crawler.imagecrawler).__name__),
+                type=type(crawler.imagecrawler).__name__,
             ),
         )
 
@@ -74,39 +75,54 @@ class Server(object):
         self._locks.reset.release()
 
     def request_reset(self) -> Dict[str, Any]:
-        time_started = self._stats.time_started
-        now = int(time())
-        if time_started is None:
+        if not self.is_alive():
             request_valid = True
             timeout = 0
         else:
+            now = int(time())
+            time_started = self._stats.time_started or now
             timeout_base = self.reset_timeout
             time_last_reset = self._stats.time_last_reset
-            reset_after = timeout_base + (time_started if time_last_reset is None else time_last_reset)
+            reset_after = timeout_base + (time_last_reset or time_started)
             request_valid = now > reset_after
             timeout = timeout_base if request_valid else (reset_after - now)
         if request_valid:
             self._reset()
         return dict(
             requested=request_valid,
-            timeout=timeout
+            timeout=timeout,
         )
 
-    def setUp(self) -> None:
+    def start(self) -> None:
         self._locks.run.acquire()
-        _log("info", " * setting up {}".format(type(self).__name__))
-        self._stats.time_started = int(time())
-        self.refill()  # initial fill
-        self._refiller = ServerRefiller(self, 1.337)
-        self._refiller.start()  # start threaded periodical refill
-        self._locks.run.release()
+        try:
+            if self.__running:
+                raise RuntimeError('already running')
+            _log("info", " * starting {}".format(type(self).__name__))
+            self.refill()  # initial fill
+            if not self._refiller:
+                self._refiller = ServerRefiller(self, 1)
+                self._refiller.start()  # start threaded periodical refill
+            self._stats.time_started = int(time())
+            self.__running = True
+        finally:
+            self._locks.run.release()
 
-    def tearDown(self) -> None:
+    def is_alive(self) -> bool:
+        return self.__running
+
+    def stop(self) -> None:
         self._locks.run.acquire()
-        _log("info", "\r\n * tearing down {}".format(type(self).__name__))
-        self._refiller.stop()
-        self._refiller = None
-        self._locks.run.release()
+        try:
+            if not self.__running:
+                raise RuntimeError('not running')
+            _log("info", "\r\n * stopping {}".format(type(self).__name__))
+            if self._refiller:
+                self._refiller.stop()
+                self._refiller = None
+            self.__running = False
+        finally:
+            self._locks.run.release()
 
 
 class ServerStatus(ABC):
@@ -120,7 +136,7 @@ class ServerStatus(ABC):
     def server(server: Server) -> Dict[str, Any]:
         stats = copy(server._stats)
         now = int(time())
-        uptime = (now - stats.time_started) if stats.time_started else 0
+        uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
         return dict(
             version=__version__,
             uptime=uptime,
@@ -150,7 +166,7 @@ class ServerStatus(ABC):
             crawler = copy(crawler)
             images = crawler.images.copy()
             status[crawler_id] = dict(
-                type=str(type(crawler.imagecrawler).__name__),
+                type=type(crawler.imagecrawler).__name__,
                 weight=crawler.weight,
                 config=crawler.imagecrawler.get_config().copy(),
                 images=dict(
@@ -166,7 +182,7 @@ class ServerRefiller(Thread):
         super().__init__(daemon=True)
         self._wr_server = weak_ref(server)
         self._sleep = sleep
-        self._stopped = False
+        self.__stopping = False
 
     def run(self) -> None:
         while True:
@@ -175,20 +191,24 @@ class ServerRefiller(Thread):
                 server.refill()
             else:
                 _log("info", " * server gone. stopping {}".format(type(self).__name__))
-                self._stopped = True
-            if self._stopped:
+                self.__stopping = True
+            if self.__stopping:
                 break  # while
             # each service worker has some delay from time to time
             sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
 
     def start(self) -> None:
+        if self.is_alive():
+            raise RuntimeError('already running')
         _log("info", " * starting {}".format(type(self).__name__))
-        self._stopped = False
+        self.__stopping = False
         super().start()
 
     def stop(self) -> None:
+        if not self.is_alive():
+            raise RuntimeError('not running')
         _log("info", " * stopping {}".format(type(self).__name__))
-        self._stopped = True
+        self.__stopping = True
 
 
 class ServerStatistics(object):
@@ -200,8 +220,8 @@ class ServerStatistics(object):
         self.cum_blacklist_on_flush = 0  # type: int
 
 
-class ServerLocks(object):
-    def __init__(self) -> None:
+class _ServerLocks(object):
+    def __init__(self) -> None:  # pragma: no cover
         self.stats_get_image = Lock()
         self.reset = Lock()
         self.refill = Lock()

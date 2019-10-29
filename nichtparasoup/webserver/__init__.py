@@ -76,7 +76,7 @@ class WebServer(object):
 
     def run(self, use_debugger: bool = False) -> None:
         try:
-            self.imageserver.setUp()
+            self.imageserver.start()
             run_simple(
                 self.hostname, self.port,
                 self, static_files={"/": self._htdocs},
@@ -89,4 +89,4 @@ class WebServer(object):
         except Exception as e:
             _exit(status=33, exception=e)
         finally:
-            self.imageserver.tearDown()
+            self.imageserver.stop()
