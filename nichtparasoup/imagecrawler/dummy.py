@@ -10,11 +10,13 @@ class Dummy(BaseImageCrawler):
 
     @staticmethod
     def info() -> ImageCrawlerInfo:
+        from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='"Finds" the same image ... again ... and again.',
             config=dict(
                 image_uri='the uro to the image to "find"',
-            )
+            ),
+            version=__version__,
         )
 
     @staticmethod

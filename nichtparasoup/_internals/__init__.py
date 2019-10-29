@@ -47,7 +47,7 @@ def _message(message: Union[str, List[str]], file: Optional[TextIO] = None) -> N
     file.write('{}{}'.format(message, newline))
 
 
-def _message_exception(exception: Exception, file: Optional[TextIO] = None) -> None:
+def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
     if not file:
         from sys import stderr
         file = stderr

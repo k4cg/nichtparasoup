@@ -4,7 +4,7 @@ import unittest
 class ArgParserTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        from nichtparasoup.cli.argparse import parser
+        from nichtparasoup.cmdline.argparse import parser
         self.parser = parser
 
     def tearDown(self) -> None:

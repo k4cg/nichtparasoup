@@ -10,9 +10,11 @@ _ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerInfo(object):
-    def __init__(self, desc: str, config: Dict[_ImageCrawlerConfigKey, str]) -> None:  # pragma: no cover
+
+    def __init__(self, desc: str, config: Dict[_ImageCrawlerConfigKey, str], version: str) -> None:  # pragma: no cover
         self.desc = desc
         self.config = config
+        self.version = version
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
@@ -44,10 +46,12 @@ class BaseImageCrawler(ABC):
                 # leave the dict empty, if there is nothing to configure
                 param1="meaning of param1",
                 paramN="meaning of paramN",
-            ))
+            ),
+            version='0.0.dev1'
+        )
 
-    @ staticmethod
-    @ abstractmethod
+    @staticmethod
+    @abstractmethod
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:  # pragma: no cover
         """
         this function is intended to check if a config is valid and to strip unused config.

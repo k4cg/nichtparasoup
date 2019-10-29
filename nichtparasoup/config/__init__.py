@@ -1,14 +1,14 @@
-__all__ = ["parse_yaml_file", "get_defaults", "dump_defaults", "get_imagecrawler"]
+__all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file"]
 
-from os.path import dirname, join as path_join, realpath
+from os.path import dirname, join as path_join
 from typing import Any, Dict, Optional
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
-_schema_file = realpath(path_join(dirname(__file__), "schema.yaml"))
+_schema_file = path_join(dirname(__file__), "schema.yaml")
 _schema = None  # type: Optional[Any]
 
-_defaults_file = realpath(path_join(dirname(__file__), "defaults.yaml"))
+_defaults_file = path_join(dirname(__file__), "defaults.yaml")
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
@@ -40,6 +40,11 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     return config
 
 
+def dump_defaults(file_path: str) -> None:
+    from shutil import copyfile
+    copyfile(_defaults_file, file_path)
+
+
 def get_defaults() -> Dict[str, Any]:
     global _defaults
     if not _defaults:
@@ -48,6 +53,11 @@ def get_defaults() -> Dict[str, Any]:
     return deepcopy(_defaults)
 
 
-def dump_defaults(file_path: str) -> None:
-    from shutil import copyfile
-    copyfile(_defaults_file, file_path)
+def get_config(config_file: Optional[str] = None) -> Dict[str, Any]:
+    if not config_file:
+        return get_defaults()
+    try:
+        return parse_yaml_file(config_file)
+    except Exception:
+        raise ValueError(
+            'invalid config file {!r}'.format(config_file))

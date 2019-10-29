@@ -12,12 +12,14 @@ class Picsum(BaseImageCrawler):
 
     @staticmethod
     def info() -> ImageCrawlerInfo:
+        from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='Find images from https://picsum.photos',
             config=dict(
                 width='width(px) of the image to find',
                 height='height(px) of the image to find',
-            )
+            ),
+            version=__version__,
         )
 
     @staticmethod
