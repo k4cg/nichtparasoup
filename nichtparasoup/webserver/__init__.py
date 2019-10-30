@@ -9,7 +9,6 @@ from werkzeug.routing import Map, Rule
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup._internals import _exit
 from nichtparasoup.core.server import Server, ServerStatus
 
 
@@ -26,7 +25,6 @@ class WebServer(object):
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
             Rule('/reset', endpoint='reset'),
-
         ])
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
@@ -83,10 +81,7 @@ class WebServer(object):
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=use_debugger)
-        except PermissionError:
-            _exit(status=32,
-                  message='ERROR: cannot start {} on port {}'.format(type(self).__name__, self.port))
-        except Exception as e:
-            _exit(status=33, exception=e)
+        except PermissionError as e:
+            raise PermissionError('cannot start {} on port {}'.format(type(self).__name__, self.port)) from e
         finally:
             self.imageserver.stop()

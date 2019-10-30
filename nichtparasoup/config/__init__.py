@@ -16,12 +16,12 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     from nichtparasoup.imagecrawler import get_class as get_crawler_class
     imagecrawler_class = get_crawler_class(config_crawler['type'])
     if not imagecrawler_class:
-        raise ValueError('unknown crawler type {type!r}'.format(type=config_crawler['type']))
+        raise ValueError('unknown crawler type {!r}'.format(config_crawler['type']))
     try:
         imagecrawler_obj = imagecrawler_class(**config_crawler['config'])
     except Exception as e:
-        raise Exception('{error!r}\r\n\twith crawler config {config!r}'.format(
-            error=e, config=config_crawler['config']))
+        raise Exception('failed setup of {type!r} with config {config!r}'.format(
+            type=config_crawler['type'], config=config_crawler['config'])) from e
     return imagecrawler_obj
 
 
@@ -58,6 +58,5 @@ def get_config(config_file: Optional[str] = None) -> Dict[str, Any]:
         return get_defaults()
     try:
         return parse_yaml_file(config_file)
-    except Exception:
-        raise ValueError(
-            'invalid config file {!r}'.format(config_file))
+    except Exception as e:
+        raise ValueError('invalid config file {!r}'.format(config_file)) from e

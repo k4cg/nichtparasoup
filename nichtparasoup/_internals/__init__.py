@@ -5,7 +5,7 @@ its internal foo that is not for public use.
 """
 
 from time import strftime
-from typing import Any, List, NoReturn, Optional, TextIO, Union
+from typing import Any, NoReturn, Optional, TextIO
 
 try:
     from termcolor import colored
@@ -37,20 +37,26 @@ def _log(type: str, message: str, cause: Optional[Any] = None, *args: Any, **kwa
     getattr(__logger, type)(message.rstrip(), *args, **kwargs)
 
 
-def _message(message: Union[str, List[str]], file: Optional[TextIO] = None) -> None:
+def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:
     from sys import stdout
     newline = '\r\n'
-    if type(message) == list:
-        message = newline.join(message)
     if not file:
         file = stdout
+    if color and colored:
+        message = colored(message, color=color)
     file.write('{}{}'.format(message, newline))
 
 
-def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
+def _message_exception(exception: BaseException, debug: bool = True, file: Optional[TextIO] = None) -> None:
     if not file:
         from sys import stderr
         file = stderr
+    if debug:
+        pass
+        # TODO: bring beutiful output
+        # from traceback import format_exception
+        # x = format_exception(type(exception), exception)
+        # _log("error", exception)
     exception_name = type(exception).__name__
     if colored:
         color = 'yellow' if isinstance(exception, Warning) else 'red'
@@ -59,7 +65,7 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
 
 
 def _exit(status: int = 0,
-          message: Optional[Union[str, List[str]]] = None, exception: Optional[Exception] = None,
+          message: Optional[str] = None, exception: Optional[Exception] = None,
           file: Optional[TextIO] = None) -> NoReturn:
     if not file:
         from sys import stderr

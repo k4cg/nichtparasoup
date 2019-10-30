@@ -63,8 +63,10 @@ class Server(object):
 
     def refill(self) -> Dict[str, bool]:
         self._locks.refill.acquire()
-        self.core.fill_up_to(self.keep, self._log_refill_crawler)
-        self._locks.refill.release()
+        try:
+            self.core.fill_up_to(self.keep, self._log_refill_crawler)
+        finally:
+            self._locks.refill.release()
         return dict(refilled=True)
 
     def _reset(self) -> None:
@@ -179,36 +181,46 @@ class ServerStatus(ABC):
 
 class ServerRefiller(Thread):
     def __init__(self, server: Server, sleep: Union[int, float]) -> None:  # pragma: no cover
+        from threading import Event
         super().__init__(daemon=True)
-        self._wr_server = weak_ref(server)
+        self._server_wr = weak_ref(server)
         self._sleep = sleep
-        self.__stopping = False
+        self._stop_event = Event()
+        self._run_lock = Lock()
 
     def run(self) -> None:
-        while True:
-            server = self._wr_server()
+        while not self._stop_event.is_set():
+            server = self._server_wr()  # type: Optional[Server]
             if server:
                 server.refill()
             else:
                 _log("info", " * server gone. stopping {}".format(type(self).__name__))
-                self.__stopping = True
-            if self.__stopping:
+                self._stop_event.set()
+            if self._stop_event.is_set():
                 break  # while
             # each service worker has some delay from time to time
-            sleep(uniform(self._sleep * 0.9001, self._sleep * 1.337))
+            sleep(uniform(self._sleep * 0.9, self._sleep * 1.1))
 
     def start(self) -> None:
-        if self.is_alive():
-            raise RuntimeError('already running')
-        _log("info", " * starting {}".format(type(self).__name__))
-        self.__stopping = False
-        super().start()
+        self._run_lock.acquire()
+        try:
+            if self.is_alive():
+                raise RuntimeError('already running')
+            _log("info", " * starting {}".format(type(self).__name__))
+            self._stop_event.clear()
+            super().start()
+        finally:
+            self._run_lock.release()
 
     def stop(self) -> None:
-        if not self.is_alive():
-            raise RuntimeError('not running')
-        _log("info", " * stopping {}".format(type(self).__name__))
-        self.__stopping = True
+        self._run_lock.acquire()
+        try:
+            if not self.is_alive():
+                raise RuntimeError('not running')
+            _log("info", " * stopping {}".format(type(self).__name__))
+            self._stop_event.set()
+        finally:
+            self._run_lock.release()
 
 
 class ServerStatistics(object):

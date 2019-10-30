@@ -36,36 +36,36 @@ class Crawler(object):
         self.imagecrawler = imagecrawler
         self.weight = weight if weight else 1  # type: _CrawlerWeight
         self.images = ImageCollection()
-        self.__wr_is_image_addable = None  # type: Optional[ReferenceType[_IsImageAddable]]
-        self.__wr_image_added = None  # type: Optional[ReferenceType[_OnImageAdded]]
+        self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
+        self._wr_image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
 
     def set_is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
         t_is_image_addable = type(is_image_addable)
         if None is is_image_addable:
-            self.__wr_is_image_addable = None
+            self._is_image_addable_wr = None
         elif MethodType is t_is_image_addable:
-            self.__wr_is_image_addable = WeakMethod(is_image_addable)  # type: ignore
+            self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
         else:
             raise Exception('type {} not supported, yet'.format(t_is_image_addable))
         # TODO: add function and other types - and write proper tests for it
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
-        return self.__wr_is_image_addable() if self.__wr_is_image_addable else None
+        return self._is_image_addable_wr() if self._is_image_addable_wr else None
 
     def set_image_added(self, image_added: Optional[_OnImageAdded]) -> None:
         t_image_added = type(image_added)
         if None is image_added:
-            self.__wr_image_added = None
+            self._wr_image_added_wr = None
         elif MethodType is t_image_added:
-            self.__wr_image_added = WeakMethod(image_added)  # type: ignore
+            self._wr_image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
             raise Exception('type {} not supported, yet'.format(t_image_added))
         # TODO: add function and other types - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
-        return self.__wr_image_added() if self.__wr_image_added else None
+        return self._wr_image_added_wr() if self._wr_image_added_wr else None
 
     def reset(self) -> None:
         self.images.clear()
@@ -84,16 +84,16 @@ class Crawler(object):
                 image_added(image_crawled)
         return len(images_crawled)
 
-    def fill_up_to(self, to: int, filled_by: Optional[_OnFill] = None) -> int:
-        cum_refilled = 0
+    def fill_up_to(self, to: int, filled_by: Optional[_OnFill] = None) -> None:
         while len(self.images) < to:
-            refilled = self.crawl()
+            refilled = 0
+            try:
+                refilled = self.crawl()
+            finally:
+                if filled_by:
+                    filled_by(self, refilled)
             if 0 == refilled:
                 break  # while
-            if filled_by:
-                filled_by(self, refilled)
-            cum_refilled += refilled
-        return cum_refilled
 
     def get_random_image(self) -> Optional[Image]:
         if not self.images:

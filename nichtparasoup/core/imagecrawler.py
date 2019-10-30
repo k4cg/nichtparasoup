@@ -87,9 +87,10 @@ class BaseImageCrawler(ABC):
 
     def crawl(self) -> ImageCollection:  # pragma: no cover
         self._crawl_lock.acquire()
-        if self._reset_before_next_crawl:
-            self._reset()
-            self._reset_before_next_crawl = False
-        images = self._crawl()
-        self._crawl_lock.release()
-        return images
+        try:
+            if self._reset_before_next_crawl:
+                self._reset()
+                self._reset_before_next_crawl = False
+            return self._crawl()
+        finally:
+            self._crawl_lock.release()
