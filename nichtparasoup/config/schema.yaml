@@ -1,6 +1,9 @@
+loglevel: include('LogLevel', required=False, none=False)
 webserver: include('Webserver', strict=True)
 imageserver: include('ImageServer', strict=True)
 crawlers: list(include('Crawler', strict=True), min=1)
+---
+LogLevel: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
 ---
 Webserver:
   hostname: str(min=1)
@@ -11,5 +14,5 @@ ImageServer:
 ---
 Crawler:
   type: str(min=1)
-  weight: num(min=0.0001, required=False, none=True)
-  config: map(required=False, none=True)
+  weight: num(min=0.0001, required=False, none=None)
+  config: map(required=False, none=False)

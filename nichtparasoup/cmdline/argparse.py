@@ -40,7 +40,7 @@ command_config_actions = command_config.add_mutually_exclusive_group(required=Tr
 command_config_actions.add_argument(
     '--check',
     help='validate a YAML config file',
-    action='store_const', const='dump', dest='action'
+    action='store_const', const='check', dest='action'
 )
 command_config_actions.add_argument(
     '--dump',

@@ -31,12 +31,11 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     if not _schema:
         _schema = yamale.make_schema(_schema_file, parser='ruamel')
     data = yamale.make_data(file_path, parser='ruamel')
-    config_valid = yamale.validate(_schema, data, strict=True)
-    config = config_valid[0][0]  # type: Dict[str, Any] # type is enforced by schema
+    config = yamale.validate(_schema, data, strict=True)[0][0]  # type: Dict[str, Any]
+    config.setdefault('loglevel', 'INFO')
     for config_crawler in config['crawlers']:
-        config_crawler.setdefault("weight", None)
-        if config_crawler.get('config') is None:
-            config_crawler["config"] = dict()
+        config_crawler.setdefault("weight", 1)
+        config_crawler.setdefault('config', dict())
     return config
 
 

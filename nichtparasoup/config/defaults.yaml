@@ -1,5 +1,7 @@
 ## this is a config file for nichtprasoup (v2.x)
 
+loglevel: 'INFO'  # enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', required=False, none='INFO') # optional # default: 'INFO'
+
 webserver:
   hostname: "0.0.0.0"   # hostname the webserver recognizes # type: string
   port: 5000            # port the webserver uns on # type: integer # constraint: > 0
@@ -12,7 +14,7 @@ crawlers:
   # ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
   # for a list of available types see the commandline help: --list-imagecrawlers
   - type: "Dummy"     # type: string
-    weight: 0.1       # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional
+    weight: 0.1       # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional # default: 1
     config:           # the crawler's own config # type: dictionary # optional
       # to get the config right, see the commandline help: --desc-imagecrawler <type>
       image_uri: "/images/dummy.png"    # path to shipped dummy image

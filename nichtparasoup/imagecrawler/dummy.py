@@ -35,8 +35,9 @@ class Dummy(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+        config = self.get_config()
         images.add(Image(
-            self._config["image_uri"],
+            config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))

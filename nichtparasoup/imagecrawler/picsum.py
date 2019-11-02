@@ -39,18 +39,19 @@ class Picsum(BaseImageCrawler):
             height=height,
         )
 
-    def _get_image_uri(self) -> ImageUri:
-        return "https://picsum.photos/{}/{}".format(
-            self._config["width"], self._config["height"])
+    @staticmethod
+    def _get_image_uri(width: int, height: int) -> ImageUri:
+        return "https://picsum.photos/{}/{}".format(width, height)
 
     def _reset(self) -> None:  # pragma: no cover
         pass
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+        config = self.get_config()
         for _ in range(0, self._bunch):
             images.add(Image(
-                self._get_image_uri(),
+                self._get_image_uri(**config),
                 is_generic=True,
             ))
         return images

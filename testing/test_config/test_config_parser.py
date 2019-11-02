@@ -6,15 +6,22 @@ from nichtparasoup.config import parse_yaml_file
 
 class ConfigParserDefaultsTest(unittest.TestCase):
 
+    def test_set_optional_loglevel(self) -> None:
+        # arrange
+        file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'missing_loglevel.yaml'))
+        # act
+        config = parse_yaml_file(file)
+        # assert
+        self.assertEqual(config["loglevel"], 'INFO')
+
     def test_set_optional_weight(self) -> None:
         # arrange
         file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'missing_weight.yaml'))
         # act
         config = parse_yaml_file(file)
         # assert
-        self.assertEqual(2, len(config["crawlers"]))
-        self.assertIsNone(config["crawlers"][0]["weight"])
-        self.assertIsNone(config["crawlers"][1]["weight"])
+        self.assertEqual(len(config["crawlers"]), 1)
+        self.assertEqual(config["crawlers"][0]["weight"], 1)
 
     def test_set_optional_config(self) -> None:
         # arrange
@@ -22,6 +29,5 @@ class ConfigParserDefaultsTest(unittest.TestCase):
         # act
         config = parse_yaml_file(file)
         # assert
-        self.assertEqual(2, len(config["crawlers"]))
+        self.assertEqual(len(config["crawlers"]), 1)
         self.assertDictEqual(config["crawlers"][0]["config"], dict())
-        self.assertDictEqual(config["crawlers"][1]["config"], dict())

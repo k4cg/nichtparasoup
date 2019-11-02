@@ -2,13 +2,14 @@ __all__ = ["NullCrawler", "Random3Crawler"]
 
 from typing import Optional
 
-from nichtparasoup.core import Crawler, _CrawlerWeight, _ImageCrawler, _IsImageAddable, _OnImageAdded
+from nichtparasoup.core import Crawler, _CrawlerWeight, _IsImageAddable, _OnImageAdded
 from nichtparasoup.core.image import Image
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 
 class _LoggingCrawler(Crawler):
     def __init__(self,
-                 imagecrawler: _ImageCrawler, weight: _CrawlerWeight,
+                 imagecrawler: BaseImageCrawler, weight: _CrawlerWeight,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:
         super().__init__(imagecrawler, weight, is_image_addable, on_image_added)

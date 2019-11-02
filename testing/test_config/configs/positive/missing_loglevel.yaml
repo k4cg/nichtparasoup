@@ -1,7 +1,7 @@
 ## this is a test config file for nichtprasoup (v2.x)
 ## purpose: check if optional weight is set a default value
 
-loglevel: INFO
+# loglevel: !!!  left away, to see if it gets its default value of 'INFO'
 
 webserver:
   hostname: "0.0.0.0"
@@ -12,6 +12,6 @@ imageserver:
 
 crawlers:
   - type: "MockableImageCrawler"
-    # weight: !!!  left away, to see if it gets its default value of 1
+    weight: 1
     config:
       foo: "bar"

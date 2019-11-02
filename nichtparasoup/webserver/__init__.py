@@ -13,6 +13,7 @@ from nichtparasoup.core.server import Server, ServerStatus
 
 
 class WebServer(object):
+
     _htdocs = path_join(dirname(__file__), "htdocs")  # remember to put as package_data in setup.py
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
@@ -72,16 +73,21 @@ class WebServer(object):
         reset = self.imageserver.request_reset()
         return Response(json_encode(reset), mimetype='application/json')
 
-    def run(self, use_debugger: bool = False) -> None:
+    def run(self) -> None:
+        from nichtparasoup._internals import _logger
+        self.imageserver.start()
         try:
-            self.imageserver.start()
+            _logger.info(' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
             run_simple(
                 self.hostname, self.port,
-                self, static_files={"/": self._htdocs},
+                application=self,
+                static_files={"/": self._htdocs},
                 processes=1, threaded=True,
                 use_reloader=False,
-                use_debugger=use_debugger)
-        except PermissionError as e:
-            raise PermissionError('cannot start {} on port {}'.format(type(self).__name__, self.port)) from e
+                use_debugger=False)
+            _logger.info(' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
+        except Exception as e:
+            _logger.exception(' * Error occurred. stopping everything', exc_info=e)
+            raise e
         finally:
             self.imageserver.stop()

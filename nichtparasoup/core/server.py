@@ -10,12 +10,13 @@ from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
 from nichtparasoup import __version__
-from nichtparasoup._internals import _log, _logger_date_time_string
+from nichtparasoup._internals import _logger
 from nichtparasoup.core import Crawler, NPCore
 
 
 class Server(object):
     """
+    this class is intended to be thread save.
     this class intended to be a stable interface.
     its public methods return base types only.
     """
@@ -56,8 +57,7 @@ class Server(object):
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
         # must be compatible to nichtparasoup.core._OnFill
         if refilled > 0:
-            _log("info", "{} filled {}({}) by {}".format(
-                _logger_date_time_string(),
+            _logger.info("refilled via {}({}) by {}".format(
                 type(crawler.imagecrawler).__name__, id(crawler.imagecrawler),
                 refilled))
 
@@ -65,16 +65,18 @@ class Server(object):
         self._locks.refill.acquire()
         try:
             self.core.fill_up_to(self.keep, self._log_refill_crawler)
+            return dict(refilled=True)
         finally:
             self._locks.refill.release()
-        return dict(refilled=True)
 
     def _reset(self) -> None:
         self._locks.reset.acquire()
-        self._stats.cum_blacklist_on_flush += self.core.reset()
-        self._stats.count_reset += 1
-        self._stats.time_last_reset = int(time())
-        self._locks.reset.release()
+        try:
+            self._stats.cum_blacklist_on_flush += self.core.reset()
+            self._stats.count_reset += 1
+            self._stats.time_last_reset = int(time())
+        finally:
+            self._locks.reset.release()
 
     def request_reset(self) -> Dict[str, Any]:
         if not self.is_alive():
@@ -100,7 +102,7 @@ class Server(object):
         try:
             if self.__running:
                 raise RuntimeError('already running')
-            _log("info", " * starting {}".format(type(self).__name__))
+            _logger.info(" * starting {}".format(type(self).__name__))
             self.refill()  # initial fill
             if not self._refiller:
                 self._refiller = ServerRefiller(self, 1)
@@ -118,7 +120,7 @@ class Server(object):
         try:
             if not self.__running:
                 raise RuntimeError('not running')
-            _log("info", "\r\n * stopping {}".format(type(self).__name__))
+            _logger.info("\r\n * stopping {}".format(type(self).__name__))
             if self._refiller:
                 self._refiller.stop()
                 self._refiller = None
@@ -194,7 +196,7 @@ class ServerRefiller(Thread):
             if server:
                 server.refill()
             else:
-                _log("info", " * server gone. stopping {}".format(type(self).__name__))
+                _logger.info(" * server gone. stopping {}".format(type(self).__name__))
                 self._stop_event.set()
             if self._stop_event.is_set():
                 break  # while
@@ -206,7 +208,7 @@ class ServerRefiller(Thread):
         try:
             if self.is_alive():
                 raise RuntimeError('already running')
-            _log("info", " * starting {}".format(type(self).__name__))
+            _logger.info(" * starting {}".format(type(self).__name__))
             self._stop_event.clear()
             super().start()
         finally:
@@ -217,7 +219,7 @@ class ServerRefiller(Thread):
         try:
             if not self.is_alive():
                 raise RuntimeError('not running')
-            _log("info", " * stopping {}".format(type(self).__name__))
+            _logger.info(" * stopping {}".format(type(self).__name__))
             self._stop_event.set()
         finally:
             self._run_lock.release()

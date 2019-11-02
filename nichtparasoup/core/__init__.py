@@ -3,7 +3,7 @@ __all__ = ["Crawler", "CrawlerCollection", "NPCore"]
 from random import choice as random_choice, uniform as random_float
 from threading import Thread
 from types import MethodType
-from typing import Callable, List, Optional, Set, TypeVar, Union
+from typing import Callable, List, Optional, Set, Union
 from weakref import ReferenceType, WeakMethod
 
 from nichtparasoup.core.image import Image, ImageCollection, ImageUri
@@ -22,19 +22,17 @@ _OnImageAdded = Callable[[Image], None]
 
 _OnFill = Callable[["Crawler", int], None]
 
-_ImageCrawler = TypeVar("_ImageCrawler", bound=BaseImageCrawler)
-
 
 class Crawler(object):
 
-    def __init__(self, imagecrawler: _ImageCrawler,
-                 weight: Optional[_CrawlerWeight] = None,
+    def __init__(self, imagecrawler: BaseImageCrawler,
+                 weight: _CrawlerWeight,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:  # pragma: no cover
-        if weight is not None and weight <= 0:
+        if weight <= 0:
             raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
-        self.weight = weight if weight else 1  # type: _CrawlerWeight
+        self.weight = weight
         self.images = ImageCollection()
         self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
         self._wr_image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
@@ -86,12 +84,9 @@ class Crawler(object):
 
     def fill_up_to(self, to: int, filled_by: Optional[_OnFill] = None) -> None:
         while len(self.images) < to:
-            refilled = 0
-            try:
-                refilled = self.crawl()
-            finally:
-                if filled_by:
-                    filled_by(self, refilled)
+            refilled = self.crawl()
+            if filled_by:
+                filled_by(self, refilled)
             if 0 == refilled:
                 break  # while
 
@@ -99,14 +94,12 @@ class Crawler(object):
         if not self.images:
             return None
         image = random_choice(list(self.images))
-        self.images.discard(image)
         return image
 
     def pop_random_image(self) -> Optional[Image]:
         image = self.get_random_image()
-        if not image:
-            return None
-        self.images.discard(image)
+        if image:
+            self.images.discard(image)
         return image
 
 
@@ -117,7 +110,7 @@ class CrawlerCollection(List[Crawler]):
 
     def get_random(self) -> Optional[Crawler]:
         cum_weight_goal = self._random_weight()
-        # IDEA: cum_weight_goal == 0 is an edge case and could be handled id needed ...
+        # IDEA: cum_weight_goal == 0 is an edge case and could be handled if needed ...
         cum_weight = 0  # type: _CrawlerWeight
         for crawler in self:
             cum_weight += crawler.weight
@@ -141,10 +134,10 @@ class NPCore(object):
         if not image.is_generic:
             self.blacklist.add(image.uri)
 
-    def has_imagecrawler(self, imagecrawler: _ImageCrawler) -> bool:
+    def has_imagecrawler(self, imagecrawler: BaseImageCrawler) -> bool:
         return imagecrawler in [crawler.imagecrawler for crawler in self.crawlers]
 
-    def add_imagecrawler(self, imagecrawler: _ImageCrawler, weight: _CrawlerWeight) -> None:
+    def add_imagecrawler(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight) -> None:
         self.crawlers.append(Crawler(
             imagecrawler, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist
