@@ -172,7 +172,7 @@ class ServerStatus(ABC):
             status[crawler_id] = dict(
                 type=type(crawler.imagecrawler).__name__,
                 weight=crawler.weight,
-                config=crawler.imagecrawler.get_config().copy(),
+                config=crawler.imagecrawler.get_config(),  # just a dict
                 images=dict(
                     len=len(images),
                     size=getsizeof(images),

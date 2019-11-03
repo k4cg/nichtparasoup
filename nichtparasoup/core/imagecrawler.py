@@ -38,7 +38,7 @@ class BaseImageCrawler(ABC):
         return False
 
     def get_config(self) -> ImageCrawlerConfig:
-        return self._config.copy()
+        return ImageCrawlerConfig(self._config)  # is just a shallow copy
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
