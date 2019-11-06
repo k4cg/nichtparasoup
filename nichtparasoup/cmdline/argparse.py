@@ -66,7 +66,7 @@ command_info_actions.add_argument(
 command_info_actions.add_argument(
     '--imagecrawler-desc',
     action='store', dest='imagecrawler_desc',
-    metavar='<type>',
+    metavar='<crawler>',
     help='describe an image crawler type and its config',
 )
 command_info_actions.add_argument(

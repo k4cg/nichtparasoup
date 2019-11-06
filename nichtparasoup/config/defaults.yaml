@@ -1,29 +1,61 @@
 ## this is a config file for nichtprasoup (v2.x)
 
-loglevel: 'INFO'  # enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', required=False, none='INFO') # optional # default: 'INFO'
+# loglevel settings
+# type: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
+# optional
+# default: 'INFO'
+loglevel: 'INFO'
 
+# WebServer config
+# type: map
 webserver:
-  hostname: "0.0.0.0"   # hostname the webserver recognizes # type: string
-  port: 5000            # port the webserver uns on # type: integer # constraint: > 0
+  # hostname the webserver recognizes
+  # type: string
+  hostname: "0.0.0.0"
+  # port the webserver uns on
+  # type: integer
+  # constraint: > 0
+  port: 5000
 
+# ImageServer config
+# type: map
 imageserver:
-  crawler_upkeep: 30    # number of images the server must keep at all time # type: integer # constraint: >= 10
+  # number of images the server must keep at all time
+  # type: integer
+  # constraint: >= 10
+  crawler_upkeep: 30
 
+# list of ImageCrawlers to use.
+# ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
+# for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
+# for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
+# type: list
 crawlers:
-  # list of ImageCrawlers to use.
-  # ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
-  # for a list of available types see the commandline help: --list-imagecrawlers
-  - type: "Dummy"     # type: string
-    weight: 0.1       # probability to be chosen randomly # type: integer or float # constraint: > 0 # optional # default: 1
-    config:           # the crawler's own config # type: dictionary # optional
-      # to get the config right, see the commandline help: --desc-imagecrawler <type>
-      image_uri: "/images/dummy.png"    # path to shipped dummy image
-  - type: "Picsum"
+  -
+    # name of the crawler
+    # for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
+    # type: string
+    type: "Dummy"
+    # probability to be chosen randomly
+    # type: integer or float
+    # constraint: > 0
+    # optional
+    # default: 1
+    weight: 0.1
+    # the crawler's own config
+    # type: map
+    # optional
+    # for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
+    config:
+      image_uri: "/images/dummy.png"
+  -
+    type: "Picsum"
     weight: 1
     config:
       width: 400
       height: 300
-  - type: "Picsum"
+  -
+    type: "Picsum"
     weight: 2
     config:
       width: 300
