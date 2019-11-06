@@ -1,11 +1,5 @@
 ## this is a config file for nichtprasoup (v2.x)
 
-# loglevel settings
-# type: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
-# optional
-# default: 'INFO'
-loglevel: 'INFO'
-
 # WebServer config
 # type: map
 webserver:
@@ -60,3 +54,14 @@ crawlers:
     config:
       width: 300
       height: 600
+
+
+# logging settings
+# type: map
+# optional
+logging:
+  # log level settings
+  # type: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
+  # optional
+  # default: 'INFO'
+  level: 'INFO'

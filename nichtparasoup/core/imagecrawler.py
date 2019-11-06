@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from threading import Lock
 from typing import Any, Dict
 
-from nichtparasoup._internals import _logger
+from nichtparasoup._internals import _log
 from nichtparasoup.core.image import ImageCollection
 
 _ImageCrawlerConfigKey = str
@@ -28,7 +28,7 @@ class BaseImageCrawler(ABC):
         self._config = self.check_config(config)
         self._reset_before_next_crawl = True
         self._crawl_lock = Lock()
-        _logger.debug('crawler initialized {}({}) with: {!r}'.format(
+        _log('debug', 'crawler initialized {}({}) with: {!r}'.format(
             type(self).__name__, id(self), self.get_config()))
 
     def __eq__(self, other: Any) -> bool:
@@ -42,22 +42,22 @@ class BaseImageCrawler(ABC):
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
-        _logger.debug('crawler resetting {}({})'.format(type(self).__name__, id(self)))
+        _log('debug', 'crawler resetting {}({})'.format(type(self).__name__, id(self)))
 
     def crawl(self) -> ImageCollection:  # pragma: no cover
         self._crawl_lock.acquire()
         debug_map = dict(type=type(self).__name__, id=id(self))
         try:
             if self._reset_before_next_crawl:
-                _logger.debug('crawler resetting {type}({id})'.format_map(debug_map))
+                _log('debug', 'crawler resetting {type}({id})'.format_map(debug_map))
                 self._reset()
                 self._reset_before_next_crawl = False
-            _logger.debug('crawling started {type}({id})'.format_map(debug_map))
+            _log('debug', 'crawling started {type}({id})'.format_map(debug_map))
             crawled = self._crawl()
-            _logger.debug('crawling finished {type}({id})'.format_map(debug_map))
+            _log('debug', 'crawling finished {type}({id})'.format_map(debug_map))
             return crawled
-        except Exception as e:
-            _logger.exception('caught an error during crawling {type}({id}})'.format_map(debug_map), exc_info=e)
+        except Exception:
+            _log('exception', 'caught an error during crawling {type}({id}})'.format_map(debug_map))
             return ImageCollection()
         finally:
             self._crawl_lock.release()

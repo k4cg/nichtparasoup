@@ -1,7 +1,5 @@
 ## this is a config file for nichtprasoup (v2.x)
 
-loglevel: 'INFO'
-
 webserver:
   hostname: "0.0.0.0"
   port: 8080

@@ -1,9 +1,10 @@
-loglevel: include('LogLevel', required=False, none=False)
 webserver: include('Webserver', strict=True)
 imageserver: include('ImageServer', strict=True)
 crawlers: list(include('Crawler', strict=True), min=1)
+logging: include('Logging', required=False, none=False)
 ---
-LogLevel: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
+Logging:
+  level: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', required=False, none=False)
 ---
 Webserver:
   hostname: str(min=1)

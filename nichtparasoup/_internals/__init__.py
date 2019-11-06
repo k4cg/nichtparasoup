@@ -1,11 +1,11 @@
-__all__ = ['_logger', '_message', '_message_exception']
+__all__ = ['_logger', '_log', '_message', '_message_exception']
 """
 yes, everything is underscored.
 its internal foo that is not for public use.
 """
 
 import logging
-from typing import Optional, TextIO
+from typing import Any, Optional, TextIO
 
 try:
     from termcolor import colored
@@ -13,8 +13,13 @@ except ImportError:
     colored = None  # type: ignore
 
 _logger = logging.getLogger('nichtparasoup')
-_logger.setLevel(logging.INFO)
-_logger.addHandler(logging.StreamHandler())
+
+
+def _log(type: str, message: str, *args: Any, **kwargs: Any) -> None:
+    if not logging.root.handlers and _logger.level == logging.NOTSET:
+        _logger.setLevel(logging.INFO)
+        _logger.addHandler(logging.StreamHandler())
+    getattr(_logger, type)(message.rstrip(), *args, **kwargs)
 
 
 def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:

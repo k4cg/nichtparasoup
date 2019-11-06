@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from nichtparasoup._internals import _logger, _message, _message_exception
+from nichtparasoup._internals import _message, _message_exception
 
 
 class Commands(object):
@@ -15,8 +15,8 @@ class Commands(object):
         from nichtparasoup.webserver import WebServer
         try:
             config = get_config(abspath(config_file) if config_file else None)
-            _logger.log(_logger.level, 'setting loglevel to {}'.format(config['loglevel']))
-            _logger.setLevel(getattr(logging, config['loglevel']))
+            logging.root.setLevel(getattr(logging, config['logging']['level']))
+            logging.root.addHandler(logging.StreamHandler())
             imageserver = ImageServer(NPCore(), **config['imageserver'])
             for crawler_config in config['crawlers']:
                 imagecrawler = get_imagecrawler(crawler_config)

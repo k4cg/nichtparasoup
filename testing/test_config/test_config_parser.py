@@ -12,7 +12,7 @@ class ConfigParserDefaultsTest(unittest.TestCase):
         # act
         config = parse_yaml_file(file)
         # assert
-        self.assertEqual(config["loglevel"], 'INFO')
+        self.assertEqual(config['logging']['level'], 'INFO')
 
     def test_set_optional_weight(self) -> None:
         # arrange

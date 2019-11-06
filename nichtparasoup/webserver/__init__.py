@@ -6,7 +6,6 @@ from typing import Any, Dict, Union
 
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
-from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 
 from nichtparasoup.core.server import Server, ServerStatus
@@ -74,10 +73,11 @@ class WebServer(object):
         return Response(json_encode(reset), mimetype='application/json')
 
     def run(self) -> None:
-        from nichtparasoup._internals import _logger
+        from werkzeug.serving import run_simple
+        from nichtparasoup._internals import _log
         self.imageserver.start()
         try:
-            _logger.info(' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
+            _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
             run_simple(
                 self.hostname, self.port,
                 application=self,
@@ -85,9 +85,9 @@ class WebServer(object):
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=False)
-            _logger.info(' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
+            _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
         except Exception as e:
-            _logger.exception(' * Error occurred. stopping everything', exc_info=e)
+            _log('exception', ' * Error occurred. stopping everything')
             raise e
         finally:
             self.imageserver.stop()

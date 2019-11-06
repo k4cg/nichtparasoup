@@ -30,9 +30,10 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     global _schema
     if not _schema:
         _schema = yamale.make_schema(_schema_file, parser='ruamel')
-    data = yamale.make_data(file_path, parser='ruamel')
-    config = yamale.validate(_schema, data, strict=True)[0][0]  # type: Dict[str, Any]
-    config.setdefault('loglevel', 'INFO')
+    _data = yamale.make_data(file_path, parser='ruamel')
+    config = yamale.validate(_schema, _data, strict=True)[0][0]  # type: Dict[str, Any]
+    config.setdefault('logging', dict())
+    config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
         config_crawler.setdefault("weight", 1)
         config_crawler.setdefault('config', dict())
