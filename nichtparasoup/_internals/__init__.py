@@ -29,7 +29,7 @@ def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] =
         file = stdout
     if color and colored:
         message = colored(message, color=color)
-    file.write('{}{}'.format(message, newline))
+    file.write('{}{}'.format(message.rstrip(), newline))
 
 
 def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
@@ -40,5 +40,4 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     if colored:
         color = 'yellow' if isinstance(exception, Warning) else 'red'
         exception_name = colored(exception_name, color, 'on_grey')
-
     _message('{}: {}'.format(exception_name, exception), file=file)
