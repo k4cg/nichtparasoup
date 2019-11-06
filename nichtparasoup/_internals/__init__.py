@@ -1,11 +1,11 @@
-__all__ = ['_logger_date_time_string', '_log', '_message', '_exit']
+__all__ = ['_logger', '_message', '_message_exception']
 """
 yes, everything is underscored.
 its internal foo that is not for public use.
 """
 
 import logging
-from typing import NoReturn, Optional, TextIO
+from typing import Optional, TextIO
 
 try:
     from termcolor import colored
@@ -37,17 +37,3 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
         exception_name = colored(exception_name, color, 'on_grey')
 
     _message('{}: {}'.format(exception_name, exception), file=file)
-
-
-def _exit(status: int = 0,
-          message: Optional[str] = None, exception: Optional[Exception] = None,
-          file: Optional[TextIO] = None) -> NoReturn:
-    if not file:
-        from sys import stderr
-        file = stderr if status > 0 else None
-    if message:
-        _message(message, file=file)
-    if exception:
-        _message_exception(exception, file=file)
-    from sys import exit
-    exit(status)
