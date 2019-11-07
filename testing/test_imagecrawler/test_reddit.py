@@ -1,5 +1,6 @@
 import unittest
 
+from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
 from nichtparasoup.imagecrawler.reddit import Reddit
 
@@ -108,14 +109,40 @@ class RedditResetTest(unittest.TestCase):
 class RedditCrawlTest(unittest.TestCase):
 
     def setUp(self) -> None:
+        from os.path import join, basename
         self.crawler = Reddit(**_reddit_right_config)
+        self.crawler._uri_base = join(basename(__file__), 'testdata_reddit', 'aww.json?after=')
 
     def tearDown(self) -> None:
         del self.crawler
 
     def test_crawl(self) -> None:
-        # TODO
-        self.assertTrue(False)
+        # arrange
+        excpected_after = 't3_dqx42l'
+        expected_images = ImageCollection()
+        expected_images.add(Image(
+            uri='https://i.redd.it/kl3dp9sy5fw31.jpg',
+            source='/r/aww/comments/dqx0z4/a_very_photogenic_noodle/'))
+        expected_images.add(Image(
+            uri='https://i.redd.it/4ltnvj5irdw31.jpg',
+            source='/r/aww/comments/dqud6w/3/'))
+        expected_images.add(Image(
+            uri='https://i.redd.it/nkfjoej8yew31.png',
+            source='/r/aww/comments/dqwp8l/left_the_house_for_10_minutes_and_came_back_to/'))
+        expected_images.add(Image(
+            uri='https://i.redd.it/gcxqswv8igw31.png',
+            source='/r/aww/comments/dqz6iz/blind_cutie/'))
+        expected_images.add(Image(
+            uri='https://i.redd.it/hywobahj9ew31.png',
+            source='/r/aww/comments/dqvgm9/i_asked_this_guy_if_he_knocked_over_the_treats/'))
+        expected_images.add(Image(
+            uri='https://i.redd.it/j4qda3c9scw31.jpg',
+            source='/r/aww/comments/dqrxiq/admiral_anchovies_is_two_weeks_old_and_has/'))
+        # act
+        images = self.crawler._crawl()
+        # assert
+        self.assertSetEqual(images, expected_images)
+        self.assertEqual(self.crawler._after, excpected_after)
 
 
 class RedditDescriptionTest(unittest.TestCase):

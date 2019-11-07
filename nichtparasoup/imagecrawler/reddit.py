@@ -43,7 +43,7 @@ class Reddit(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        # TODO
+        # TODO - maybe use PRAW? https://github.com/praw-dev/praw
         images.add(Image(
             uri='TODO',
             source='TOOD',
