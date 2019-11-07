@@ -42,7 +42,7 @@ class BaseImageCrawler(ABC):
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
-        _log('debug', 'crawler resetting {}({})'.format(type(self).__name__, id(self)))
+        _log('debug', 'crawler reset planned {}({})'.format(type(self).__name__, id(self)))
 
     def crawl(self) -> ImageCollection:  # pragma: no cover
         self._crawl_lock.acquire()
