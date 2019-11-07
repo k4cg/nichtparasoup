@@ -15,5 +15,5 @@ ImageServer:
 ---
 Crawler:
   type: str(min=1)
-  weight: num(min=0.0001, required=False, none=None)
+  weight: num(min=0.0001, required=False, none=False)
   config: map(required=False, none=False)
