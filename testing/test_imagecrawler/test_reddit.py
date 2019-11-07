@@ -3,7 +3,7 @@ import unittest
 from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
 from nichtparasoup.imagecrawler.reddit import Reddit
 
-_reddit_right_config = dict(TODO=True)
+_reddit_right_config = dict(subreddit='aww')
 
 
 class PicsumConfigCorrect(unittest.TestCase):
@@ -34,9 +34,10 @@ class RedditCrawlTest(unittest.TestCase):
 class RedditDescriptionTest(unittest.TestCase):
     def test_description_config(self) -> None:
         # act
-        # TODO
+        description = Reddit.info()
         # assert
-        self.assertTrue(False)
+        for config_key in _reddit_right_config.keys():
+            self.assertTrue(config_key in description.config)
 
 
 class RedditLoaderTest(unittest.TestCase):
