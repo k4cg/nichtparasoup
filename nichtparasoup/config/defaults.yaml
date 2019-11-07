@@ -37,9 +37,9 @@ crawlers:
     # default: 1
     weight: 0.1
     # the crawler's own config
+    # for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
     # type: map
     # optional
-    # for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
     config:
       image_uri: "/images/dummy.png"
   -
