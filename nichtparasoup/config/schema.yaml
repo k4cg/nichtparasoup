@@ -1,7 +1,7 @@
 webserver: include('Webserver', strict=True)
 imageserver: include('ImageServer', strict=True)
 crawlers: list(include('Crawler', strict=True), min=1)
-logging: include('Logging', required=False, none=False)
+logging: include('Logging', strict=True, required=False, none=False)
 ---
 Logging:
   level: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', required=False, none=False)
