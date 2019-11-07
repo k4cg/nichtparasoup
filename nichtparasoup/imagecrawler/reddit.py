@@ -38,7 +38,7 @@ class Reddit(BaseImageCrawler):
         )
 
     def _reset(self) -> None:
-        # TODO
+        self._after = None
         pass
 
     def _crawl(self) -> ImageCollection:

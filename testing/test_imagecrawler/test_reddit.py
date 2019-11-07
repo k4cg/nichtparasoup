@@ -96,8 +96,13 @@ class RedditBuildUriTest(unittest.TestCase):
 class RedditResetTest(unittest.TestCase):
 
     def test_reset_done(self) -> None:
-        # TODO
-        self.assertTrue(False)
+        # arrange
+        crawler = Reddit(subreddit='test')
+        crawler._after = 'foo'
+        # act
+        crawler._reset()
+        # assert
+        self.assertIsNone(crawler._after)
 
 
 class RedditCrawlTest(unittest.TestCase):
