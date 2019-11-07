@@ -70,9 +70,9 @@ class Crawler(object):
         self.imagecrawler.reset()
 
     def crawl(self) -> int:
-        images_crawled = self.imagecrawler.crawl()
         is_image_addable = self.get_is_image_addable()
         image_added = self.get_image_added()
+        images_crawled = self.imagecrawler.crawl()
         for image_crawled in images_crawled:
             addable = is_image_addable(image_crawled) if is_image_addable else True
             if not addable:
