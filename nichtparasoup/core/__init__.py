@@ -25,8 +25,7 @@ _OnFill = Callable[["Crawler", int], None]
 
 class Crawler(object):
 
-    def __init__(self, imagecrawler: BaseImageCrawler,
-                 weight: _CrawlerWeight,
+    def __init__(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:  # pragma: no cover
         if weight <= 0:
