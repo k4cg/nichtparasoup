@@ -72,7 +72,7 @@ class BaseImageCrawler(ABC):
                 param1="meaning of param1",
                 paramN="meaning of paramN",
             ),
-            version='0.0.dev1'
+            version='0.0.dev1',
         )
 
     @staticmethod

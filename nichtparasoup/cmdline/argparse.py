@@ -10,7 +10,7 @@ parser = ArgumentParser(
 commands = parser.add_subparsers(
     title='Commands',
     metavar='<command>',
-    dest='command'
+    dest='command',
 )
 commands.required = True
 
@@ -23,10 +23,9 @@ command_run = commands.add_parser(
 )
 command_run.add_argument(
     '-c', '--use-config',
-    metavar='<file>',
-    type=str,
-    dest="config_file",
     help='use a YAML config file instead of the defaults',
+    metavar='<file>',
+    action='store', dest="config_file", type=str,
 )
 
 command_config = commands.add_parser(
@@ -40,15 +39,17 @@ command_config_actions = command_config.add_mutually_exclusive_group(required=Tr
 command_config_actions.add_argument(
     '--check',
     help='validate a YAML config file',
-    action='store_const', const='check', dest='action'
+    action='store_const', dest='action', const='check',
 )
 command_config_actions.add_argument(
     '--dump',
     help='dump YAML config into a file',
-    action='store_const', const='dump', dest='action'
+    action='store_const', dest='action', const='dump',
 )
-command_config.add_argument(metavar='<file>', dest='config_file')
-
+command_config.add_argument(
+    metavar='<file>',
+    action='store', dest='config_file', type=str,
+)
 
 command_info = commands.add_parser(
     'info',
@@ -60,17 +61,17 @@ command_info = commands.add_parser(
 command_info_actions = command_info.add_mutually_exclusive_group(required=True)
 command_info_actions.add_argument(
     '--imagecrawler-list',
-    action='store_true', dest='imagecrawler_list',
     help='list available image crawler types',
+    action='store_true', dest='imagecrawler_list',
 )
 command_info_actions.add_argument(
     '--imagecrawler-desc',
-    action='store', dest='imagecrawler_desc',
-    metavar='<crawler>',
     help='describe an image crawler type and its config',
+    metavar='<crawler>',
+    action='store', dest='imagecrawler_desc', type=str,
 )
 command_info_actions.add_argument(
     '--version',
-    action='store_true', dest='version',
     help="show program's version number",
+    action='store_true', dest='version',
 )

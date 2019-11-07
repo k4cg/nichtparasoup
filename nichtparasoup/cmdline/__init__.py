@@ -43,10 +43,10 @@ class Commands(object):
         config_file = abspath(config_file)
         try:
             dump_defaults(config_file)
+            return 0
         except Exception as e:
             _message_exception(e)
             return 1
-        return 0
 
     @staticmethod
     def config_check_file(config_file: str) -> int:
@@ -77,13 +77,13 @@ class Commands(object):
             return 255
         action, action_value = active_actions.popitem()
         return dict(
-            version=cls.ino_version,
+            version=cls.info_version,
             imagecrawler_list=cls.info_imagecrawler_list,
             imagecrawler_desc=cls.info_imagecrawler_desc,
         )[action](action_value)
 
     @staticmethod
-    def ino_version(_: Any) -> int:
+    def info_version(_: Any) -> int:
         from nichtparasoup import __version__
         _message(__version__)
         return 0

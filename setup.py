@@ -3,6 +3,8 @@ from functools import reduce
 from nichtparasoup import __version__
 
 REQUIREMENTS = dict(
+    _internals=['typing-extensions;python_version<"3.8"'],
+    cmdline=[],
     config=['ruamel.yaml', "yamale"],
     core=[],
     imagecrawler=[],

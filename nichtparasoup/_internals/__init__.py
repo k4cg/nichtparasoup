@@ -5,7 +5,13 @@ its internal foo that is not for public use.
 """
 
 import logging
+import sys
 from typing import Any, Optional, TextIO
+
+if sys.version_info >= (3, 8):
+    from typing import Literal
+else:
+    from typing_extensions import Literal
 
 try:
     from termcolor import colored
@@ -14,8 +20,10 @@ except ImportError:
 
 _logger = logging.getLogger('nichtparasoup')
 
+_LOG_TYPE = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
 
-def _log(type: str, message: str, *args: Any, **kwargs: Any) -> None:
+
+def _log(type: _LOG_TYPE, message: str, *args: Any, **kwargs: Any) -> None:
     if not logging.root.handlers and _logger.level == logging.NOTSET:
         _logger.setLevel(logging.INFO)
         _logger.addHandler(logging.StreamHandler())
