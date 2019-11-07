@@ -5,7 +5,8 @@ show-source  = True
 # ignore self markers of https://github.com/python-discord/flake8-annotations
 ignore = TYP101,TYP102
 
-exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache
+exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,
+    setup.py
 
 max-complexity = 5
 

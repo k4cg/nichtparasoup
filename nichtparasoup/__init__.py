@@ -1,3 +1,6 @@
 __all__ = ["__version__"]
 
-__version__ = "2.0.dev0"  # use setuptools-scm in setup.py ?
+try:
+    from nichtparasoup.__version__ import __version__
+except ImportError:
+    __version__ = 'development'
