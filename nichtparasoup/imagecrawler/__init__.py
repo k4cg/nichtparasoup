@@ -6,10 +6,12 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 from .dummy import Dummy
 from .picsum import Picsum
+from .reddit import Reddit
 
 _imagecrawlers = dict(
     Dummy=Dummy,
     Picsum=Picsum,
+    Reddit=Reddit,
 )
 
 
