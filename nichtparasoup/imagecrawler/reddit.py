@@ -21,8 +21,14 @@ class Reddit(BaseImageCrawler):
 
     @staticmethod
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        # TODO
-        return ImageCrawlerConfig()
+        subreddit = config["subreddit"]
+        if type(subreddit) is not str:
+            raise TypeError("subreddit {} is not str".format(subreddit))
+        if 0 == len(subreddit):
+            raise ValueError("subreddit {} is empty".format(subreddit))
+        return ImageCrawlerConfig(
+            subreddit=subreddit,
+        )
 
     def _reset(self) -> None:
         # TODO
