@@ -28,7 +28,7 @@ class BaseImageCrawler(ABC):
         self._config = self.check_config(config)
         self._reset_before_next_crawl = True
         self._crawl_lock = Lock()
-        _log('debug', 'crawler initialized {}({}) with: {!r}'.format(
+        _log('debug', 'crawler initialized {}({:x}) with: {!r}'.format(
             type(self).__name__, id(self), self.get_config()))
 
     def __eq__(self, other: Any) -> bool:
@@ -42,22 +42,22 @@ class BaseImageCrawler(ABC):
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
-        _log('debug', 'crawler reset planned {}({})'.format(type(self).__name__, id(self)))
+        _log('debug', 'crawler reset planned {}({:x})'.format(type(self).__name__, id(self)))
 
     def crawl(self) -> ImageCollection:  # pragma: no cover
         self._crawl_lock.acquire()
         debug_map = dict(type=type(self).__name__, id=id(self))
         try:
             if self._reset_before_next_crawl:
-                _log('debug', 'crawler resetting {type}({id})'.format_map(debug_map))
+                _log('debug', 'crawler resetting {type}({id:x})'.format_map(debug_map))
                 self._reset()
                 self._reset_before_next_crawl = False
-            _log('debug', 'crawling started {type}({id})'.format_map(debug_map))
+            _log('debug', 'crawling started {type}({id:x})'.format_map(debug_map))
             crawled = self._crawl()
-            _log('debug', 'crawling finished {type}({id})'.format_map(debug_map))
+            _log('debug', 'crawling finished {type}({id:x})'.format_map(debug_map))
             return crawled
         except Exception:
-            _log('exception', 'caught an error during crawling {type}({id}})'.format_map(debug_map))
+            _log('exception', 'caught an error during crawling {type}({id:x}})'.format_map(debug_map))
             return ImageCollection()
         finally:
             self._crawl_lock.release()
