@@ -49,3 +49,12 @@ class BaseImageCrawlerResetTest(unittest.TestCase):
         c.reset()
         # assert
         self.assertTrue(c._reset_before_next_crawl)
+
+    def test_reset_released(self) -> None:
+        # arrange
+        c = MockableImageCrawler()
+        c._reset_before_next_crawl = True
+        # act
+        c.crawl()
+        # assert
+        self.assertFalse(c._reset_before_next_crawl)

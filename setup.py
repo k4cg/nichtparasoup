@@ -3,7 +3,9 @@ from functools import reduce
 from nichtparasoup import __version__
 
 REQUIREMENTS = dict(
-    config=[],
+    _internals=['typing-extensions;python_version<"3.8"'],
+    cmdline=[],
+    config=['ruamel.yaml', "yamale"],
     core=[],
     imagecrawler=[],
     webserver=["werkzeug"],
@@ -17,12 +19,17 @@ SETUP = dict(
     packages=["nichtparasoup"],
     package_data=dict(
         nichtparasoup=[
-            "webserver/htdocs",  # TODO: check if this is done right. are the files included in dist
+            # TODO: check if this is done right. are the files included in dist
+            "webserver/htdocs",
+            "config/*.yaml", "config/*.yml",
         ],
     ),
     python_requires=">=3.5",
     install_requires=reduce(lambda r1, r2: r1 + r2, REQUIREMENTS.values(), []),
     extras_require=dict(
+        colors=[
+            "termcolor",
+        ],
         development=[
             "tox",
             "isort",
@@ -38,6 +45,7 @@ SETUP = dict(
             "coverage",
             "pytest",
             "ddt",
+            "yamale",
         ],
     ),
 )

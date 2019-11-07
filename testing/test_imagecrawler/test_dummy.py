@@ -62,6 +62,14 @@ class DummyCrawlTest(unittest.TestCase):
             self.assertTrue(image_crawled.more.get("this_is_a_dummy"), "this is not a dummy")
 
 
+class DummyDescriptionTest(unittest.TestCase):
+    def test_description_config(self) -> None:
+        # act
+        description = Dummy.info()
+        # assert
+        self.assertTrue('image_uri' in description.config)
+
+
 class DummyLoaderTest(unittest.TestCase):
     def test_get_imagecrawler_class(self) -> None:
         # act

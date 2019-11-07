@@ -3,13 +3,24 @@ __all__ = ["Dummy"]
 from typing import Any, Dict
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
+from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Dummy(BaseImageCrawler):
 
     @staticmethod
-    def check_config(config: Dict[str, Any]) -> ImageCrawlerConfig:
+    def info() -> ImageCrawlerInfo:
+        from nichtparasoup import __version__
+        return ImageCrawlerInfo(
+            desc='"Finds" the same image ... again ... and again.',
+            config=dict(
+                image_uri='the URI to the image to "find"',
+            ),
+            version=__version__,
+        )
+
+    @staticmethod
+    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
         image_uri = config["image_uri"]
         if type(image_uri) is not str:
             raise TypeError("image_uri {} is not str".format(image_uri))
@@ -19,12 +30,15 @@ class Dummy(BaseImageCrawler):
             image_uri=image_uri,
         )
 
-    def crawl(self) -> ImageCollection:
+    def _reset(self) -> None:  # pragma: no cover
+        pass
+
+    def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+        config = self.get_config()
         images.add(Image(
-            self._config["image_uri"],
+            config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))
-        self._reset_before_next_crawl = False
         return images

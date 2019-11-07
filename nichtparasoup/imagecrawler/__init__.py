@@ -1,6 +1,6 @@
-__all__ = ["get_class"]
+__all__ = ["get_class", "get_classes"]
 
-from typing import Optional, Type
+from typing import Dict, Optional, Type
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
@@ -11,6 +11,10 @@ _imagecrawlers = dict(
     Dummy=Dummy,
     Picsum=Picsum,
 )
+
+
+def get_classes() -> Dict[str, Type[BaseImageCrawler]]:
+    return _imagecrawlers.copy()
 
 
 def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:
