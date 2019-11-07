@@ -103,7 +103,7 @@ class Commands(object):
         from nichtparasoup.imagecrawler import get_class as get_imagegrawler_class
         imagecrawler_class = get_imagegrawler_class(imagecrawler)
         if not imagecrawler_class:
-            _message_exception(ValueError('unknown ImageCrawler: {!r}'.format(imagecrawler)))
+            _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
             return 1
         info = imagecrawler_class.info()
         if info.config:

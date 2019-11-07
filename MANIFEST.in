@@ -1,0 +1,17 @@
+
+# per default: exclude everything
+global-exclude *
+
+include README.md
+include AUTHORS
+include LICENSE
+include MANIFEST.in
+
+graft nichtparasoup
+# graft docs
+# graft examples
+# graft testing
+graft images
+
+global-exclude __pycache__
+global-exclude *.py[co]
