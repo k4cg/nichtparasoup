@@ -56,6 +56,43 @@ class RedditConfigSubredditTest(unittest.TestCase):
         pass
 
 
+class RedditBuildUriTest(unittest.TestCase):
+
+    def test__build_uri_at_front(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='foo')
+        # act
+        uri = crawler._get_uri()
+        # assert
+        self.assertEqual(uri, 'https://www.reddit.com/r/foo.json?after=')
+
+    def test__build_uri_at_front__escape(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='foo/bar bazz')
+        # act
+        uri = crawler._get_uri()
+        # assert
+        self.assertEqual(uri, 'https://www.reddit.com/r/foo%2Fbar+bazz.json?after=')
+
+    def test__build_uri_at_after(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='test')
+        crawler._after = 'foobar'
+        # act
+        uri = crawler._get_uri()
+        # assert
+        self.assertEqual(uri, 'https://www.reddit.com/r/test.json?after=foobar')
+
+    def test__build_uri_at_after__escape(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='test')
+        crawler._after = 'foo/bar bazz'
+        # act
+        uri = crawler._get_uri()
+        # assert
+        self.assertEqual(uri, 'https://www.reddit.com/r/test.json?after=foo%2Fbar+bazz')
+
+
 class RedditResetTest(unittest.TestCase):
 
     def test_reset_done(self) -> None:
@@ -64,6 +101,12 @@ class RedditResetTest(unittest.TestCase):
 
 
 class RedditCrawlTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.crawler = Reddit(**_reddit_right_config)
+
+    def tearDown(self) -> None:
+        del self.crawler
 
     def test_crawl(self) -> None:
         # TODO

@@ -1,12 +1,19 @@
 __all__ = ["Reddit"]
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from urllib.parse import quote_plus as url_quote
 
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Reddit(BaseImageCrawler):
+
+    def __init__(self, **config: Any) -> None:  # pragma: no cover
+        super().__init__(**config)
+        self._uri_base = 'https://www.reddit.com/r/{}.json?after='.format(
+            url_quote(self.get_config()['subreddit']))
+        self._after = None  # type: Optional[str]
 
     @staticmethod
     def info() -> ImageCrawlerInfo:
@@ -42,3 +49,6 @@ class Reddit(BaseImageCrawler):
             source='TOOD',
         ))
         return images
+
+    def _get_uri(self) -> str:
+        return self._uri_base + url_quote(self._after or '')
