@@ -35,7 +35,7 @@ class Crawler(object):
         self.weight = weight
         self.images = ImageCollection()
         self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
-        self._wr_image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
+        self._image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
 
@@ -55,15 +55,15 @@ class Crawler(object):
     def set_image_added(self, image_added: Optional[_OnImageAdded]) -> None:
         t_image_added = type(image_added)
         if None is image_added:
-            self._wr_image_added_wr = None
+            self._image_added_wr = None
         elif MethodType is t_image_added:
-            self._wr_image_added_wr = WeakMethod(image_added)  # type: ignore
+            self._image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
             raise Exception('type {} not supported, yet'.format(t_image_added))
         # TODO: add function and other types - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
-        return self._wr_image_added_wr() if self._wr_image_added_wr else None
+        return self._image_added_wr() if self._image_added_wr else None
 
     def reset(self) -> None:
         self.images.clear()
