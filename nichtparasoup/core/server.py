@@ -2,10 +2,9 @@ __all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
 
 from abc import ABC
 from copy import copy
-from random import uniform
 from sys import getsizeof
 from threading import Lock, Thread
-from time import sleep, time
+from time import time
 from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
@@ -191,6 +190,8 @@ class ServerRefiller(Thread):
         self._run_lock = Lock()
 
     def run(self) -> None:
+        from random import uniform
+        from time import sleep
         while not self._stop_event.is_set():
             server = self._server_wr()  # type: Optional[Server]
             if server:
@@ -198,10 +199,9 @@ class ServerRefiller(Thread):
             else:
                 _log('info', " * server gone. stopping {}".format(type(self).__name__))
                 self._stop_event.set()
-            if self._stop_event.is_set():
-                break  # while
-            # each service worker has some delay from time to time
-            sleep(uniform(self._sleep * 0.9, self._sleep * 1.1))
+            if not self._stop_event.is_set():
+                # each service worker has some delay from time to time.
+                sleep(self._sleep * uniform(0.9, 1.1))
 
     def start(self) -> None:
         self._run_lock.acquire()
