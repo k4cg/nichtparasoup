@@ -14,7 +14,7 @@ class Dummy(BaseImageCrawler):
         return ImageCrawlerInfo(
             desc='"Finds" the same image ... again ... and again.',
             config=dict(
-                image_uri='the URI to the image to "find"',
+                image_uri='the URI of the image to "find"',
             ),
             version=__version__,
         )

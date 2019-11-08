@@ -20,9 +20,9 @@ class Reddit(BaseImageCrawler):
     def info() -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
-            desc='A Crawler for SubReddits of https://www.reddit.com/',
+            desc='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
             config=dict(
-                subreddit='the SubReddits to crawl',
+                subreddit='the SubReddit to crawl',
             ),
             version=__version__,
         )
