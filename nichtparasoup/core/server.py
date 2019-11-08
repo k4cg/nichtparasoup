@@ -102,6 +102,7 @@ class Server(object):
             if self.__running:
                 raise RuntimeError('already running')
             _log('info', " * starting {}".format(type(self).__name__))
+            _log('info', ' * fill all crawlers up to {}'.format(self.keep))
             self.refill()  # initial fill
             if not self._refiller:
                 self._refiller = ServerRefiller(self, 1)

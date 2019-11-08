@@ -1,4 +1,4 @@
-## this is a config file for nichtprasoup (v2.x)
+## This is a config file for nichtprasoup (v2.x)
 
 # WebServer config
 # type: map
@@ -8,7 +8,7 @@ webserver:
   hostname: "0.0.0.0"
   # port the webserver uns on
   # type: integer
-  # constraint: > 0
+  # constraint: 1 <= port <= 65535
   port: 5000
 
 # ImageServer config
@@ -29,28 +29,22 @@ crawlers:
     # name of the crawler
     # for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
     # type: string
-    type: "Dummy"
+    type: "Reddit"
     # probability to be chosen randomly
     # type: integer or float
     # constraint: > 0
     # optional
     # default: 1
-    weight: 0.1
+    weight: 3
     # the crawler's own config
     # for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
     # type: map
     # optional
     config:
-      image_uri: "/images/dummy.png"
+      subreddit: 'EarthPorn'
   -
     type: "Picsum"
     weight: 1
-    config:
-      width: 400
-      height: 300
-  -
-    type: "Picsum"
-    weight: 2
     config:
       width: 300
       height: 600
