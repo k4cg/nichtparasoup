@@ -16,8 +16,8 @@ class Picsum(BaseImageCrawler):
         return ImageCrawlerInfo(
             desc='Find images from https://picsum.photos',
             config=dict(
-                width='width(px) of the image to find',
-                height='height(px) of the image to find',
+                width='how many pixels of the image to find should be wide',
+                height='how many pixels of the image to find should be high',
             ),
             version=__version__,
         )
