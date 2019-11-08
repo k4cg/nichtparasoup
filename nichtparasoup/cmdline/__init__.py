@@ -124,8 +124,4 @@ def main(args: Optional[List[str]] = None) -> int:
     from nichtparasoup.cmdline.argparse import parser as argparser
     options = dict(argparser.parse_args(args=args).__dict__)
     command = options.pop('command')
-    if not command:
-        from sys import stderr
-        argparser.print_usage(file=stderr)
-        return 0
     return getattr(Commands, command)(**options)  # type: ignore
