@@ -22,6 +22,8 @@ _OnImageAdded = Callable[[Image], None]
 
 _OnFill = Callable[["Crawler", int], None]
 
+_FILLUP_TIMEOUT_DEFAULT = 1.0
+
 
 class Crawler(object):
 
@@ -81,13 +83,20 @@ class Crawler(object):
                 image_added(image_crawled)
         return len(images_crawled)
 
-    def fill_up_to(self, to: int, filled_by: Optional[_OnFill] = None) -> None:
+    def fill_up_to(self, to: int,
+                   filled_by: Optional[_OnFill] = None,
+                   timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
+        from random import uniform
+        from time import sleep
         while len(self.images) < to:
             refilled = self.crawl()
             if filled_by:
                 filled_by(self, refilled)
             if 0 == refilled:
                 break  # while
+            if len(self.images) < to and timeout > 0:
+                # be nice, give the site some rest after crawling
+                sleep(timeout * uniform(0.9, 1.1))
 
     def get_random_image(self) -> Optional[Image]:
         if not self.images:
@@ -142,10 +151,10 @@ class NPCore(object):
             self._is_image_not_in_blacklist, self._add_image_to_blacklist
         ))
 
-    def fill_up_to(self, to: int, on_refill: Optional[_OnFill]) -> None:
+    def fill_up_to(self, to: int, on_refill: Optional[_OnFill], timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
         fill_treads = list()  # type: List[Thread]
         for crawler in self.crawlers:
-            fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill), daemon=True)
+            fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, timeout), daemon=True)
             fill_treads.append(fill_tread)
             fill_tread.start()
         for fill_tread in fill_treads:

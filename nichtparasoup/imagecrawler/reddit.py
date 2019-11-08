@@ -1,7 +1,8 @@
 __all__ = ["Reddit"]
 
+from json import loads as json_loads
 from typing import Any, Dict, Optional
-from urllib.parse import quote_plus as url_quote
+from urllib.parse import quote_plus as url_quote, urljoin
 
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
@@ -30,9 +31,9 @@ class Reddit(BaseImageCrawler):
     def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
         subreddit = config["subreddit"]
         if type(subreddit) is not str:
-            raise TypeError("subreddit {} is not str".format(subreddit))
+            raise TypeError("subreddit {!r} is not str".format(subreddit))
         if 0 == len(subreddit):
-            raise ValueError("subreddit {} is empty".format(subreddit))
+            raise ValueError("subreddit {!r} is empty".format(subreddit))
         return ImageCrawlerConfig(
             subreddit=subreddit,
         )
@@ -43,12 +44,26 @@ class Reddit(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        # TODO - maybe use PRAW? https://github.com/praw-dev/praw
-        images.add(Image(
-            uri='TODO',
-            source='TOOD',
-        ))
+        listing_data, uri = self.fetch_remote_data(self._get_uri())
+        listing = json_loads(listing_data)
+        del listing_data  # free up some ram
+        for child in listing['data']['children']:
+            image = self._get_image(child['data'])
+            if image:
+                images.add(Image(
+                    uri=image,
+                    source=urljoin(uri, child['data']['permalink']),
+                ))
+        # don't care if `after` is `None` after the crawl ... why not restarting at front when the end is reached?!
+        self._after = listing['data']['after']
         return images
 
     def _get_uri(self) -> str:
-        return self._uri_base + url_quote(self._after or '')
+        return self._uri_base + (url_quote(self._after) if self._after else '')
+
+    def _get_image(self, data: Dict[str, Any]) -> Optional[str]:
+        uri = data.get('url')  # type: Optional[str]
+        if uri:
+            if self.path_is_image(uri):
+                return uri
+        return None

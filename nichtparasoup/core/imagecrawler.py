@@ -1,8 +1,11 @@
 __all__ = ["ImageCrawlerConfig", "BaseImageCrawler", "ImageCrawlerInfo"]
 
 from abc import ABC, abstractmethod
+from http.client import HTTPResponse
+from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
 from threading import Lock
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Pattern, Tuple
+from urllib.request import Request, urlopen
 
 from nichtparasoup._internals import _log
 from nichtparasoup.core.image import ImageCollection
@@ -57,10 +60,31 @@ class BaseImageCrawler(ABC):
             _log('debug', 'crawling finished {type}({id:x})'.format_map(debug_map))
             return crawled
         except Exception:
-            _log('exception', 'caught an error during crawling {type}({id:x}})'.format_map(debug_map))
+            _log('exception', 'caught an error during crawling {type}({id:x})'.format_map(debug_map))
             return ImageCollection()
         finally:
             self._crawl_lock.release()
+
+    _RE_IMAGE_PATH = re_compile(r'.*\.(?:jpeg|jpg|png|gif)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
+
+    @classmethod
+    def path_is_image(cls, uri: str) -> bool:
+        return cls._RE_IMAGE_PATH.match(uri) is not None
+
+    _HEADERS_DEFAULT = {
+        'User-Agent': 'NichtParasoup',
+    }
+
+    @classmethod
+    def fetch_remote_data(cls, uri: str,
+                          timeout: float = 10.0,
+                          headers: Optional[Dict[str, str]] = None) -> Tuple[str, str]:
+        _log('debug', 'fetch remote {!r} in {!r} with {!r}'.format(uri, timeout, headers))
+        request = Request(uri, headers={**cls._HEADERS_DEFAULT, **(headers or dict())})
+        response = urlopen(request, timeout=timeout)  # type: HTTPResponse
+        actual_uri = response.geturl()  # after following redirects ...
+        charset = str(response.info().get_param('charset', 'UTF-8'))
+        return response.read().decode(charset), actual_uri
 
     @staticmethod
     @abstractmethod

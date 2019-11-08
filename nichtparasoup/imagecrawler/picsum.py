@@ -27,13 +27,13 @@ class Picsum(BaseImageCrawler):
         width = config["width"]
         height = config["height"]
         if type(width) is not int:
-            raise TypeError("width {} is not int".format(width))
+            raise TypeError("width {!r} is not int".format(width))
         if type(height) is not int:
-            raise TypeError("height {} is not int".format(height))
+            raise TypeError("height {!r} is not int".format(height))
         if width <= 0:
-            raise ValueError("width {} <= 0".format(width))
+            raise ValueError("width {!r} <= 0".format(width))
         if height <= 0:
-            raise ValueError("height {} <= 0".format(height))
+            raise ValueError("height {!r} <= 0".format(height))
         return ImageCrawlerConfig(
             width=width,
             height=height,

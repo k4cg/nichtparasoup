@@ -1,5 +1,7 @@
 import unittest
 
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
+
 from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 
 
@@ -58,3 +60,17 @@ class BaseImageCrawlerResetTest(unittest.TestCase):
         c.crawl()
         # assert
         self.assertFalse(c._reset_before_next_crawl)
+
+
+class BaseImageCrawlerPathIsImageTest(unittest.TestCase):
+
+    def test_path_is_image(self) -> None:
+        # arrange
+        image_file_extensions = ('jpg', 'jpeg', 'gif', 'png')
+        # act & assert
+        for image_file_extension in image_file_extensions:
+            image_file_path = '.' + image_file_extension
+            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path))
+            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '?foo'))
+            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '#bar'))
+            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '?foo#bar'))
