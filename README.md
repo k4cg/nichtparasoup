@@ -1,24 +1,19 @@
 # nichtparasoup
 
----
-
-:construction:  THIS FILE IS OUTDATED
-:construction:  DUE TO A REWRITE
-
----
-
-
-
-nichtparasoup is a hackspaces entertainment system.
+_nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
-[reddit](https://reddit.com).
+[reddit](https://reddit.com).  
+Other crawlers are currently removed, but will be back soon.
+
 
 ![logo](images/logo.png)
 
-At our hackspace [k4cg](https://k4cg.org) we
-use it since 2 years now. It turns out to be a very non-invasive way of
-entertaining a crowd of nerds without having the noise and interruptions of
-videos or other stuff.
+---
+
+
+At our hackspace [k4cg](https://k4cg.org) we use it since 2 years now.  
+It turns out to be a very non-invasive way of entertaining a crowd of nerds 
+without having the noise and interruptions of videos or other stuff.
 
 Here is what it looks like in your browser
 ![screenshot](images/screenshot.png)
