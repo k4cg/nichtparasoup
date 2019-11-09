@@ -57,7 +57,6 @@ EXTRAS = dict(
     development=[
         "tox",
         "isort",
-        "sphinx", "recommonmark"
     ],
     testing=[
         "flake8",
