@@ -86,7 +86,6 @@ class Crawler(object):
     def fill_up_to(self, to: int,
                    filled_by: Optional[_OnFill] = None,
                    timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
-        from random import uniform
         from time import sleep
         while len(self.images) < to:
             refilled = self.crawl()
@@ -96,7 +95,7 @@ class Crawler(object):
                 break  # while
             if len(self.images) < to and timeout > 0:
                 # be nice, give the site some rest after crawling
-                sleep(timeout * uniform(0.9, 1.1))
+                sleep(timeout)
 
     def get_random_image(self) -> Optional[Image]:
         if not self.images:

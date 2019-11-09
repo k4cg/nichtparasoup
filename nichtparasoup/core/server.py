@@ -191,7 +191,6 @@ class ServerRefiller(Thread):
         self._run_lock = Lock()
 
     def run(self) -> None:
-        from random import uniform
         from time import sleep
         while not self._stop_event.is_set():
             server = self._server_wr()  # type: Optional[Server]
@@ -201,8 +200,7 @@ class ServerRefiller(Thread):
                 _log('info', " * server gone. stopping {}".format(type(self).__name__))
                 self._stop_event.set()
             if not self._stop_event.is_set():
-                # each service worker has some delay from time to time.
-                sleep(self._sleep * uniform(0.9, 1.1))
+                sleep(self._sleep)
 
     def start(self) -> None:
         self._run_lock.acquire()
