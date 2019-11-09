@@ -1,4 +1,4 @@
-# server
+# web-api: server status
 
 call via `/status/server`.
 

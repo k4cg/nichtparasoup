@@ -1,4 +1,4 @@
-# blacklist
+# web-api: blacklist status
 
 information about the blacklist.
 

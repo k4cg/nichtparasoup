@@ -1,4 +1,4 @@
-# web-api: `/status` 
+# web-api: status
 
 get several information about the server
 
