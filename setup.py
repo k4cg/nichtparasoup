@@ -34,8 +34,8 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 NAME = 'nichtparasoup'
 DESCRIPTION = 'A hackspaces entertainment system'
 URL = 'https://github.com/k4cg/nichtparasoup'
-EMAIL = None  # TODO
-AUTHOR = None  # TODO
+EMAIL = None
+AUTHOR = 'FLorian Baumann, Jan Kowalleck'
 REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 VERSION = None  # read from __version__.py
 
@@ -57,6 +57,7 @@ EXTRAS = dict(
     development=[
         "tox",
         "isort",
+        "sphinx", "recommonmark"
     ],
     testing=[
         "flake8",

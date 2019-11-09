@@ -2,16 +2,20 @@
 # per default: exclude everything
 global-exclude *
 
+include setup.py
 include README.md
 include AUTHORS
 include LICENSE
+include INSTALL
 include MANIFEST.in
 
 graft nichtparasoup
-# graft docs
-# graft examples
+graft docs
+graft examples
 # graft testing
 graft images
 
 global-exclude __pycache__
 global-exclude *.py[co]
+
+global-exclude .gitignore
