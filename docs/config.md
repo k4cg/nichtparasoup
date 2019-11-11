@@ -4,7 +4,7 @@ _nichtparasoup_ uses configs in [YAML](https://yaml.org/) file format.
 Supported are YAML v1.0 to v1.2.
 
 for a quick start run `nichtparasoup config --dump`.  
-to have your config checked, run `nichtparasoup cinfig --check`.
+to have your config checked, run `nichtparasoup config --check`.
 
 this document explains all the options and what it you need to know to write your own config.
 
