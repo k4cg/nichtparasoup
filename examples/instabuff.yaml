@@ -1,0 +1,20 @@
+## This is a config file for nichtprasoup (v2.x)
+## This is an example file. For a better kickStart run: nichtparasoup config --help
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 8080
+
+imageserver:
+  crawler_upkeep: 10
+
+crawlers:
+  - type: "InstagramHashtag"
+    config:
+      tag_name: "cyberpunk"
+  - type: "InstagramProfile"
+    config:
+      user_name: "beeple_crap"
+  - type: "InstagramHashtag"
+    config:
+      tag_name: "synthwave"

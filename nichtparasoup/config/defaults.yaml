@@ -49,6 +49,17 @@ crawlers:
     config:
       width: 300
       height: 600
+  -
+    type: "InstagramHashtag"
+    weight: 1
+    config:
+      tag_name: "earthporn"
+  -
+    type: "InstagramProfile"
+    weight: 1
+    config:
+      user_name: "natgeo"
+
 
 
 ## logging settings
