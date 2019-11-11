@@ -9,16 +9,16 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
 class MockableImageCrawler(BaseImageCrawler):
     """ imagecrawler that does nothing. use it for mocking ... """
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             desc='a mock',
             config=dict(),
             version='mock',
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         return ImageCrawlerConfig(config)
 
     def _reset(self) -> None:

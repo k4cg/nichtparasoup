@@ -66,7 +66,7 @@ class Image(object):
         return False
 
     def __repr__(self) -> str:
-        return '<{0.__module__}.{0.__name__} object at {1:#x} {2.uri!r}>'.format(type(self), id(self), self)
+        return '<{} {!r}>'.format(type(self).__name__, self.uri)
 
 
 class ImageCollection(Set[Image]):
