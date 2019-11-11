@@ -20,7 +20,7 @@ class WebServer(object):
         self.hostname = hostname
         self.port = port
         self.url_map = Map([
-            Rule("/", redirect_to="/index.html"),
+            Rule("/", redirect_to="./index.html"),
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
