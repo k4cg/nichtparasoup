@@ -40,23 +40,20 @@ REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 VERSION = None  # read from __version__.py
 
 # What packages are required for this module to be executed?
-REQUIRED = dict(
-    _internals=['typing-extensions;python_version<"3.8"'],
-    cmdline=[],
-    config=['ruamel.yaml', "yamale"],
-    core=[],
-    imagecrawler=[],
-    webserver=["werkzeug"],
-)
+REQUIRED = [
+    'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`
+    'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
+    "werkzeug>=0.15",  # for `webserver`
+]
 
 # What packages are optional?
 EXTRAS = dict(
     colors=[
-        "termcolor",
+        "termcolor>=1.1",
     ],
     development=[
-        "tox",
-        "isort",
+        "tox>=3.14",
+        "isort>=4.3",
     ],
     testing=[
         "flake8",
@@ -69,7 +66,6 @@ EXTRAS = dict(
         "coverage",
         "pytest",
         "ddt",
-        "yamale",
     ],
 )
 
@@ -151,7 +147,7 @@ setup(
         console_scripts=['nichtparasoup=nichtparasoup.cmdline:main'],
     ),
     setup_requires=["setuptools"],
-    install_requires=reduce(lambda r1, r2: r1 + r2, REQUIRED.values(), []),
+    install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
     license='MIT',
