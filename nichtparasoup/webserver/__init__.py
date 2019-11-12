@@ -6,6 +6,7 @@ from typing import Any, Dict, Union
 
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
+from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from nichtparasoup.core.server import Server, ServerStatus
@@ -20,7 +21,7 @@ class WebServer(object):
         self.hostname = hostname
         self.port = port
         self.url_map = Map([
-            Rule("/", redirect_to="./index.html"),
+            Rule("/", endpoint='root'),
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
@@ -46,6 +47,16 @@ class WebServer(object):
             response.cache_control.no_cache = True
             response.cache_control.no_store = True
         return response(environ, start_response)
+
+    def on_root(self, req: Request) -> Response:
+        env_get = req.environ.get
+        return redirect(
+            '{}://{}:{}{}/index.html'.format(
+                env_get('HTTP_X_FORWARDED_PROTO') or env_get('wsgi.url_scheme'),
+                env_get('HTTP_X_FORWARDED_HOST') or env_get('SERVER_NAME'),
+                env_get('HTTP_X_FORWARDED_PORT') or env_get('SERVER_PORT'),
+                env_get('HTTP_X_FORWARDED_PREFIX') or ''
+            ), code=301, Response=Response)
 
     def on_get(self, _: Request) -> Response:
         image = self.imageserver.get_image()
