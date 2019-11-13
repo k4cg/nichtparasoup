@@ -13,13 +13,6 @@ Logging:
 Webserver:
   hostname: str(min=1)
   port: int(min=1, max=65535)
-  proxy: include('Webserver_Proxy', strict=True, required=False, none=False)
-Webserver_Proxy:
-  x_for: int(min=0)
-  x_proto: int(min=0)
-  x_host: int(min=0)
-  x_port: int(min=0)
-  x_prefix: int(min=0)
 ---
 ImageServer:
   crawler_upkeep: int(min=10)

@@ -2,33 +2,26 @@ __all__ = ["WebServer"]
 
 from json import dumps as json_encode
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
+from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
 from nichtparasoup.core.server import Server, ServerStatus
 
 
 class WebServer(object):
-    _HTDOCS = path_join(dirname(__file__), "htdocs")
-    _HTINDEX = 'index.html'  # relative to cls._HTDOCS
+    _STATIC_FILES = path_join(dirname(__file__), 'htdocs')
+    _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES
 
-    def __init__(self, imageserver: Server, hostname: str, port: int,
-                 proxy: Optional[Dict[str, int]] = None) -> None:  # pragma: no cover
-        """
-        :param imageserver:
-        :param hostname: hostname or unixsocket
-        :param port:
-        :param proxy: reverse proxy config. see https://werkzeug.palletsprojects.com/en/0.15.x/middleware/proxy_fix/
-        """
+    def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
         self.imageserver = imageserver
         self.hostname = hostname
         self.port = port
-        self.proxy = proxy
         self.url_map = Map([
-            Rule("/", redirect_to=self._HTINDEX),
+            Rule('/', endpoint='root'),
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
@@ -55,6 +48,13 @@ class WebServer(object):
             response.cache_control.no_store = True
         return response(environ, start_response)
 
+    def on_root(self, _: Request) -> Response:
+        # relative-path is valid via https://tools.ietf.org/html/rfc3986#section-4.2
+        forward = redirect(self._STATIC_INDEX, code=302, Response=Response)
+        # to prevent extensive (reverse proxy) header parsing, it is kept as a relative-path
+        forward.autocorrect_location_header = False
+        return forward
+
     def on_get(self, _: Request) -> Response:
         image = self.imageserver.get_image()
         return Response(json_encode(image), mimetype='application/json')
@@ -66,7 +66,7 @@ class WebServer(object):
     )
 
     def on_status(self, _: Request) -> Response:
-        status = dict((what, getter(self.imageserver)) for what, getter in self._STATUS_WHATS.items())
+        status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}
         return Response(json_encode(status), mimetype='application/json')
 
     def on_status_what(self, _: Request, what: str) -> Response:
@@ -86,15 +86,10 @@ class WebServer(object):
         self.imageserver.start()
         try:
             _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-            application = self  # type: Union[WebServer, ProxyFix]
-            if self.proxy and any(self.proxy.values()):
-                _log('info', ' * starting {0} with reverse proxy config {1!r}'.format(type(self).__name__, self.proxy))
-                from werkzeug.middleware.proxy_fix import ProxyFix
-                application = ProxyFix(application, **self.proxy)
             run_simple(
                 self.hostname, self.port,
-                application=application,
-                static_files={"/": self._HTDOCS},
+                application=self,
+                static_files={'/': self._STATIC_FILES},
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=False)

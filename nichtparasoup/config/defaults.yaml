@@ -4,24 +4,13 @@
 ## WebServer config
 ## type: map
 webserver:
-  ## hostname the webserver recognizes. can also be a socket
+  ## hostname the WebServer recognizes. can also be a unix socket
   ## type: string
   hostname: "0.0.0.0"
   ## port the webserver runs on
   ## type: integer
   ## constraint: 1 <= port <= 65535
   port: 5000
-  ## reverse proxy config - if you don't know what this is, you probably don't need it :-)
-  ## for details read nichtprasoup's `docs/config.md`
-  ## type: map
-  ## optional
-  ## default: null (=disable reverse proxy)
-  proxy:
-    x_for: 0     # Number of values to trust for X-Forwarded-For.
-    x_proto: 0   # Number of values to trust for X-Forwarded-Proto.
-    x_host: 0    # Number of values to trust for X-Forwarded-Host.
-    x_port: 0    # Number of values to trust for X-Forwarded-Port.
-    x_prefix: 0  # Number of values to trust for X-Forwarded-Prefix.
 
 ## ImageServer config
 ## type: map
