@@ -4,7 +4,7 @@
 ## WebServer config
 ## type: map
 webserver:
-  ## hostname the webserver recognizes
+  ## hostname the webserver recognizes. can also be a socket
   ## type: string
   hostname: "0.0.0.0"
   ## port the webserver runs on

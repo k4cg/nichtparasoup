@@ -45,7 +45,7 @@ logging:
 
 ### `hostname` 
 
-- hostname the web server recognizes
+- hostname the web server recognizes. can also be a socket
 - type: string
 
 ### `port` 

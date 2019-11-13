@@ -17,6 +17,12 @@ class WebServer(object):
 
     def __init__(self, imageserver: Server, hostname: str, port: int,
                  proxy: Optional[Dict[str, int]] = None) -> None:  # pragma: no cover
+        """
+        :param imageserver:
+        :param hostname: hostname or unixsocket
+        :param port:
+        :param proxy: reverse proxy config. see https://werkzeug.palletsprojects.com/en/0.15.x/middleware/proxy_fix/
+        """
         self.imageserver = imageserver
         self.hostname = hostname
         self.port = port
@@ -77,14 +83,14 @@ class WebServer(object):
     def run(self) -> None:
         from werkzeug.serving import run_simple
         from nichtparasoup._internals import _log
-        application = self  # type: Union[WebServer, ProxyFix]
-        if self.proxy:
-            from werkzeug.middleware.proxy_fix import ProxyFix
-            _log('debug', ' * will use reverse proxy config {!r}'.format(self.proxy))
-            application = ProxyFix(application, **self.proxy)
         self.imageserver.start()
         try:
             _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
+            application = self  # type: Union[WebServer, ProxyFix]
+            if self.proxy and any(self.proxy.values()):
+                _log('info', ' * starting {0} with reverse proxy config {1!r}'.format(type(self).__name__, self.proxy))
+                from werkzeug.middleware.proxy_fix import ProxyFix
+                application = ProxyFix(application, **self.proxy)
             run_simple(
                 self.hostname, self.port,
                 application=application,
