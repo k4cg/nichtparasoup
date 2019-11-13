@@ -38,15 +38,21 @@ class Commands(object):
 
     @staticmethod
     def config_dump_file(config_file: str) -> int:
-        from os.path import abspath
+        from os.path import abspath, isfile
         from nichtparasoup.config import dump_defaults
         config_file = abspath(config_file)
+        if isfile(config_file):
+            from nichtparasoup._internals import _confirm
+            overwrite = _confirm('File already exists, overwrite?')
+            if overwrite is not True:
+                _message('Abort.')
+                return 1
         try:
             dump_defaults(config_file)
             return 0
         except Exception as e:
             _message_exception(e)
-            return 1
+            return 255
 
     @staticmethod
     def config_check_file(config_file: str) -> int:
