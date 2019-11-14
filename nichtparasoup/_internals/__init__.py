@@ -1,4 +1,4 @@
-__all__ = ['_logger', '_log', '_message', '_message_exception']
+__all__ = ['_logger', '_log', '_message', '_message_exception', '_confirm']
 """
 yes, everything is underscored.
 its internal foo that is not for public use.
@@ -47,5 +47,21 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     exception_name = type(exception).__name__
     if colored:
         color = 'yellow' if isinstance(exception, Warning) else 'red'
-        exception_name = colored(exception_name, color, 'on_grey')
+        exception_name = colored(exception_name, color)
     _message('{}: {}'.format(exception_name, exception), file=file)
+
+
+def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
+    rv = {
+        'y': True,
+        'yes': True,
+        '': default,
+        'n': False,
+        'no': False,
+    }
+    options = 'Y/n' if default else 'y/N'
+    try:
+        value = input('{!s} [{}]: '.format(prompt, options)).lower().strip()
+        return rv[value]
+    except (KeyboardInterrupt, EOFError, KeyError):
+        return None
