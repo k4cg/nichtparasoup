@@ -35,7 +35,7 @@ NAME = 'nichtparasoup'
 DESCRIPTION = 'A hackspaces entertainment system'
 URL = 'https://github.com/k4cg/nichtparasoup'
 EMAIL = None
-AUTHOR = 'FLorian Baumann, Jan Kowalleck'
+AUTHOR = 'Florian Baumann, Jan Kowalleck'
 REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 VERSION = None  # read from __version__.py
 
