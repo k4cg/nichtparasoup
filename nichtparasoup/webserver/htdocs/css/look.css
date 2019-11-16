@@ -106,20 +106,20 @@ footer {
 
 }
 
-#wall article {
+#wall figure {
 	position: relative;
 	margin: 1ex 1ex;
-	border: 1px solid #999;
+	border: 1px solid #7f7f7f;
 	display: inline;
 	display: inline-block;
 	float: left;
 }
 
-#wall article img {
+#wall figure img {
 	display: none;
 }
 
-#wall article {
+#wall figure {
 	animation: scaleIn linear 0.5s;
 	-webkit-animation: scaleIn linear 0.5s;
 	-moz-animation: scaleIn linear 0.5s;
@@ -159,11 +159,11 @@ footer {
 	to   { -ms-transform: scale(1); }
 }
 
-#wall article img {
+#wall figure img {
 	display: block; /* needed for alignment of the image to its container box ... */
 }
 
-#wall article section[role="source"] {
+#wall figure figcaption {
 	display: block;
 	position: absolute;
 	bottom: 0ex;
@@ -180,7 +180,7 @@ footer {
 	text-align: initial; /* fall back to native */
 }
 
-#wall article section[role="source"] a {
+#wall figure figcaption a {
 	display: none;
 	word-wrap: break-word;
 	text-decoration: none;
@@ -188,18 +188,18 @@ footer {
 	margin: 0.1ex 0.1em;
 }
 
-#wall article section[role="source"]:hover {
+#wall figure figcaption:hover {
 	opacity: 1;
 	background-color: #606060;
 	background-color: rgba(100, 100, 100, 0.7);
 	left: 0em;
 }
 
-#wall article section[role="source"]:hover a {
+#wall figure figcaption:hover a {
 	display: block;
 }
 
-#wall article section[role="source"][data-is_generic="true"] a::after {
+#wall figure figcaption[data-is_generic="true"] a::after {
     content: "generic";
     vertical-align: text-top;
     font-size: small;
