@@ -9,7 +9,6 @@
 import io
 import os
 import sys
-from functools import reduce
 from shutil import rmtree
 
 from setuptools import Command, find_packages, setup
@@ -33,11 +32,16 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 # Package meta-data.
 NAME = 'nichtparasoup'
 DESCRIPTION = 'A hackspaces entertainment system'
-URL = 'https://github.com/k4cg/nichtparasoup'
+URL = 'https://github.com/k4cg/nichtparasoup/'
 EMAIL = None
 AUTHOR = 'Florian Baumann, Jan Kowalleck'
 REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 VERSION = None  # read from __version__.py
+
+URLS = dict(
+    Source='https://github.com/k4cg/nichtparasoup/',
+    Documentation='https://github.com/k4cg/nichtparasoup/docs/',
+)
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -142,6 +146,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
+    project_urls=URLS,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     entry_points=dict(
         console_scripts=['nichtparasoup=nichtparasoup.cmdline:main'],
