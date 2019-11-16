@@ -175,28 +175,27 @@
     {
 
       /* structure looks like :
-        <article>
+        <figure>
           <img src="{uri}" />
-          <section role="source" data-crawler="{crawler}" data-source="{source}" data-is_generic="{is_generic}">
+          <figcaption data-crawler="{crawler}" data-source="{source}" data-is_generic="{is_generic}">
             <a href="{uri}">{uri}</a>
-          </section>
-        </article>
+          </figcaption>
+        </figure>
       */
 
-      var imageBox = document.createElement("article");
+      var imageBox = document.createElement("figure");
       imageBox.appendChild(imageDoc);
 
-      var srcSpan = imageBox.appendChild(document.createElement("section"));
-      srcSpan.setAttribute("role", "source");
+      var srcBox = imageBox.appendChild(document.createElement("figcaption"));
 
       // not all browsers support dataset property - so use setAttribute function
-      srcSpan.setAttribute("data-crawler", imageData.crawler.type.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
+      srcBox.setAttribute("data-crawler", imageData.crawler.type.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
       if ( imageData.source )
       { // this one is optional
-        srcSpan.setAttribute("data-source", imageData.source);
+        srcBox.setAttribute("data-source", imageData.source);
       }
 
-      srcSpan.setAttribute("data-is_generic", imageData.is_generic);
+      srcBox.setAttribute("data-is_generic", imageData.is_generic);
 
       var src = this.src;
       if (imageData.is_generic)
@@ -204,7 +203,7 @@
         src = src.replace(imageData.genericMarker,'');
       }
 
-      var srcA = srcSpan.appendChild(document.createElement("a"));
+      var srcA = srcBox.appendChild(document.createElement("a"));
       srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || src;
 
       if ( typeof onReady == "function" )
