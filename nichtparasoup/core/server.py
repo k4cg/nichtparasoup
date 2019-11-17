@@ -38,9 +38,8 @@ class Server(object):
         image = copy(crawler.pop_random_image())
         if not image:
             return None
-        self._locks.stats_get_image.acquire()
-        self._stats.count_images_served += 1
-        self._locks.stats_get_image.release()
+        with self._locks.stats_get_image:
+            self._stats.count_images_served += 1
         return dict(
             uri=image.uri,
             is_generic=image.is_generic,
@@ -61,21 +60,15 @@ class Server(object):
                 refilled))
 
     def refill(self) -> Dict[str, bool]:
-        self._locks.refill.acquire()
-        try:
+        with self._locks.refill:
             self.core.fill_up_to(self.keep, self._log_refill_crawler)
             return dict(refilled=True)
-        finally:
-            self._locks.refill.release()
 
     def _reset(self) -> None:
-        self._locks.reset.acquire()
-        try:
+        with self._locks.reset:
             self._stats.cum_blacklist_on_flush += self.core.reset()
             self._stats.count_reset += 1
             self._stats.time_last_reset = int(time())
-        finally:
-            self._locks.reset.release()
 
     def request_reset(self) -> Dict[str, Any]:
         if not self.is_alive():
@@ -97,8 +90,7 @@ class Server(object):
         )
 
     def start(self) -> None:
-        self._locks.run.acquire()
-        try:
+        with self._locks.run:
             if self.__running:
                 raise RuntimeError('already running')
             _log('info', " * starting {}".format(type(self).__name__))
@@ -109,15 +101,12 @@ class Server(object):
                 self._refiller.start()  # start threaded periodical refill
             self._stats.time_started = int(time())
             self.__running = True
-        finally:
-            self._locks.run.release()
 
     def is_alive(self) -> bool:
         return self.__running
 
     def stop(self) -> None:
-        self._locks.run.acquire()
-        try:
+        with self._locks.run:
             if not self.__running:
                 raise RuntimeError('not running')
             _log('info', "\r\n * stopping {}".format(type(self).__name__))
@@ -125,8 +114,6 @@ class Server(object):
                 self._refiller.stop()
                 self._refiller = None
             self.__running = False
-        finally:
-            self._locks.run.release()
 
 
 class ServerStatus(ABC):
