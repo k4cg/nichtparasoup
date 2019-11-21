@@ -6,7 +6,7 @@ It randomly displays images from
 Other crawlers are currently removed, but will be back soon.
 
 
-![logo](images/logo.png)
+![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
 
 ---
 
@@ -16,10 +16,10 @@ It turns out to be a very non-invasive way of entertaining a crowd of nerds
 without having the noise and interruptions of videos or other stuff.
 
 Here is what it looks like in your browser
-![screenshot](images/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/screenshot.png)
 
 and even better, on a beamer in your local hackspace!
-![hackspace](images/hackspace.jpg)
+![hackspace](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/hackspace.jpg)
 
 ## demo
 
@@ -27,15 +27,15 @@ Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 
 ## install, usage, config, etc 
 
-see the [docs](docs)
+see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs)
 
 ## license
 
-MIT - see the [`LICENSE`](LICENSE) file for details.
+MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/master/LICENSE) file for details.
 
 ## credits
 
-* see the [`AUTHORS`](AUTHORS) file for a list of essential contributors
+* see the [`AUTHORS`](https://github.com/k4cg/nichtparasoup/blob/master/AUTHORS) file for a list of essential contributors
 * parts of the logo are taken
    from [Smashicons](https://www.flaticon.com/authors/smashicons)
    on [www.flaticon.com](https://www.flaticon.com/)
