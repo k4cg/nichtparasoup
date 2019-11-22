@@ -8,6 +8,7 @@ include AUTHORS
 include INSTALL
 include LICENSE
 include MANIFEST.in
+include HISTORY.md
 include README.md
 
 graft nichtparasoup
