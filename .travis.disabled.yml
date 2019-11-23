@@ -1,3 +1,6 @@
+## not using travisCI for this project anymore
+## switched to github actions
+
 version: ~> 1.0
 
 os: "linux"
