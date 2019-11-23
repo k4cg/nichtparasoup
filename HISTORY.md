@@ -23,14 +23,15 @@ Yes, everything changed ... due to a complete rewrite. Read the `docs/dev/` for 
 
 ### Added
 
+* publishing to PyPI
 * image crawler for "picsum"
 * image crawler "dummy"
 * documentation in `docs/`
 * `setup.py`-based packaging support - for `PIP`
-* testing support via `pytest` and `coverage` reporting
-* `tox`-based automatisation for testing and test coverage reporting
+* testing support via `pytest` and test coverage report via `coverage`
 * code style tests via `flake8`, `mypy` and extensions for those - also added them to `tox`-based automatisation
-* travis CI env for `tox`-based tests on `py35`, `py36`, `py37`, `py38`
+* `tox`-based automatisation for testing
+* CI tests for `tox`-based tests on `py35`, `py36`, `py37`, `py38` - via github actions
 * version history file `HISTORY.md`
 
 ### Modified
