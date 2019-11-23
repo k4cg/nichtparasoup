@@ -56,6 +56,8 @@ indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{*.cfg, .coveragerc, .pylintrc, .flake8}]
+[{*.cfg, .pypirc, .coveragerc, .flake8}]
+indent_style = space
+indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
