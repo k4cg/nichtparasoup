@@ -14,4 +14,4 @@
     1. commit and push the changed `HISTORY.md` to master
         1. run ala `git commmit -m 'preparing 2.X.Y' HISTORY.md`
         1. run ala `git push origin master`
-1. draft and publish a release on `master`  branch in github
+1. draft and publish a release on `master` branch in github
