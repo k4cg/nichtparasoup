@@ -7,7 +7,6 @@ __all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):
-
     _bunch = 10
 
     @staticmethod
@@ -50,8 +49,9 @@ class Picsum(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         for _ in range(0, self._bunch):
+            uri = self._get_image_uri(**config)
             images.add(Image(
-                self._get_image_uri(**config),
+                uri, uri,
                 is_generic=True,
             ))
         return images

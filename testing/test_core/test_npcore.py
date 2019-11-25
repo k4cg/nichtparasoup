@@ -10,8 +10,8 @@ class NPCoreTest(unittest.TestCase):
 
     def test__is_image_not_in_blacklist(self) -> None:
         # arrange
-        image1 = Image("test1")
-        image2 = Image("test2")
+        image1 = Image("test1", 'test')
+        image2 = Image("test2", 'test')
         core = NPCore()
         # act
         core.blacklist.add(image1.uri)
@@ -21,8 +21,8 @@ class NPCoreTest(unittest.TestCase):
 
     def test__add_image_to_blacklist(self) -> None:
         # arrange
-        image1 = Image("test1")
-        image2 = Image("test2")
+        image1 = Image("test1", 'test')
+        image2 = Image("test2", 'test')
         core = NPCore()
         # act
         core._add_image_to_blacklist(image1)

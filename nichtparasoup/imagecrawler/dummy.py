@@ -37,7 +37,7 @@ class Dummy(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         images.add(Image(
-            config["image_uri"],
+            config["image_uri"], config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))
