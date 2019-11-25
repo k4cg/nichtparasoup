@@ -1,7 +1,5 @@
 import unittest
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
-
 from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 
 
@@ -62,15 +60,36 @@ class BaseImageCrawlerResetTest(unittest.TestCase):
         self.assertFalse(c._reset_before_next_crawl)
 
 
-class BaseImageCrawlerPathIsImageTest(unittest.TestCase):
+class BaseImageCrawlerGetConfigTest(unittest.TestCase):
 
-    def test_path_is_image(self) -> None:
+    def test_public(self) -> None:
         # arrange
-        image_file_extensions = ('jpg', 'jpeg', 'gif', 'png')
-        # act & assert
-        for image_file_extension in image_file_extensions:
-            image_file_path = '.' + image_file_extension
-            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path))
-            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '?foo'))
-            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '#bar'))
-            self.assertTrue(BaseImageCrawler.path_is_image(image_file_path + '?foo#bar'))
+        c = MockableImageCrawler(foo='bar')
+        # act
+        config = c.get_config()
+        # assert
+        self.assertDictEqual(config, dict(foo='bar'))
+
+    def test_empty_key(self) -> None:
+        # arrange
+        c = MockableImageCrawler(**{'': 'bar'})
+        # act
+        config = c.get_config()
+        # assert
+        self.assertDictEqual(config, {'': 'bar'})
+
+    def test_protected(self) -> None:
+        # arrange
+        c = MockableImageCrawler(_foo='bar')
+        # act
+        config = c.get_config()
+        # assert
+        self.assertDictEqual(config, dict())
+
+    def test_private(self) -> None:
+        # arrange
+        c = MockableImageCrawler(__foo='bar')
+        # act
+        config = c.get_config()
+        # assert
+        self.assertDictEqual(config, dict())
