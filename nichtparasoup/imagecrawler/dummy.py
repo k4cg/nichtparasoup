@@ -8,8 +8,8 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
 
 class Dummy(BaseImageCrawler):
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='"Finds" the same image ... again ... and again.',
@@ -19,8 +19,8 @@ class Dummy(BaseImageCrawler):
             version=__version__,
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         image_uri = config["image_uri"]
         if type(image_uri) is not str:
             raise TypeError("image_uri {!r} is not str".format(image_uri))
@@ -37,7 +37,7 @@ class Dummy(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         images.add(Image(
-            config["image_uri"],
+            config["image_uri"], config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))

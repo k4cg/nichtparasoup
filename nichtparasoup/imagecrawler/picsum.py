@@ -1,17 +1,16 @@
 from typing import Any, Dict
 
-from nichtparasoup.core.image import Image, ImageCollection, ImageUri
+from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 __all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):
-
     _bunch = 10
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='Find images from https://picsum.photos',
@@ -22,8 +21,8 @@ class Picsum(BaseImageCrawler):
             version=__version__,
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         width = config["width"]
         height = config["height"]
         if type(width) is not int:
@@ -40,7 +39,7 @@ class Picsum(BaseImageCrawler):
         )
 
     @staticmethod
-    def _get_image_uri(width: int, height: int) -> ImageUri:
+    def _get_image_uri(width: int, height: int) -> str:
         return "https://picsum.photos/{}/{}".format(width, height)
 
     def _reset(self) -> None:  # pragma: no cover
@@ -50,8 +49,9 @@ class Picsum(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         for _ in range(0, self._bunch):
+            uri = self._get_image_uri(**config)
             images.add(Image(
-                self._get_image_uri(**config),
+                uri, uri,
                 is_generic=True,
             ))
         return images

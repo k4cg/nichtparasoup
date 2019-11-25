@@ -1,9 +1,11 @@
 import unittest
-from typing import Any, Tuple
+from os.path import dirname, join as path_join
 
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
 from nichtparasoup.imagecrawler.reddit import Reddit
+
+from . import _FileFetcher
 
 _reddit_right_config = dict(subreddit='aww')
 
@@ -64,7 +66,7 @@ class RedditBuildUriTest(unittest.TestCase):
         # arrange
         crawler = Reddit(subreddit='foo')
         # act
-        uri = crawler._get_uri()
+        uri = crawler._get_uri(None)
         # assert
         self.assertEqual(uri, 'https://www.reddit.com/r/foo.json?after=')
 
@@ -72,25 +74,23 @@ class RedditBuildUriTest(unittest.TestCase):
         # arrange
         crawler = Reddit(subreddit='foo/bar bazz')
         # act
-        uri = crawler._get_uri()
+        uri = crawler._get_uri(None)
         # assert
         self.assertEqual(uri, 'https://www.reddit.com/r/foo%2Fbar+bazz.json?after=')
 
     def test__build_uri_at_after(self) -> None:
         # arrange
         crawler = Reddit(subreddit='test')
-        crawler._after = 'foobar'
         # act
-        uri = crawler._get_uri()
+        uri = crawler._get_uri('foobar')
         # assert
         self.assertEqual(uri, 'https://www.reddit.com/r/test.json?after=foobar')
 
     def test__build_uri_at_after__escape(self) -> None:
         # arrange
         crawler = Reddit(subreddit='test')
-        crawler._after = 'foo/bar bazz'
         # act
-        uri = crawler._get_uri()
+        uri = crawler._get_uri('foo/bar bazz')
         # assert
         self.assertEqual(uri, 'https://www.reddit.com/r/test.json?after=foo%2Fbar+bazz')
 
@@ -107,19 +107,19 @@ class RedditResetTest(unittest.TestCase):
         self.assertIsNone(crawler._after)
 
 
+_FILE_FETCHER = _FileFetcher({  # relative to "../testdata_instagram"
+    '/r/aww.json?after=': 'aww.json',
+}, base_dir=path_join(dirname(__file__), 'testdata_reddit'))
+
+
 class RedditCrawlTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.crawler = Reddit(subreddit='aww')
-        self.crawler.fetch_remote_data = self.fetch_aww_data  # type: ignore
+        self.crawler._remote_fetcher = _FILE_FETCHER
 
     def tearDown(self) -> None:
         del self.crawler
-
-    @staticmethod
-    def fetch_aww_data(uri: str, *_: Any, **__: Any) -> Tuple[str, str]:
-        from os.path import join, dirname
-        return open(join(dirname(__file__), 'testdata_reddit', 'aww.json')).read(), uri
 
     def test_crawl(self) -> None:
         # arrange
@@ -159,7 +159,7 @@ class RedditCrawlTest(unittest.TestCase):
         for expected_image in expected_images:
             for image in images:
                 if image == expected_image:
-                    # sources are invalid for quality, need to be checked manually
+                    # sources are irrelevant for equality, need to be checked manually
                     self.assertEqual(image.source, expected_image.source)
 
 

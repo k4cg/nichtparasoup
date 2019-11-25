@@ -33,5 +33,5 @@ class Random3Crawler(_LoggingCrawler):
     def crawl(self) -> int:
         super().crawl()
         for _ in range(3):
-            self.images.add(Image('test', is_generic=True))
+            self.images.add(Image('test', 'test', is_generic=True))
         return 3

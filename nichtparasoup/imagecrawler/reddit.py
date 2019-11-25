@@ -5,7 +5,9 @@ from typing import Any, Dict, Optional
 from urllib.parse import quote_plus as url_quote, urljoin
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.core.imagecrawler import (
+    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
+)
 
 
 class Reddit(BaseImageCrawler):
@@ -13,11 +15,13 @@ class Reddit(BaseImageCrawler):
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self._uri_base = 'https://www.reddit.com/r/{}.json?after='.format(
-            url_quote(self.get_config()['subreddit']))
+            url_quote(self._config['subreddit']))
         self._after = None  # type: Optional[str]
+        self._remote_fetcher = RemoteFetcher()
+        self._image_recognizer = ImageRecognizer()
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
@@ -27,8 +31,8 @@ class Reddit(BaseImageCrawler):
             version=__version__,
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         subreddit = config["subreddit"]
         if type(subreddit) is not str:
             raise TypeError("subreddit {!r} is not str".format(subreddit))
@@ -44,9 +48,9 @@ class Reddit(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        listing_data, uri = self.fetch_remote_data(self._get_uri())
-        listing = json_loads(listing_data)
-        del listing_data  # free up some ram
+        listing_string, uri = self._remote_fetcher.get_string(self._get_uri(self._after))
+        listing = json_loads(listing_string)
+        del listing_string  # free up some ram
         for child in listing['data']['children']:
             image = self._get_image(child['data'])
             if image:
@@ -58,12 +62,9 @@ class Reddit(BaseImageCrawler):
         self._after = listing['data']['after']
         return images
 
-    def _get_uri(self) -> str:
-        return self._uri_base + (url_quote(self._after) if self._after else '')
+    def _get_uri(self, after: Optional[str]) -> str:
+        return self._uri_base + (url_quote(after) if after else '')
 
     def _get_image(self, data: Dict[str, Any]) -> Optional[str]:
         uri = data.get('url')  # type: Optional[str]
-        if uri:
-            if self.path_is_image(uri):
-                return uri
-        return None
+        return uri if uri and self._image_recognizer.path_is_image(uri) else None
