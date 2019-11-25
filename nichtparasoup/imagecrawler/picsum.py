@@ -9,8 +9,8 @@ __all__ = ["Picsum"]
 class Picsum(BaseImageCrawler):
     _bunch = 10
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='Find images from https://picsum.photos',
@@ -21,8 +21,8 @@ class Picsum(BaseImageCrawler):
             version=__version__,
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         width = config["width"]
         height = config["height"]
         if type(width) is not int:

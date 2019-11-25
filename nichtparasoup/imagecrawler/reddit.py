@@ -20,8 +20,8 @@ class Reddit(BaseImageCrawler):
         self._remote_fetcher = RemoteFetcher()
         self._image_recognizer = ImageRecognizer()
 
-    @staticmethod
-    def info() -> ImageCrawlerInfo:
+    @classmethod
+    def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import __version__
         return ImageCrawlerInfo(
             desc='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
@@ -31,8 +31,8 @@ class Reddit(BaseImageCrawler):
             version=__version__,
         )
 
-    @staticmethod
-    def check_config(config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    @classmethod
+    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         subreddit = config["subreddit"]
         if type(subreddit) is not str:
             raise TypeError("subreddit {!r} is not str".format(subreddit))
