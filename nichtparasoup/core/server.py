@@ -55,9 +55,7 @@ class Server(object):
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
         # must be compatible to nichtparasoup.core._OnFill
         if refilled > 0:
-            _log('info', "refilled via {}({:x}) by {}".format(
-                type(crawler.imagecrawler).__name__, id(crawler.imagecrawler),
-                refilled))
+            _log('info', "refilled by {} via {!r}".format(refilled, crawler.imagecrawler))
 
     def refill(self) -> Dict[str, bool]:
         with self._locks.refill:

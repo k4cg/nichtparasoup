@@ -35,7 +35,7 @@ class BaseImageCrawler(ABC):
         _log('debug', 'crawler initialized: {!r}'.format(self))
 
     def __repr__(self) -> str:
-        return '<{} {!r}>'.format(type(self).__name__, self.get_config())
+        return '<{0.__module__}.{0.__name__} {1!r}>'.format(type(self), self.get_config())
 
     def __eq__(self, other: Any) -> bool:
         if type(self) is type(other):
