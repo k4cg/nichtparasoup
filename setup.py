@@ -29,8 +29,8 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 NAME = 'nichtparasoup'
 DESCRIPTION = 'A hackspaces entertainment system'
 URL = 'https://github.com/k4cg/nichtparasoup/'
-AUTHOR = 'Florian Baumann, Jan Kowalleck'
-EMAIL = ''
+AUTHOR = 'K4CG'
+EMAIL = 'info@k4cg.org'
 REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 
 URLS = dict(
