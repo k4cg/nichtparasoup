@@ -20,14 +20,14 @@ except ImportError:
 
 _logger = logging.getLogger('nichtparasoup')
 
-_LOG_TYPE = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
+_LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
 
 
-def _log(type: _LOG_TYPE, message: str, *args: Any, **kwargs: Any) -> None:
+def _log(level: _LOG_LEVEL, message: str, *args: Any, **kwargs: Any) -> None:
     if not logging.root.handlers and _logger.level == logging.NOTSET:
         _logger.setLevel(logging.INFO)
         _logger.addHandler(logging.StreamHandler())
-    getattr(_logger, type)(message.rstrip(), *args, **kwargs)
+    getattr(_logger, level)(message.rstrip(), *args, **kwargs)
 
 
 def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:

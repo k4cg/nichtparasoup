@@ -65,6 +65,8 @@ EXTRAS = dict(
         "coverage",
         "pytest",
         "ddt",
+        # "flake8-builtins",  # nice in general, but seams not bug-free, yet.
+        # "lake8-docstrings", not in use, until pluggable ImageCrawlers are implemented.
     ],
 )
 

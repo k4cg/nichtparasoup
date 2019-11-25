@@ -68,7 +68,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(config, dict(foo='bar'))
+        self.assertDictEqual(dict(foo='bar'), config)
 
     def test_empty_key(self) -> None:
         # arrange
@@ -76,7 +76,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(config, {'': 'bar'})
+        self.assertDictEqual({'': 'bar'}, config)
 
     def test_protected(self) -> None:
         # arrange
@@ -84,7 +84,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(config, dict())
+        self.assertDictEqual(dict(), config)
 
     def test_private(self) -> None:
         # arrange
@@ -92,4 +92,4 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(config, dict())
+        self.assertDictEqual(dict(), config)
