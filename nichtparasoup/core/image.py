@@ -1,17 +1,17 @@
-__all__ = ["Image", "ImageCollection", "ImageSource", "ImageUri"]
+__all__ = ["Image", "ImageCollection"]
 
 from typing import Any, Optional, Set
 from uuid import uuid4
 
 ImageUri = str
 
-ImageSource = str
+SourceUri = str
 
 
 class Image(object):
 
     def __init__(self, uri: ImageUri,
-                 is_generic: bool = False, source: Optional[ImageSource] = None,
+                 is_generic: bool = False, source: Optional[SourceUri] = None,
                  **more: Any) -> None:  # pragma: no cover
         self.uri = uri
         self.source = source

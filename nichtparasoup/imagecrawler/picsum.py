@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from nichtparasoup.core.image import Image, ImageCollection, ImageUri
+from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 __all__ = ["Picsum"]
@@ -40,7 +40,7 @@ class Picsum(BaseImageCrawler):
         )
 
     @staticmethod
-    def _get_image_uri(width: int, height: int) -> ImageUri:
+    def _get_image_uri(width: int, height: int) -> str:
         return "https://picsum.photos/{}/{}".format(width, height)
 
     def _reset(self) -> None:  # pragma: no cover
