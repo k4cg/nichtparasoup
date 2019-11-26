@@ -22,13 +22,13 @@ class Reddit(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import __version__
+        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             desc='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
             config=dict(
                 subreddit='the SubReddit to crawl',
             ),
-            version=__version__,
+            version=VERSION,  # since its a builtin crawler
         )
 
     @classmethod
