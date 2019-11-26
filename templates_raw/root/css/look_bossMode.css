@@ -1,7 +1,0 @@
-/* remember for development: lines that include the string "@stripOnBuild" will be stripped on build ;-) */
-
-/* @TODO write a good looking bos mode that is not totally suspicious */
-
-html.boss * {
-  visibility: hidden;
-}

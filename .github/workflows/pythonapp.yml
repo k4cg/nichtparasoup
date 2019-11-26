@@ -1,0 +1,52 @@
+name: "Test & Build"
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    name: Testing
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']
+        pyhon: ['3.5', '3.6', '3.7', '3.8']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.pyhon_version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.pyhon }}
+      - name: Install dependencies
+        run: |
+            python3 -m pip install --upgrade pip
+            python3 -m pip install --upgrade setuptools tox
+      - name: Test with tox
+        run: |
+          python3 -m tox
+  publish:
+    name: Publishing
+    if: github.event_name == 'release' && github.event.action == 'created'
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade setuptools setuptools_scm wheel twine
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+

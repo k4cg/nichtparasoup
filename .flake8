@@ -1,0 +1,16 @@
+[flake8]
+
+show-source  = True
+
+# ignore self markers of https://github.com/python-discord/flake8-annotations
+ignore = TYP101,TYP102
+
+exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
+    setup.py
+    docs
+
+max-complexity = 5
+
+# allow up to 119 characters as this is the width of GitHub code review
+max-line-length = 119
+

@@ -1,0 +1,40 @@
+button ,
+.button {
+  min-height: 2ex;
+  min-width: 2.2ex;
+  vertical-align: middle;
+  background-color: #111;
+  color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 0.5ex;
+  display: inline;
+  display: inline-block;
+  padding: 0.2ex 0.4ex;
+  line-height: 2.8ex;
+}
+
+
+button:hover , button:active , button:focus ,
+a.button:hover , a.button:active , a.button:focus ,
+label.button:hover , label.button:active , label.button:focus {
+  outline: 0
+}
+
+
+button:hover , button:active ,
+a.button:hover , a.button:active ,
+label.button:hover , label.button:active  {
+ /* invert colors */
+  background-color: #ccc;
+  color: #111;
+  cursor: pointer;
+}
+
+
+
+button[disabled] ,
+.button[disabled] {
+  opacity: 0.4;
+  filter: alpha(opacity=40); /* For IE8 and earlier */
+  cursor: not-allowed !important;
+}

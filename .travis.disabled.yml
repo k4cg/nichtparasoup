@@ -1,0 +1,53 @@
+## not using travisCI for this project anymore
+## switched to github actions
+
+version: ~> 1.0
+
+os: "linux"
+dist: "xenial"
+
+language: "python"
+
+cache: "pip"
+
+install:
+  - "python3 -m pip install --upgrade pip setuptools"
+  - "python3 -m pip install --upgrade tox"
+
+script: "python3 -m tox"
+
+stages:
+  - name: "Testing"
+  - name: "Publishing"
+    if: "tag IS present"
+
+jobs:
+  include:
+    - stage: "Testing"
+      dist: "trusty"
+      python: "3.5"
+      env: "TOXENV=py35-codecov"
+    - stage: "Testing"
+      python: "3.6"
+      env: "TOXENV=py36-codecov"
+    - stage: "Testing"
+      python: "3.7"
+      env: "TOXENV=py37-codecov"
+    - stage: "Testing"
+      python: "3.8"
+      env: "TOXENV=py38-codecov"
+    - stage: "Publishing"
+      name: "PYPI"
+      install:
+        - "python3 -m pip install --upgrade pip setuptools"
+        - "python3 -m pip install --upgrade twine wheel"
+      script: skip
+      deploy:
+        provider: "pypi"
+        username: "__token__"
+        password:
+          secure: "TODO"
+        distributions: "sdist bdist_wheel"
+        on:
+          branch: master
+          tags: true

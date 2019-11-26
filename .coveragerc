@@ -1,0 +1,45 @@
+# .coveragerc to control coverage.py
+
+[run]
+
+data_file = .coverage
+branch = True
+
+source =
+    nichtparasoup
+
+omit =
+    # Don't complain if non-runnable code isn't run:
+    */__main__.py
+
+
+[paths]
+
+source =
+    ./nichtparasoup
+    .tox/*/lib/python*/site-packages/nichtparasoup
+    .tox/pypy/site-packages/nichtparasoup
+
+
+[report]
+
+# TODO set proper value
+fail_under = 0
+
+exclude_lines =
+    # Have to re-enable the standard pragma
+    \#\s*pragma: no cover
+
+    # Don't complain if non-runnable code isn't run:
+    ^if __name__ == ['"]__main__['"]:$
+    ^\s*if False:
+
+
+[html]
+
+directory = htmlcov
+
+
+[xml]
+
+output = coverage.xml

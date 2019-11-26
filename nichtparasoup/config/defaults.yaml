@@ -1,0 +1,62 @@
+## This is a config file for nichtprasoup (v2.x)
+
+
+## WebServer config
+## type: map
+webserver:
+  ## hostname the WebServer recognizes. can also be a unix socket
+  ## type: string
+  hostname: "0.0.0.0"
+  ## port the webserver runs on
+  ## type: integer
+  ## constraint: 1 <= port <= 65535
+  port: 5000
+
+## ImageServer config
+## type: map
+imageserver:
+  ## number of images the server must keep at all time
+  ## type: integer
+  ## constraint: >= 10
+  crawler_upkeep: 30
+
+## list of ImageCrawlers to use.
+## ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
+## for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
+## for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
+## type: list
+crawlers:
+  -
+    ## name of the crawler
+    ## for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
+    ## type: string
+    type: "Reddit"
+    ## probability to be chosen randomly
+    ## type: integer or float
+    ## constraint: > 0
+    ## optional
+    ## default: 1
+    weight: 3
+    ## the crawler's own config
+    ## for description of a crawler and how to configure, see commandline help: nichtparasoup info --imagecrawler-desc <crawler>
+    ## type: map
+    ## optional
+    config:
+      subreddit: 'EarthPorn'
+  -
+    type: "Picsum"
+    weight: 1
+    config:
+      width: 300
+      height: 600
+
+
+## logging settings
+## type: map
+## optional
+logging:
+  ## log level settings
+  ## type: enum('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG')
+  ## optional
+  ## default: 'INFO'
+  level: 'INFO'

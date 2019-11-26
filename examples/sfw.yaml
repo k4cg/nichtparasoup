@@ -1,0 +1,206 @@
+## This is a config file for nichtprasoup (v2.x)
+## This is an example file. For a better kickStart run: nichtparasoup config --help
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 5000
+
+imageserver:
+  crawler_upkeep: 10
+
+logging:
+  level: 'INFO'
+
+crawlers:
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'EarthPorn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'gifs'
+  - type: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'pics'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'aww_gifs'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'mildlyinteresting'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'reactiongifs'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Oddlysatisfying'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Spaceflightporn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Therewasanattempt'
+  - type: "Reddit"
+    weight: 6
+    config:
+      subreddit: 'HistoryMemes'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Unexpected'
+  - type: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'Whatcouldgowrong'
+  - type: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'Weird'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'photoshopbattles'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Nonononoyes'
+  - type: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'earthporn'
+  - type: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'Bettereveryloop'
+  - type: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'assholedesign'
+  - type: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'machineporn'
+  - type: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'Shittyfoodporn'
+  - type: "Reddit"
+    weight: 2
+    config:
+      subreddit: 'Instant_regret'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Mildlyinfuriating'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'somememes'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Crappydesign'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'engineeringporn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'hmmm'
+  - type: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'mechanical_gifs'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'cableporn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'shittylifehacks'
+  - type: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'perfecttiming'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'AnimalPorn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'CatGifs'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'ChildrenFallingOver'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'funny'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'geek'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'IdiotsInCars'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'interestingasfuck'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'itsaunixsystem'
+  - type: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'MadeMeSmile'
+  - type: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'insanepeoplefacebook'
+  - type: "Reddit"
+    weight: 1
+    config:
+      subreddit: 'PeopleFuckingDying'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'spaceflightporn'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'woahdude'
+  - type: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'spaceporn'
+  - type: "Reddit"
+    weight: 2
+    config:
+      subreddit: 'neckbeardnests'
+  - type: "Reddit"
+    weight: 1
+    config:
+      subreddit: 'techsupportgore'
+  - type: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'perfectloops'
+  - type: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'wasletztepreis'
