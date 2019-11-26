@@ -35,7 +35,7 @@ REQUIRES_PYTHON = '>={}.{}'.format(*REQUIRED_PYTHON)
 
 URLS = dict(
     Source='https://github.com/k4cg/nichtparasoup/',
-    Documentation='https://github.com/k4cg/nichtparasoup/docs/',
+    Documentation='https://github.com/k4cg/nichtparasoup/tree/master/docs',
 )
 
 # What packages are required for this module to be executed?
