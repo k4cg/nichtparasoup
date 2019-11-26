@@ -4,6 +4,13 @@
 ## Unreleased
 
 
+## 2.0.1
+
+### Fix
+
+* internal version detection
+
+
 ## 2.0.0
 
 Rewrite from scratch.
