@@ -5,3 +5,8 @@
 html.boss * {
   visibility: hidden;
 }
+
+html.boss,
+html.boss body {
+    overflow: hidden;
+}

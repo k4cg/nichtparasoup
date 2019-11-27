@@ -1,0 +1,15 @@
+@media all and (display-mode: fullscreen) {
+
+    html.atTop::-webkit-scrollbar,
+    html.atTop body::-webkit-scrollbar {
+        display: none;
+    }
+
+    html.atTop,
+    html.atTop body {
+        overflow: -moz-scrollbars-none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+}
