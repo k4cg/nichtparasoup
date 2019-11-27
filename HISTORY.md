@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Added
+
+* ImageCrawler for Instagram: `InstagramProfile` & `InstagramHashtag`
+
 
 ## 2.0.1
 

@@ -26,7 +26,8 @@
     background-image: url('https://assets-9gag-fun.9cache.com/s/fab0aa49/a221eed4bcd7a347dc71f9348923eacaac0db5ff/static/dist/core/img/favicon.ico');
 }
 
-#wall figure figcaption[data-crawler='instagram'] {
+#wall figure figcaption[data-crawler='instagramhashtag'] ,
+#wall figure figcaption[data-crawler='instagramprofile'] {
     background-image: url('https://www.instagram.com/static/images/ico/favicon-192.png/68d99ba29cc8.png');
 }
 

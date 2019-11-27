@@ -40,7 +40,7 @@ URLS = dict(
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`
+    'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`, `imagecrawler/instagram`
     'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
     "werkzeug>=0.15",  # for `webserver`
 ]

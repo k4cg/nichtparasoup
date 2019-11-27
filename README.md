@@ -2,6 +2,7 @@
 
 _nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
+[instagram](https://instagram.com),
 [reddit](https://reddit.com).  
 Other crawlers are currently removed, but will be back soon.
 
