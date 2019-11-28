@@ -51,7 +51,7 @@
             presented: 3, // tab is presented
             active: 4,  // window is presented
             scroll: 5, // window is scrolled away from top
-            gallery : 6 // image is clicked for gallery-view
+            gallery: 6 // image is clicked for gallery-view
         }
     };
 
@@ -177,7 +177,9 @@
             var srcA = srcBox.appendChild(document.createElement("a"));
             srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || src;
 
-            addEvent(imageDoc, 'click', np._showInGalery);
+            addEvent(imageDoc, 'click', function () {
+                fullscreen.toggle(this);
+            });
 
             if (typeof onReady == "function") {
                 onReady(imageBox);
@@ -206,24 +208,6 @@
         var image = this._images.shift();
         if (image && image.parentNode) {
             image.parentNode.removeChild(image);
-        }
-    };
-
-    np._showInGalery = function ()
-    {
-        // this = elem
-        var shown = fullscreen.toggle(this);
-        switch (shown)
-        {
-            case true:
-                np.setState(np.constants.stateBS.gallery, true);
-                break;
-            case false:
-                np.setState(np.constants.stateBS.gallery, false);
-                break;
-            case undefined:
-                // pass
-                break;
         }
     };
 
@@ -332,16 +316,19 @@
         this._imageFadeInTime = imageFadeInTime;
         this._optionsStorage.load();
 
-        if (fullscreen.isSupported)
-        {
+        if (fullscreen.isSupported) {
             helperFuncs.className.add(rootElem, this.__canFullScreen_className);
+            fullscreen.onChange(function () {
+                var inGallery = !!fullscreen.getFullScreenElement();
+                np.setState(np.constants.stateBS.gallery, inGallery);
+            });
         }
 
         addEvent(window, "scroll", function () {
             np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0);
         });
         helperFuncs.className.add(rootElem, this.__atTop_className);
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
         fireEvent(window, "scroll");
 
         var c_background = document.getElementById("c_background");

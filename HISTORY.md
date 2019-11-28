@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Fix
+
+* auto-play is no longer broken, when image-gallery-mode is canceled by browser's builtin functions.
+
 
 ## 2.1.0
 
