@@ -7,6 +7,9 @@
     var addEvent = window.helperFuncs.addEvent,
         fireEvent = window.helperFuncs.fireEvent;
 
+
+    var fullscreen = window.helperFuncs.fullscreen;
+
     /*
      * put everything public/protected in a single-use object called "np"
      * every thing else is private ...
@@ -48,11 +51,13 @@
             presented: 3, // tab is presented
             active: 4,  // window is presented
             scroll: 5, // window is scrolled away from top
+            gallery : 6 // image is clicked for gallery-view
         }
     };
 
     np.__bossMode_className = "boss";
     np.__atTop_className = "atTop";
+    np.__canFullScreen_className = "canFullScreen";
 
     np._imageTarget = undefined;
 
@@ -172,6 +177,8 @@
             var srcA = srcBox.appendChild(document.createElement("a"));
             srcA.href = srcA.innerHTML = srcA.innerText = imageData.source || src;
 
+            addEvent(imageDoc, 'click', np._showInGalery);
+
             if (typeof onReady == "function") {
                 onReady(imageBox);
             }
@@ -200,7 +207,24 @@
         if (image && image.parentNode) {
             image.parentNode.removeChild(image);
         }
+    };
 
+    np._showInGalery = function ()
+    {
+        // this = elem
+        var shown = fullscreen.toggle(this);
+        switch (shown)
+        {
+            case true:
+                np.setState(np.constants.stateBS.gallery, true);
+                break;
+            case false:
+                np.setState(np.constants.stateBS.gallery, false);
+                break;
+            case undefined:
+                // pass
+                break;
+        }
     };
 
     np._optionsStorage = {
@@ -295,13 +319,6 @@
         return bitset.check(this._state, which);
     };
 
-    np.toggleFullScreen = window.helperFuncs.noop;
-    if (window.helperFuncs.fullscreen.isSupported) {
-        np.toggleFullScreen = function () {
-            window.helperFuncs.fullscreen.toggle(document.documentElement);
-        };
-    }
-
     np.__inited = false;
     np.init = function (imageTargetID, imageFadeInTime) {
         if (this.__inited) {
@@ -314,6 +331,11 @@
         this._imageTarget.appendChild(document.createTextNode("")); // to prevent issues with insertBefore()
         this._imageFadeInTime = imageFadeInTime;
         this._optionsStorage.load();
+
+        if (fullscreen.isSupported)
+        {
+            helperFuncs.className.add(rootElem, this.__canFullScreen_className);
+        }
 
         addEvent(window, "scroll", function () {
             np.setState(np.constants.stateBS.scroll, this.pageYOffset > 0);
@@ -352,7 +374,6 @@
         c_speed.value = this.getInterval();
         addEvent(c_speed, "change", function () {
             np.setInterval(this.value);
-
         });
 
         var c_state = document.getElementById("c_state");

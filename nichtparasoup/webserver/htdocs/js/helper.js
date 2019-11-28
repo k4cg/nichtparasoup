@@ -121,23 +121,11 @@ window.helperFuncs = {
         },
         toggle: function (elem) {
             if (elem === this.getFullScreenElement()) {
-                return (elem === this.exit());
+                return this.exit() ? false : undefined;
             } else {
-                return (0 !== this.enter(elem));
+                return this.enter(elem) ? true : undefined;
             }
         }
     }
 
 };
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+
 @media all and (display-mode: fullscreen) {
 
     html.atTop::-webkit-scrollbar,
@@ -12,4 +13,13 @@
         scrollbar-width: none;
     }
 
+}
+
+
+html.canFullScreen #wall figure img {
+    cursor: zoom-in;
+}
+
+html.canFullScreen #wall figure img:fullscreen {
+    cursor: zoom-out;
 }
