@@ -50,13 +50,11 @@ window.helperFuncs = {
     },
 
     className: {
-        add: function (elem, className)
-        {
-            elem.className += " "+ className;
+        add: function (elem, className) {
+            elem.className += " " + className;
         },
-        remove: function (elem, className)
-        {
-            elem.className = elem.className.replace(new RegExp("\\s*\\b"+ className +"\\b", "g"), "");
+        remove: function (elem, className) {
+            elem.className = elem.className.replace(new RegExp("\\s*\\b" + className + "\\b", "g"), "");
         }
     },
 
@@ -125,6 +123,13 @@ window.helperFuncs = {
             } else {
                 return this.enter(elem) ? true : undefined;
             }
+        },
+        onChange: function (callback) {
+            var hf = window.helperFuncs;
+            hf.addEvent(document, "fullscreenchange", callback);
+            hf.addEvent(document, "mozfullscreenchange", callback);
+            hf.addEvent(document, "webkitfullscreenchange", callback);
+            hf.addEvent(document, "msfullscreenchange", callback);
         }
     }
 
