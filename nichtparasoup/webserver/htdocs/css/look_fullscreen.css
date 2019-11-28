@@ -1,0 +1,25 @@
+
+@media all and (display-mode: fullscreen) {
+
+    html.atTop::-webkit-scrollbar,
+    html.atTop body::-webkit-scrollbar {
+        display: none;
+    }
+
+    html.atTop,
+    html.atTop body {
+        overflow: -moz-scrollbars-none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+}
+
+
+html.canFullScreen #wall figure img {
+    cursor: zoom-in;
+}
+
+html.canFullScreen #wall figure img:fullscreen {
+    cursor: zoom-out;
+}
