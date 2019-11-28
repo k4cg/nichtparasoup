@@ -6,6 +6,8 @@
 ### Added
 
 * ImageCrawler for Instagram: `InstagramProfile` & `InstagramHashtag`
+* web UI: added image zoom in
+* web UI: hide scrollbar in FullScreen mode, when at top
 
 
 ## 2.0.1
