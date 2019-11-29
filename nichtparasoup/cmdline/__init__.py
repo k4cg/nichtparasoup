@@ -101,7 +101,7 @@ class Commands(object):
         if not imagecrawlers:
             _message_exception(Warning('no ImageCrawler found'))
         else:
-            _message("\r\n".join(imagecrawlers))
+            _message("\r\n".join(sorted(imagecrawlers)))
         return 0
 
     @staticmethod
