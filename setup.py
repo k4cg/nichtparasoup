@@ -43,6 +43,7 @@ REQUIRED = [
     'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`, `imagecrawler/instagram`
     'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
     "werkzeug>=0.15",  # for `webserver`
+    'setuptools>=40.0',  # for imagecrawler-plugin-architecture
 ]
 
 # What packages are optional?
@@ -103,7 +104,16 @@ setup(
     project_urls=URLS,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     entry_points=dict(
-        console_scripts=['nichtparasoup=nichtparasoup.cmdline:main'],
+        console_scripts=[
+            'nichtparasoup = nichtparasoup.cmdline:main',
+        ],
+        nichtparasoup_imagecrawler=[
+            'Dummy = nichtparasoup.imagecrawler.dummy:Dummy',
+            'Picsum = nichtparasoup.imagecrawler.picsum:Picsum',
+            'Reddit = nichtparasoup.imagecrawler.reddit:Reddit',
+            'InstagramProfile = nichtparasoup.imagecrawler.instagram:InstagramProfile',
+            'InstagramHashtag = nichtparasoup.imagecrawler.instagram:InstagramHashtag',
+        ]
     ),
     setup_requires=["setuptools", "setuptools_scm>=3.3.3"],
     install_requires=REQUIRED,
