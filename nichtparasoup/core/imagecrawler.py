@@ -34,7 +34,7 @@ class BaseImageCrawler(ABC):
         self._crawl_lock = Lock()
         _log('debug', 'crawler initialized: {!r}'.format(self))
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} {1!r}>'.format(type(self), self.get_config())
 
     def __eq__(self, other: Any) -> bool:

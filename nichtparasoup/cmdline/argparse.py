@@ -1,3 +1,5 @@
+# pragma: no cover
+
 __all__ = ["parser"]
 
 from argparse import ArgumentParser

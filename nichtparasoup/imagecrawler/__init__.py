@@ -18,8 +18,6 @@ def _load_classes(entries: Iterable[EntryPoint]) -> Dict[str, Type[BaseImageCraw
                 raise NameError('Duplicate imagecrawler {!r} for {!r}'.
                                 format(entry.name, (classes[entry.name], imagecrawler_class)))
             classes[entry.name] = imagecrawler_class
-        else:
-            pass
     return classes
 
 
@@ -35,9 +33,9 @@ def __get_imagecrawlers() -> Dict[str, Type[BaseImageCrawler]]:
     return __imagecrawlers
 
 
-def get_classes() -> Dict[str, Type[BaseImageCrawler]]:
+def get_classes() -> Dict[str, Type[BaseImageCrawler]]:  # pragma: no cover
     return __get_imagecrawlers().copy()
 
 
-def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:
+def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:  # pragma: no cover
     return __get_imagecrawlers().get(class_name)
