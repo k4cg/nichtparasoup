@@ -242,7 +242,7 @@ class InstagramHashtag(BaseInstagramCrawler):
     def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='A Crawler for hash tag posts of https://www.instagram.com/',
+            description='A Crawler for hash tag posts of https://www.instagram.com/',
             config=dict(
                 tag_name='the HashTag on Instagram',
             ),
@@ -283,7 +283,7 @@ class InstagramProfile(BaseInstagramCrawler):
     def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='A Crawler for profile pages of https://www.instagram.com/',
+            description='A Crawler for profile pages of https://www.instagram.com/',
             config=dict(
                 user_name='the UserName on Instagram',
             ),

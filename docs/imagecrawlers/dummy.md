@@ -2,8 +2,10 @@
 
 ## Purpose
 
-Not an actual crawler.  
 just generates the same URIs... again .. and again...
+
+Not an actual crawler.
+More like an EchoCrawler that returns what you tell it to return.
 
 ## Config
 

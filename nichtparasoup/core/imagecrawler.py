@@ -16,8 +16,11 @@ _ImageCrawlerConfigKey = str
 
 class ImageCrawlerInfo(object):
 
-    def __init__(self, desc: str, config: Dict[_ImageCrawlerConfigKey, str], version: str) -> None:  # pragma: no cover
-        self.desc = desc
+    def __init__(self, description: str,
+                 config: Dict[_ImageCrawlerConfigKey, str], version: str,
+                 long_description: Optional[str] = None) -> None:  # pragma: no cover
+        self.description = description
+        self.long_description = long_description
         self.config = config
         self.version = version
 

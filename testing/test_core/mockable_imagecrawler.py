@@ -12,7 +12,7 @@ class MockableImageCrawler(BaseImageCrawler):
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
-            desc='a mock',
+            description='a mock',
             config=dict(),
             version='mock',
         )

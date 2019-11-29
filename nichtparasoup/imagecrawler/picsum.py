@@ -13,7 +13,7 @@ class Picsum(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='Find images from https://picsum.photos',
+            description='Find images from https://picsum.photos',
             config=dict(
                 width='how many pixels of the image to find should be wide',
                 height='how many pixels of the image to find should be high',

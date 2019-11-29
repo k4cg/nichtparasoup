@@ -68,9 +68,9 @@ class Commands(object):
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             if imagecrawler in imagecrawlers:
-                _message_exception(Warning(
-                    'duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
-                    .format(type=type(imagecrawler), config=imagecrawler.get_config())))
+                _message_exception(
+                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'.
+                            format(type=type(imagecrawler), config=imagecrawler.get_config())))
                 continue
             imagecrawlers.append(imagecrawler)
         return 0
@@ -111,18 +111,25 @@ class Commands(object):
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
             return 1
-        info = imagecrawler_class.info()
-        if info.config:
-            info_bull = '\r\n * '
-            mlen = max(len(k) for k in info.config.keys())
-            info_config = info_bull + info_bull.join([
+        info = []
+        info_linebreak = '\r\n'
+        imagecrawler_info = imagecrawler_class.info()
+        info.append(imagecrawler_info.description)
+        if imagecrawler_info.long_description:
+            info.append(imagecrawler_info.long_description)
+        if imagecrawler_info.config:
+            info_bull = info_linebreak + ' * '
+            mlen = max(len(k) for k in imagecrawler_info.config.keys())
+            info.append('Config: ' + info_bull + info_bull.join([
                 '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
-                for key, desc in info.config.items()])
-        else:
-            info_config = 'none'
-        _message('Purpose: {}\r\n'
-                 'Config : {}\r\n'
-                 'Version: {}'.format(info.desc, info_config, info.version))
+                for key, desc in imagecrawler_info.config.items()]))
+        info.append(info_linebreak.join(  # additional info - useful for debugging
+            [
+                info_linebreak,
+                'Version: {}'.format(imagecrawler_info.version),
+                'Class  : {}:{}'.format(imagecrawler_class.__module__, imagecrawler_class.__name__),
+            ]))
+        _message((info_linebreak * 2).join(info))
         return 0
 
 
