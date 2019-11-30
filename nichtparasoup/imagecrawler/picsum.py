@@ -19,6 +19,7 @@ class Picsum(BaseImageCrawler):
                 height='how many pixels of the image to find should be high',
             ),
             version=VERSION,  # since its a builtin crawler
+            icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png'
         )
 
     @classmethod

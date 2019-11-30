@@ -162,7 +162,7 @@
             var srcBox = imageBox.appendChild(document.createElement("figcaption"));
 
             // not all browsers support dataset property - so use setAttribute function
-            srcBox.setAttribute("data-crawler", imageData.crawler.type.toLowerCase());  // naming conventions: lowercase the names of the crawler classes
+            srcBox.setAttribute("data-crawler", imageData.crawler.name);  // naming conventions: lowercase the names of the crawler classes
             if (imageData.source) { // this one is optional
                 srcBox.setAttribute("data-source", imageData.source);
             }

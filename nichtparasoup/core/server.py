@@ -47,7 +47,7 @@ class Server(object):
             more=image.more,
             crawler=dict(
                 id=id(crawler),
-                type=type(crawler.imagecrawler).__name__,
+                name=type(crawler.imagecrawler).__name__,
             ),
         )
 
@@ -155,7 +155,7 @@ class ServerStatus(ABC):
             crawler = copy(crawler)
             images = crawler.images.copy()
             status[crawler_id] = dict(
-                type=type(crawler.imagecrawler).__name__,
+                name='TODO',
                 weight=crawler.weight,
                 config=crawler.imagecrawler.get_config(),  # just a dict
                 images=dict(

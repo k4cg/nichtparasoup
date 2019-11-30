@@ -42,7 +42,7 @@ URLS = dict(
 REQUIRED = [
     'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`, `imagecrawler/instagram`
     'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
-    "werkzeug>=0.15",  # for `webserver`
+    "werkzeug>=0.15", "jinja2>=2.10",  # for `webserver`
     'setuptools>=40.0',  # for imagecrawler-plugin-architecture
 ]
 

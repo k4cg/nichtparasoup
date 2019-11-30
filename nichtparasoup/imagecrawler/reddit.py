@@ -29,6 +29,7 @@ class Reddit(BaseImageCrawler):
                 subreddit='the SubReddit to crawl',
             ),
             version=VERSION,  # since its a builtin crawler
+            icon_url='https://www.redditstatic.com/desktop2x/img/favicon/apple-icon-120x120.png',
         )
 
     @classmethod

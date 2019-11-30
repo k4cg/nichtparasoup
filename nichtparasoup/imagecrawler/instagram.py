@@ -62,6 +62,8 @@ or maybe even use the official API.
 
 INSTAGRAM_URL_ROOT = 'https://www.instagram.com/'
 
+INSTAGRAM_ICON_URL = INSTAGRAM_URL_ROOT + 'static/images/ico/favicon-192.png/68d99ba29cc8.png'
+
 _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
 
@@ -247,6 +249,7 @@ class InstagramHashtag(BaseInstagramCrawler):
                 tag_name='the HashTag on Instagram',
             ),
             version=VERSION,  # since its a builtin crawler
+            icon_url=INSTAGRAM_ICON_URL,
         )
 
     @classmethod
@@ -288,6 +291,7 @@ class InstagramProfile(BaseInstagramCrawler):
                 user_name='the UserName on Instagram',
             ),
             version=VERSION,
+            icon_url=INSTAGRAM_ICON_URL,
         )
 
     @classmethod
