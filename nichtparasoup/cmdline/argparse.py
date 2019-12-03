@@ -16,6 +16,12 @@ commands = parser.add_subparsers(
 )
 commands.required = True
 
+parser.add_argument(
+    '--debug',
+    help='enable debug output',
+    action='store_true', dest="debug",
+)
+
 command_run = commands.add_parser(
     'run',
     help='run a server',

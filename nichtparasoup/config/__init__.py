@@ -13,8 +13,8 @@ _defaults = None  # type: Optional[Dict[str, Any]]
 
 
 def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
-    from nichtparasoup.imagecrawler import get_class as get_crawler_class
-    imagecrawler_class = get_crawler_class(config_crawler['type'])
+    from nichtparasoup.imagecrawler import get_imagecrawlers
+    imagecrawler_class = get_imagecrawlers().get_class(config_crawler['type'])
     if not imagecrawler_class:
         raise ValueError('unknown crawler type {!r}'.format(config_crawler['type']))
     try:

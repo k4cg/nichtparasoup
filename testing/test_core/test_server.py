@@ -51,7 +51,7 @@ class ServerGetImageTest(unittest.TestCase):
             self.assertIsInstance(image_got.get("crawler"), dict)
             image_got_crawler = image_got["crawler"]  # type: Dict[str, Any]
             self.assertEqual(image_got_crawler.get("id"), id(crawler))
-            self.assertEqual(image_got_crawler.get("type"), type(imagecrawler).__name__)
+            self.assertEqual(image_got_crawler.get("type"), '{0.__module__}.{0.__name__}'.format(type(imagecrawler)))
 
 
 class ServerResetTest(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
 
-from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
+from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.dummy import Dummy
 
 
@@ -59,8 +59,23 @@ class DummyDescriptionTest(unittest.TestCase):
 
 
 class DummyLoaderTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ic_name = "Dummy"
+        self.ic_class = Dummy
+
+    def tearDown(self) -> None:
+        del self.ic_name
+        del self.ic_class
+
     def test_get_imagecrawler_class(self) -> None:
         # act
-        imagecrawler_class = get_imagecrawler_class("Dummy")
+        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
         # assert
-        self.assertIs(imagecrawler_class, Dummy)
+        self.assertIs(imagecrawler_class, self.ic_class)
+
+    def test_get_imagecrawler_name(self) -> None:
+        # act
+        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
+        # assert
+        self.assertEqual(imagecrawler_name, self.ic_name)

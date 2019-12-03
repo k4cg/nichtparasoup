@@ -1,13 +1,19 @@
+import logging
 from typing import Any, List, Optional
 
 from nichtparasoup._internals import _message, _message_exception
+
+
+def _logging_init(level: int) -> None:
+    if logging.root.level == logging.NOTSET:
+        logging.root.setLevel(level)
+        logging.root.addHandler(logging.StreamHandler())
 
 
 class Commands(object):
 
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
-        import logging
         from os.path import abspath
         from nichtparasoup.config import get_config, get_imagecrawler
         from nichtparasoup.core import NPCore
@@ -15,8 +21,7 @@ class Commands(object):
         from nichtparasoup.webserver import WebServer
         try:
             config = get_config(abspath(config_file) if config_file else None)
-            logging.root.setLevel(getattr(logging, config['logging']['level']))
-            logging.root.addHandler(logging.StreamHandler())
+            _logging_init(getattr(logging, config['logging']['level']))
             imageserver = ImageServer(NPCore(), **config['imageserver'])
             for crawler_config in config['crawlers']:
                 imagecrawler = get_imagecrawler(crawler_config)
@@ -96,8 +101,8 @@ class Commands(object):
 
     @staticmethod
     def info_imagecrawler_list(_: Any) -> int:
-        from nichtparasoup.imagecrawler import get_classes as get_imagegrawler_classes
-        imagecrawlers = list(get_imagegrawler_classes().keys())
+        from nichtparasoup.imagecrawler import get_imagecrawlers
+        imagecrawlers = get_imagecrawlers().names()
         if not imagecrawlers:
             _message_exception(Warning('no ImageCrawler found'))
         else:
@@ -106,8 +111,8 @@ class Commands(object):
 
     @staticmethod
     def info_imagecrawler_desc(imagecrawler: str) -> int:
-        from nichtparasoup.imagecrawler import get_class as get_imagegrawler_class
-        imagecrawler_class = get_imagegrawler_class(imagecrawler)
+        from nichtparasoup.imagecrawler import get_imagecrawlers
+        imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
             return 1
@@ -136,5 +141,8 @@ class Commands(object):
 def main(args: Optional[List[str]] = None) -> int:
     from nichtparasoup.cmdline.argparse import parser as argparser
     options = dict(argparser.parse_args(args=args).__dict__)
+    if options.pop('debug', False):
+        _logging_init(logging.DEBUG)
+        _message('DEBUG ENABLED :)', 'cyan')
     command = options.pop('command')
     return getattr(Commands, command)(**options)  # type: ignore

@@ -102,17 +102,17 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=URLS,
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(exclude=["testing", "tests", "*.tests", "*.tests.*", "tests.*"]),
     entry_points=dict(
         console_scripts=[
-            'nichtparasoup = nichtparasoup.cmdline:main',
+            NAME + ' = ' + NAME + '.cmdline:main',
         ],
         nichtparasoup_imagecrawler=[
-            'Dummy = nichtparasoup.imagecrawler.dummy:Dummy',
-            'Picsum = nichtparasoup.imagecrawler.picsum:Picsum',
-            'Reddit = nichtparasoup.imagecrawler.reddit:Reddit',
-            'InstagramProfile = nichtparasoup.imagecrawler.instagram:InstagramProfile',
-            'InstagramHashtag = nichtparasoup.imagecrawler.instagram:InstagramHashtag',
+            'Dummy = ' + NAME + '.imagecrawler.dummy:Dummy',
+            'Picsum = ' + NAME + '.imagecrawler.picsum:Picsum',
+            'Reddit = ' + NAME + '.imagecrawler.reddit:Reddit',
+            'InstagramProfile = ' + NAME + '.imagecrawler.instagram:InstagramProfile',
+            'InstagramHashtag = ' + NAME + '.imagecrawler.instagram:InstagramHashtag',
         ]
     ),
     setup_requires=["setuptools", "setuptools_scm>=3.3.3"],

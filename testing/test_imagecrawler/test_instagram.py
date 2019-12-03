@@ -6,7 +6,7 @@ from typing import Any, Dict
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
+from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )
@@ -316,11 +316,26 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
 
 
 class InstagramHashtagLoaderTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ic_name = "InstagramHashtag"
+        self.ic_class = InstagramHashtag
+
+    def tearDown(self) -> None:
+        del self.ic_name
+        del self.ic_class
+
     def test_get_imagecrawler_class(self) -> None:
         # act
-        imagecrawler_class = get_imagecrawler_class("InstagramHashtag")
+        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
         # assert
-        self.assertIs(imagecrawler_class, InstagramHashtag)
+        self.assertIs(imagecrawler_class, self.ic_class)
+
+    def test_get_imagecrawler_name(self) -> None:
+        # act
+        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
+        # assert
+        self.assertEqual(imagecrawler_name, self.ic_name)
 
 
 class InstagramProfileTest(unittest.TestCase):
@@ -474,8 +489,23 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
 
 
 class InstagramProfileLoaderTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ic_name = "InstagramProfile"
+        self.ic_class = InstagramProfile
+
+    def tearDown(self) -> None:
+        del self.ic_name
+        del self.ic_class
+
     def test_get_imagecrawler_class(self) -> None:
         # act
-        imagecrawler_class = get_imagecrawler_class("InstagramProfile")
+        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
         # assert
-        self.assertIs(imagecrawler_class, InstagramProfile)
+        self.assertIs(imagecrawler_class, self.ic_class)
+
+    def test_get_imagecrawler_name(self) -> None:
+        # act
+        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
+        # assert
+        self.assertEqual(imagecrawler_name, self.ic_name)

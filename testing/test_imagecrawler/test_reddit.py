@@ -2,7 +2,7 @@ import unittest
 from os.path import dirname, join as path_join
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
+from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.reddit import Reddit
 
 from . import _FileFetcher
@@ -173,8 +173,23 @@ class RedditDescriptionTest(unittest.TestCase):
 
 
 class RedditLoaderTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ic_name = "Reddit"
+        self.ic_class = Reddit
+
+    def tearDown(self) -> None:
+        del self.ic_name
+        del self.ic_class
+
     def test_get_imagecrawler_class(self) -> None:
         # act
-        imagecrawler_class = get_imagecrawler_class("Reddit")
+        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
         # assert
-        self.assertIs(imagecrawler_class, Reddit)
+        self.assertIs(imagecrawler_class, self.ic_class)
+
+    def test_get_imagecrawler_name(self) -> None:
+        # act
+        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
+        # assert
+        self.assertEqual(imagecrawler_name, self.ic_name)

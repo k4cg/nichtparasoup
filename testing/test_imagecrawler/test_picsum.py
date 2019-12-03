@@ -1,9 +1,9 @@
 import unittest
 
-from nichtparasoup.imagecrawler import get_class as get_imagecrawler_class
+from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.picsum import Picsum
 
-_picsum_right_config = dict(width=800, height=600)
+_picsum_right_config = {'width': 800, 'height': 600}
 
 
 class PicsumConfigCorrect(unittest.TestCase):
@@ -103,17 +103,34 @@ class PicsumCrawlTest(unittest.TestCase):
 
 
 class DummyDescriptionTest(unittest.TestCase):
+
     def test_description_config(self) -> None:
         # act
         description = Picsum.info()
         # assert
+        self.assertIsInstance(description.config, dict)
         for config_key in _picsum_right_config.keys():
             self.assertTrue(config_key in description.config)
 
 
 class PicsumLoaderTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.ic_name = "Picsum"
+        self.ic_class = Picsum
+
+    def tearDown(self) -> None:
+        del self.ic_name
+        del self.ic_class
+
     def test_get_imagecrawler_class(self) -> None:
         # act
-        imagecrawler_class = get_imagecrawler_class("Picsum")
+        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
         # assert
-        self.assertIs(imagecrawler_class, Picsum)
+        self.assertIs(imagecrawler_class, self.ic_class)
+
+    def test_get_imagecrawler_name(self) -> None:
+        # act
+        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
+        # assert
+        self.assertEqual(imagecrawler_name, self.ic_name)
