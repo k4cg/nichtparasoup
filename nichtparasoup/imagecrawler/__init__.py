@@ -15,7 +15,7 @@ _Imagecrawler = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
 
 class KnownImageCrawlers(object):
 
-    def __init__(self, entries: Iterable[EntryPoint]) -> None:
+    def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
         self.__list = []  # type: List[_Imagecrawler]
         for entry in entries:
             try:

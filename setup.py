@@ -18,8 +18,8 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 
     sys.stderr.write(textwrap.dedent("""
     UNSUPPORTED PYTHON VERSION
-    
-    This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]}, 
+
+    This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]},
     but you're trying to install it on Python {py_current[0]}.{py_current[1]}.
 
     """.format(py_current=CURRENT_PYTHON, py_required=REQUIRED_PYTHON)))
@@ -102,7 +102,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=URLS,
-    packages=find_packages(exclude=["testing", "tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     entry_points=dict(
         console_scripts=[
             NAME + ' = ' + NAME + '.cmdline:main',

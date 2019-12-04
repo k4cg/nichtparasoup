@@ -10,11 +10,10 @@ from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )
+from nichtparasoup.testing.imagecrawler import FileFetcher
 
-from . import _FileFetcher
 
-
-class _InstagramFileFetcher(_FileFetcher):
+class _InstagramFileFetcher(FileFetcher):
 
     @classmethod
     def _uri_sort_query(cls, uri: str) -> str:

@@ -22,7 +22,7 @@ include LICENSE
 graft docs
 graft examples
 graft images
-graft testing
+graft tests
 
 
 # excludes

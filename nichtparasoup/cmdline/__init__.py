@@ -5,7 +5,7 @@ from nichtparasoup._internals import _message, _message_exception
 
 
 def _logging_init(level: int) -> None:
-    if logging.root.level == logging.NOTSET:
+    if not logging.root.handlers:
         logging.root.setLevel(level)
         logging.root.addHandler(logging.StreamHandler())
 

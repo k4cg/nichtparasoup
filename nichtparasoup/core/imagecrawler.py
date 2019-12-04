@@ -4,9 +4,10 @@ from abc import ABC, abstractmethod
 from http.client import HTTPResponse
 from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Tuple
+from typing import Any, Dict, Optional, Pattern, Tuple, Union
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+from urllib.response import addinfourl
 
 from nichtparasoup._internals import _log
 from nichtparasoup.core.image import ImageCollection
@@ -146,14 +147,14 @@ class RemoteFetcher(object):
         (scheme, _, _, _, _, _) = urlparse(uri)
         return scheme in {'http', 'https'}
 
-    def get_stream(self, uri: str) -> Tuple[HTTPResponse, str]:
+    def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
         if not self._valid_uri(uri):
             raise ValueError('not remote: ' + uri)
         _log('debug', 'fetch remote {!r} in {}s with {!r}'.format(
             uri, self._timeout, self._headers))
         request = Request(uri, headers=self._headers)
         try:
-            response = urlopen(request, timeout=self._timeout)  # type: HTTPResponse
+            response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
         except BaseException as e:
             _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=True)
             raise e

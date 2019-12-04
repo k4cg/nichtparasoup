@@ -4,8 +4,7 @@ from os.path import dirname, join as path_join
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup.imagecrawler.reddit import Reddit
-
-from . import _FileFetcher
+from nichtparasoup.testing.imagecrawler import FileFetcher
 
 _reddit_right_config = dict(subreddit='aww')
 
@@ -107,7 +106,7 @@ class RedditResetTest(unittest.TestCase):
         self.assertIsNone(crawler._after)
 
 
-_FILE_FETCHER = _FileFetcher({  # relative to "../testdata_instagram"
+_FILE_FETCHER = FileFetcher({  # relative to "../testdata_instagram"
     '/r/aww.json?after=': 'aww.json',
 }, base_dir=path_join(dirname(__file__), 'testdata_reddit'))
 

@@ -1,11 +1,10 @@
-import unittest
 from typing import Any, Dict
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 
-class _LoadableImageCrawlerA(BaseImageCrawler):
+class LoadableImageCrawlerA(BaseImageCrawler):
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         pass
@@ -21,10 +20,5 @@ class _LoadableImageCrawlerA(BaseImageCrawler):
         pass
 
 
-class _LoadableImageCrawlerB(_LoadableImageCrawlerA):
-    pass
-
-
-class KnownImageCrawlersTest(unittest.TestCase):
-    # TODO write tests
+class LoadableImageCrawlerB(LoadableImageCrawlerA):
     pass

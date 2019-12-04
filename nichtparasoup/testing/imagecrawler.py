@@ -1,15 +1,23 @@
+__all__ = ["FileFetcher"]
+
 from collections import OrderedDict
 from http.client import HTTPResponse
 from os.path import join as path_join
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib.response import addinfourl
 
 from nichtparasoup.core.imagecrawler import RemoteFetcher
 
 
-class _FileFetcher(RemoteFetcher):
+class FileFetcher(RemoteFetcher):
+    """
+    A file fetcher that can be used for testing with local files.
 
-    def __init__(self, known_files: Dict[str, str], base_dir: Optional[str] = None) -> None:
+    URI are modified so query params are sorted - which makes same URL unique.
+    """
+
+    def __init__(self, known_files: Dict[str, str], base_dir: Optional[str] = None) -> None:  # pragma: no cover
         super().__init__()
         self._known_files = {self.__class__._uri_sort_query(k): v for k, v in known_files.items()}
         self._dir = base_dir
@@ -42,6 +50,8 @@ class _FileFetcher(RemoteFetcher):
         scheme, _, _, _, _, _ = urlparse(uri)
         return scheme == 'file'
 
-    def get_stream(self, uri: str) -> Tuple[HTTPResponse, str]:
-        stream, _ = super().get_stream(self._get_file_uri(uri))
-        return stream, uri
+    def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
+        response, _ = super().get_stream(self._get_file_uri(uri))
+        return response, uri
+
+# TODO: add unittest for autoloader foo

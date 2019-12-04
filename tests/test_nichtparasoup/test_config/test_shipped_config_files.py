@@ -13,7 +13,7 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 class ParseShippedConfigFilesTest(YamaleTestCase):  # type: ignore
 
     def setUp(self) -> None:
-        self.base_dir = realpath(path_join(dirname(__file__), "..", ".."))
+        self.base_dir = realpath(path_join(dirname(__file__), "..", "..", ".."))
         self.schema = path_join("nichtparasoup", "config", 'schema.yaml')
         self.yaml = []  # type: List[str]  # override this in your test
 
