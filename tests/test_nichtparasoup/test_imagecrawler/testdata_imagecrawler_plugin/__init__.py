@@ -1,7 +1,16 @@
+from abc import ABC
 from typing import Any, Dict
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
+
+
+class StandaloneLoadableImageCrawlerA(object):
+    pass
+
+
+class BaseLoadableImageCrawlerA(BaseImageCrawler, ABC):
+    pass
 
 
 class LoadableImageCrawlerA(BaseImageCrawler):

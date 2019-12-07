@@ -1,7 +1,7 @@
 __all__ = ["get_imagecrawlers"]
 
 from copy import copy
-from typing import Any, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
 
@@ -15,8 +15,22 @@ _Imagecrawler = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
 
 class KnownImageCrawlers(object):
 
+    @staticmethod
+    def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
+        from .dummy import Dummy
+        from .picsum import Picsum
+        from .reddit import Reddit
+        from .instagram import InstagramHashtag, InstagramProfile
+        return dict(
+            Dummy=Dummy,
+            Picsum=Picsum,
+            Reddit=Reddit,
+            InstagramProfile=InstagramProfile,
+            InstagramHashtag=InstagramHashtag,
+        )
+
     def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
-        self.__list = []  # type: List[_Imagecrawler]
+        self._list = [(n, c) for n, c in self._builtins().items()]  # type: List[_Imagecrawler]
         for entry in entries:
             try:
                 self._add(entry)
@@ -25,33 +39,32 @@ class KnownImageCrawlers(object):
                 _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e))
 
     def _add(self, entry: EntryPoint) -> None:
-        self._test_ownership(entry)
         self._test_duplicate_name(entry.name)
         loaded = self._load(entry)
-        self._test_inheritance(loaded)
-        self._test_abstract(loaded)
+        self._test(loaded)
         self._test_duplicate_class(loaded)
-        self.__list.append((entry.name, loaded))
+        # if everything went well .. add
+        self._list.append((entry.name, loaded))
 
-    def names(self) -> List[_ImagecrawlerName]:
-        return [imacrawler[0] for imacrawler in self.__list]
+    def names(self) -> Iterable[_ImagecrawlerName]:
+        return (ic_name for ic_name, _ in self._list)
 
-    def classes(self) -> List[_ImagecrawlerClass]:
-        return [imacrawler[1] for imacrawler in self.__list]
+    def classes(self) -> Iterable[_ImagecrawlerClass]:
+        return (ic_class for _, ic_class in self._list)
 
-    def iter(self) -> Iterable[_Imagecrawler]:
-        return (copy(imacrawler) for imacrawler in self.__list)
-
-    def get_class(self, imagecrawler_name: _ImagecrawlerName) -> Optional[_ImagecrawlerClass]:
-        for imagagecrawler in self.__list:
-            if imagagecrawler[0] == imagecrawler_name:
-                return imagagecrawler[1]
-        return None
+    def items(self) -> Iterable[_Imagecrawler]:
+        return (copy(imacrawler) for imacrawler in self._list)
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
-        for imagagecrawler in self.__list:
-            if imagagecrawler[1] == imagecrawler_class:
-                return imagagecrawler[0]
+        for ic_name, ic_class in self._list:
+            if ic_class == imagecrawler_class:
+                return ic_name
+        return None
+
+    def get_class(self, imagecrawler_name: _ImagecrawlerName) -> Optional[_ImagecrawlerClass]:
+        for ic_name, ic_class in self._list:
+            if ic_name == imagecrawler_name:
+                return ic_class
         return None
 
     @staticmethod
@@ -61,13 +74,10 @@ class KnownImageCrawlers(object):
         except BaseException as e:
             raise ImportError('Error on loading entry {}'.format(entry)) from e
 
-    @staticmethod
-    def _test_ownership(entry: EntryPoint) -> None:
-        if entry.dist:
-            expected_key = entry.dist.key
-            dist_key = entry.module_name.split('.')[0]
-            if expected_key != dist_key:
-                raise TypeError('Entry not own {!r} in {!r}'.format(entry.module_name, expected_key))
+    @classmethod
+    def _test(cls, something: Any) -> None:  # pragma: no cover
+        cls._test_inheritance(something)
+        cls._test_abstract(something)
 
     @staticmethod
     def _test_inheritance(something: Any) -> None:
@@ -81,13 +91,13 @@ class KnownImageCrawlers(object):
                 raise TypeError('{!r} is abstract'.format(some_type))
 
     def _test_duplicate_name(self, imagecrawler_name: str) -> None:
-        for other in self.__list:
-            if other[0] == imagecrawler_name:
+        for ic_name, _ in self._list:
+            if ic_name == imagecrawler_name:
                 raise KeyError('Duplicate ImageCrawler {!r}'.format(imagecrawler_name))
 
     def _test_duplicate_class(self, imagecrawler_class: _ImagecrawlerClass) -> None:
-        for other in self.__list:
-            if other[1] == imagecrawler_class:
+        for _, ic_class in self._list:
+            if ic_class == imagecrawler_class:
                 raise TypeError('Duplicate ImageCrawler {!r}'.format(imagecrawler_class))
 
 

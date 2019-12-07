@@ -107,13 +107,6 @@ setup(
         console_scripts=[
             NAME + ' = ' + NAME + '.cmdline:main',
         ],
-        nichtparasoup_imagecrawler=[
-            'Dummy = ' + NAME + '.imagecrawler.dummy:Dummy',
-            'Picsum = ' + NAME + '.imagecrawler.picsum:Picsum',
-            'Reddit = ' + NAME + '.imagecrawler.reddit:Reddit',
-            'InstagramProfile = ' + NAME + '.imagecrawler.instagram:InstagramProfile',
-            'InstagramHashtag = ' + NAME + '.imagecrawler.instagram:InstagramHashtag',
-        ]
     ),
     setup_requires=["setuptools", "setuptools_scm>=3.3.3"],
     install_requires=REQUIRED,
