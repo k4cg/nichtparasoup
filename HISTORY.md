@@ -3,6 +3,15 @@
 
 ## Unreleased
 
+### Added
+
+* plugin support for ImageCrawlers. You may write your own, now :-)
+
+### Changes
+
+* implementation of ImageCrawler may have a ling description, now.
+* implementation of ImageCrawler don'st have a version anymore.
+* implementation of ImageCrawler may have an icon, now.
 
 ## 2.1.1
 

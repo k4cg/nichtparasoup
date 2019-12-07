@@ -9,7 +9,7 @@ imageserver:
   crawler_upkeep: 30
 
 crawlers:
-  - type: "MockableImageCrawler"
+  - name: "MockableImageCrawler"
     # weight: !!!  left away, to see if it gets its default value of 1
     config:
       foo: "bar"

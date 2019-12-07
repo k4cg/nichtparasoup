@@ -16,16 +16,27 @@ _ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerInfo(object):
+    """
+    ImageCrawler's Info.
+
+    see BaseImageCrawler::info()
+    """
 
     def __init__(self, description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
-                 version: Optional[str] = None,
-                 icon_url: Optional[str] = None) -> None:  # pragma: no cover
+                 icon_url: Optional[str] = None,
+                 **kwargs: Any) -> None:  # pragma: no cover
+        """
+        description: short description
+        long_description: long description
+        config: config description
+        icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
+        """
         self.description = description
         self.long_description = long_description
         self.config = config or dict()  # type: Dict[_ImageCrawlerConfigKey, str]
-        self.version = version
         self.icon_url = icon_url
+        del kwargs  # self.more = kwargs # currently not stored, but planned for the future
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
@@ -55,7 +66,7 @@ class BaseImageCrawler(ABC):
 
         For internal access to the config using `self._config` is encouraged
         """
-        return ImageCrawlerConfig({k: v for (k, v) in self._config.items() if not k.startswith('_')})
+        return ImageCrawlerConfig({k: v for k, v in self._config.items() if not k.startswith('_')})
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -84,13 +95,18 @@ class BaseImageCrawler(ABC):
 
         example implementation:
             return ImageCrawlerInfo(
-                desc="Some textual description about what this ImageCrawler does.",
+                description='Textual description what this ImageCrawler does. Where it gets the images from.',
+                long_description=textwrap.dedent('''
+                You may want write a long description of the ImageCrawler. Feel free to do so.
+                This is the place where you can do this.
+                ''').strip(),
                 config=dict(
-                    # leave the dict empty, if there is nothing to configure
-                    param1="meaning of param1",
-                    paramN="meaning of paramN",
+                    # leave the dict empty, if there is nothing to configure. or just don't pass a config at all.
+                    param1='purpose & meaning of param1',
+                    # ...
+                    paramN='purpose & meaning of paramN',
                 ),
-                version='0.0.dev1',
+                icon_url='https://my.imagesource.net/favicon.png'
             )
         """
         raise NotImplementedError()

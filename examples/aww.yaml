@@ -9,12 +9,12 @@ imageserver:
   crawler_upkeep: 10
 
 crawlers:
-  - type: "Reddit"
+  - name: "Reddit"
     config:
       subreddit: "aww"
-  - type: "Reddit"
+  - name: "Reddit"
     config:
       subreddit: "awww"
-  - type: "Reddit"
+  - name: "Reddit"
     config:
       subreddit: "awwww"

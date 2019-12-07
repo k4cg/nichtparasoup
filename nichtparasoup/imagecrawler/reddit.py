@@ -22,13 +22,11 @@ class Reddit(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             description='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
             config=dict(
                 subreddit='the SubReddit to crawl',
             ),
-            version=VERSION,  # since its a builtin crawler
             icon_url='https://www.redditstatic.com/desktop2x/img/favicon/apple-icon-120x120.png',
         )
 

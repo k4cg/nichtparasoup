@@ -12,195 +12,191 @@ logging:
   level: 'INFO'
 
 crawlers:
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'EarthPorn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'gifs'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 9
     config:
       subreddit: 'pics'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'aww_gifs'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'mildlyinteresting'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'reactiongifs'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Oddlysatisfying'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Spaceflightporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Therewasanattempt'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 6
     config:
       subreddit: 'HistoryMemes'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Unexpected'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 8
     config:
       subreddit: 'Whatcouldgowrong'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 9
     config:
       subreddit: 'Weird'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'photoshopbattles'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Nonononoyes'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 8
     config:
       subreddit: 'earthporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 5
     config:
       subreddit: 'Bettereveryloop'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 8
     config:
       subreddit: 'assholedesign'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 9
     config:
       subreddit: 'machineporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 4
     config:
       subreddit: 'Shittyfoodporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 2
     config:
       subreddit: 'Instant_regret'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Mildlyinfuriating'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'somememes'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'Crappydesign'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'engineeringporn'
-  - type: "Reddit"
-    weight: 3
-    config:
-      subreddit: 'hmmm'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 5
     config:
       subreddit: 'mechanical_gifs'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'cableporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'shittylifehacks'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 4
     config:
       subreddit: 'perfecttiming'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'AnimalPorn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'CatGifs'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'ChildrenFallingOver'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'funny'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'geek'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'IdiotsInCars'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'interestingasfuck'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'itsaunixsystem'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 4
     config:
       subreddit: 'MadeMeSmile'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 5
     config:
       subreddit: 'insanepeoplefacebook'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 1
     config:
       subreddit: 'PeopleFuckingDying'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'spaceflightporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'woahdude'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 4
     config:
       subreddit: 'spaceporn'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 2
     config:
       subreddit: 'neckbeardnests'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 1
     config:
       subreddit: 'techsupportgore'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 5
     config:
       subreddit: 'perfectloops'
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'wasletztepreis'

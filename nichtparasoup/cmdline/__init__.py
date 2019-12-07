@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 from nichtparasoup._internals import _message, _message_exception
 
 
-def _logging_init(level: int) -> None:
+def _logging_init(level: int) -> None:  # pragma: no cover
     if not logging.root.handlers:
         logging.root.setLevel(level)
         logging.root.addHandler(logging.StreamHandler())
@@ -111,6 +111,7 @@ class Commands(object):
 
     @staticmethod
     def info_imagecrawler_desc(imagecrawler: str) -> int:
+        from nichtparasoup._internals import _log
         from nichtparasoup.imagecrawler import get_imagecrawlers
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
@@ -128,13 +129,14 @@ class Commands(object):
             info.append('Config: ' + info_bull + info_bull.join([
                 '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
                 for key, desc in imagecrawler_info.config.items()]))
-        info.append(info_linebreak.join(  # additional info - useful for debugging
+        _message((info_linebreak * 2).join(info))
+        _log('debug', info_linebreak.join(
             [
                 info_linebreak,
-                'Version: {}'.format(imagecrawler_info.version),
-                'Class  : {}:{}'.format(imagecrawler_class.__module__, imagecrawler_class.__name__),
+                'DEBUG INFO',
+                'Icon : {!r}'.format(imagecrawler_info.icon_url),
+                'Class: {}:{}'.format(imagecrawler_class.__module__, imagecrawler_class.__name__),
             ]))
-        _message((info_linebreak * 2).join(info))
         return 0
 
 

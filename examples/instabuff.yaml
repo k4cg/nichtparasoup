@@ -9,12 +9,12 @@ imageserver:
   crawler_upkeep: 10
 
 crawlers:
-  - type: "InstagramHashtag"
+  - name: "InstagramHashtag"
     config:
       tag_name: "cyberpunk"
-  - type: "InstagramProfile"
+  - name: "InstagramProfile"
     config:
       user_name: "beeple_crap"
-  - type: "InstagramHashtag"
+  - name: "InstagramHashtag"
     config:
       tag_name: "synthwave"

@@ -11,7 +11,6 @@ class Dummy(BaseImageCrawler):
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         from textwrap import dedent
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             description='"Finds" the same image ... again ... and again.',
             long_description=dedent('''
@@ -21,7 +20,6 @@ class Dummy(BaseImageCrawler):
             config=dict(
                 image_uri='the URI of the image to "find"',
             ),
-            version=VERSION,  # since its a builtin crawler
         )
 
     @classmethod

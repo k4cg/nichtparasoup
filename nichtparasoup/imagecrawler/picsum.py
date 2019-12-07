@@ -11,14 +11,12 @@ class Picsum(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             description='Find images from https://picsum.photos',
             config=dict(
                 width='how many pixels of the image to find should be wide',
                 height='how many pixels of the image to find should be high',
             ),
-            version=VERSION,  # since its a builtin crawler
             icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png'
         )
 

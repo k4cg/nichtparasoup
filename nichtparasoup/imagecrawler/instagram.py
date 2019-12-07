@@ -242,13 +242,11 @@ class InstagramHashtag(BaseInstagramCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             description='A Crawler for hash tag posts of https://www.instagram.com/',
             config=dict(
                 tag_name='the HashTag on Instagram',
             ),
-            version=VERSION,  # since its a builtin crawler
             icon_url=INSTAGRAM_ICON_URL,
         )
 

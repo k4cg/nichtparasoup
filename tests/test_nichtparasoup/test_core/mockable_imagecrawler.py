@@ -14,7 +14,6 @@ class MockableImageCrawler(BaseImageCrawler):
         return ImageCrawlerInfo(
             description='a mock',
             config=dict(),
-            version='mock',
         )
 
     @classmethod
