@@ -4,16 +4,18 @@ from json import dumps as json_encode
 from os.path import dirname, join as path_join
 from typing import Any, Dict, Union
 
+from mako.template import Template  # type: ignore
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup.core.server import Server, ServerStatus
+from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
 class WebServer(object):
-    _STATIC_FILES = path_join(dirname(__file__), 'htdocs')
+    _TEMPLATE_FILES = path_join(dirname(__file__), 'htdocs', 'template')
+    _STATIC_FILES = path_join(dirname(__file__), 'htdocs', 'static')
     _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
@@ -26,6 +28,7 @@ class WebServer(object):
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
             Rule('/reset', endpoint='reset'),
+            Rule('/css/sourceIcons.css', endpoint='sourceicons')
         ])
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
@@ -79,6 +82,12 @@ class WebServer(object):
     def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
         return Response(json_encode(reset), mimetype='application/json')
+
+    def on_sourceicons(self, _: Request) -> Response:
+        imagecrawlers = [c.imagecrawler for c in self.imageserver.core.crawlers]
+        icons = {type_module_name_str(type(ic)): ic.info().icon_url for ic in imagecrawlers}
+        template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
+        return Response(template.render(icons=icons.items()), mimetype='text/css')
 
     def run(self) -> None:
         from werkzeug.serving import run_simple
