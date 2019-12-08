@@ -87,7 +87,9 @@ class WebServer(object):
         icons = {type_module_name_str(type(ic)): ic.info().icon_url for ic
                  in (c.imagecrawler for c in self.imageserver.core.crawlers)}
         template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
-        css = template.render(icons={n: i for n, i in icons.items() if i})
+        # cannot use dict for `icons`. will break the template occasionally :-/
+        icons = [(n, i) for n, i in icons.items() if i]
+        css = template.render(icons=icons)
         return Response(css, mimetype='text/css')
 
     def run(self) -> None:

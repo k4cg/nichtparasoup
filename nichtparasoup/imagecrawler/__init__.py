@@ -36,7 +36,7 @@ class KnownImageCrawlers(object):
                 self._add(entry)
                 _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
             except BaseException as e:
-                _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e))
+                _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
 
     def _add(self, entry: EntryPoint) -> None:
         self._test_duplicate_name(entry.name)

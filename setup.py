@@ -103,7 +103,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=URLS,
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*", "examples"]),
     entry_points=dict(
         console_scripts=[
             NAME + ' = ' + NAME + '.cmdline:main',
@@ -129,6 +129,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Games/Entertainment',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Typing :: Typed',
     ],
     keywords='',
 )
