@@ -5,7 +5,7 @@
 
 ## this part is a mako template - see https://docs.makotemplates.org/en/latest/
 % for type, icon_url in icons:
-#wall figure figcaption[data-crawler='${type}'] {
-    background-image: url('${icon_url}');
-}
+    #wall figure figcaption[data-crawler='${type}'] {
+        background-image: url('${icon_url}');
+    }
 % endfor

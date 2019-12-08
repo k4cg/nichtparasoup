@@ -84,10 +84,11 @@ class WebServer(object):
         return Response(json_encode(reset), mimetype='application/json')
 
     def on_sourceicons(self, _: Request) -> Response:
-        imagecrawlers = [c.imagecrawler for c in self.imageserver.core.crawlers]
-        icons = {type_module_name_str(type(ic)): ic.info().icon_url for ic in imagecrawlers}
+        icons = {type_module_name_str(type(ic)): ic.info().icon_url for ic
+                 in (c.imagecrawler for c in self.imageserver.core.crawlers)}
         template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
-        return Response(template.render(icons=icons.items()), mimetype='text/css')
+        css = template.render(icons={n: i for n, i in icons.items() if i})
+        return Response(css, mimetype='text/css')
 
     def run(self) -> None:
         from werkzeug.serving import run_simple
@@ -103,7 +104,7 @@ class WebServer(object):
                 use_reloader=False,
                 use_debugger=False)
             _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-        except Exception as e:
+        except BaseException as e:
             _log('exception', ' * Error occurred. stopping everything')
             raise e
         finally:
