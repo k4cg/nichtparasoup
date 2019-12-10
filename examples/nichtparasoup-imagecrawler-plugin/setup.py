@@ -13,5 +13,5 @@ setup(
             'DummyImage = nichtparasoup_placeholders:DummyImage',
         ],
     ),
-    install_requires=['nichtparasoup>=2.1'],
+    install_requires=['nichtparasoup>2.1.1'],
 )
