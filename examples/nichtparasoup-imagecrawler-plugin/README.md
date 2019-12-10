@@ -1,6 +1,6 @@
 # _nichtparasoup_ ImageCrawler: Placeholders
 
-This is an example plugin for _[nichtparasoup](https://pypi.org/project/nichtparasoup/)_.  
+This is an example plugin for [_nichtparasoup_](https://pypi.org/project/nichtparasoup/).  
 Purpose of this project is, to give ImageCrawler plugin developers a kick start.
 
 This project includes:

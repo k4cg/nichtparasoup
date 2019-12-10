@@ -10,11 +10,16 @@ class DummyImage(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
+        from textwrap import dedent
         return ImageCrawlerInfo(
             description='Dynamic Dummy Image from https://dummyimage.com',
+            long_description=dedent('''
+                Not an actual crawler.
+                Just a thing that delivers images that are useful to test the web UI of nichtparasoup.
+                ''').strip(),
             config=dict(
-                width='width',
-                heiht='height',
+                width='width of a test image',
+                heiht='height of a test image',
             ),
             icon_url='https://dummyimage.com/favicon.ico',
         )

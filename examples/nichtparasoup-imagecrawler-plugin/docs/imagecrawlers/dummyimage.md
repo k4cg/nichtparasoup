@@ -3,7 +3,7 @@
 ## Purpose
 
 Not an actual crawler.  
-Dynamic Dummy Image from (https://dummyimage.com)[https://dummyimage.com].
+Dynamic Dummy Image from [https://dummyimage.com](https://dummyimage.com).
 
 
 ## Config

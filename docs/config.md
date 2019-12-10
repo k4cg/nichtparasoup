@@ -19,11 +19,11 @@ imageserver:
   crawler_upkeep: 30
 
 crawlers:
-  - type: "Reddit"
+  - name: "Reddit"
     weight: 3
     config:
       subreddit: 'EarthPorn'
-  - type: "Picsum"
+  - name: "Picsum"
     config:
       width: 300
       height: 600
@@ -68,7 +68,7 @@ logging:
   or read the [docs](imagecrawlers)
 - type: list
 
-### `type` 
+### `name` 
 
 - name of the crawler
 - for a list of available types see the commandline help: `nichtparasoup info --imagecrawler-list`  

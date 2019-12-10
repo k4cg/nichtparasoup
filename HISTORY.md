@@ -7,11 +7,20 @@
 
 * plugin support for ImageCrawlers. You may write your own, now :-)
 
+### Breaking changes
+
+* in the config the crawlers' `type` was renamed to `name`.
+
 ### Changes
 
-* implementation of ImageCrawler may have a ling description, now.
-* implementation of ImageCrawler don'st have a version anymore.
-* implementation of ImageCrawler may have an icon, now.
+* implementation of ImageCrawler may have a `lon_description`, now.
+* implementation of ImageCrawler don't have a `version` anymore.
+* implementation of ImageCrawler may have an `icon_uri`, now.
+
+### Added
+
+* commandline interface got a `--debug` switch to help plugin developers.
+* `webserver` now uses [`mako`](https://www.makotemplates.org/) template engine.
 
 ## 2.1.1
 

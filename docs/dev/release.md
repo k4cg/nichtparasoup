@@ -1,3 +1,4 @@
 # release process
 
-TODO
+see the [dedicated testing redme](../../RELEASEPROCESS.md).
+

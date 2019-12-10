@@ -15,7 +15,7 @@ class Echo(BaseImageCrawler):
             description='"Finds" the same image ... again ... and again.',
             long_description=dedent('''
                 Not an actual crawler.
-                More like an EchoCrawler that returns what you tell it to return.
+                More like an Parrot that is trained to repeat what you tell it to say.
                 ''').strip(),
             config=dict(
                 image_uri='the URI of the image to "find"',
