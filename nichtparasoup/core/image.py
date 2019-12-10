@@ -9,13 +9,14 @@ SourceUri = str
 
 
 class Image(object):
-    """Describe an image
+    """
+    Describe an image
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``schema`` must be either 'http' or 'https' - the last one is preferred.
+            ``schema`` must be either 'http' or 'https' - use 'https' if possible!
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
     `source`

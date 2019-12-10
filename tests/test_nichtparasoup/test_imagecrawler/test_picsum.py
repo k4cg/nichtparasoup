@@ -102,13 +102,13 @@ class PicsumCrawlTest(unittest.TestCase):
             self.assertTrue(image_crawled.is_generic, 'this is not generic')
 
 
-class DummyDescriptionTest(unittest.TestCase):
+class PicsumDescriptionTest(unittest.TestCase):
 
     def test_description_config(self) -> None:
         # act
         description = Picsum.info()
         # assert
-        self.assertIsInstance(description.config, dict)
+        assert isinstance(description.config, dict)
         for config_key in _picsum_right_config.keys():
             self.assertTrue(config_key in description.config)
 

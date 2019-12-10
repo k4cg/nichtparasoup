@@ -20,23 +20,25 @@ class ImageCrawlerInfo(object):
     ImageCrawler's Info.
 
     see BaseImageCrawler::info()
+
     """
 
     def __init__(self, description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[str] = None,
-                 **kwargs: Any) -> None:  # pragma: no cover
+                 **more: Any) -> None:  # pragma: no cover
         """
         description: short description
         long_description: long description
         config: config description
         icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
+        more: more to save - planned to the future
         """
         self.description = description
         self.long_description = long_description
-        self.config = config or dict()  # type: Dict[_ImageCrawlerConfigKey, str]
+        self.config = config
         self.icon_url = icon_url
-        del kwargs  # self.more = kwargs # currently not stored, but planned for the future
+        del more  # self.more = more # currently not stored, but planned for the future
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
@@ -65,8 +67,12 @@ class BaseImageCrawler(ABC):
         Get all *public* information from the config
 
         For internal access to the config using `self._config` is encouraged
+
         """
-        return ImageCrawlerConfig({k: v for k, v in self._config.items() if not k.startswith('_')})
+        return ImageCrawlerConfig({k: v
+                                   for k, v
+                                   in self._config.items()
+                                   if not k.startswith('_')})
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -83,7 +89,7 @@ class BaseImageCrawler(ABC):
                 crawled = self._crawl()
                 _log('debug', 'crawling finished {!r}'.format(self))
                 return crawled
-            except Exception:
+            except BaseException:
                 _log('exception', 'caught an error during crawling {!r}'.format(self))
                 return ImageCollection()
 
@@ -108,6 +114,7 @@ class BaseImageCrawler(ABC):
                 ),
                 icon_url='https://my.imagesource.net/favicon.png'
             )
+
         """
         raise NotImplementedError()
 
@@ -128,6 +135,7 @@ class BaseImageCrawler(ABC):
                 raise TypeError("height {} is not int".format(height))
             if height <= 0:
                 raise ValueError("height {} <= 0".format(width))
+
         """
         raise NotImplementedError()
 
@@ -147,7 +155,6 @@ class BaseImageCrawler(ABC):
 
 
 class RemoteFetcher(object):
-
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }
@@ -188,7 +195,6 @@ class RemoteFetcher(object):
 
 
 class ImageRecognizer(object):
-
     _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
 
     def path_is_image(self, uri: str) -> bool:

@@ -1,44 +1,44 @@
 import unittest
 
 from nichtparasoup.imagecrawler import get_imagecrawlers
-from nichtparasoup.imagecrawler.dummy import Dummy
+from nichtparasoup.imagecrawler.echo import Echo
 
 
-class DummyConfigImageUriTest(unittest.TestCase):
+class EchoConfigImageUriTest(unittest.TestCase):
 
     def test__check_config_right_value(self) -> None:
         # arrange
         config_in = dict(image_uri="test")
         # act
-        config_out = Dummy.check_config(config_in)
+        config_out = Echo.check_config(config_in)
         # assert
         self.assertDictEqual(config_in, config_out)
 
     def test__check_config_missing_value(self) -> None:
         # assert
         with self.assertRaises(KeyError):
-            Dummy.check_config(dict())
+            Echo.check_config(dict())
 
     def test__check_config_wrong_type(self) -> None:
         wrong_types = [None, True, 23, 4.2, [], (), {}, self]  # type: ignore
         for wrong_type in wrong_types:
             # assert
             with self.assertRaises(TypeError):
-                Dummy.check_config(dict(image_uri=wrong_type))
+                Echo.check_config(dict(image_uri=wrong_type))
 
     def test__check_config_wrong_value(self) -> None:
         wrong_values = [""]
         for wrong_value in wrong_values:
             # assert
             with self.assertRaises(ValueError):
-                Dummy.check_config(dict(image_uri=wrong_value))
+                Echo.check_config(dict(image_uri=wrong_value))
 
 
-class DummyCrawlTest(unittest.TestCase):
+class EchoCrawlTest(unittest.TestCase):
 
     def test_crawl(self) -> None:
         # arrange
-        crawler = Dummy(image_uri="test")
+        crawler = Echo(image_uri="test")
         # act
         images_crawled = crawler.crawl()
         images_crawled_len = len(images_crawled)
@@ -50,19 +50,20 @@ class DummyCrawlTest(unittest.TestCase):
             self.assertTrue(image_crawled.more.get("this_is_a_dummy"), "this is not a dummy")
 
 
-class DummyDescriptionTest(unittest.TestCase):
+class EchoDescriptionTest(unittest.TestCase):
     def test_description_config(self) -> None:
         # act
-        description = Dummy.info()
+        description = Echo.info()
         # assert
+        assert isinstance(description.config, dict)
         self.assertTrue('image_uri' in description.config)
 
 
-class DummyLoaderTest(unittest.TestCase):
+class EchoLoaderTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.ic_name = "Dummy"
-        self.ic_class = Dummy
+        self.ic_name = "Echo"
+        self.ic_class = Echo
 
     def tearDown(self) -> None:
         del self.ic_name

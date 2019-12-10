@@ -311,6 +311,7 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
         # act
         description = InstagramHashtag.info()
         # assert
+        assert isinstance(description.config, dict)
         self.assertTrue('tag_name' in description.config)
 
 
@@ -484,6 +485,7 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
         # act
         description = InstagramProfile.info()
         # assert
+        assert isinstance(description.config, dict)
         self.assertTrue('user_name' in description.config)
 
 

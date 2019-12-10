@@ -1,4 +1,4 @@
-__all__ = ["Dummy"]
+__all__ = ["Echo"]
 
 from typing import Any, Dict
 
@@ -6,7 +6,7 @@ from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
 
 
-class Dummy(BaseImageCrawler):
+class Echo(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:

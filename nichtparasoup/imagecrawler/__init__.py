@@ -17,12 +17,12 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
-        from .dummy import Dummy
+        from .echo import Echo
         from .picsum import Picsum
         from .reddit import Reddit
         from .instagram import InstagramHashtag, InstagramProfile
         return dict(
-            Dummy=Dummy,
+            Echo=Echo,
             Picsum=Picsum,
             Reddit=Reddit,
             InstagramProfile=InstagramProfile,

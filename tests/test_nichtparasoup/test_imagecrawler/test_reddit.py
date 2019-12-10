@@ -167,6 +167,7 @@ class RedditDescriptionTest(unittest.TestCase):
         # act
         description = Reddit.info()
         # assert
+        assert isinstance(description.config, dict)
         for config_key in _reddit_right_config.keys():
             self.assertTrue(config_key in description.config)
 
