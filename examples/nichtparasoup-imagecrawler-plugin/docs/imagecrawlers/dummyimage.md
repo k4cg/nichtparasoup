@@ -1,9 +1,10 @@
-# ImageCrawler: Reddit 
+# ImageCrawler: DummyImage 
 
 ## Purpose
 
 Not an actual crawler.  
-Returns generic URIs to [https://picsum.photos](https://picsum.photos).
+Dynamic Dummy Image from (https://dummyimage.com)[https://dummyimage.com].
+
 
 ## Config
 

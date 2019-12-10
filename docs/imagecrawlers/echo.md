@@ -1,11 +1,11 @@
-# ImageCrawler: Reddit 
+# ImageCrawler: Echo
 
 ## Purpose
 
 just generates the same URIs... again .. and again...
 
 Not an actual crawler.
-More like an EchoCrawler that returns what you tell it to return.
+More like an Parrot that is trained to repeat what you tell it to say.
 
 ## Config
 
