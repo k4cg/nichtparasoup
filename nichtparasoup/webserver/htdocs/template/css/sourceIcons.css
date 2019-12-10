@@ -4,8 +4,8 @@
 }
 
 ## this part is a mako template - see https://docs.makotemplates.org/en/latest/
-% for type, icon_url in icons:
-    #wall figure figcaption[data-crawler='${type.replace("'", "")}'] {
-        background-image: url('${icon_url.replace("'", "")}');
+% for crawler_name, crawler_icon_url in names_icons_list:
+    #wall figure figcaption[data-crawler='${crawler_name.replace("'", "")}'] {
+        background-image: url('${crawler_icon_url.replace("'", "")}');
     }
 % endfor

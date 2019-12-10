@@ -50,7 +50,7 @@ class DummyImage(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        for i in range(self._BUNCH):
+        for _ in range(self._BUNCH):
             images.add(Image(
                 uri=self._get_image_uri(**self._config),
                 source='https://dummyimage.com/',

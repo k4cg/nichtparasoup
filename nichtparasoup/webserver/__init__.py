@@ -2,7 +2,7 @@ __all__ = ["WebServer"]
 
 from json import dumps as json_encode
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Union
+from typing import Any, Dict, Set, Type, Union
 
 from mako.template import Template  # type: ignore
 from werkzeug.exceptions import HTTPException, NotFound
@@ -10,6 +10,7 @@ from werkzeug.routing import Map, Rule
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
@@ -84,12 +85,21 @@ class WebServer(object):
         return Response(json_encode(reset), mimetype='application/json')
 
     def on_sourceicons(self, _: Request) -> Response:
-        icons = {type_module_name_str(type(ic)): ic.info().icon_url for ic
-                 in (c.imagecrawler for c in self.imageserver.core.crawlers)}
+        imagecrawlers = {
+            type(crawler.imagecrawler)
+            for crawler
+            in self.imageserver.core.crawlers}  # type: Set[Type[BaseImageCrawler]]
+        names_icons_list = [
+            (name, icon)
+            for name, icon
+            in [
+                (type_module_name_str(imagecrawler), imagecrawler.info().icon_url)
+                for imagecrawler
+                in imagecrawlers]
+            if icon]
+        # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
         template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
-        # cannot use dict for `icons`. will break the template occasionally :-/
-        icons = [(n, i) for n, i in icons.items() if i]
-        css = template.render(icons=icons)
+        css = template.render(names_icons_list=names_icons_list)
         return Response(css, mimetype='text/css')
 
     def run(self) -> None:
