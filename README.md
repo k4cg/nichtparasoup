@@ -16,7 +16,7 @@ _nichtparasoup_ supports ImageCrawler plugins :-)
 ---
 
 
-At our hackspace [k4cg](https://k4cg.org) we use it since 2 years now.  
+At our hackspace [k4cg](https://k4cg.org) we use it since years now.  
 It turns out to be a very non-invasive way of entertaining a crowd of nerds 
 without having the noise and interruptions of videos or other stuff.
 
