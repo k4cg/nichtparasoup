@@ -10,4 +10,8 @@ class ConfigFilesTest(TestCase):
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict, file)
         for crawler_config in config['crawlers']:
-            self.assertIsInstance(get_imagecrawler(crawler_config), BaseImageCrawler, file)
+            try:
+                imagecrawler = get_imagecrawler(crawler_config)
+            except Exception as e:
+                self.fail('{}\r\n{}'.format(file, e))
+            self.assertIsInstance(imagecrawler, BaseImageCrawler, file)

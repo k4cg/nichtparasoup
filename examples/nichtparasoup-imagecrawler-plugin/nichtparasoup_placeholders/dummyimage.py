@@ -19,7 +19,7 @@ class DummyImage(BaseImageCrawler):
                 ''').strip(),
             config=dict(
                 width='width of a test image',
-                heiht='height of a test image',
+                height='height of a test image',
             ),
             icon_url='https://dummyimage.com/favicon.ico',
         )

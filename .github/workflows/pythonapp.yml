@@ -27,6 +27,7 @@ jobs:
       - name: Test with tox
         run: |
           python3 -m tox
+          python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     if: github.event_name == 'release' && github.event.action == 'created'

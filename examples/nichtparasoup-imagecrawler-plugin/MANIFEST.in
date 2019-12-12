@@ -9,7 +9,7 @@ include MANIFEST.in
 
 include setup.py
 include README.md
-graft nichtparasoup_*
+graft nichtparasoup_placeholders
 
 
 # additional files and folders
