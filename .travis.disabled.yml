@@ -11,10 +11,12 @@ language: "python"
 cache: "pip"
 
 install:
-  - "python3 -m pip install --upgrade pip setuptools"
-  - "python3 -m pip install --upgrade tox"
+  - "python3 -m pip install --upgrade pip"
+  - "python3 -m pip install --upgrade setuptools tox"
 
-script: "python3 -m tox"
+script:
+  - "python3 -m tox"
+  - "python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/"
 
 stages:
   - name: "Testing"
