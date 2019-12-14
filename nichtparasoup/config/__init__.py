@@ -22,8 +22,10 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     try:
         imagecrawler_obj = imagecrawler_class(**imagecrawler_config)
     except Exception as e:
-        raise Exception('failed setup crawler {name!r} of type {type!r} with config {config!r}'.format(
-            name=imagecrawler_name, type=imagecrawler_class, config=imagecrawler_config)) from e
+        raise Exception(
+            'failed setup crawler {!r} of type {!r} with config {!r}'
+            .format(imagecrawler_name, imagecrawler_class, imagecrawler_config)
+        ) from e
     return imagecrawler_obj
 
 
