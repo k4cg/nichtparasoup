@@ -74,8 +74,8 @@ class Commands(object):
             imagecrawler = get_imagecrawler(crawler_config)
             if imagecrawler in imagecrawlers:
                 _message_exception(
-                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'.
-                            format(type=type(imagecrawler), config=imagecrawler.get_config())))
+                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
+                            .format(type=type(imagecrawler), config=imagecrawler.get_config())))
                 continue
             imagecrawlers.append(imagecrawler)
         return 0
@@ -112,6 +112,7 @@ class Commands(object):
     @staticmethod
     def info_imagecrawler_desc(imagecrawler: str) -> int:
         from nichtparasoup._internals import _log
+        from nichtparasoup.core.server import type_module_name_str
         from nichtparasoup.imagecrawler import get_imagecrawlers
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
@@ -135,7 +136,7 @@ class Commands(object):
                 info_linebreak,
                 'DEBUG INFO',
                 'Icon : {!r}'.format(imagecrawler_info.icon_url),
-                'Class: {}:{}'.format(imagecrawler_class.__module__, imagecrawler_class.__name__),
+                'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
             ]))
         return 0
 
