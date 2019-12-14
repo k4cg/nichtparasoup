@@ -4,9 +4,8 @@ from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import quote_plus as url_quote, urljoin
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import (
-    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
+from nichtparasoup.imagecrawler import (
+    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
 )
 
 

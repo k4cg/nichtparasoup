@@ -2,8 +2,7 @@ __all__ = ["Echo"]
 
 from typing import Any, Dict
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Echo(BaseImageCrawler):

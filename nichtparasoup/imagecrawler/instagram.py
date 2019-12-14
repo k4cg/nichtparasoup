@@ -8,8 +8,9 @@ from threading import Lock
 from typing import Any, Dict, Optional, Pattern, Set
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
+from nichtparasoup.imagecrawler import (
+    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
+)
 
 if sys.version_info >= (3, 8):
     from typing import Literal

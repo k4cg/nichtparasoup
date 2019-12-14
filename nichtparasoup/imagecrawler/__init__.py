@@ -1,4 +1,10 @@
-__all__ = ["get_imagecrawlers"]
+__all__ = [
+    "get_imagecrawlers",
+    # for convenience, all classes that are needed to implement an ImageCrawler are exported, here
+    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "Image", "ImageCollection",
+    "RemoteFetcher", "ImageRecognizer",
+]
 
 from copy import copy
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
@@ -6,7 +12,10 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 from pkg_resources import EntryPoint, iter_entry_points
 
 from nichtparasoup._internals import _log
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.core.image import Image, ImageCollection
+from nichtparasoup.core.imagecrawler import (
+    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
+)
 
 _ImagecrawlerName = str
 _ImagecrawlerClass = Type[BaseImageCrawler]

@@ -68,7 +68,7 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
 
     @property
     @abstractmethod
-    def ic_name(self) -> str:
+    def ic_name(self) -> str:  # pragma: no cover
         """
         Return the intended ImageCrawler's name.
         That's basically the name you chose in the EntryPoint.
@@ -80,7 +80,7 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
 
     @property
     @abstractmethod
-    def ic_class(self) -> Type[BaseImageCrawler]:
+    def ic_class(self) -> Type[BaseImageCrawler]:  # pragma: no cover
         """
         the class of your ImageCrawler.
 
