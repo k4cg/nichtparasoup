@@ -1,7 +1,7 @@
 import unittest
 from typing import Type
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawler.picsum import Picsum
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 

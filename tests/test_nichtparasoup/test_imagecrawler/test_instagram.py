@@ -5,8 +5,7 @@ from os.path import dirname, join as path_join
 from typing import Any, Dict, Type
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawler.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )

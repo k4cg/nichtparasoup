@@ -3,7 +3,7 @@ from typing import Type
 
 from nichtparasoup_placeholders import DummyImage
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 _dummyimage_right_config = {'width': 800, 'height': 600}
