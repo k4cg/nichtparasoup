@@ -1,3 +1,3 @@
 # testing
 
-see the [dedicated testing redme](../../tests/README.md).
+see the [dedicated testing docs](../../tests/README.md).

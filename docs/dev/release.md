@@ -1,4 +1,4 @@
 # release process
 
-see the [dedicated testing redme](../../RELEASEPROCESS.md).
+see the [dedicated release docs](../../RELEASEPROCESS.md).
 

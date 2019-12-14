@@ -13,7 +13,7 @@
 
 ### Changes
 
-* implementation of ImageCrawler may have a `lon_description`, now.
+* implementation of ImageCrawler may have a `long_description`, now.
 * implementation of ImageCrawler don't have a `version` anymore.
 * implementation of ImageCrawler may have an `icon_uri`, now.
 
