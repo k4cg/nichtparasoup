@@ -1,10 +1,11 @@
 import unittest
 from os.path import dirname, join as path_join
+from typing import Type
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.imagecrawler import get_imagecrawlers
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawler.reddit import Reddit
-from nichtparasoup.testing.imagecrawler import FileFetcher
+from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 _reddit_right_config = dict(subreddit='aww')
 
@@ -163,6 +164,7 @@ class RedditCrawlTest(unittest.TestCase):
 
 
 class RedditDescriptionTest(unittest.TestCase):
+
     def test_description_config(self) -> None:
         # act
         description = Reddit.info()
@@ -172,24 +174,15 @@ class RedditDescriptionTest(unittest.TestCase):
             self.assertTrue(config_key in description.config)
 
 
-class RedditLoaderTest(unittest.TestCase):
+class RedditLoaderTest(ImageCrawlerLoaderTest):
 
-    def setUp(self) -> None:
-        self.ic_name = "Reddit"
-        self.ic_class = Reddit
+    @property
+    def ic_name(self) -> str:
+        return 'Reddit'
 
-    def tearDown(self) -> None:
-        del self.ic_name
-        del self.ic_class
+    @property
+    def ic_class(self) -> Type[BaseImageCrawler]:
+        return Reddit
 
-    def test_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def test_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def test_loader(self) -> None:
+        self.check()

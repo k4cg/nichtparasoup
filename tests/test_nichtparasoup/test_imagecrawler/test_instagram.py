@@ -2,15 +2,15 @@ import unittest
 from collections import OrderedDict
 from json import dumps as json_dumps, loads as json_loads
 from os.path import dirname, join as path_join
-from typing import Any, Dict
+from typing import Any, Dict, Type
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.imagecrawler import get_imagecrawlers
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawler.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )
-from nichtparasoup.testing.imagecrawler import FileFetcher
+from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 
 class _InstagramFileFetcher(FileFetcher):
@@ -315,27 +315,18 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
         self.assertTrue('tag_name' in description.config)
 
 
-class InstagramHashtagLoaderTest(unittest.TestCase):
+class InstagramHashtagLoaderTest(ImageCrawlerLoaderTest):
 
-    def setUp(self) -> None:
-        self.ic_name = "InstagramHashtag"
-        self.ic_class = InstagramHashtag
+    @property
+    def ic_name(self) -> str:
+        return "InstagramHashtag"
 
-    def tearDown(self) -> None:
-        del self.ic_name
-        del self.ic_class
+    @property
+    def ic_class(self) -> Type[BaseImageCrawler]:
+        return InstagramHashtag
 
-    def test_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def test_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def test_loader(self) -> None:
+        self.check()
 
 
 class InstagramProfileTest(unittest.TestCase):
@@ -481,6 +472,7 @@ class InstagramProfileTest(unittest.TestCase):
 
 
 class InstagramProfileDescriptionTest(unittest.TestCase):
+
     def test_description_config(self) -> None:
         # act
         description = InstagramProfile.info()
@@ -489,24 +481,15 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
         self.assertTrue('user_name' in description.config)
 
 
-class InstagramProfileLoaderTest(unittest.TestCase):
+class InstagramProfileLoaderTest(ImageCrawlerLoaderTest):
 
-    def setUp(self) -> None:
-        self.ic_name = "InstagramProfile"
-        self.ic_class = InstagramProfile
+    @property
+    def ic_name(self) -> str:
+        return 'InstagramProfile'
 
-    def tearDown(self) -> None:
-        del self.ic_name
-        del self.ic_class
+    @property
+    def ic_class(self) -> Type[BaseImageCrawler]:
+        return InstagramProfile
 
-    def test_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def test_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def test_loader(self) -> None:
+        self.check()

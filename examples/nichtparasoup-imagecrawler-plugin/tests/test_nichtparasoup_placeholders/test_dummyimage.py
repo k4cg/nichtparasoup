@@ -1,7 +1,10 @@
 import unittest
+from typing import Type
 
-from nichtparasoup.imagecrawler import get_imagecrawlers
 from nichtparasoup_placeholders import DummyImage
+
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 _dummyimage_right_config = {'width': 800, 'height': 600}
 
@@ -113,24 +116,15 @@ class DummyImageDescriptionTest(unittest.TestCase):
             self.assertTrue(config_key in description.config, config_key)
 
 
-class DummyImageLoaderTest(unittest.TestCase):
+class DummyImageLoaderTest(ImageCrawlerLoaderTest):
 
-    def setUp(self) -> None:
-        self.ic_name = "DummyImage"
-        self.ic_class = DummyImage
+    @property
+    def ic_name(self) -> str:
+        return "DummyImage"
 
-    def tearDown(self) -> None:
-        del self.ic_name
-        del self.ic_class
+    @property
+    def ic_class(self) -> Type[BaseImageCrawler]:
+        return DummyImage
 
-    def test_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def test_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def test_loader(self) -> None:
+        self.check()

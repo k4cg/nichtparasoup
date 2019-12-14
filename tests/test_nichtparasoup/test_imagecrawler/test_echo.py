@@ -1,7 +1,9 @@
 import unittest
+from typing import Type
 
-from nichtparasoup.imagecrawler import get_imagecrawlers
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 
 class EchoConfigImageUriTest(unittest.TestCase):
@@ -51,6 +53,7 @@ class EchoCrawlTest(unittest.TestCase):
 
 
 class EchoDescriptionTest(unittest.TestCase):
+
     def test_description_config(self) -> None:
         # act
         description = Echo.info()
@@ -59,24 +62,15 @@ class EchoDescriptionTest(unittest.TestCase):
         self.assertTrue('image_uri' in description.config)
 
 
-class EchoLoaderTest(unittest.TestCase):
+class EchoLoaderTest(ImageCrawlerLoaderTest):
 
-    def setUp(self) -> None:
-        self.ic_name = "Echo"
-        self.ic_class = Echo
+    @property
+    def ic_name(self) -> str:
+        return 'Echo'
 
-    def tearDown(self) -> None:
-        del self.ic_name
-        del self.ic_class
+    @property
+    def ic_class(self) -> Type[BaseImageCrawler]:
+        return Echo
 
-    def test_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def test_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def test_loader(self) -> None:
+        self.check()

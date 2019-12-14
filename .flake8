@@ -8,6 +8,7 @@ ignore = TYP101,TYP102
 exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
     setup.py
     docs
+    examples
 
 max-complexity = 5
 
