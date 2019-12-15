@@ -13,14 +13,17 @@
 
 ### Changes
 
-* implementation of ImageCrawler may have a `long_description`, now.
-* implementation of ImageCrawler don't have a `version` anymore.
-* implementation of ImageCrawler may have an `icon_uri`, now.
+* `ImageCrawlerInfo`'s `desc` was renamed to `description`.
+* `ImageCrawlerInfo` don't have a `version` anymore.
 
 ### Added
 
 * commandline interface got a `--debug` switch to help plugin developers.
 * `webserver` now uses [`mako`](https://www.makotemplates.org/) template engine.
+* `ImageCrawlerInfo` may have an `icon_uri`, now.
+* `ImageCrawlerInfo` may have a `long_description`, now.
+
+
 
 ## 2.1.1
 
