@@ -1,8 +1,6 @@
-name: "Test & Build"
+name: "Release"
 
 on:
-  push:
-  pull_request:
   release:
     types: [created]
 
@@ -32,7 +30,6 @@ jobs:
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
-    if: github.event_name == 'release' && github.event.action == 'created'
     needs: [test]
     runs-on: ubuntu-latest
     steps:
@@ -53,4 +50,3 @@ jobs:
           rm -rf build dist
           python3 setup.py sdist bdist_wheel
           twine upload dist/*
-
