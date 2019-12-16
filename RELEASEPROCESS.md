@@ -20,4 +20,4 @@
         1. Run ala `git commmit -m 'preparing 2.X.Y' HISTORY.md`.
         1. Run ala `git push origin master`.
 1. Draft and publish a release on `master` branch in github.  
-   Put the latest part of the `HISTORY.md` in the release notes.
+   Put the latest part of the [`HISTORY.md`](HISTORY.md) in the release notes.
