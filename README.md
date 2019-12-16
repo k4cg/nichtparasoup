@@ -1,5 +1,15 @@
 # nichtparasoup
 
+[![PyPI](https://img.shields.io/pypi/v/nichtparasoup)](https://pypi.org/project/nichtparasoup/)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/nichtparasoup)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)  
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test%22)
+[![Codecov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup)](https://codecov.io/gh/k4cg/nichtparasoup)  
+
+
+----
+
+
 _nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
 [instagram](https://instagram.com) and
@@ -7,7 +17,7 @@ It randomly displays images from
 Other crawlers are currently removed, but will be back soon.
 
 If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
-_nichtparasoup_ supports plugins :-)
+Contribute it to the _nichtparasoup_ project or write it as a independent plugin :-)
 
 
 ![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
@@ -23,20 +33,31 @@ without having the noise and interruptions of videos or other stuff.
 Here is what it looks like in your browser
 ![screenshot](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/screenshot.png)
 
-and even better, on a beamer in your local hackspace!
+and even better, on a video projector in your local hackspace!
 ![hackspace](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/hackspace.jpg)
 
 
 ## How it works
 
 Images are crawled from multiple public pre-configured sources.  
-No image is actually downloaded, just the URL to images are gathered. Found images are kept in a list, also it is assured that the same URL is never gathered twice.
+No image is actually downloaded, just the URL to images are gathered. Found images are kept in a list, also it is
+assured that the same URL is never gathered twice.
 
-To display the crawled images, _nichtparasoup_ starts a webserver display a web UI.  
-The web UI fetches a random image URL from the _nichtparasoup_ server one by one. In the web UI the images are downloaded from the original source.  
-Also the original source is linked and marked by an icon. Just hover or click the icon in the bottom right of each image.
+To display the crawled images, _nichtparasoup_ starts a web-server display a web UI.  
+The web UI fetches a random image URL from the _nichtparasoup_ server one by one. 
 
-Every time _nichtparasoup_ serves an image URL it also removes it from its list. This means an image URL is served only once - unless the server was resetted. (This might change in the future)
+The web UI will load new images continuously, unless one of the following events happen:
+* paused manually in the web UI
+* scroll position in web UI is not on top
+* window or tab lost focus
+* web UI is in image theater/zoom mode
+* boss mode is active in web UI
+
+In the web UI the images are downloaded from the original source. Also the original source is linked and marked by
+an icon. Just hover or click the icon in the bottom right of an image.
+
+Every time _nichtparasoup_ serves an image URL it also removes it from its list. This means an image URL is served
+only once - unless the server was reset. (This might change in the future)
 
 
 ## Demo
@@ -49,7 +70,7 @@ Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs).
 
 
-## ImageCrawler Plugin development
+## ImageCrawler (plugin) development
 
 see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs/plugin-development).
 
