@@ -34,6 +34,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-          flags: unittests
+          flags: tests
           name: ${{ matrix.os }}_${{ matrix.pyhon }}
           yml: ./codecov.yml
