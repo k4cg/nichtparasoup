@@ -28,13 +28,13 @@ jobs:
         run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Gather coverage
-        # coverage was gathered via tox run
-        if: github.event_name == 'push'
+        ### coverage was gathered via tox run
+        # if: github.event_name == 'push'
         run: |
           python3 -m pip install --upgrade coverage
           python3 -m coverage xml -i -o ./coverage.xml
       - name: Upload coverage to Codecov
-        if: github.event_name == 'push'
+        # if: github.event_name == 'push'
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
