@@ -26,7 +26,7 @@ jobs:
           python3 -m pip install --upgrade setuptools tox
       - name: Test nichtparasoup
         run: |
-          python3 -m tox
+          python3 -m tox -e py3
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/

@@ -23,19 +23,14 @@ jobs:
           python3 -m pip install --upgrade setuptools tox
       - name: Test nichtparasoup
         run: |
-          python3 -m tox
+          python3 -m tox -e py3-coverageXML
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
-      - name: Gather coverage
-        ### coverage was gathered via tox run
-        # if: github.event_name == 'push'
-        run: |
-          python3 -m pip install --upgrade coverage
-          python3 -m coverage xml -i -o ./coverage.xml
       - name: Upload coverage to Codecov
-        # if: github.event_name == 'push'
+        # if: github.event_name == 'push'  # actually not needed, codecov knows pull-requests
         uses: codecov/codecov-action@v1
+        ## see https://github.com/codecov/codecov-action
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
