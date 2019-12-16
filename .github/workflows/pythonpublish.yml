@@ -14,7 +14,8 @@ jobs:
         pyhon: ['3.5', '3.6', '3.7', '3.8']
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
+      - name: Fetch Code
+        uses: actions/checkout@v1
       - name: Set up Python ${{ matrix.pyhon_version }}
         uses: actions/setup-python@v1
         with:
@@ -34,7 +35,8 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Fetch Code
+        uses: actions/checkout@v1
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
