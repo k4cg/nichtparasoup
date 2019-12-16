@@ -1,4 +1,4 @@
-name: "Release"
+name: "Test & Release"
 
 on:
   release:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    # these tests are just a clone from the actual "test" workflow
     name: Testing
     strategy:
       matrix:
