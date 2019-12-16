@@ -6,8 +6,8 @@ It randomly displays images from
 [reddit](https://reddit.com).  
 Other crawlers are currently removed, but will be back soon.
 
-If you find your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
-_nichtparasoup_ supports ImageCrawler plugins :-)
+If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
+_nichtparasoup_ supports plugins :-)
 
 
 ![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
