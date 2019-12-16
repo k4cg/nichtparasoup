@@ -27,3 +27,12 @@ jobs:
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
+      - name: Upload coverage to Codecov
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          name: ${{ matrix.os }}_${{ matrix.pyhon }}
+          yml: ./codecov.yml
