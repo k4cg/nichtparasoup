@@ -1,3 +1,5 @@
+# pragma: no cover
+
 __all__ = ["parser"]
 
 from argparse import ArgumentParser
@@ -13,6 +15,12 @@ commands = parser.add_subparsers(
     dest='command',
 )
 commands.required = True
+
+parser.add_argument(
+    '--debug',
+    help='enable debug output',
+    action='store_true', dest="debug",
+)
 
 command_run = commands.add_parser(
     'run',

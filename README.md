@@ -2,9 +2,12 @@
 
 _nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
-[instagram](https://instagram.com),
+[instagram](https://instagram.com) and
 [reddit](https://reddit.com).  
 Other crawlers are currently removed, but will be back soon.
+
+If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
+_nichtparasoup_ supports plugins :-)
 
 
 ![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
@@ -13,7 +16,7 @@ Other crawlers are currently removed, but will be back soon.
 ---
 
 
-At our hackspace [k4cg](https://k4cg.org) we use it since 2 years now.  
+At our hackspace [k4cg](https://k4cg.org) we use it since years now.  
 It turns out to be a very non-invasive way of entertaining a crowd of nerds 
 without having the noise and interruptions of videos or other stuff.
 
@@ -33,7 +36,7 @@ To display the crawled images, _nichtparasoup_ starts a webserver display a web 
 The web UI fetches a random image URL from the _nichtparasoup_ server one by one. In the web UI the images are downloaded from the original source.  
 Also the original source is linked and marked by an icon. Just hover or click the icon in the bottom right of each image.
 
-Everytime _nichtparasoup_ serves an image URL it also removes it from its list. This means an image URL is served only once - unless the server was resetted. (This might change in the future)
+Every time _nichtparasoup_ serves an image URL it also removes it from its list. This means an image URL is served only once - unless the server was resetted. (This might change in the future)
 
 
 ## Demo
@@ -43,7 +46,12 @@ Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 
 ## Install, Usage, Config, etc 
 
-see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs)
+see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs).
+
+
+## ImageCrawler Plugin development
+
+see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs/plugin-development).
 
 
 ## License
@@ -53,8 +61,9 @@ MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/master/LICE
 
 ## Credits
 
-* see the [`AUTHORS`](https://github.com/k4cg/nichtparasoup/blob/master/AUTHORS) file for a list of essential contributors
+* see the [`AUTHORS`](https://github.com/k4cg/nichtparasoup/blob/master/AUTHORS) file 
+   for a list of essential contributors.
 * parts of the logo are taken
    from [Smashicons](https://www.flaticon.com/authors/smashicons)
    on [www.flaticon.com](https://www.flaticon.com/)
-   are licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+   are licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).

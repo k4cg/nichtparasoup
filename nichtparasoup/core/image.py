@@ -9,13 +9,14 @@ SourceUri = str
 
 
 class Image(object):
-    """Describe an image
+    """
+    Describe an image
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``schema`` must be either 'http' or 'https' - the last one is preferred.
+            ``schema`` must be either 'http' or 'https' - use 'https' if possible!
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
     `source`
@@ -65,7 +66,7 @@ class Image(object):
             return hash(self) == hash(other)
         return False
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} object at {1:#x} {2.uri!r}>'.format(type(self), id(self), self)
 
 

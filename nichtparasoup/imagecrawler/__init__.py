@@ -1,71 +1,127 @@
-__all__ = ["get_class", "get_classes"]
+__all__ = [
+    "get_imagecrawlers",
+    # for convenience, all classes that are needed to implement an ImageCrawler are exported, here
+    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "Image", "ImageCollection",
+    "RemoteFetcher", "ImageRecognizer",
+]
 
-from typing import Dict, Optional, Type
+from copy import copy
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from pkg_resources import EntryPoint, iter_entry_points
 
-from .dummy import Dummy
-from .instagram import InstagramHashtag, InstagramProfile
-from .picsum import Picsum
-from .reddit import Reddit
-
-_imagecrawlers = dict(
-    Dummy=Dummy,
-    Picsum=Picsum,
-    Reddit=Reddit,
-    InstagramProfile=InstagramProfile,
-    InstagramHashtag=InstagramHashtag,
+from nichtparasoup._internals import _log
+from nichtparasoup.core.image import Image, ImageCollection
+from nichtparasoup.core.imagecrawler import (
+    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
 )
 
+_ImagecrawlerName = str
+_ImagecrawlerClass = Type[BaseImageCrawler]
+_Imagecrawler = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
 
-def get_classes() -> Dict[str, Type[BaseImageCrawler]]:
-    return _imagecrawlers.copy()
+
+class KnownImageCrawlers(object):
+
+    @staticmethod
+    def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
+        from .echo import Echo
+        from .picsum import Picsum
+        from .reddit import Reddit
+        from .instagram import InstagramHashtag, InstagramProfile
+        return dict(
+            Echo=Echo,
+            Picsum=Picsum,
+            Reddit=Reddit,
+            InstagramProfile=InstagramProfile,
+            InstagramHashtag=InstagramHashtag,
+        )
+
+    def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
+        self._list = [(n, c) for n, c in self._builtins().items()]  # type: List[_Imagecrawler]
+        for entry in entries:
+            try:
+                self._add(entry)
+                _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
+            except BaseException as e:
+                _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
+
+    def _add(self, entry: EntryPoint) -> None:
+        self._test_duplicate_name(entry.name)
+        loaded = self._load(entry)
+        self._test(loaded)
+        self._test_duplicate_class(loaded)
+        # if everything went well .. add
+        self._list.append((entry.name, loaded))
+
+    def names(self) -> Iterable[_ImagecrawlerName]:
+        return (ic_name for ic_name, _ in self._list)
+
+    def classes(self) -> Iterable[_ImagecrawlerClass]:
+        return (ic_class for _, ic_class in self._list)
+
+    def items(self) -> Iterable[_Imagecrawler]:
+        return (copy(imacrawler) for imacrawler in self._list)
+
+    def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
+        for ic_name, ic_class in self._list:
+            if ic_class == imagecrawler_class:
+                return ic_name
+        return None
+
+    def get_class(self, imagecrawler_name: _ImagecrawlerName) -> Optional[_ImagecrawlerClass]:
+        for ic_name, ic_class in self._list:
+            if ic_name == imagecrawler_name:
+                return ic_class
+        return None
+
+    @staticmethod
+    def _load(entry: EntryPoint) -> Any:
+        try:
+            return entry.load()
+        except BaseException as e:
+            raise ImportError('Error on loading entry {}'.format(entry)) from e
+
+    @classmethod
+    def _test(cls, something: Any) -> None:  # pragma: no cover
+        cls._test_inheritance(something)
+        cls._test_abstract(something)
+
+    @staticmethod
+    def _test_inheritance(something: Any) -> None:
+        if not issubclass(something, BaseImageCrawler):
+            raise TypeError('{!r} is not a {!r}'.format(something, BaseImageCrawler))
+
+    @staticmethod
+    def _test_abstract(some_type: Type[object]) -> None:
+        if hasattr(some_type, '__abstractmethods__'):
+            if some_type.__abstractmethods__:  # type: ignore
+                raise TypeError('{!r} is abstract'.format(some_type))
+
+    def _test_duplicate_name(self, imagecrawler_name: str) -> None:
+        for ic_name, _ in self._list:
+            if ic_name == imagecrawler_name:
+                raise KeyError('Duplicate ImageCrawler {!r}'.format(imagecrawler_name))
+
+    def _test_duplicate_class(self, imagecrawler_class: _ImagecrawlerClass) -> None:
+        for _, ic_class in self._list:
+            if ic_class == imagecrawler_class:
+                raise TypeError('Duplicate ImageCrawler {!r}'.format(imagecrawler_class))
 
 
-def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:
-    return _imagecrawlers.get(class_name)
+__ENTRY_POINT_NAME = 'nichtparasoup_imagecrawler'
 
-# TODO: write the whole thing testable. no write it as a util or use lib. or just write crawlers plugable
-#
-# import pkgutil
-# from importlib import import_module
-# from os.path import dirname
-# from types import ModuleType
-# from typing import Dict, Optional, Type
-#
-# from nichtparasoup.core.imagecrawler import BaseImageCrawler
-#
-#
-# def _get_subclasses_from_module(module_name: str, baseclass: type) -> Dict[str, type]:
-#     subclasses = dict()
-#     module = import_module('.{}'.format(module_name), __name__)  # type: ModuleType
-#     if hasattr(module, '__all__'):
-#         index = module.__all__  # type: ignore
-#     else:
-#         index = [attrib for attrib in dir(module) if '_' != attrib[:1]]
-#     for imported_name in index:
-#         imported_var = getattr(module, imported_name)
-#         if issubclass(imported_var, baseclass):
-#             subclasses[imported_name] = imported_var
-#     return subclasses
-#
-#
-# def _get_subclasses_from_package(package_path: str, baseclass: type) -> Dict[str, type]:
-#     subclasses = dict()  # type: Dict[str, type]
-#     for (_, module_name, _) in pkgutil.iter_modules([package_path]):
-#         module_subclasses = _get_subclasses_from_module(module_name, baseclass)
-#         for (module_subclass_name, module_subclass) in module_subclasses.items():
-#             if subclasses.get(module_subclass_name):
-#                 raise Exception('duplicate subclass defined: {}'.format(module_subclass_name))
-#             subclasses[module_subclass_name] = module_subclass
-#     return subclasses
-#
-#
-# _imagecrawlers_builtin = None   # type: Optional[Dict[str, type]]
-#
-#
-# def get_class(class_name: str) -> Optional[Type[BaseImageCrawler]]:
-#     global _imagecrawlers_builtin
-#     if not _imagecrawlers_builtin:
-#         _imagecrawlers_builtin = _get_subclasses_from_package(dirname(__file__), BaseImageCrawler)
-#     return _imagecrawlers_builtin.get(class_name)
+__imagecrawlers = None  # type: Optional[KnownImageCrawlers]
+
+
+def get_imagecrawlers() -> KnownImageCrawlers:  # pragma: no cover
+    global __imagecrawlers
+    if __imagecrawlers is None:
+        __imagecrawlers = KnownImageCrawlers(iter_entry_points(__ENTRY_POINT_NAME))
+    return __imagecrawlers
+
+
+def clear_imagecrawlers() -> None:  # pragma: no cover
+    global __imagecrawlers
+    __imagecrawlers = None

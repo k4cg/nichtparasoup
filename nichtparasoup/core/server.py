@@ -5,7 +5,7 @@ from copy import copy
 from sys import getsizeof
 from threading import Lock, Thread
 from time import time
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Type, Union
 from weakref import ref as weak_ref
 
 from nichtparasoup import VERSION
@@ -47,7 +47,7 @@ class Server(object):
             more=image.more,
             crawler=dict(
                 id=id(crawler),
-                type=type(crawler.imagecrawler).__name__,
+                type=type_module_name_str(type(crawler.imagecrawler)),
             ),
         )
 
@@ -117,8 +117,8 @@ class Server(object):
 class ServerStatus(ABC):
     """
     this class intended to be a stable interface.
-    all methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
-    all methods must be associated with stat(u)s!
+    all public methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
+    all public methods must be associated with stat(u)s!
     """
 
     @staticmethod
@@ -155,8 +155,8 @@ class ServerStatus(ABC):
             crawler = copy(crawler)
             images = crawler.images.copy()
             status[crawler_id] = dict(
-                type=type(crawler.imagecrawler).__name__,
                 weight=crawler.weight,
+                type=type_module_name_str(type(crawler.imagecrawler)),
                 config=crawler.imagecrawler.get_config(),  # just a dict
                 images=dict(
                     len=len(images),
@@ -164,6 +164,10 @@ class ServerStatus(ABC):
                 ),
             )
         return status
+
+
+def type_module_name_str(t: Type[Any]) -> str:
+    return '{}:{}'.format(t.__module__, t.__name__)
 
 
 class ServerRefiller(Thread):

@@ -1,0 +1,31 @@
+## https://packaging.python.org/guides/using-manifest-in/
+
+
+# this file
+include MANIFEST.in
+
+
+# minimum files
+
+include setup.py
+include README.md
+graft nichtparasoup_placeholders
+
+
+# additional files and folders
+
+include INSTALL
+include LICENSE
+
+graft docs
+graft examples
+graft tests
+
+
+# excludes
+
+global-exclude *_cache/*
+global-exclude __pycache__
+global-exclude *.py[cod]
+
+global-exclude .gitignore

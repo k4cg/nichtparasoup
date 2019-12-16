@@ -3,6 +3,32 @@
 
 ## Unreleased
 
+### Breaking changes
+
+* in the config the crawlers' `type` was renamed to `name`.
+* the `Dummy` ImageCrawler was renamed to `Echo`.
+
+### Changes
+
+* `ImageCrawlerInfo`'s `desc` was renamed to `description`.
+* `ImageCrawlerInfo` don't require a `version` anymore.
+
+### Fix
+
+* The non-existing `favicon.ico` is no longer tried to be loaded.
+
+### Added
+
+* plugin support for ImageCrawlers. You may write your own, now :-)
+    * plugin recognition via EntryPoint "nichtparasoup_imagecrawler".
+    * [`testing`](nichtparasoup/testing) added: test helpers are now part of the package for public use by plugin-devs.
+    * [`example`](examples/nichtparasoup-imagecrawler-plugin) implementation added.
+    * [`doc`](docs/plugin-development) space was prepared.
+* commandline interface got a `--debug` switch to help plugin developers.
+* `webserver` now uses [`mako`](https://www.makotemplates.org/) template engine.
+* `ImageCrawlerInfo` may have an `icon_uri`, now.
+* `ImageCrawlerInfo` may have a `long_description`, now.
+
 
 ## 2.1.1
 

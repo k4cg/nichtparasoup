@@ -1,0 +1,20 @@
+## This is a config file for nichtprasoup (v2.2)
+## This is an example file. For a better kickStart run: nichtparasoup config --help
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 8080
+
+imageserver:
+  crawler_upkeep: 10
+
+crawlers:
+  - name: "Reddit"
+    config:
+      subreddit: "aww"
+  - name: "Reddit"
+    config:
+      subreddit: "awww"
+  - name: "Reddit"
+    config:
+      subreddit: "awwww"

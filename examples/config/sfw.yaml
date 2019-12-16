@@ -1,0 +1,202 @@
+## This is a config file for nichtprasoup (v2.2)
+## This is an example file. For a better kickStart run: nichtparasoup config --help
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 5000
+
+imageserver:
+  crawler_upkeep: 10
+
+logging:
+  level: 'INFO'
+
+crawlers:
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'EarthPorn'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'gifs'
+  - name: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'pics'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'aww_gifs'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'mildlyinteresting'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'reactiongifs'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Oddlysatisfying'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Spaceflightporn'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Therewasanattempt'
+  - name: "Reddit"
+    weight: 6
+    config:
+      subreddit: 'HistoryMemes'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Unexpected'
+  - name: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'Whatcouldgowrong'
+  - name: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'Weird'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'photoshopbattles'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Nonononoyes'
+  - name: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'earthporn'
+  - name: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'Bettereveryloop'
+  - name: "Reddit"
+    weight: 8
+    config:
+      subreddit: 'assholedesign'
+  - name: "Reddit"
+    weight: 9
+    config:
+      subreddit: 'machineporn'
+  - name: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'Shittyfoodporn'
+  - name: "Reddit"
+    weight: 2
+    config:
+      subreddit: 'Instant_regret'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Mildlyinfuriating'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'somememes'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'Crappydesign'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'engineeringporn'
+  - name: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'mechanical_gifs'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'cableporn'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'shittylifehacks'
+  - name: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'perfecttiming'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'AnimalPorn'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'CatGifs'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'ChildrenFallingOver'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'funny'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'geek'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'IdiotsInCars'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'interestingasfuck'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'itsaunixsystem'
+  - name: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'MadeMeSmile'
+  - name: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'insanepeoplefacebook'
+  - name: "Reddit"
+    weight: 1
+    config:
+      subreddit: 'PeopleFuckingDying'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'spaceflightporn'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'woahdude'
+  - name: "Reddit"
+    weight: 4
+    config:
+      subreddit: 'spaceporn'
+  - name: "Reddit"
+    weight: 2
+    config:
+      subreddit: 'neckbeardnests'
+  - name: "Reddit"
+    weight: 1
+    config:
+      subreddit: 'techsupportgore'
+  - name: "Reddit"
+    weight: 5
+    config:
+      subreddit: 'perfectloops'
+  - name: "Reddit"
+    weight: 3
+    config:
+      subreddit: 'wasletztepreis'

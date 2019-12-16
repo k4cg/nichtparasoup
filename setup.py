@@ -18,8 +18,8 @@ if CURRENT_PYTHON < REQUIRED_PYTHON:
 
     sys.stderr.write(textwrap.dedent("""
     UNSUPPORTED PYTHON VERSION
-    
-    This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]}, 
+
+    This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]},
     but you're trying to install it on Python {py_current[0]}.{py_current[1]}.
 
     """.format(py_current=CURRENT_PYTHON, py_required=REQUIRED_PYTHON)))
@@ -43,6 +43,8 @@ REQUIRED = [
     'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`, `imagecrawler/instagram`
     'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
     "werkzeug>=0.15",  # for `webserver`
+    "mako>=1.1",  # for `webserver`'s templates
+    'setuptools>=40.0',  # for imagecrawler-plugin-architecture
 ]
 
 # What packages are optional?
@@ -101,9 +103,11 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=URLS,
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*", "examples"]),
     entry_points=dict(
-        console_scripts=['nichtparasoup=nichtparasoup.cmdline:main'],
+        console_scripts=[
+            'nichtparasoup = nichtparasoup.cmdline:main',
+        ],
     ),
     setup_requires=["setuptools", "setuptools_scm>=3.3.3"],
     install_requires=REQUIRED,
@@ -125,6 +129,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Games/Entertainment',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Typing :: Typed',
     ],
     keywords='',
 )

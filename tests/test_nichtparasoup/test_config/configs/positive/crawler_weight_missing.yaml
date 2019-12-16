@@ -1,0 +1,15 @@
+## this is a test config file for nichtprasoup (v2.x)
+## purpose: check if optional weight is set a default value
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 5000
+
+imageserver:
+  crawler_upkeep: 30
+
+crawlers:
+  - name: "MockableImageCrawler"
+    # weight: !!!  left away, to see if it gets its default value of 1
+    config:
+      foo: "bar"

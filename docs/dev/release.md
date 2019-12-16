@@ -1,3 +1,4 @@
 # release process
 
-TODO
+see the [dedicated release docs](../../RELEASEPROCESS.md).
+

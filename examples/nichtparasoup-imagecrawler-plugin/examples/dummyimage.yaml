@@ -1,0 +1,43 @@
+## This is a config file for nichtprasoup (v2.2)
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 5000
+
+imageserver:
+  crawler_upkeep: 10
+
+crawlers:
+  # test sizes based on https://en.wikipedia.org/wiki/Display_resolution#/media/File:Vector_Video_Standards8.svg
+  -
+    name: "DummyImage"
+    weight: 1
+    config:
+      width: 320
+      height: 200
+  -
+    name: "DummyImage"
+    weight: 1
+    config:
+      width: 320
+      height: 240
+  -
+    name: "DummyImage"
+    weight: 1
+    config:
+      width: 352
+      height: 288
+  -
+    name: "DummyImage"
+    weight: 1
+    config:
+      width: 384
+      height: 288
+  -
+    name: "DummyImage"
+    weight: 1
+    config:
+      width: 480
+      height: 320
+
+  # to be continued

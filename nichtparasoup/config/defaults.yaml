@@ -1,4 +1,4 @@
-## This is a config file for nichtprasoup (v2.x)
+## This is a config file for nichtprasoup (v2.2)
 
 
 ## WebServer config
@@ -30,7 +30,7 @@ crawlers:
     ## name of the crawler
     ## for a list of available types see the commandline help: nichtparasoup info --imagecrawler-list
     ## type: string
-    type: "Reddit"
+    name: "Reddit"
     ## probability to be chosen randomly
     ## type: integer or float
     ## constraint: > 0
@@ -44,18 +44,18 @@ crawlers:
     config:
       subreddit: 'EarthPorn'
   -
-    type: "Picsum"
+    name: "Picsum"
     weight: 1
     config:
       width: 300
       height: 600
   -
-    type: "InstagramHashtag"
+    name: "InstagramHashtag"
     weight: 1
     config:
       tag_name: "earthporn"
   -
-    type: "InstagramProfile"
+    name: "InstagramProfile"
     weight: 1
     config:
       user_name: "natgeo"

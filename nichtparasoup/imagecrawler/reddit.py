@@ -4,9 +4,8 @@ from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import quote_plus as url_quote, urljoin
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import (
-    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
+from nichtparasoup.imagecrawler import (
+    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
 )
 
 
@@ -22,13 +21,12 @@ class Reddit(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
+            description='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
             config=dict(
                 subreddit='the SubReddit to crawl',
             ),
-            version=VERSION,  # since its a builtin crawler
+            icon_url='https://www.redditstatic.com/desktop2x/img/favicon/apple-icon-120x120.png',
         )
 
     @classmethod

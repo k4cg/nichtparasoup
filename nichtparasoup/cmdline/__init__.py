@@ -1,13 +1,19 @@
+import logging
 from typing import Any, List, Optional
 
 from nichtparasoup._internals import _message, _message_exception
+
+
+def _logging_init(level: int) -> None:  # pragma: no cover
+    if not logging.root.handlers:
+        logging.root.setLevel(level)
+        logging.root.addHandler(logging.StreamHandler())
 
 
 class Commands(object):
 
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
-        import logging
         from os.path import abspath
         from nichtparasoup.config import get_config, get_imagecrawler
         from nichtparasoup.core import NPCore
@@ -15,8 +21,7 @@ class Commands(object):
         from nichtparasoup.webserver import WebServer
         try:
             config = get_config(abspath(config_file) if config_file else None)
-            logging.root.setLevel(getattr(logging, config['logging']['level']))
-            logging.root.addHandler(logging.StreamHandler())
+            _logging_init(getattr(logging, config['logging']['level']))
             imageserver = ImageServer(NPCore(), **config['imageserver'])
             for crawler_config in config['crawlers']:
                 imagecrawler = get_imagecrawler(crawler_config)
@@ -68,9 +73,9 @@ class Commands(object):
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             if imagecrawler in imagecrawlers:
-                _message_exception(Warning(
-                    'duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
-                    .format(type=type(imagecrawler), config=imagecrawler.get_config())))
+                _message_exception(
+                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
+                            .format(type=type(imagecrawler), config=imagecrawler.get_config())))
                 continue
             imagecrawlers.append(imagecrawler)
         return 0
@@ -96,38 +101,51 @@ class Commands(object):
 
     @staticmethod
     def info_imagecrawler_list(_: Any) -> int:
-        from nichtparasoup.imagecrawler import get_classes as get_imagegrawler_classes
-        imagecrawlers = list(get_imagegrawler_classes().keys())
+        from nichtparasoup.imagecrawler import get_imagecrawlers
+        imagecrawlers = get_imagecrawlers().names()
         if not imagecrawlers:
             _message_exception(Warning('no ImageCrawler found'))
         else:
-            _message("\r\n".join(imagecrawlers))
+            _message("\r\n".join(sorted(imagecrawlers)))
         return 0
 
     @staticmethod
     def info_imagecrawler_desc(imagecrawler: str) -> int:
-        from nichtparasoup.imagecrawler import get_class as get_imagegrawler_class
-        imagecrawler_class = get_imagegrawler_class(imagecrawler)
+        from nichtparasoup._internals import _log
+        from nichtparasoup.core.server import type_module_name_str
+        from nichtparasoup.imagecrawler import get_imagecrawlers
+        imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
             return 1
-        info = imagecrawler_class.info()
-        if info.config:
-            info_bull = '\r\n * '
-            mlen = max(len(k) for k in info.config.keys())
-            info_config = info_bull + info_bull.join([
+        info = []
+        info_linebreak = '\r\n'
+        imagecrawler_info = imagecrawler_class.info()
+        info.append(imagecrawler_info.description)
+        if imagecrawler_info.long_description:
+            info.append(imagecrawler_info.long_description)
+        if imagecrawler_info.config:
+            info_bull = info_linebreak + ' * '
+            mlen = max(len(k) for k in imagecrawler_info.config.keys())
+            info.append('Config: ' + info_bull + info_bull.join([
                 '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
-                for key, desc in info.config.items()])
-        else:
-            info_config = 'none'
-        _message('Purpose: {}\r\n'
-                 'Config : {}\r\n'
-                 'Version: {}'.format(info.desc, info_config, info.version))
+                for key, desc in imagecrawler_info.config.items()]))
+        _message((info_linebreak * 2).join(info))
+        _log('debug', info_linebreak.join(
+            [
+                info_linebreak,
+                'DEBUG INFO',
+                'Icon : {!r}'.format(imagecrawler_info.icon_url),
+                'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
+            ]))
         return 0
 
 
 def main(args: Optional[List[str]] = None) -> int:
     from nichtparasoup.cmdline.argparse import parser as argparser
     options = dict(argparser.parse_args(args=args).__dict__)
+    if options.pop('debug', False):
+        _logging_init(logging.DEBUG)
+        _message('DEBUG ENABLED :)', 'cyan')
     command = options.pop('command')
     return getattr(Commands, command)(**options)  # type: ignore

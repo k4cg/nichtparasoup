@@ -1,7 +1,6 @@
 from typing import Any, Dict
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
 
 __all__ = ["Picsum"]
 
@@ -11,14 +10,13 @@ class Picsum(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='Find images from https://picsum.photos',
+            description='Find images from https://picsum.photos',
             config=dict(
                 width='how many pixels of the image to find should be wide',
                 height='how many pixels of the image to find should be high',
             ),
-            version=VERSION,  # since its a builtin crawler
+            icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png'
         )
 
     @classmethod

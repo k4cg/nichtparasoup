@@ -1,0 +1,2 @@
+# Marker file for PEP 561.  The nichtparasoup package uses inline types.
+# This file is needed to allow other (plugin) packages to type-check their code against this package.

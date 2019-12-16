@@ -2,7 +2,8 @@
 
 see [install docs](install.md) first.
 
-This package requires `Python>=3.5`!  
+This package requires `Python>=3.5`!
+
 Required dependencies are installed automatically during install via `pip`.
 
 If you find the installation breaking, this might be due to the following issues:

@@ -8,8 +8,9 @@ from threading import Lock
 from typing import Any, Dict, Optional, Pattern, Set
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
+from nichtparasoup.imagecrawler import (
+    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
+)
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -61,6 +62,8 @@ or maybe even use the official API.
 """
 
 INSTAGRAM_URL_ROOT = 'https://www.instagram.com/'
+
+INSTAGRAM_ICON_URL = INSTAGRAM_URL_ROOT + 'static/images/ico/favicon-192.png/68d99ba29cc8.png'
 
 _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
@@ -240,13 +243,12 @@ class InstagramHashtag(BaseInstagramCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='A Crawler for hash tag posts of https://www.instagram.com/',
+            description='A Crawler for hash tag posts of https://www.instagram.com/',
             config=dict(
                 tag_name='the HashTag on Instagram',
             ),
-            version=VERSION,  # since its a builtin crawler
+            icon_url=INSTAGRAM_ICON_URL,
         )
 
     @classmethod
@@ -283,11 +285,12 @@ class InstagramProfile(BaseInstagramCrawler):
     def info(cls) -> ImageCrawlerInfo:
         from nichtparasoup import VERSION
         return ImageCrawlerInfo(
-            desc='A Crawler for profile pages of https://www.instagram.com/',
+            description='A Crawler for profile pages of https://www.instagram.com/',
             config=dict(
                 user_name='the UserName on Instagram',
             ),
             version=VERSION,
+            icon_url=INSTAGRAM_ICON_URL,
         )
 
     @classmethod

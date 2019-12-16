@@ -3,7 +3,7 @@
 ## Purpose
 
 Not an actual crawler.  
-returns generic URIs to [https://picsum.photos](https://picsum.photos).
+Returns generic URIs to [https://picsum.photos](https://picsum.photos).
 
 ## Config
 

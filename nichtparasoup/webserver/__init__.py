@@ -2,18 +2,21 @@ __all__ = ["WebServer"]
 
 from json import dumps as json_encode
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Union
+from typing import Any, Dict, Set, Type, Union
 
+from mako.template import Template  # type: ignore
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup.core.server import Server, ServerStatus
+from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
 class WebServer(object):
-    _STATIC_FILES = path_join(dirname(__file__), 'htdocs')
+    _TEMPLATE_FILES = path_join(dirname(__file__), 'htdocs', 'template')
+    _STATIC_FILES = path_join(dirname(__file__), 'htdocs', 'static')
     _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
@@ -26,6 +29,7 @@ class WebServer(object):
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
             Rule('/reset', endpoint='reset'),
+            Rule('/css/sourceIcons.css', endpoint='sourceicons')
         ])
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
@@ -80,6 +84,24 @@ class WebServer(object):
         reset = self.imageserver.request_reset()
         return Response(json_encode(reset), mimetype='application/json')
 
+    def on_sourceicons(self, _: Request) -> Response:
+        imagecrawlers = {
+            type(crawler.imagecrawler)
+            for crawler
+            in self.imageserver.core.crawlers}  # type: Set[Type[BaseImageCrawler]]
+        names_icons_list = [
+            (name, icon)
+            for name, icon
+            in [
+                (type_module_name_str(imagecrawler), imagecrawler.info().icon_url)
+                for imagecrawler
+                in imagecrawlers]
+            if icon]
+        # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
+        template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
+        css = template.render(names_icons_list=names_icons_list)
+        return Response(css, mimetype='text/css')
+
     def run(self) -> None:
         from werkzeug.serving import run_simple
         from nichtparasoup._internals import _log
@@ -94,7 +116,7 @@ class WebServer(object):
                 use_reloader=False,
                 use_debugger=False)
             _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-        except Exception as e:
+        except BaseException as e:
             _log('exception', ' * Error occurred. stopping everything')
             raise e
         finally:

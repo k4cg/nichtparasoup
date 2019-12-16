@@ -27,6 +27,7 @@ jobs:
       - name: Test with tox
         run: |
           python3 -m tox
+          python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     if: github.event_name == 'release' && github.event.action == 'created'
@@ -47,6 +48,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          python setup.py sdist bdist_wheel
+          rm -rf build dist
+          python3 setup.py sdist bdist_wheel
           twine upload dist/*
 

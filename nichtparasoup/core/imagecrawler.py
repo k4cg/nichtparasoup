@@ -4,9 +4,10 @@ from abc import ABC, abstractmethod
 from http.client import HTTPResponse
 from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Tuple
+from typing import Any, Dict, Optional, Pattern, Tuple, Union
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+from urllib.response import addinfourl
 
 from nichtparasoup._internals import _log
 from nichtparasoup.core.image import ImageCollection
@@ -15,11 +16,29 @@ _ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerInfo(object):
+    """
+    ImageCrawler's Info.
 
-    def __init__(self, desc: str, config: Dict[_ImageCrawlerConfigKey, str], version: str) -> None:  # pragma: no cover
-        self.desc = desc
+    see BaseImageCrawler::info()
+
+    """
+
+    def __init__(self, description: str, long_description: Optional[str] = None,
+                 config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
+                 icon_url: Optional[str] = None,
+                 **more: Any) -> None:  # pragma: no cover
+        """
+        description: short description
+        long_description: long description
+        config: config description
+        icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
+        more: more to save - planned to the future
+        """
+        self.description = description
+        self.long_description = long_description
         self.config = config
-        self.version = version
+        self.icon_url = icon_url
+        del more  # self.more = more # currently not stored, but planned for the future
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
@@ -34,7 +53,7 @@ class BaseImageCrawler(ABC):
         self._crawl_lock = Lock()
         _log('debug', 'crawler initialized: {!r}'.format(self))
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} {1!r}>'.format(type(self), self.get_config())
 
     def __eq__(self, other: Any) -> bool:
@@ -48,8 +67,12 @@ class BaseImageCrawler(ABC):
         Get all *public* information from the config
 
         For internal access to the config using `self._config` is encouraged
+
         """
-        return ImageCrawlerConfig({k: v for (k, v) in self._config.items() if not k.startswith('_')})
+        return ImageCrawlerConfig({k: v
+                                   for k, v
+                                   in self._config.items()
+                                   if not k.startswith('_')})
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -66,7 +89,7 @@ class BaseImageCrawler(ABC):
                 crawled = self._crawl()
                 _log('debug', 'crawling finished {!r}'.format(self))
                 return crawled
-            except Exception:
+            except BaseException:
                 _log('exception', 'caught an error during crawling {!r}'.format(self))
                 return ImageCollection()
 
@@ -78,14 +101,20 @@ class BaseImageCrawler(ABC):
 
         example implementation:
             return ImageCrawlerInfo(
-                desc="Some textual description about what this ImageCrawler does.",
+                description='Textual description what this ImageCrawler does. Where it gets the images from.',
+                long_description=textwrap.dedent('''
+                You may want write a long description of the ImageCrawler. Feel free to do so.
+                This is the place where you can do this.
+                ''').strip(),
                 config=dict(
-                    # leave the dict empty, if there is nothing to configure
-                    param1="meaning of param1",
-                    paramN="meaning of paramN",
+                    # leave the dict empty, if there is nothing to configure. or just don't pass a config at all.
+                    param1='purpose & meaning of param1',
+                    # ...
+                    paramN='purpose & meaning of paramN',
                 ),
-                version='0.0.dev1',
+                icon_url='https://my.imagesource.net/favicon.png'
             )
+
         """
         raise NotImplementedError()
 
@@ -106,6 +135,7 @@ class BaseImageCrawler(ABC):
                 raise TypeError("height {} is not int".format(height))
             if height <= 0:
                 raise ValueError("height {} <= 0".format(width))
+
         """
         raise NotImplementedError()
 
@@ -141,14 +171,14 @@ class RemoteFetcher(object):
         (scheme, _, _, _, _, _) = urlparse(uri)
         return scheme in {'http', 'https'}
 
-    def get_stream(self, uri: str) -> Tuple[HTTPResponse, str]:
+    def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
         if not self._valid_uri(uri):
             raise ValueError('not remote: ' + uri)
         _log('debug', 'fetch remote {!r} in {}s with {!r}'.format(
             uri, self._timeout, self._headers))
         request = Request(uri, headers=self._headers)
         try:
-            response = urlopen(request, timeout=self._timeout)  # type: HTTPResponse
+            response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
         except BaseException as e:
             _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=True)
             raise e
@@ -166,7 +196,6 @@ class RemoteFetcher(object):
 
 
 class ImageRecognizer(object):
-
     _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
 
     def path_is_image(self, uri: str) -> bool:
