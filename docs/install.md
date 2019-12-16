@@ -1,19 +1,21 @@
 # install
 
+This package requires `Python>=3.5`!  
+
 ## official
 
-`python3 -m pip install nichtparasoup`
+1. run `python3 -m pip install --user nichtparasoup`
 
 ## nightly
 
-1. have git installed
-1. `python3 -m pip install https://github.com/k4cg/nichtparasoup.git`
+1. have git installed.
+1. run `python3 -m pip install --user --upgrade https://github.com/k4cg/nichtparasoup.git`
 
-## for development
+## for development / testing
 
 1. have git installed
 1. clone the source from https://github.com/k4cg/nichtparasoup.git
-1. run `python3 -m pip install -e .[development,testing]` from projects root dir  
+1. run `python3 -m pip install --user --editable .[development,testing]` from cloned project's root dir.
 
 ## troubleshooting
 
