@@ -22,11 +22,13 @@ jobs:
           python-version: ${{ matrix.pyhon }}
       - name: Install dependencies
         run: |
-            python3 -m pip install --upgrade pip
-            python3 -m pip install --upgrade setuptools tox
-      - name: Test with tox
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade setuptools tox
+      - name: Test nichtparasoup
         run: |
           python3 -m tox
+      - name: "Test examples::nichtparasoup-imagecrawler-plugin"
+        run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
