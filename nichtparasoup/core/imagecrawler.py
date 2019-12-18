@@ -38,7 +38,7 @@ class ImageCrawlerInfo(object):
         self.long_description = long_description
         self.config = config
         self.icon_url = icon_url
-        del more  # self.more = more # currently not stored, but planned for the future
+        del more  # currently not stored, but planned for the future
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
