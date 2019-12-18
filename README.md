@@ -3,8 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/nichtparasoup)](https://pypi.org/project/nichtparasoup/)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/nichtparasoup)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)  
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test%22)
-[![Codecov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup)](https://codecov.io/gh/k4cg/nichtparasoup)  
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3ATest+branch%3Amaster)
+[![Codecov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup)](https://codecov.io/gh/k4cg/nichtparasoup/branch/master)  
 
 
 ----
