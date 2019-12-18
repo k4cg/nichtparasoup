@@ -2,9 +2,10 @@ __all__ = ["WebServer"]
 
 from json import dumps as json_encode
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Set, Type, Union
+from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple, Type, Union
 
 from mako.template import Template  # type: ignore
+from werkzeug.datastructures import Headers
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.utils import redirect
@@ -12,6 +13,26 @@ from werkzeug.wrappers import Request, Response
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
+
+
+class JsonRespone(Response):
+    def __init__(
+        self,
+        response: Optional[Any] = None,
+        status: Optional[Union[str, int]] = None,
+        headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
+        mimetype: Optional[str] = 'application/json',
+        content_type: Optional[str] = 'application/json',
+        direct_passthrough: bool = False,
+    ) -> None:
+        super().__init__(
+            response=json_encode(response),
+            status=status,
+            headers=headers,
+            mimetype=mimetype,
+            content_type=content_type,
+            direct_passthrough=direct_passthrough
+        )
 
 
 class WebServer(object):
@@ -61,7 +82,7 @@ class WebServer(object):
 
     def on_get(self, _: Request) -> Response:
         image = self.imageserver.get_image()
-        return Response(json_encode(image), mimetype='application/json')
+        return JsonRespone(image)
 
     _STATUS_WHATS = dict(
         server=ServerStatus.server,
@@ -71,18 +92,18 @@ class WebServer(object):
 
     def on_status(self, _: Request) -> Response:
         status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}
-        return Response(json_encode(status), mimetype='application/json')
+        return JsonRespone(status)
 
     def on_status_what(self, _: Request, what: str) -> Response:
         status_what = self._STATUS_WHATS.get(what)
         if not status_what:
             raise NotFound()
         status = status_what(self.imageserver)
-        return Response(json_encode(status), mimetype='application/json')
+        return JsonRespone(status)
 
     def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
-        return Response(json_encode(reset), mimetype='application/json')
+        return JsonRespone(reset)
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers = {
