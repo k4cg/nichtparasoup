@@ -95,9 +95,8 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _test_abstract(some_type: Type[object]) -> None:
-        if hasattr(some_type, '__abstractmethods__'):
-            if some_type.__abstractmethods__:  # type: ignore
-                raise TypeError('{!r} is abstract'.format(some_type))
+        if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
+            raise TypeError('{!r} is abstract'.format(some_type))
 
     def _test_duplicate_name(self, imagecrawler_name: str) -> None:
         for ic_name, _ in self._list:
