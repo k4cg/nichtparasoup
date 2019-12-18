@@ -1,5 +1,5 @@
 
-(function (np, window, undefined) {
+(function (np, window) {
     "use strict";
 
     var log = window.helperFuncs.log;
