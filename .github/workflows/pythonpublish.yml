@@ -29,7 +29,7 @@ jobs:
           python3 -m tox -e py3
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
-          python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
+          python3 -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     needs: [test]
