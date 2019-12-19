@@ -21,14 +21,14 @@ jobs:
           python-version: ${{ matrix.pyhon }}
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools tox
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools tox
       - name: Test nichtparasoup
         run: |
-          python3 -m tox -e py3-coverageXML
+          python -m tox -e py3-coverageXML
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
-          python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
+          python -m tox -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1

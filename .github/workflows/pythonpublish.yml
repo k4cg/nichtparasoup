@@ -20,14 +20,14 @@ jobs:
           python-version: '3.8'
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools tox
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools tox
       - name: Test nichtparasoup
         run: |
-          python3 -m tox -e py3
+          python -m tox -e py3
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
-          python3 -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
+          python -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     # build in an isolated env
@@ -44,13 +44,13 @@ jobs:
           python-version: '3.8'
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools setuptools_scm wheel twine
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools setuptools_scm wheel twine
       - name: Build and publish
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           rm -rf build dist
-          python3 setup.py sdist bdist_wheel
+          python setup.py sdist bdist_wheel
           twine upload dist/*
