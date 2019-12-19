@@ -1,8 +1,6 @@
 
-(function (np, window, undefined) {
+(function (np, window) {
     "use strict";
-
-    var log = window.helperFuncs.log;
 
     var addEvent = window.helperFuncs.addEvent,
         fireEvent = window.helperFuncs.fireEvent;

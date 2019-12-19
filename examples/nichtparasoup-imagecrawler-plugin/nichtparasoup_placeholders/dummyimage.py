@@ -48,6 +48,7 @@ class DummyImage(BaseImageCrawler):
         return cls._IMAGE_URI_TEMPLATE.format(width, height)
 
     def _reset(self) -> None:
+        # nothing to reset since this is a generic crawler
         pass
 
     _BUNCH = 10

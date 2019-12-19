@@ -42,7 +42,6 @@ class Reddit(BaseImageCrawler):
 
     def _reset(self) -> None:
         self._after = None
-        pass
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
