@@ -6,20 +6,16 @@ on:
 
 jobs:
   test:
-    # these tests are just a clone from the actual "test" workflow
-    name: Testing
-    strategy:
-      matrix:
-        os: ['ubuntu-latest']
-        pyhon: ['3.5', '3.6', '3.7', '3.8']
-    runs-on: ${{ matrix.os }}
+    name: Minimal Testing
+    # these tests are just to ensure that a minimal quality is given
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
         uses: actions/checkout@v1
-      - name: Set up Python ${{ matrix.pyhon_version }}
+      - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ matrix.pyhon }}
+          python-version: '3.8'
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
@@ -32,6 +28,7 @@ jobs:
           python3 -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
+    # build in an isolated env
     needs: [test]
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +37,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.x'
+          python-version: '3.8'
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
