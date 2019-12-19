@@ -3,7 +3,6 @@
 
     var addEvent = window.helperFuncs.addEvent,
         fireEvent = window.helperFuncs.fireEvent;
-    var log = window.helperFuncs.log;
 
     var cancelBubble = function (event) {
         event.cancelBubble = true;
