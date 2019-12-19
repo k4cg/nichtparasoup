@@ -6,6 +6,12 @@ from nichtparasoup.testing.imagecrawler import FileFetcher
 
 class FileFetcherTest(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self._testdata_dir = path.join(path.dirname(__file__), 'testdata_filefetcher')
+
+    def tearDown(self) -> None:
+        del self._testdata_dir
+
     def test__uri_sort_query__dings(self) -> None:
         # assert
         self.assertEqual(
@@ -69,7 +75,7 @@ class FileFetcherTest(unittest.TestCase):
 
     def test__get_file_uri__without_basedir(self) -> None:
         # arrange
-        test_file = 'test.txt'
+        test_file = path.join(self._testdata_dir, 'test.txt')
         filefetcher = FileFetcher(
             dict(
                 test_file=test_file,
@@ -83,7 +89,7 @@ class FileFetcherTest(unittest.TestCase):
     def test__get_file_uri__with_basedir(self) -> None:
         # arrange
         test_file = 'test.txt'
-        test_base = 'base'
+        test_base = self._testdata_dir
         filefetcher = FileFetcher(
             dict(
                 test_file=test_file,
@@ -109,7 +115,7 @@ class FileFetcherTest(unittest.TestCase):
             dict(
                 test_file='test.txt',
             ),
-            base_dir=path.join(path.dirname(__file__), 'testdata_filefetcher')
+            base_dir=self._testdata_dir
         )
         # act
         stream, _ = filefetcher.get_stream('test_file')
