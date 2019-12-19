@@ -12,8 +12,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Fetch Code
+        # see https://github.com/actions/checkout
         uses: actions/checkout@v1
       - name: Set up Python ${{ matrix.pyhon_version }}
+        # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.pyhon }}
@@ -28,9 +30,8 @@ jobs:
         run: |
           python3 -m tox -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
-        # if: github.event_name == 'push'  # actually not needed, codecov knows pull-requests
+        # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1
-        ## see https://github.com/codecov/codecov-action
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
