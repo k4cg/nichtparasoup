@@ -39,32 +39,32 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to '../testdata_instagram'
     '/static/bundles/metro/TagPageContainer.js/1bad9348735e.js': '1bad9348735e.js',
     '/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
-        'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first:+1,+after:+,+tag_name:+foo}',
+        'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first-1,after,tag_name-foo}',
     '/graphql/query/?query_hash=174a5243287c5f3a7de741089750ab3b&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
-        'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first:+1,+after:+,+tag_name:+foo}',
+        'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first-1,after,tag_name-foo}',
     '/graphql/query/?query_hash=ff260833edf142911047af6024eb634a&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
-        'query_hash=ff260833edf142911047af6024eb634a&variables={first:+1,+after:+,+tag_name:+foo}',
+        'query_hash=ff260833edf142911047af6024eb634a&variables={first-1,after,tag_name-foo}',
     '/graphql/query/?query_hash=174a5243287c5f3a7de741089750ab3b&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
-        'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first:+5,+after:+,+tag_name:+foo}',
+        'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first-5,after,tag_name-foo}',
     '/natgeo/?__a=1': 'natgeo.__a=1',
     '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first:+1,+after:+,+id:+787132}',
+        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=ff260833edf142911047af6024eb634a&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=ff260833edf142911047af6024eb634a&variables={first:+1,+after:+,+id:+787132}',
+        'query_hash=ff260833edf142911047af6024eb634a&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first:+1,+after:+,+id:+787132}',
+        'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=8c86fed24fa03a8a2eea2a70a80c7b6b&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=8c86fed24fa03a8a2eea2a70a80c7b6b&variables={first:+1,+after:+,+id:+787132}',
+        'query_hash=8c86fed24fa03a8a2eea2a70a80c7b6b&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first:+5,+after:+,+id:+787132}',
+        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-5,after,id-787132}',
 }, base_dir=path_join(dirname(__file__), 'testdata_instagram'))
 
 _QUERYHASHES_EXPECTED_TAG = {'f0986789a5c5d17c2400faebf16efd0d',
