@@ -127,12 +127,6 @@ footer {
 	-ms-transform-origin: top left;
 }
 
-#wall figure img {
-	display: none;
-}
-
-
-
 @keyframes scaleIn {
 	from { transform: scale(0); }
 	to   { transform: scale(1); }
