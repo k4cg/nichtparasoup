@@ -1,4 +1,4 @@
-name: "Test & Release"
+name: "Minimal test & Release"
 
 on:
   release:
@@ -7,7 +7,7 @@ on:
 jobs:
   test:
     name: Minimal Testing
-    # these tests are just to ensure that a minimal quality is given
+    # these tests are just to ensure that a minimal quality is given. full tests are done in "pythonpackage" action
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code

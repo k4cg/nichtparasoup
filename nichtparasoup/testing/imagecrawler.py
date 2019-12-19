@@ -14,10 +14,15 @@ from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
 class FileFetcher(RemoteFetcher):
-    """
+    r"""
     A file fetcher that can be used for testing with local files.
 
     URI are modified so query params are sorted - which makes same URL unique.
+
+    Remember the FileSystem restrictions:
+    * some FS do not support CaseSensitivity
+    * some FS do not allow these characters: \/:*?"<>|
+
     """
 
     def __init__(self, known_files: Dict[str, str], base_dir: Optional[str] = None) -> None:  # pragma: no cover
