@@ -2,9 +2,6 @@
 (function (pub, win) {
     "use strict";
 
-    var log = window.helperFuncs.log;
-
-
     // define vars and shortcuts up here to get the compressor shorten them
     var vars, func, conf,
         doc = win.document, math = win.Math; // shortcuts
