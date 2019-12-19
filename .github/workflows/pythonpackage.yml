@@ -4,10 +4,10 @@ on: [push,pull_request]
 
 jobs:
   test:
-    name: Testing
+    name: Testing os:${{ matrix.os }} py:${{ matrix.pyhon }}
     strategy:
       matrix:
-        os: ['ubuntu-latest']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         pyhon: ['3.5', '3.6', '3.7', '3.8']
     runs-on: ${{ matrix.os }}
     steps:
@@ -35,5 +35,5 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           flags: tests
-          name: ${{ matrix.os }}_${{ matrix.pyhon }}
+          name: od:${{ matrix.os }} py:${{ matrix.pyhon }}
           yml: ./codecov.yml
