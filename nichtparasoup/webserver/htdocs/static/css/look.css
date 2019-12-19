@@ -113,13 +113,7 @@ footer {
 	display: inline;
 	display: inline-block;
 	float: left;
-}
 
-#wall figure img {
-	display: none;
-}
-
-#wall figure {
 	animation: scaleIn linear 0.5s;
 	-webkit-animation: scaleIn linear 0.5s;
 	-moz-animation: scaleIn linear 0.5s;
@@ -132,6 +126,11 @@ footer {
 	-o-transform-origin: top left;
 	-ms-transform-origin: top left;
 }
+
+#wall figure img {
+	display: none;
+}
+
 
 
 @keyframes scaleIn {
