@@ -3,6 +3,14 @@
 
 ## Unreleased
 
+
+## 2.2.1
+
+### Fix
+
+* fixed web UI settings storage.
+
+
 ## 2.2.0
 
 ### Breaking changes

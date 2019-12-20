@@ -4,8 +4,6 @@ window.helperFuncs = {
 
     noop: function () { }, // no operation
 
-    log: function () { }, // in case we forget to strip a log
-
     addEvent: function (obj, event, fn, capture) {
         "use strict";
         if (!obj) { return; }
