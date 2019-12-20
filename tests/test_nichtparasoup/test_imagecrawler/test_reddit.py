@@ -41,7 +41,7 @@ class RedditConfigSubredditTest(unittest.TestCase):
             config_in = self._reddit_right_config_wo_subreddit
             config_in["subreddit"] = wrong_type  # type: ignore
             # assert
-            with self.assertRaises(TypeError):
+            with self.assertRaises(TypeError, msg=repr(config_in)):
                 Reddit.check_config(config_in)
 
     def test_check_config_wrong_value(self) -> None:
@@ -51,12 +51,11 @@ class RedditConfigSubredditTest(unittest.TestCase):
             config_in = self._reddit_right_config_wo_subreddit
             config_in["subreddit"] = wrong_value
             # assert
-            with self.assertRaises(ValueError):
+            with self.assertRaises(ValueError, msg=repr(config_in)):
                 Reddit.check_config(config_in)
 
     def test_check_config_not_existing(self) -> None:
         self.skipTest('TODO do we need this tested or even coded?')
-        pass
 
 
 class RedditBuildUriTest(unittest.TestCase):

@@ -41,7 +41,7 @@ class DummyImageConfigWidthTest(unittest.TestCase):
             config_in = self._dummyimage_right_config_wo_width
             config_in["width"] = wrong_type  # type: ignore
             # assert
-            with self.assertRaises(TypeError):
+            with self.assertRaises(TypeError, msg=repr(config_in)):
                 DummyImage.check_config(config_in)
 
     def test__check_config_wrong_value(self) -> None:
@@ -51,7 +51,7 @@ class DummyImageConfigWidthTest(unittest.TestCase):
             config_in = self._dummyimage_right_config_wo_width
             config_in["width"] = wrong_value
             # assert
-            with self.assertRaises(ValueError):
+            with self.assertRaises(ValueError, msg=repr(config_in)):
                 DummyImage.check_config(config_in)
 
 
@@ -76,7 +76,7 @@ class DummyImageConfigHeightTest(unittest.TestCase):
             config_in = self._dummyimage_right_config_wo_height
             config_in["height"] = wrong_type  # type: ignore
             # assert
-            with self.assertRaises(TypeError):
+            with self.assertRaises(TypeError, msg=repr(config_in)):
                 DummyImage.check_config(config_in)
 
     def test__check_config_wrong_value(self) -> None:
@@ -86,7 +86,7 @@ class DummyImageConfigHeightTest(unittest.TestCase):
             config_in = self._dummyimage_right_config_wo_height
             config_in["height"] = wrong_value
             # assert
-            with self.assertRaises(ValueError):
+            with self.assertRaises(ValueError, msg=repr(config_in)):
                 DummyImage.check_config(config_in)
 
 
