@@ -4,7 +4,7 @@ from nichtparasoup.config import get_imagecrawler, parse_yaml_file
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 
-class ConfigFilesTest(TestCase):
+class ConfigFilesTest(TestCase):  # pragma: no cover
 
     def validate(self, file: str) -> None:
         config = parse_yaml_file(file)

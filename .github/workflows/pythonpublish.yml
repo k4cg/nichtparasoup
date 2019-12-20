@@ -1,4 +1,4 @@
-name: "Test & Release"
+name: "Minimal test & Release"
 
 on:
   release:
@@ -6,50 +6,51 @@ on:
 
 jobs:
   test:
-    # these tests are just a clone from the actual "test" workflow
-    name: Testing
-    strategy:
-      matrix:
-        os: ['ubuntu-latest']
-        pyhon: ['3.5', '3.6', '3.7', '3.8']
-    runs-on: ${{ matrix.os }}
+    name: Minimal Testing
+    # these tests are just to ensure that a minimal quality is given. full tests are done in "pythonpackage" action
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
+        # see https://github.com/actions/checkout
         uses: actions/checkout@v1
-      - name: Set up Python ${{ matrix.pyhon_version }}
+      - name: Set up Python
+        # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ matrix.pyhon }}
+          python-version: '3.8'
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools tox
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools tox
       - name: Test nichtparasoup
         run: |
-          python3 -m tox -e py3
+          python -m tox -e py3
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: |
-          python3 -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
+          python -m tox -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
+    # build in an isolated env
     needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
+        # see https://github.com/actions/checkout
         uses: actions/checkout@v1
       - name: Set up Python
+        # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.x'
+          python-version: '3.8'
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade setuptools setuptools_scm wheel twine
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools setuptools_scm wheel twine
       - name: Build and publish
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           rm -rf build dist
-          python3 setup.py sdist bdist_wheel
+          python setup.py sdist bdist_wheel
           twine upload dist/*
