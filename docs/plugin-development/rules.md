@@ -2,6 +2,7 @@
 
 * Your ImageCrawler implementation class must inherit `nichtparasoup.core.BaseImageCrawler`.
 * Your ImageCrawler must be installable via `pip`.
+* Your ImageCrawler must require `nichtparasoup>=2.2` or greater.
 * Your ImageCrawler must have an [EntryPoint](https://packaging.python.org/specifications/entry-points/)
   with the `group` called "nichtparasoup_imagecrawler".  
   The `name` is the name that should be used in the config.  
