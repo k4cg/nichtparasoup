@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+## 2.2.0
+
 ### Breaking changes
 
 * in the config the crawlers' `type` was renamed to `name`.
