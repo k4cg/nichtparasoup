@@ -13,7 +13,9 @@ setup(
             'DummyImage = nichtparasoup_placeholders:DummyImage',
         ],
     ),
-    install_requires=['nichtparasoup>2.1.1'],  # TODO fix version to >=2.2
+    install_requires=[
+        'nichtparasoup>=2.2',
+    ],
     extras_require=dict(
         testing=[
             'mypy',
