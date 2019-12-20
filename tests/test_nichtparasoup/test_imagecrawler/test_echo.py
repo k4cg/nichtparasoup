@@ -25,14 +25,14 @@ class EchoConfigImageUriTest(unittest.TestCase):
         wrong_types = [None, True, 23, 4.2, [], (), {}, self]  # type: ignore
         for wrong_type in wrong_types:
             # assert
-            with self.assertRaises(TypeError):
+            with self.assertRaises(TypeError, msg=repr(wrong_type)):
                 Echo.check_config(dict(image_uri=wrong_type))
 
     def test__check_config_wrong_value(self) -> None:
         wrong_values = [""]
         for wrong_value in wrong_values:
             # assert
-            with self.assertRaises(ValueError):
+            with self.assertRaises(ValueError, msg=repr(wrong_value)):
                 Echo.check_config(dict(image_uri=wrong_value))
 
 

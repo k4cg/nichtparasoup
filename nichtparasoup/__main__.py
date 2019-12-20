@@ -1,6 +1,5 @@
-from sys import exit
+import sys
 
 from nichtparasoup.cmdline import main
 
-if __name__ == '__main__':
-    exit(main())
+sys.exit(main())
