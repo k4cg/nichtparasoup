@@ -31,12 +31,10 @@
         },
         "set": function (int, bit) {
             var r = int | this.gen(bit);
-            //    log("BS set", int, bit, "->", r);
             return r;
         },
         "unset": function (int, bit) {
             var r = this.check(int, bit) ? int ^ this.gen(bit) : int;
-            //    log("BS unset", int, bit, "->", r);
             return r;
         }
     };
@@ -209,7 +207,6 @@
     np._optionsStorage = {
         target: "np_store",
         save: function () {
-            log("options saved");
             localStorage.setItem(this.target, JSON.stringify(np._options));
         },
         load: function () {
