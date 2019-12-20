@@ -1,5 +1,6 @@
 import unittest
 from os import path
+from pathlib import Path
 
 from nichtparasoup.testing.imagecrawler import FileFetcher
 
@@ -75,31 +76,42 @@ class FileFetcherTest(unittest.TestCase):
 
     def test__get_file_uri__without_basedir(self) -> None:
         # arrange
+        test_file = 'test.txt'
+        # act & assert
+        with self.assertRaisesRegex(FileNotFoundError, 'Path not absolute'):
+            FileFetcher._build_uri(test_file)
+
+    def test__get_file_uri__unknown_file(self) -> None:
+        # arrange
+        test_file = path.join(self._testdata_dir, 'unknown.file')
+        # act & assert
+        with self.assertRaisesRegex(FileNotFoundError, 'Not a file'):
+            FileFetcher._build_uri(test_file)
+
+    def test__get_file_uri__absolute_basedir(self) -> None:
+        # arrange
         test_file = path.join(self._testdata_dir, 'test.txt')
-        filefetcher = FileFetcher(
-            dict(
-                test_file=test_file,
-            )
-        )
         # act
-        file = filefetcher._get_file_uri('test_file')
+        file = FileFetcher._build_uri(test_file)
         # assert
-        self.assertEqual('file://' + test_file, file)
+        self.assertTrue(file.startswith('file://'), file)
+        self.assertEqual(
+            Path(test_file).as_uri(),
+            file
+        )
 
     def test__get_file_uri__with_basedir(self) -> None:
         # arrange
         test_file = 'test.txt'
         test_base = self._testdata_dir
-        filefetcher = FileFetcher(
-            dict(
-                test_file=test_file,
-            ),
-            base_dir=test_base
-        )
         # act
-        file = filefetcher._get_file_uri('test_file')
+        file = FileFetcher._build_uri(test_file, test_base)
         # assert
-        self.assertEqual('file://' + path.join(test_base, test_file), file)
+        self.assertTrue(file.startswith('file://'), file)
+        self.assertEqual(
+            Path(path.join(test_base, test_file)).as_uri(),
+            file,
+        )
 
     def test__get_file_uri__unknown_basedir(self) -> None:
         # arrange

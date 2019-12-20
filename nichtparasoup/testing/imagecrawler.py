@@ -35,13 +35,13 @@ class FileFetcher(RemoteFetcher):
         }  # type: Dict[str, str]
 
     @classmethod
-    def _build_uri(cls, file: str, base_dir: str = '') -> str:  # pragma: no cover
+    def _build_uri(cls, file: str, base_dir: str = '') -> str:
         file_path = Path(path_join(base_dir, file) if base_dir else file)
         cls._test_path(file_path)
         return file_path.as_uri()
 
     @staticmethod
-    def _test_path(file_path: Path) -> None:  # pragma: no cover
+    def _test_path(file_path: Path) -> None:
         if not file_path.is_absolute():
             raise FileNotFoundError('Path not absolute: {!r}'.format(file_path))
         if not file_path.is_file():
