@@ -131,5 +131,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Typing :: Typed',
     ],
-    keywords='',
+    keywords='image-crawler, reddit, instagram',
 )
