@@ -203,7 +203,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         try:
             self._query(uri)
             return True
-        except (InstagramError, BaseException):
+        except BaseException:
             return False
 
     def _find_query_hash(self) -> Optional[str]:
