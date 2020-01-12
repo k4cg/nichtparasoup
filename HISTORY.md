@@ -4,6 +4,18 @@
 ## Unreleased
 
 
+## 2.2.2
+
+### Fix
+
+* fixed exception catch in `instagram` imagecrawler.
+* fixed hyperlinks in the `README.md`.
+
+### Added
+
+* added keywords in `setup.py`.
+
+
 ## 2.2.1
 
 ### Fix
