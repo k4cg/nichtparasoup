@@ -33,7 +33,7 @@ class ServerGetImageTest(unittest.TestCase):
 
     def test_get_image_some_images(self) -> None:
         # arrange
-        image_crawled = Image('testURI', is_generic=True, source='testSource', bla=1, foo="bar")
+        image_crawled = Image(uri='testURI', is_generic=True, source='testSource', bla=1, foo="bar")
         imagecrawler = MockableImageCrawler()
         imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
         self.server.core.add_imagecrawler(imagecrawler, 1)

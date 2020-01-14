@@ -23,14 +23,15 @@ class ImageCrawlerInfo(object):
 
     """
 
-    def __init__(self, description: str, long_description: Optional[str] = None,
+    def __init__(self, *,
+                 description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[str] = None,
                  **more: Any) -> None:  # pragma: no cover
         """
         description: short description
         long_description: long description
-        config: config description
+        config: config description(s)
         icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
         more: more to save - planned to the future
         """

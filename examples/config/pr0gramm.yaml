@@ -1,0 +1,15 @@
+## This is a config file for nichtprasoup (v2.2)
+## This is an example file. For a better kickStart run: nichtparasoup config --help
+
+# TODO give the config a proper name
+
+webserver:
+  hostname: "0.0.0.0"
+  port: 8080
+
+imageserver:
+  crawler_upkeep: 10
+
+crawlers:
+  - name: "Pr0gramm"
+    # TODO config

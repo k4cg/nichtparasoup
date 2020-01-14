@@ -49,7 +49,8 @@ class Image(object):
 
     """
 
-    def __init__(self, uri: ImageUri, source: SourceUri,
+    def __init__(self, *,
+                 uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
                  **more: Any) -> None:  # pragma: no cover
         self.uri = uri

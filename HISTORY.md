@@ -3,6 +3,15 @@
 
 ## Unreleased
 
+### Changes
+
+* class `ImageCrawlerInfo` lost support for positional arguments, supports keyword-arguments only - prepare future extensibility.
+* class `Image` lost support for positional arguments, supports keyword-arguments only - prepare future extensibility.
+
+### Added
+
+* added image crawler for [pr0gramm](https://pr0gramm.com) - Read the [docs](./docs/imagecrawlers/pr0gramm.md).
+
 
 ## 2.2.2
 
