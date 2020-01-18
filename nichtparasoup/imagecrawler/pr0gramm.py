@@ -1,6 +1,6 @@
 __all__ = ["Pr0gramm"]
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from nichtparasoup.imagecrawler import (
     BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
@@ -48,13 +48,18 @@ class Pr0gramm(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for https://pr0gramm.com',
-            config=dict(),  # TODO
+            config=dict(
+                promoted='Show only top("beliebt") voted images or anything("neu")',
+                tags='Filter. must start with "!" - see https://pr0gramm.com/new/2782197',
+            ),
             icon_url='https://pr0gramm.com/media/pr0gramm-favicon.png',
         )
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        # TODO
+        # TODO promoted==Optional[bool] - default: true
+        # TODO tag=str - must start with "!"
+        # TODO set `tags = '({}) & -"video"'.format(tags)` to gags
         return ImageCrawlerConfig()
 
     def _reset(self) -> None:
@@ -63,6 +68,7 @@ class Pr0gramm(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+        # TODO get some info from the API
         # TODO loop over `items`, add image ...
         images.add(Image(
             uri='',

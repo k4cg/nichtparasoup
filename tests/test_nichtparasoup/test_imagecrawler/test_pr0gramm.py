@@ -40,7 +40,29 @@ class Pr0grammConfigImageUriTest(unittest.TestCase):
                 Pr0gramm.check_config(dict(image_uri=wrong_value))
 
 
+class Pr0grammUrlBuilderTest(unittest.TestCase):
+
+    def test_promoted_false(self) -> None:
+        self.assertTrue(False, 'TODO')
+        # TODO test if promoted is 0
+
+    def test_promoted_true(self) -> None:
+        self.assertTrue(False, 'TODO')
+        # TODO test if promoted is 1
+
+    def test_promoted_default(self) -> None:
+        self.test_promoted_true()
+
+    def test_tags_SOMETHING(self) -> None:
+        self.assertTrue(False, 'TODO')
+        # TODO
+
+
 class Pr0grammCrawlTest(unittest.TestCase):
+
+    def test_at_end(self) -> None:
+        self.assertTrue(False, 'TODO')
+        # TODO: check if end is detected, what must request a reset ...
 
     def test_crawl(self) -> None:
         self.assertTrue(False, 'TODO')
