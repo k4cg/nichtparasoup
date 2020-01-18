@@ -19,7 +19,7 @@ class ImageCrawlerInfo(object):
     """
     ImageCrawler's Info.
 
-    see BaseImageCrawler::info()
+    .. seealso:: :method:`BaseImageCrawler.info()`
 
     """
 
@@ -29,11 +29,11 @@ class ImageCrawlerInfo(object):
                  icon_url: Optional[str] = None,
                  **more: Any) -> None:  # pragma: no cover
         """
-        description: short description
-        long_description: long description
-        config: config description(s)
-        icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
-        more: more to save - planned to the future
+        :param description: short description
+        :param long_description: long description
+        :param config: config description(s)
+        :param icon_url: url to an icon-like image. maybe the favicon. use 'https://' if possible!
+        :param more: more to save - planned to the future
         """
         self.description = description
         self.long_description = long_description

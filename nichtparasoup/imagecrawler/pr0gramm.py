@@ -19,11 +19,10 @@ class Pr0gramm(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        # TODO
         return ImageCrawlerInfo(
-            description='',
-            config=dict(),
-            icon_url='',
+            description='A Crawler for https://pr0gramm.com',
+            config=dict(),  # TODO
+            icon_url='https://pr0gramm.com/media/pr0gramm-favicon.png',
         )
 
     @classmethod
@@ -36,5 +35,4 @@ class Pr0gramm(BaseImageCrawler):
         pass
 
     def _crawl(self) -> ImageCollection:
-        # TODO
         return ImageCollection()

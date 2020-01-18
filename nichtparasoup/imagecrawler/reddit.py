@@ -22,7 +22,7 @@ class Reddit(BaseImageCrawler):
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
-            description='A Crawler for an arbitrary SubReddit of https://www.reddit.com/',
+            description='A Crawler for an arbitrary SubReddit of https://www.reddit.com',
             config=dict(
                 subreddit='the SubReddit to crawl',
             ),
