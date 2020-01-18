@@ -43,14 +43,15 @@ class Pr0gramm(BaseImageCrawler):
         super().__init__(**config)
         self._older = None  # type: Optional[int]
         self._remote_fetcher = RemoteFetcher()
+        self.__api_uri_proto = self._get_api_uri_prototype()
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for https://pr0gramm.com',
             config=dict(
-                promoted='Show only top("beliebt") voted images or anything("neu")',
-                tags='Filter. must start with "!" - see https://pr0gramm.com/new/2782197',
+                promoted='Boolean. Search only top("beliebt") voted images? Otherwise search anything("neu").',
+                tags='Filter. None or a string that starting with "!" - see https://pr0gramm.com/new/2782197',
             ),
             icon_url='https://pr0gramm.com/media/pr0gramm-favicon.png',
         )
@@ -58,13 +59,22 @@ class Pr0gramm(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         # TODO promoted==Optional[bool] - default: true
-        # TODO tag=str - must start with "!"
-        # TODO set `tags = '({}) & -"video"'.format(tags)` to gags
+        # TODO tags=Optional[str] - must start with ! and have something after it ...
         return ImageCrawlerConfig()
+
+    @staticmethod
+    def _get_api_uri_prototype(*, flags: int, promoted: bool, tags: Optional[str]) -> str:
+        from urllib.parse import quote as url_quote
+        return 'https://pr0gramm.com/api/items/get?flags={}&promoted={}&tags={}&older='.format(
+            flags,
+            1 if promoted else 0,
+            url_quote('!{} -"video"'.format(
+                '({})'.format(tags.lstrip('!').lstrip()) if tags else ''
+            ), safe='')
+        )
 
     def _reset(self) -> None:
         self._older = None
-        pass
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()

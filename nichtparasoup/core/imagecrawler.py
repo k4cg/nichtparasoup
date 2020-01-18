@@ -70,10 +70,12 @@ class BaseImageCrawler(ABC):
         For internal access to the config using `self._config` is encouraged
 
         """
-        return ImageCrawlerConfig({k: v
-                                   for k, v
-                                   in self._config.items()
-                                   if not k.startswith('_')})
+        return ImageCrawlerConfig({
+            k: v
+            for k, v
+            in self._config.items()
+            if not k.startswith('_')
+        })
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -156,7 +158,6 @@ class BaseImageCrawler(ABC):
 
 
 class RemoteFetcher(object):
-
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }
