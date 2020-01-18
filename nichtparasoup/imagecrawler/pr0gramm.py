@@ -2,7 +2,9 @@ __all__ = ["Pr0gramm"]
 
 from typing import Any, Dict
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.imagecrawler import (
+    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
+)
 
 
 class Pr0gramm(BaseImageCrawler):
@@ -24,14 +26,23 @@ class Pr0gramm(BaseImageCrawler):
     #   * error: null
     #   * items: list
     #     * id: int
-    #     * width:
-    #     * height:
-    #     * source:
+    #     * width: int
+    #     * height: int
+    #     * source: ???
+    #     * image: string (url-path)
     # * https://pr0gramm.com/api/items/get?older=3637805&flags=1&tags=!-%22video%22
     #    * param: "older" = id of last item
 
+    # distinguish the image:
+    # https://img.pr0gramm.com/<item.image>
+
     # distinguish the source:
-    # https://pr0gramm.com/(new|top)/<item.id> -- integrate nsfw|nsfl ?
+    # https://pr0gramm.com/new/<item.id>
+
+    def __init__(self, **config: Any) -> None:  # pragma: no cover
+        super().__init__(**config)
+        self._older = None  # type: Optional[int]
+        self._remote_fetcher = RemoteFetcher()
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
@@ -47,8 +58,18 @@ class Pr0gramm(BaseImageCrawler):
         return ImageCrawlerConfig()
 
     def _reset(self) -> None:
-        # TODO
+        self._older = None
         pass
 
     def _crawl(self) -> ImageCollection:
-        return ImageCollection()
+        images = ImageCollection()
+        # TODO loop over `items`, add image ...
+        images.add(Image(
+            uri='',
+            source='https://pr0gramm.com/new/12345',
+            # more: width, height, nsfw, nsfl, ...
+        ))
+        # TODO
+        # if `atEnd` is true, then reset
+        # else: set set._older to `items[last].id`
+        return images
