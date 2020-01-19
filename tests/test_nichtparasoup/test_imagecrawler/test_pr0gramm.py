@@ -35,7 +35,7 @@ class Pr0grammConfigPromotedTest(unittest.TestCase):
         for wrong_type in wrong_types:
             # assert
             with self.assertRaises(TypeError, msg=repr(wrong_type)):
-                Pr0gramm.check_config(dict(image_uri=wrong_type))
+                Pr0gramm.check_config(dict(promoted=wrong_type))
 
 
 @ddt
@@ -47,7 +47,7 @@ class Pr0grammConfigTagsTest(unittest.TestCase):
         # act
         config_out = Pr0gramm.check_config(config_in)
         # assert
-        self.assertFalse('tags' in config_out)
+        self.assertIsNone(config_out['tags'])
 
     @ddt_data(('!"test"',))  # type: ignore
     @ddt_unpack  # type: ignore
@@ -84,7 +84,7 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         # assert
         self.assertEqual('https', scheme)
         self.assertEqual('pr0gramm.com', netloc)
-        self.assertEqual('api/items/get', path)
+        self.assertEqual('/api/items/get', path)
 
     @ddt_idata((i, str(i)) for i in range(1, 16, 1))  # type: ignore
     @ddt_unpack  # type: ignore
