@@ -43,15 +43,14 @@ class Pr0gramm(BaseImageCrawler):
         super().__init__(**config)
         self._older = None  # type: Optional[int]
         self._remote_fetcher = RemoteFetcher()
-        self.__api_uri_proto = self._get_api_uri_prototype()
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for https://pr0gramm.com',
             config=dict(
-                promoted='Boolean. Search only top("beliebt") voted images? Otherwise search anything("neu").',
-                tags='Filter. None or a string that starting with "!" - see https://pr0gramm.com/new/2782197',
+                promoted='Boolean. Search only top("beliebt") voted content? Otherwise search anything("neu").',
+                tags='Filter. None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197',
             ),
             icon_url='https://pr0gramm.com/media/pr0gramm-favicon.png',
         )
@@ -63,21 +62,29 @@ class Pr0gramm(BaseImageCrawler):
         return ImageCrawlerConfig()
 
     @staticmethod
-    def _get_api_uri_prototype(*, flags: int, promoted: bool, tags: Optional[str]) -> str:
-        from urllib.parse import quote as url_quote
-        return 'https://pr0gramm.com/api/items/get?flags={}&promoted={}&tags={}&older='.format(
-            flags,
-            1 if promoted else 0,
-            url_quote('!{} -"video"'.format(
-                '({})'.format(tags.lstrip('!').lstrip()) if tags else ''
-            ), safe='')
-        )
+    def _get_api_uri(*,
+                     flags: int, promoted: bool,
+                     tags: Optional[str] = None, older: Optional[int] = None) -> str:
+        """
+        :param flags: BitSet. sfw=1, nsfw=2, nsfl=4
+        :param promoted: Search top("beliebt') only? - Otherwise search all("neu").
+        :param tags: None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197
+        :param older: page through the search
+        """
+        # TODO
+        del flags
+        del promoted
+        del tags
+        del older
+        return ''
 
     def _reset(self) -> None:
         self._older = None
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+
+        # self._remote_fetcher.get_string( ... )
         # TODO get some info from the API
         # TODO loop over `items`, add image ...
         images.add(Image(
