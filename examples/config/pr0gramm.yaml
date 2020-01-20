@@ -12,4 +12,3 @@ imageserver:
 
 crawlers:
   - name: "Pr0gramm"
-    # TODO config

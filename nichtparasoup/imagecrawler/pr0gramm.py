@@ -2,7 +2,7 @@ __all__ = ["Pr0gramm"]
 
 from json import loads as json_loads
 from typing import Any, Dict, Optional
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin
 
 from nichtparasoup.imagecrawler import (
     BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
@@ -83,7 +83,7 @@ class Pr0gramm(BaseImageCrawler):
             tags=tags,
         )
 
-    __API_URL_GET = 'https://pr0gramm.com/api/items/get'
+    __API_GET_URL = 'https://pr0gramm.com/api/items/get'
 
     @classmethod
     def _get_api_uri(cls, *,
@@ -103,24 +103,28 @@ class Pr0gramm(BaseImageCrawler):
         )
         if older:
             params['older'] = str(older)
-        return cls.__API_URL_GET + '?' + urlencode(params)
+        return cls.__API_GET_URL + '?' + urlencode(params)
 
     def _reset(self) -> None:
         self._older = None
 
+    __IMG_BASE_URL = 'https://img.pr0gramm.com/'
+    __POST_BASE_URL = 'https://pr0gramm.com/new/'
+
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        api_uri = self._get_api_uri(**self._config, older=self._older)
-        response_raw = self._remote_fetcher.get_string(api_uri)
+        api_uri = self._get_api_uri(**self._config, flags=1, older=self._older)
+        response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
         response = json_loads(response_raw)
         for item in response['items']:
             images.add(Image(
-                uri='https://img.pr0gramm.com/{}'.format(item['image']),
-                source='https://pr0gramm.com/new/{}'.format(item['id']),
-                # more: width, height, nsfw, nsfl, ...
+                uri=urljoin(self.__IMG_BASE_URL, item['image']),
+                source=urljoin(self.__POST_BASE_URL, item['id']),
+                width=item.get('width'),
+                height=item.get('height'),
             ))
-        self._older = int(response['items'][-1]['id']) or None
-        # TODO
-        # if `atEnd` is true, then reset
-        # else: set set._older to `items[last].id`
+        if response['atEnd']:
+            self.reset()
+        else:
+            self._older = response['items'][-1]['id'] or None
         return images
