@@ -1,5 +1,6 @@
 __all__ = ["Pr0gramm"]
 
+from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import urlencode
 
@@ -87,7 +88,8 @@ class Pr0gramm(BaseImageCrawler):
     @classmethod
     def _get_api_uri(cls, *,
                      flags: int, promoted: bool,
-                     tags: Optional[str] = None, older: Optional[int] = None) -> str:
+                     tags: Optional[str] = None, older: Optional[int] = None,
+                     **_: Any) -> str:
         """
         :param flags: BitSet. sfw=1, nsfw=2, nsfl=4
         :param promoted: Search top("beliebt") only? - Otherwise search all("neu").
@@ -108,15 +110,16 @@ class Pr0gramm(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-
-        # self._remote_fetcher.get_string( ... )
-        # TODO get some info from the API
-        # TODO loop over `items`, add image ...
-        images.add(Image(
-            uri='',
-            source='https://pr0gramm.com/new/12345',
-            # more: width, height, nsfw, nsfl, ...
-        ))
+        api_uri = self._get_api_uri(**self._config, older=self._older)
+        response_raw = self._remote_fetcher.get_string(api_uri)
+        response = json_loads(response_raw)
+        for item in response['items']:
+            images.add(Image(
+                uri='https://img.pr0gramm.com/{}'.format(item['image']),
+                source='https://pr0gramm.com/new/{}'.format(item['id']),
+                # more: width, height, nsfw, nsfl, ...
+            ))
+        self._older = int(response['items'][-1]['id']) or None
         # TODO
         # if `atEnd` is true, then reset
         # else: set set._older to `items[last].id`
