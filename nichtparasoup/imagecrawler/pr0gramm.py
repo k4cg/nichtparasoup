@@ -118,8 +118,8 @@ class Pr0gramm(BaseImageCrawler):
         response = json_loads(response_raw)
         for item in response['items']:
             images.add(Image(
-                uri=urljoin(self.__IMG_BASE_URL, item['image']),
-                source=urljoin(self.__POST_BASE_URL, item['id']),
+                uri=urljoin(self.__IMG_BASE_URL, str(item['image'])),
+                source=urljoin(self.__POST_BASE_URL, str(item['id'])),
                 width=item.get('width'),
                 height=item.get('height'),
             ))
