@@ -94,7 +94,7 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         (_, _, _, query_string, _) = urlsplit(api_uri)
         query = parse_qs(query_string)
         # assert
-        self.assertEqual(flags_qs, query['flags'])
+        self.assertEqual([flags_qs], query['flags'])
 
     @ddt_data((True, '1'), (False, '0'))  # type: ignore
     @ddt_unpack  # type: ignore
@@ -104,7 +104,7 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         (_, _, _, query_string, _) = urlsplit(api_uri)
         query = parse_qs(query_string)
         # assert
-        self.assertEqual(promoted_qs, query['promoted'])
+        self.assertEqual([promoted_qs], query['promoted'])
 
     @ddt_data((None, '! -"video"'), ('!"test"', '!("test") -"video"'))  # type: ignore
     @ddt_unpack  # type: ignore
@@ -114,7 +114,7 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         (_, _, _, query_string, _) = urlsplit(api_uri)
         query = parse_qs(query_string)
         # assert
-        self.assertEqual(tags_qs, query['tags'])
+        self.assertEqual([tags_qs], query['tags'])
 
 
 class Pr0grammCrawlTest(unittest.TestCase):

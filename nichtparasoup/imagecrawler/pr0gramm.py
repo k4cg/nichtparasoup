@@ -1,6 +1,7 @@
 __all__ = ["Pr0gramm"]
 
 from typing import Any, Dict, Optional
+from urllib.parse import urlencode
 
 from nichtparasoup.imagecrawler import (
     BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
@@ -81,8 +82,10 @@ class Pr0gramm(BaseImageCrawler):
             tags=tags,
         )
 
-    @staticmethod
-    def _get_api_uri(*,
+    __API_URL_GET = 'https://pr0gramm.com/api/items/get'
+
+    @classmethod
+    def _get_api_uri(cls, *,
                      flags: int, promoted: bool,
                      tags: Optional[str] = None, older: Optional[int] = None) -> str:
         """
@@ -91,12 +94,14 @@ class Pr0gramm(BaseImageCrawler):
         :param tags: None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197
         :param older: page through the search
         """
-        # TODO
-        del flags
-        del promoted
-        del tags
-        del older
-        return 'https://pr0gramm.com/api/items/get'  # TODO
+        params = dict(
+            flags=str(flags),
+            promoted=('1' if promoted else '0'),
+            tags='!{} -"video"'.format('({})'.format(tags.lstrip('!')) if tags else '')
+        )
+        if older:
+            params['older'] = str(older)
+        return cls.__API_URL_GET + '?' + urlencode(params)
 
     def _reset(self) -> None:
         self._older = None
