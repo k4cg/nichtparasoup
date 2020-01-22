@@ -11,5 +11,5 @@ imageserver:
 crawlers:
   - name: "Pr0gramm"
     config:
-      tags: '!s:500 (( kadse -text'
+      tags: '!s:500 kadse -text'
       promoted: True

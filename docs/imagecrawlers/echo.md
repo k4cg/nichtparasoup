@@ -9,7 +9,7 @@ More like an Parrot that is trained to repeat what you tell it to say.
 
 ## Config
 
-### `image_uri` 
+### `image_uri`
 
 - the URI to the image to show
 - type: string

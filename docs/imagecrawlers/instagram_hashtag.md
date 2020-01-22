@@ -6,7 +6,7 @@ A Crawler for hash tag posts of [https://www.instagram.com](https://www.instagra
 
 ## Config
 
-### `tag_name` 
+### `tag_name`
 
 - the HashTag on Instagram
 - type: string
