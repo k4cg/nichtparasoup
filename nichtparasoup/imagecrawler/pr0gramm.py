@@ -11,36 +11,6 @@ from nichtparasoup.imagecrawler import (
 
 class Pr0gramm(BaseImageCrawler):
 
-    # TODO plan the features
-    # support nsfl/nsfw ? - flags=(int) - binary concat; sfw=1, nsfw=2, nsfl=4 - default: 1
-    # support tags? - tags=(string) - default ""
-    # support top/new? promoted=(int) - top=1, new=0 - default: 1
-
-    # understand the tags: read https://pr0gramm.com/new/2782197
-    # images only = add to tags: ! -"video"
-
-    # TODO analyse the API
-    # website uses lazy loading - this means there is some kind of data api that can be used for crawling.
-    # also see the https://github.com/mopsalarm/Pr0 - the have mocs and docs!elf :-)
-    # * https://pr0gramm.com/api/items/get?flags=1&tags=!-%22video%22
-    #   * has all non-videos, that are sfw
-    #   * atEnd: bool
-    #   * error: null
-    #   * items: list
-    #     * id: int
-    #     * width: int
-    #     * height: int
-    #     * source: ???
-    #     * image: string (url-path)
-    # * https://pr0gramm.com/api/items/get?older=3637805&flags=1&tags=!-%22video%22
-    #    * param: "older" = id of last item
-
-    # distinguish the image:
-    # https://img.pr0gramm.com/<item.image>
-
-    # distinguish the source:
-    # https://pr0gramm.com/new/<item.id>
-
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self._older = None  # type: Optional[int]
@@ -112,10 +82,11 @@ class Pr0gramm(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        api_uri = self._get_api_uri(flags=1,
-                                    promoted=self._config['promoted'],
-                                    tags=self._config.get('tags', None),
-                                    older=self._older)
+        api_uri = self._get_api_uri(
+            flags=1,
+            promoted=self._config['promoted'],
+            tags=self._config.get('tags', None),
+            older=self._older)
         response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
         response = json_loads(response_raw)
         for item in response['items']:
