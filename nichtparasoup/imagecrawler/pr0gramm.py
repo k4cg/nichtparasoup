@@ -113,7 +113,10 @@ class Pr0gramm(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        api_uri = self._get_api_uri(**self._config, flags=1, older=self._older)
+        api_uri = self._get_api_uri(flags=1,
+                                    promoted=self._config['promoted'],
+                                    tags=self._config.get('tags', None),
+                                    older=self._older)
         response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
         response = json_loads(response_raw)
         for item in response['items']:

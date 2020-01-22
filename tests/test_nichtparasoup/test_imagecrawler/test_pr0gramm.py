@@ -3,12 +3,11 @@ from os.path import dirname, join as path_join
 from typing import Any, Dict, Optional, Type
 from urllib.parse import parse_qs, urlsplit
 
-
 from ddt import data as ddt_data, ddt, idata as ddt_idata, unpack as ddt_unpack  # type: ignore
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, ImageCollection, Image
+from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawler.pr0gramm import Pr0gramm
-from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest, FileFetcher
+from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 
 @ddt
@@ -118,6 +117,16 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         # assert
         self.assertEqual([tags_qs], query['tags'])
 
+    @ddt_data((None, None), (23, '23'))  # type: ignore
+    @ddt_unpack  # type: ignore
+    def test_older(self, older: Optional[int], older_qs: str) -> None:
+        # act
+        api_uri = Pr0gramm._get_api_uri(flags=0, promoted=False, older=older)
+        (_, _, _, query_string, _) = urlsplit(api_uri)
+        query = parse_qs(query_string)
+        # assert
+        self.assertEqual([older_qs], query.get('older', [None]))
+
 
 _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
     '/api/items/get?flags=1&promoted=1&tags=%21%28s%3A15000%29+-%22video%22':
@@ -127,11 +136,23 @@ _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
 }, base_dir=path_join(dirname(__file__), 'testdata_pr0gramm'))
 
 
+class Pr0grammResetTest(unittest.TestCase):
+
+    def test_reset_done(self) -> None:
+        # arrange
+        crawler = Pr0gramm()
+        crawler._older = 1337
+        # act
+        crawler._reset()
+        # assert
+        self.assertIsNone(crawler._older)
+
+
 class Pr0grammCrawlTest(unittest.TestCase):
 
     def test_reset_at_end(self) -> None:
         # arrange
-        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:15000')
+        crawler = Pr0gramm(promoted=True, tags='!s:15000')
         crawler._remote_fetcher = _FILE_FETCHER
         crawler._reset_before_next_crawl = False
         # act
@@ -187,12 +208,12 @@ class Pr0grammCrawlTest(unittest.TestCase):
 class Pr0grammDescriptionTest(unittest.TestCase):
 
     def test_description_config(self) -> None:
-        self.assertTrue(False, 'TODO')
         # act
         description = Pr0gramm.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('image_uri' in description.config)
+        self.assertTrue('promoted' in description.config)
+        self.assertTrue('tags' in description.config)
 
 
 class Pr0grammLoaderTest(ImageCrawlerLoaderTest):
