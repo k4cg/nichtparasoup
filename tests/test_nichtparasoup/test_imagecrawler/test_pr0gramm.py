@@ -1,12 +1,14 @@
 import unittest
+from os.path import dirname, join as path_join
 from typing import Any, Dict, Optional, Type
 from urllib.parse import parse_qs, urlsplit
 
+
 from ddt import data as ddt_data, ddt, idata as ddt_idata, unpack as ddt_unpack  # type: ignore
 
-from nichtparasoup.imagecrawler import BaseImageCrawler
+from nichtparasoup.imagecrawler import BaseImageCrawler, ImageCollection, Image
 from nichtparasoup.imagecrawler.pr0gramm import Pr0gramm
-from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
+from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest, FileFetcher
 
 
 @ddt
@@ -117,25 +119,69 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         self.assertEqual([tags_qs], query['tags'])
 
 
+_FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
+    '/api/items/get?flags=1&promoted=1&tags=%21%28s%3A15000%29+-%22video%22':
+        'get-flags_1-promoted_1-tags_s15000-video.json',
+    '/api/items/get?flags=1&promoted=1&tags=%21%28s%3A1000%29+-%22video%22':
+        'get-flags_1-promoted_1-tags_s1000-video.json',
+}, base_dir=path_join(dirname(__file__), 'testdata_pr0gramm'))
+
+
 class Pr0grammCrawlTest(unittest.TestCase):
 
-    def test_at_end(self) -> None:
-        self.assertTrue(False, 'TODO')
-        # TODO: check if end is detected, what must request a reset ...
-
-    def test_crawl(self) -> None:
-        self.assertTrue(False, 'TODO')
+    def test_reset_at_end(self) -> None:
         # arrange
-        crawler = Pr0gramm()
+        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:15000')
+        crawler._remote_fetcher = _FILE_FETCHER
+        crawler._reset_before_next_crawl = False
         # act
-        images_crawled = crawler.crawl()
-        images_crawled_len = len(images_crawled)
-        image_crawled = images_crawled.pop() if images_crawled_len else None
+        crawler.crawl()
         # assert
-        self.assertEqual(images_crawled_len, 1, "no images crawled")
-        if image_crawled:
-            self.assertTrue(image_crawled.is_generic, "this is not a generic")
-            self.assertTrue(image_crawled.more.get("this_is_a_dummy"), "this is not a dummy")
+        self.assertTrue(crawler._reset_before_next_crawl)
+
+    def test_no_reset_before_end(self) -> None:
+        # arrange
+        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
+        crawler._remote_fetcher = _FILE_FETCHER
+        crawler._reset_before_next_crawl = False
+        # act
+        crawler.crawl()
+        # assert
+        self.assertFalse(crawler._reset_before_next_crawl)
+
+    def test_crawl_cursor(self) -> None:
+        # arrange
+        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
+        crawler._remote_fetcher = _FILE_FETCHER
+        crawler._older = None
+        expected_cursor = 3639645
+        # act
+        crawler._crawl()
+        # assert
+        self.assertEqual(crawler._older, expected_cursor)
+
+    def test_crawl_images(self) -> None:
+        # arrange
+        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:15000')
+        crawler._remote_fetcher = _FILE_FETCHER
+        expected_images = ImageCollection()
+        expected_images.add(Image(
+            uri='https://img.pr0gramm.com/2018/10/11/ac41a1fbcc3abf09.png',
+            source='https://pr0gramm.com/new/2782197',
+        ))
+        expected_images.add(Image(
+            uri='https://img.pr0gramm.com/2015/07/05/5624d30ec6e743b2.png',
+            source='https://pr0gramm.com/new/879293',
+        ))
+        # act
+        images = crawler._crawl()
+        # assert
+        self.assertSetEqual(images, expected_images)
+        for expected_image in expected_images:
+            for image in images:
+                if image == expected_image:
+                    # sources are irrelevant for equality, need to be checked manually
+                    self.assertEqual(image.source, expected_image.source)
 
 
 class Pr0grammDescriptionTest(unittest.TestCase):

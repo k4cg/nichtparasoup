@@ -105,7 +105,7 @@ class RedditResetTest(unittest.TestCase):
         self.assertIsNone(crawler._after)
 
 
-_FILE_FETCHER = FileFetcher({  # relative to "../testdata_instagram"
+_FILE_FETCHER = FileFetcher({  # relative to "./testdata_instagram"
     '/r/aww.json?after=': 'aww.json',
 }, base_dir=path_join(dirname(__file__), 'testdata_reddit'))
 
