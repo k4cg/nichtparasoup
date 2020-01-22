@@ -30,16 +30,15 @@ class Pr0gramm(BaseImageCrawler):
     @staticmethod
     def __check_config_tags(tags: Optional[str]) -> Optional[str]:
         if tags is None:
-            pass
-        elif type(tags) is str:
+            return None
+        if type(tags) is str:
             tags = tags.strip()
             if not tags.startswith('!'):
                 raise ValueError('tags {!r} must start with "!"'.format(tags))
             if not len(tags) > 1:
                 raise ValueError('tags {!r} is empty'.format(tags))
-        else:
-            raise TypeError('tags {!r} is not str or None'.format(tags))
-        return tags
+            return tags
+        raise TypeError('tags {!r} is not str or None'.format(tags))
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
