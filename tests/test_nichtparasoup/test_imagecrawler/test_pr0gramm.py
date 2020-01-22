@@ -60,7 +60,7 @@ class Pr0grammConfigTagsTest(unittest.TestCase):
         # assert
         self.assertEqual(tags, config_out['tags'])
 
-    def test__check_wrong_value(self) -> None:
+    def test__check_wrong_tag_value(self) -> None:
         wrong_values = ['', ' \n\t', ' !', '! \n\t']
         for wrong_value in wrong_values:
             # assert
@@ -107,7 +107,7 @@ class Pr0grammUrlBuilderTest(unittest.TestCase):
         # assert
         self.assertEqual([promoted_qs], query['promoted'])
 
-    @ddt_data((None, '! -"video"'), ('!"test"', '!("test") -"video"'))  # type: ignore
+    @ddt_data((None, '! -"video"'), ('', '! -"video"'), ('!"test"', '!("test") -"video"'))  # type: ignore
     @ddt_unpack  # type: ignore
     def test_tags(self, tags: Optional[str], tags_qs: str) -> None:
         # act

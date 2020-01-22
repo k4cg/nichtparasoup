@@ -1,7 +1,5 @@
-## This is a config file for nichtprasoup (v2.2)
+## This is a config file for nichtprasoup (v2.3)
 ## This is an example file. For a better kickStart run: nichtparasoup config --help
-
-# TODO give the config a proper name
 
 webserver:
   hostname: "0.0.0.0"
@@ -12,3 +10,6 @@ imageserver:
 
 crawlers:
   - name: "Pr0gramm"
+    config:
+      tags: '!s:500 (( kadse -text'
+      promoted: True

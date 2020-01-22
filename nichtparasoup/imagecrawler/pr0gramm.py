@@ -88,8 +88,7 @@ class Pr0gramm(BaseImageCrawler):
     @classmethod
     def _get_api_uri(cls, *,
                      flags: int, promoted: bool,
-                     tags: Optional[str] = None, older: Optional[int] = None,
-                     **_: Any) -> str:
+                     tags: Optional[str] = None, older: Optional[int] = None) -> str:
         """
         :param flags: BitSet. sfw=1, nsfw=2, nsfl=4
         :param promoted: Search top("beliebt") only? - Otherwise search all("neu").
