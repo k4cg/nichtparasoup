@@ -11,12 +11,15 @@ class ConfigFilesTest(TestCase, ABC):  # pragma: no cover
     def validate(self, file: str) -> None:
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
+        crawlers = []
         for crawler_config in config['crawlers']:
             try:
                 imagecrawler = get_imagecrawler(crawler_config)
             except BaseException as e:
                 self.fail('Init {}\r\n{}'.format(crawler_config, e))
             self.assertIsInstance(imagecrawler, BaseImageCrawler, file)
+            self.assertNotIn(imagecrawler, crawlers, msg='Duplicate ImageCrawler')
+            crawlers.append(imagecrawler)
 
     def probe(self, file: str) -> None:
         config = parse_yaml_file(file)
