@@ -14,7 +14,7 @@ setup(
         ],
     ),
     install_requires=[
-        'nichtparasoup>=2.2',
+        'nichtparasoup>2.2.2',
     ],
     extras_require=dict(
         testing=[
