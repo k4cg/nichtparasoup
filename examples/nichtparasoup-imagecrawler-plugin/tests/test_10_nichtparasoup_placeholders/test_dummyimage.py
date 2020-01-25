@@ -6,14 +6,14 @@ from nichtparasoup_placeholders import DummyImage
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
-_dummyimage_right_config = {'width': 800, 'height': 600}
+_DUMMYIMAGE_RIGHT_CONFIG = {'width': 800, 'height': 600}
 
 
 class DummyImageConfigCorrect(unittest.TestCase):
 
     def test__check_config_right_value(self) -> None:
         # arrange
-        config_in = _dummyimage_right_config.copy()
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
         # act
         config_out = DummyImage.check_config(config_in)
         # assert
@@ -23,7 +23,7 @@ class DummyImageConfigCorrect(unittest.TestCase):
 class DummyImageConfigWidthTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self._dummyimage_right_config_wo_width = _dummyimage_right_config.copy()
+        self._dummyimage_right_config_wo_width = _DUMMYIMAGE_RIGHT_CONFIG.copy()
         del self._dummyimage_right_config_wo_width["width"]
 
     def tearDown(self) -> None:
@@ -58,7 +58,7 @@ class DummyImageConfigWidthTest(unittest.TestCase):
 class DummyImageConfigHeightTest(unittest.TestCase):
 
     def setUp(self) -> None:
-        self._dummyimage_right_config_wo_height = _dummyimage_right_config.copy()
+        self._dummyimage_right_config_wo_height = _DUMMYIMAGE_RIGHT_CONFIG.copy()
         del self._dummyimage_right_config_wo_height["height"]
 
     def tearDown(self) -> None:
@@ -94,7 +94,7 @@ class DummyImageCrawlTest(unittest.TestCase):
 
     def test_crawl(self) -> None:
         # arrange
-        crawler = DummyImage(**_dummyimage_right_config)
+        crawler = DummyImage(**_DUMMYIMAGE_RIGHT_CONFIG)
         # act
         images_crawled = crawler.crawl()
         images_crawled_len = len(images_crawled)
@@ -112,8 +112,8 @@ class DummyImageDescriptionTest(unittest.TestCase):
         description = DummyImage.info()
         # assert
         assert isinstance(description.config, dict)
-        for config_key in _dummyimage_right_config.keys():
-            self.assertTrue(config_key in description.config, config_key)
+        for config_key in _DUMMYIMAGE_RIGHT_CONFIG.keys():
+            self.assertIn(config_key, description.config)
 
 
 class DummyImageLoaderTest(ImageCrawlerLoaderTest):

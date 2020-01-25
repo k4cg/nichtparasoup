@@ -14,13 +14,17 @@ setup(
         ],
     ),
     install_requires=[
-        'nichtparasoup>=2.2',
+        'nichtparasoup',
+        # This example requires `nichtparasoup>=2.3`
+        # You SHOULD write the min-version dependency in your real-world.
+        # This was not done here, since its an in-dev example.
     ],
     extras_require=dict(
         testing=[
             'mypy',
-            'pytest',
+            'pytest>=5,<5.3.4',  # 5.3.4 has a bug: https://github.com/pytest-dev/pytest/issues/6517
             'coverage',
+            'ddt',
         ]
     ),
 )

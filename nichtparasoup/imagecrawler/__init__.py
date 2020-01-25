@@ -46,7 +46,7 @@ class KnownImageCrawlers(object):
             try:
                 self._add(entry)
                 _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
-            except BaseException as e:
+            except Exception as e:
                 _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
 
     def _add(self, entry: EntryPoint) -> None:
@@ -82,7 +82,7 @@ class KnownImageCrawlers(object):
     def _load(entry: EntryPoint) -> Any:
         try:
             return entry.load()
-        except BaseException as e:
+        except Exception as e:
             raise ImportError('Error on loading entry {}'.format(entry)) from e
 
     @classmethod

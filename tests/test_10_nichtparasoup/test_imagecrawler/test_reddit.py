@@ -169,7 +169,7 @@ class RedditDescriptionTest(unittest.TestCase):
         # assert
         assert isinstance(description.config, dict)
         for config_key in _reddit_right_config.keys():
-            self.assertTrue(config_key in description.config)
+            self.assertIn(config_key, description.config)
 
 
 class RedditLoaderTest(ImageCrawlerLoaderTest):

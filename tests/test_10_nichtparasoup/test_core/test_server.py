@@ -114,7 +114,7 @@ class ServerStartStopTest(unittest.TestCase):
     def tearDown(self) -> None:
         try:
             self.server.stop()
-        except BaseException:
+        except Exception:
             pass
         finally:
             del self.server

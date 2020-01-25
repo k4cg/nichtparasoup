@@ -21,7 +21,7 @@ use a won config for the server. If omitted, the default is used. to write your 
 
 when you start _nichtparasoup_
 1. system will fill up cache by startup
-1. system starts up the webserver
+1. system starts up the web-server
 1. point your browser to the configured localhost:5000/ or whatever is configured in the config
 1. start page will request single images randomly by /get and show it
 1. when system's cache is empty, it will be refilled by the crawler automatically
@@ -41,14 +41,14 @@ for an eay handling this sub-command comes into play.
 `nichtparasoup config` 
 
 the following switches are available:
-* `--check` - validate a YAML config file
+* `--check` - validate and probe a YAML config file
 * `--dump`  - dump YAML config into a file
 
 
 ### check a config
 
 check if a file is a valid config.
-will prompt promt errors and warnings, if any.
+will prompt prompt errors and warnings, if any.
 
 `nichtparasoup config --check <file>`
 

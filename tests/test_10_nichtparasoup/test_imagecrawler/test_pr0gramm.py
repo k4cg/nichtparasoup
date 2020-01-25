@@ -212,8 +212,8 @@ class Pr0grammDescriptionTest(unittest.TestCase):
         description = Pr0gramm.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('promoted' in description.config)
-        self.assertTrue('tags' in description.config)
+        self.assertIn('promoted', description.config)
+        self.assertIn('tags', description.config)
 
 
 class Pr0grammLoaderTest(ImageCrawlerLoaderTest):

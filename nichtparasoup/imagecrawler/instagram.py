@@ -95,7 +95,7 @@ class InstagramQueryHashFinder(object):
     def _get_from_remote_js(self, js_uri: str) -> Set[str]:
         try:
             js_src, _ = self._remote_fetcher.get_string(js_uri)
-        except BaseException:
+        except Exception:
             return set()
         return self._get_from_js(js_src)
 
@@ -203,7 +203,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         try:
             self._query(uri)
             return True
-        except BaseException:
+        except Exception:
             return False
 
     def _find_query_hash(self) -> Optional[str]:
@@ -338,5 +338,5 @@ class InstagramProfile(BaseInstagramCrawler):
         return self.__class__.__PROFILE_URL_TEMPLATE.format(url_quote(self._config['user_name']))
 
 
-class InstagramError(BaseException):
+class InstagramError(Exception):
     pass

@@ -92,7 +92,7 @@ class BaseImageCrawler(ABC):
                 crawled = self._crawl()
                 _log('debug', 'crawling finished {!r}'.format(self))
                 return crawled
-            except BaseException:
+            except Exception:
                 _log('exception', 'caught an error during crawling {!r}'.format(self))
                 return ImageCollection()
 
@@ -181,7 +181,7 @@ class RemoteFetcher(object):
         request = Request(uri, headers=self._headers)
         try:
             response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
-        except BaseException as e:
+        except Exception as e:
             _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=True)
             raise e
         actual_uri = response.geturl()  # after following redirects ...

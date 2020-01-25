@@ -193,6 +193,7 @@ class InstagramHashtagTest(unittest.TestCase):
     _QUERY_HASH = '174a5243287c5f3a7de741089750ab3b'
 
     def setUp(self) -> None:
+        InstagramHashtag._query_hash = None
         self.crawler = InstagramHashtag(tag_name='foo')
         self.crawler._remote_fetcher = _FILE_FETCHER
         self.crawler._amount = 5
@@ -200,6 +201,7 @@ class InstagramHashtagTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         del self.crawler
+        InstagramHashtag._query_hash = None
 
     def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
         finder = InstagramQueryHashFinder('tag')
@@ -311,7 +313,7 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
         description = InstagramHashtag.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('tag_name' in description.config)
+        self.assertIn('tag_name', description.config)
 
 
 class InstagramHashtagLoaderTest(ImageCrawlerLoaderTest):
@@ -334,6 +336,7 @@ class InstagramProfileTest(unittest.TestCase):
     _QUERY_HASH = '2c5d4d8b70cad329c4a6ebe3abb6eedd'
 
     def setUp(self) -> None:
+        InstagramProfile._query_hash = None
         self.crawler = InstagramProfile(user_name='natgeo')
         self.crawler._remote_fetcher = _FILE_FETCHER
         self.crawler._amount = 5
@@ -341,6 +344,7 @@ class InstagramProfileTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         del self.crawler
+        InstagramProfile._query_hash = None
 
     def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
         finder = InstagramQueryHashFinder('profile')
@@ -477,7 +481,7 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
         description = InstagramProfile.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('user_name' in description.config)
+        self.assertIn('user_name', description.config)
 
 
 class InstagramProfileLoaderTest(ImageCrawlerLoaderTest):
