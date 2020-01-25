@@ -3,15 +3,20 @@
 
 ## Unreleased
 
+### Breaking changes
+
+* `nichtparasoup config --check`'s "duplicate image crawler" is no longer a Warning but an Error.
+
 ### Changes
 
+* `nichtparasoup config --check` now does a probe crawl.
 * class `ImageCrawlerInfo` lost support for positional arguments, supports keyword-arguments only - prepare future extensibility.
 * class `Image` lost support for positional arguments, supports keyword-arguments only - prepare future extensibility.
 
 ### Added
 
 * added image crawler for [pr0gramm](https://pr0gramm.com) - Read the [docs](./docs/imagecrawlers/pr0gramm.md).
-* added `nichtparasoup.testing.ConfigFilesTest.probe()`.
+* added additional test function: `nichtparasoup.testing.ConfigFilesTest.probe()`.
 
 
 ## 2.2.2

@@ -62,22 +62,15 @@ class Commands(object):
     @staticmethod
     def config_check_file(config_file: str) -> int:
         from os.path import abspath
-        from nichtparasoup.config import get_imagecrawler, parse_yaml_file
+        from nichtparasoup.testing.config import ConfigFilesTest
         config_file = abspath(config_file)
+        config_test = ConfigFilesTest()
         try:
-            config = parse_yaml_file(config_file)
-        except Exception as e:
+            config_test.validate(config_file)
+            config_test.probe(config_file)
+        except BaseException as e:
             _message_exception(e)
-            return 1
-        imagecrawlers = list()  # type: List[Any]   # actually list of BaseImageCrawler
-        for crawler_config in config['crawlers']:
-            imagecrawler = get_imagecrawler(crawler_config)
-            if imagecrawler in imagecrawlers:
-                _message_exception(
-                    Warning('duplicate crawler of type {type.__name__!r}\r\n\twith config {config!r}'
-                            .format(type=type(imagecrawler), config=imagecrawler.get_config())))
-                continue
-            imagecrawlers.append(imagecrawler)
+            return 255
         return 0
 
     @classmethod

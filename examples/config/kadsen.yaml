@@ -13,7 +13,3 @@ crawlers:
     config:
       tags: '!s:500 kadse -text'
       promoted: True
-  - name: "Pr0gramm"
-    config:
-      tags: '!s:500 kadse -text'
-      promoted: True
