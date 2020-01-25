@@ -68,7 +68,7 @@ class Commands(object):
         try:
             config_test.validate(config_file)
             config_test.probe(config_file)
-        except BaseException as e:
+        except Exception as e:
             _message_exception(e)
             return 255
         return 0

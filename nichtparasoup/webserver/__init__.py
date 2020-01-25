@@ -137,7 +137,7 @@ class WebServer(object):
                 use_reloader=False,
                 use_debugger=False)
             _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-        except BaseException as e:
+        except Exception as e:
             _log('exception', ' * Error occurred. stopping everything')
             raise e
         finally:
