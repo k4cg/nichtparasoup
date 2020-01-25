@@ -1,7 +1,7 @@
 from glob import glob
 from os.path import basename, dirname, join as path_join, realpath
 
-import pytest
+import pytest  # type: ignore
 from ddt import ddt, idata, unpack  # type: ignore
 
 from nichtparasoup.testing.config import ConfigFileTest
@@ -16,7 +16,7 @@ class ShippedExampleConfigFileTest(ConfigFileTest):
     def test_has_examples(self) -> None:
         self.assertGreater(len(self.__class__.__EXAMPLE_FILES), 0)
 
-    @pytest.mark.slow  # probing goes over the internet and might be slow
+    @pytest.mark.slow  # type: ignore  # probing goes over the internet and might be slow
     @idata((basename(file),) for file in __EXAMPLE_FILES)  # type: ignore
     @unpack  # type: ignore
     def test_example(self, filename: str) -> None:
