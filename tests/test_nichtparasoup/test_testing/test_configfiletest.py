@@ -1,16 +1,35 @@
 import unittest
+from os import path
+
+from nichtparasoup.testing.config import ConfigFileTest
 
 
 class ConfigFileValidateTest(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self._TESTDATA_DIR = path.join(path.dirname(__file__), 'testdata_configfiletest')
+
+    def tearDown(self) -> None:
+        del self._TESTDATA_DIR
+
     def test_propagate_errors(self) -> None:
-        self.fail('NOT IMPLEMENTED')
+        # nothing to test, yet.
+        # calls already covered functions only
+        pass
 
     def test_detect_duplicates(self) -> None:
-        self.fail('NOT IMPLEMENTED')
+        import re
+        # arrange
+        tester = ConfigFileTest()
+        test_file = path.join(self._TESTDATA_DIR, 'duplicates.yaml')
+        # act & assert
+        with self.assertRaisesRegex(Exception, re.compile(r'duplicate ImageCrawler', re.IGNORECASE)):
+            tester.validate(test_file)
 
 
 class ConfigFileProbeTest(unittest.TestCase):
 
     def test_propagate_errors(self) -> None:
-        self.fail('NOT IMPLEMENTED')
+        # nothing to test, yet.
+        # calls already covered functions only
+        pass
