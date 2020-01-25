@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-from os import path
-
 from setuptools import find_packages, setup
-
-here = path.abspath(path.dirname(__file__))
 
 setup(
     name='nichtparasoup-imagecrawler-placeholders',
