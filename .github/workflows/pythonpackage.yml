@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: ${{ matrix.pyhon }}
       - name: Python version
-          run: python --version
+        run: python --version
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
