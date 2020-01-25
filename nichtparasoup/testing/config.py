@@ -1,4 +1,5 @@
 from abc import ABC
+from time import sleep
 from unittest import TestCase
 
 from nichtparasoup.config import get_imagecrawler, parse_yaml_file
@@ -24,5 +25,6 @@ class ConfigFilesTest(TestCase, ABC):  # pragma: no cover
             imagecrawler = get_imagecrawler(crawler_config)
             try:
                 imagecrawler._crawl()
+                sleep(0.01)  # do not be greedy
             except BaseException as e:
                 self.fail('Crawl {!r}\r\n{}'.format(imagecrawler, e))
