@@ -6,11 +6,7 @@ from nichtparasoup.testing.config import ConfigFileTest
 
 class ConfigFileValidateTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        self._TESTDATA_DIR = path.join(path.dirname(__file__), 'testdata_configfiletest')
-
-    def tearDown(self) -> None:
-        del self._TESTDATA_DIR
+    _TESTDATA_DIR = path.join(path.dirname(__file__), 'testdata_configfiletest')
 
     def test_propagate_errors(self) -> None:
         # nothing to test, yet.

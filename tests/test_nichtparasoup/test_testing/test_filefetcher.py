@@ -7,11 +7,7 @@ from nichtparasoup.testing.imagecrawler import FileFetcher
 
 class FileFetcherTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        self._testdata_dir = path.join(path.dirname(__file__), 'testdata_filefetcher')
-
-    def tearDown(self) -> None:
-        del self._testdata_dir
+    _TESTDATA_DIR = path.join(path.dirname(__file__), 'testdata_filefetcher')
 
     def test__uri_sort_query__dings(self) -> None:
         # assert
@@ -83,14 +79,14 @@ class FileFetcherTest(unittest.TestCase):
 
     def test__get_file_uri__unknown_file(self) -> None:
         # arrange
-        test_file = path.join(self._testdata_dir, 'unknown.file')
+        test_file = path.join(self._TESTDATA_DIR, 'unknown.file')
         # act & assert
         with self.assertRaisesRegex(FileNotFoundError, 'Not a file'):
             FileFetcher._build_uri(test_file)
 
     def test__get_file_uri__absolute_basedir(self) -> None:
         # arrange
-        test_file = path.join(self._testdata_dir, 'test.txt')
+        test_file = path.join(self._TESTDATA_DIR, 'test.txt')
         # act
         file = FileFetcher._build_uri(test_file)
         # assert
@@ -103,7 +99,7 @@ class FileFetcherTest(unittest.TestCase):
     def test__get_file_uri__with_basedir(self) -> None:
         # arrange
         test_file = 'test.txt'
-        test_base = self._testdata_dir
+        test_base = self._TESTDATA_DIR
         # act
         file = FileFetcher._build_uri(test_file, test_base)
         # assert
@@ -127,7 +123,7 @@ class FileFetcherTest(unittest.TestCase):
             dict(
                 test_file='test.txt',
             ),
-            base_dir=self._testdata_dir
+            base_dir=self._TESTDATA_DIR
         )
         # act
         stream, _ = filefetcher.get_stream('test_file')
