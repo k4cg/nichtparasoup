@@ -311,7 +311,7 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
         description = InstagramHashtag.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('tag_name' in description.config)
+        self.assertIn('tag_name', description.config)
 
 
 class InstagramHashtagLoaderTest(ImageCrawlerLoaderTest):
@@ -477,7 +477,7 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
         description = InstagramProfile.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('user_name' in description.config)
+        self.assertIn('user_name', description.config)
 
 
 class InstagramProfileLoaderTest(ImageCrawlerLoaderTest):

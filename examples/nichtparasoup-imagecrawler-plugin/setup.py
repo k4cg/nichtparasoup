@@ -21,6 +21,7 @@ setup(
             'mypy',
             'pytest',
             'coverage',
+            'ddt',
         ]
     ),
 )

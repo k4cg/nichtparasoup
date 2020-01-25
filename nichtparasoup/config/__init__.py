@@ -5,10 +5,10 @@ from typing import Any, Dict, Optional
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
-_schema_file = realpath(path_join(dirname(__file__), "schema.yaml"))
+_SCHEMA_FILE = realpath(path_join(dirname(__file__), "schema.yaml"))
 _schema = None  # type: Optional[Any]
 
-_defaults_file = realpath(path_join(dirname(__file__), "defaults.yaml"))
+_DEFAULTS_FILE = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
@@ -33,7 +33,7 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     import yamale  # type: ignore
     global _schema
     if not _schema:
-        _schema = yamale.make_schema(_schema_file, parser='ruamel')
+        _schema = yamale.make_schema(_SCHEMA_FILE, parser='ruamel')
     _data = yamale.make_data(file_path, parser='ruamel')
     config = yamale.validate(_schema, _data, strict=True)[0][0]  # type: Dict[str, Any]
     config.setdefault('logging', dict())
@@ -46,13 +46,13 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
 
 def dump_defaults(file_path: str) -> None:
     from shutil import copyfile
-    copyfile(_defaults_file, file_path)
+    copyfile(_DEFAULTS_FILE, file_path)
 
 
 def get_defaults() -> Dict[str, Any]:
     global _defaults
     if not _defaults:
-        _defaults = parse_yaml_file(_defaults_file)
+        _defaults = parse_yaml_file(_DEFAULTS_FILE)
     from copy import deepcopy
     return deepcopy(_defaults)
 

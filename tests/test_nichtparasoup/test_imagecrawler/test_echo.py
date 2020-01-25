@@ -59,7 +59,7 @@ class EchoDescriptionTest(unittest.TestCase):
         description = Echo.info()
         # assert
         assert isinstance(description.config, dict)
-        self.assertTrue('image_uri' in description.config)
+        self.assertIn('image_uri', description.config)
 
 
 class EchoLoaderTest(ImageCrawlerLoaderTest):
