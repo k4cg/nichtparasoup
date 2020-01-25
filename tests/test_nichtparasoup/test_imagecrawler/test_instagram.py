@@ -33,7 +33,7 @@ class _InstagramFileFetcher(FileFetcher):
         return super()._uri_sort_query(uri_sorted)
 
 
-_FILE_FETCHER = _InstagramFileFetcher({  # relative to '../testdata_instagram'
+_FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/': 'index.html',
     '/static/bundles/metro/ProfilePageContainer.js/e243abb1f92c.js': 'e243abb1f92c.js',
     '/static/bundles/metro/TagPageContainer.js/1bad9348735e.js': '1bad9348735e.js',

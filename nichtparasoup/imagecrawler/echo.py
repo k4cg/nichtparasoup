@@ -19,6 +19,7 @@ class Echo(BaseImageCrawler):
             config=dict(
                 image_uri='the URI of the image to "find"',
             ),
+            # does not have an icon
         )
 
     @classmethod
@@ -39,7 +40,8 @@ class Echo(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         images.add(Image(
-            config["image_uri"], config["image_uri"],
+            uri=config["image_uri"],
+            source=config["image_uri"],
             is_generic=True,
             this_is_a_dummy=True,
         ))

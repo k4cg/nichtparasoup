@@ -7,12 +7,12 @@ Returns generic URIs to [https://picsum.photos](https://picsum.photos).
 
 ## Config
 
-### `with` 
+### `with`
 
 - the width of the image in pixels.
 - type: integer
 
-### `height` 
+### `height`
 
 - the height of the image in pixels.
 - type: integer

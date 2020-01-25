@@ -16,7 +16,7 @@ class Picsum(BaseImageCrawler):
                 width='how many pixels of the image to find should be wide',
                 height='how many pixels of the image to find should be high',
             ),
-            icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png'
+            icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png',
         )
 
     @classmethod
@@ -49,7 +49,8 @@ class Picsum(BaseImageCrawler):
         for _ in range(0, self._bunch):
             uri = self._get_image_uri(**config)
             images.add(Image(
-                uri, uri,
+                uri=uri,
+                source=uri,
                 is_generic=True,
             ))
         return images

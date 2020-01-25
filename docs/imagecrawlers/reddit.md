@@ -7,7 +7,7 @@ A Crawler for an arbitrary SubReddit of [https://www.reddit.com](https://www.red
 
 ## Config
 
-### `subreddit` 
+### `subreddit`
 
 - the SubReddit to crawl
 - type: string

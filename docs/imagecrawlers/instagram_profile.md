@@ -6,7 +6,7 @@ A Crawler for profile pages of [https://www.instagram.com](https://www.instagram
 
 ## Config
 
-### `user_name` 
+### `user_name`
 
 - the UserName on Instagram
 - type: string

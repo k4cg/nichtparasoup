@@ -150,7 +150,7 @@ class CrawlerImageAddedTestCase(unittest.TestCase):
 class CrawlerCrawlCase(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.images = ImageCollection({Image('1', 'test'), Image('2', 'test')})
+        self.images = ImageCollection({Image(uri='1', source='test'), Image(uri='2', source='test')})
         self.imagecrawler = MockableImageCrawler()
         self.imagecrawler.crawl = MagicMock(return_value=self.images)  # type: ignore
         self.crawler = Crawler(self.imagecrawler, 1)

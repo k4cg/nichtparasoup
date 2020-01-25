@@ -19,20 +19,21 @@ class ImageCrawlerInfo(object):
     """
     ImageCrawler's Info.
 
-    see BaseImageCrawler::info()
+    .. seealso:: :method:`BaseImageCrawler.info()`
 
     """
 
-    def __init__(self, description: str, long_description: Optional[str] = None,
+    def __init__(self, *,
+                 description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[str] = None,
                  **more: Any) -> None:  # pragma: no cover
         """
-        description: short description
-        long_description: long description
-        config: config description
-        icon_url: url to an icon-like image. maybe the favicon. use https:// if possible!
-        more: more to save - planned to the future
+        :param description: short description
+        :param long_description: long description
+        :param config: config description(s)
+        :param icon_url: url to an icon-like image. maybe the favicon. use 'https://' if possible!
+        :param more: more to save - planned to the future
         """
         self.description = description
         self.long_description = long_description
@@ -69,10 +70,12 @@ class BaseImageCrawler(ABC):
         For internal access to the config using `self._config` is encouraged
 
         """
-        return ImageCrawlerConfig({k: v
-                                   for k, v
-                                   in self._config.items()
-                                   if not k.startswith('_')})
+        return ImageCrawlerConfig({
+            k: v
+            for k, v
+            in self._config.items()
+            if not k.startswith('_')
+        })
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -155,7 +158,6 @@ class BaseImageCrawler(ABC):
 
 
 class RemoteFetcher(object):
-
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }

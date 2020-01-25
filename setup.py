@@ -16,13 +16,13 @@ REQUIRED_PYTHON = (3, 5)
 if CURRENT_PYTHON < REQUIRED_PYTHON:
     import textwrap
 
-    sys.stderr.write(textwrap.dedent("""
+    sys.stderr.write(textwrap.dedent('''
     UNSUPPORTED PYTHON VERSION
 
     This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]},
     but you're trying to install it on Python {py_current[0]}.{py_current[1]}.
 
-    """.format(py_current=CURRENT_PYTHON, py_required=REQUIRED_PYTHON)))
+    '''.format(py_current=CURRENT_PYTHON, py_required=REQUIRED_PYTHON)))
     sys.exit(1)
 
 # Package meta-data.
@@ -41,34 +41,34 @@ URLS = dict(
 # What packages are required for this module to be executed?
 REQUIRED = [
     'typing-extensions>=3.7.4;python_version<"3.8"',  # for `_internals`, `imagecrawler/instagram`
-    'ruamel.yaml>=0.16', "yamale>=2.0",  # for `config`
-    "werkzeug>=0.15",  # for `webserver`
-    "mako>=1.1",  # for `webserver`'s templates
+    'ruamel.yaml>=0.16', 'yamale>=2.0',  # for `config`
+    'werkzeug>=0.15',  # for `webserver`
+    'mako>=1.1',  # for `webserver`'s templates
     'setuptools>=40.0',  # for imagecrawler-plugin-architecture
 ]
 
 # What packages are optional?
 EXTRAS = dict(
     colors=[
-        "termcolor>=1.1",
+        'termcolor>=1.1',
     ],
     development=[
-        "tox>=3.14",
-        "isort>=4.3",
+        'tox>=3.14',
+        'isort>=4.3',
     ],
     testing=[
-        "flake8",
+        'flake8',
         'flake8-annotations;python_version>="3.6"',
         'flake8-bugbear',
-        "flake8-isort",
+        'flake8-isort',
         'flake8-pep3101',
-        "pep8-naming",
-        "mypy",
-        "coverage",
-        "pytest",
-        "ddt",
-        # "flake8-builtins",  # nice in general, but seams not bug-free, yet.
-        # "lake8-docstrings", not in use, until pluggable ImageCrawlers are implemented.
+        'pep8-naming',
+        'mypy',
+        'coverage',
+        'pytest',
+        'ddt',
+        # 'flake8-builtins',  # nice in general, but seams not bug-free, yet.
+        # 'lake8-docstrings', not in use, until pluggable ImageCrawlers are implemented.
     ],
 )
 
@@ -91,7 +91,7 @@ except FileNotFoundError:
 setup(
     name=NAME,
     use_scm_version=dict(
-        root='.', relative_to=__file__,
+        root=here,
         fallback_version='UNKNOWN.scm',
         write_to=os.path.join('nichtparasoup', '__version__.py'),
     ),
@@ -103,13 +103,13 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     project_urls=URLS,
-    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*", "examples"]),
+    packages=find_packages(exclude=['tests', '*.tests', '*.tests.*', 'tests.*', 'examples']),
     entry_points=dict(
         console_scripts=[
             'nichtparasoup = nichtparasoup.cmdline:main',
         ],
     ),
-    setup_requires=["setuptools", "setuptools_scm>=3.3.3"],
+    setup_requires=['setuptools', 'setuptools_scm>=3.3.3'],
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
@@ -131,5 +131,10 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Typing :: Typed',
     ],
-    keywords='image-crawler, reddit, instagram',
+    keywords=[
+        'image-crawler',
+        'instagram',
+        'pr0gramm',
+        'reddit',
+    ],
 )
