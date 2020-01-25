@@ -1,10 +1,16 @@
 import unittest
 
 
-class Foo(unittest.TestCase):
+class ConfigFileValidateTest(unittest.TestCase):
 
-    def test_validate(self) -> None:
+    def test_propagate_errors(self) -> None:
         self.fail('NOT IMPLEMENTED')
 
-    def test_probe(self) -> None:
+    def test_detect_duplicates(self) -> None:
+        self.fail('NOT IMPLEMENTED')
+
+
+class ConfigFileProbeTest(unittest.TestCase):
+
+    def test_propagate_errors(self) -> None:
         self.fail('NOT IMPLEMENTED')
