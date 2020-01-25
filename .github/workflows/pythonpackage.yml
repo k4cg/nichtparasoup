@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools tox
+          python -m pip install --upgrade setuptools 'tox>3.10'
       - name: Test nichtparasoup
         run: python -m tox -e py3-coverageXML
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
