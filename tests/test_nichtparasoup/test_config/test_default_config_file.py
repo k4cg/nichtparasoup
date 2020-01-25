@@ -1,8 +1,8 @@
 from nichtparasoup.config import _DEFAULTS_FILE
-from nichtparasoup.testing.config import ConfigFilesTest
+from nichtparasoup.testing.config import ConfigFileTest
 
 
-class DefaultConfigFileTest(ConfigFilesTest):
+class DefaultConfigFileTest(ConfigFileTest):
 
     def test_examples(self) -> None:
         self.validate(_DEFAULTS_FILE)

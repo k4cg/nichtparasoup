@@ -62,9 +62,9 @@ class Commands(object):
     @staticmethod
     def config_check_file(config_file: str) -> int:
         from os.path import abspath
-        from nichtparasoup.testing.config import ConfigFilesTest
+        from nichtparasoup.testing.config import ConfigFileTest
         config_file = abspath(config_file)
-        config_test = ConfigFilesTest()
+        config_test = ConfigFileTest()
         try:
             config_test.validate(config_file)
             config_test.probe(config_file)

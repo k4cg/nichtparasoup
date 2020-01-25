@@ -3,11 +3,11 @@ from os.path import basename, dirname, join as path_join, realpath
 
 from ddt import ddt, idata, unpack  # type: ignore
 
-from nichtparasoup.testing.config import ConfigFilesTest
+from nichtparasoup.testing.config import ConfigFileTest
 
 
 @ddt
-class ShippedExampleConfigFilesTest(ConfigFilesTest):
+class ShippedExampleConfigFileTest(ConfigFileTest):
 
     __EXAMPLE_DIR = path_join(dirname(__file__), '..', '..', 'examples')
     __EXAMPLE_FILES = glob(path_join(__EXAMPLE_DIR, '*.*'), recursive=False)

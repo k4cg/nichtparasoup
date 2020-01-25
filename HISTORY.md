@@ -6,6 +6,7 @@
 ### Breaking changes
 
 * `nichtparasoup config --check`'s "duplicate image crawler" is no longer a Warning but an Error.
+* renamed `nichtparasoup.testing.config.ConfigFileTest` to `ConfigFileTest` - without an "s".
 
 ### Changes
 
@@ -16,7 +17,7 @@
 ### Added
 
 * added image crawler for [pr0gramm](https://pr0gramm.com) - Read the [docs](./docs/imagecrawlers/pr0gramm.md).
-* added additional test function: `nichtparasoup.testing.ConfigFilesTest.probe()`.
+* added additional test function: `nichtparasoup.testing.config.ConfigFileTest.probe()`.
 
 
 ## 2.2.2

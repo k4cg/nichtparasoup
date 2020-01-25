@@ -6,9 +6,9 @@ from nichtparasoup.config import get_imagecrawler, parse_yaml_file
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 
-class ConfigFilesTest(TestCase):  # pragma: no cover
+class ConfigFileTest(TestCase):
 
-    def __validate_crawler_config(self, crawler_config: Dict[Any, Any]) -> BaseImageCrawler:
+    def _validate_crawler_config(self, crawler_config: Dict[Any, Any]) -> BaseImageCrawler:
         try:
             imagecrawler = get_imagecrawler(crawler_config)
         except BaseException as e:
@@ -21,7 +21,7 @@ class ConfigFilesTest(TestCase):  # pragma: no cover
         self.assertIsInstance(config, dict)
         crawlers = []  # type: List[BaseImageCrawler]
         for crawler_config in config['crawlers']:
-            imagecrawler = self.__validate_crawler_config(crawler_config)
+            imagecrawler = self._validate_crawler_config(crawler_config)
             self.assertNotIn(imagecrawler, crawlers, msg='Duplicate ImageCrawler')
             crawlers.append(imagecrawler)
 
@@ -37,23 +37,23 @@ class ConfigFilesTest(TestCase):  # pragma: no cover
                 raise ImageCrawlerProbeCrawlError(imagecrawler) from e
 
 
-class ConfigFilesTestError(Exception):
+class ConfigFileTestError(Exception):
     pass
 
 
-class ImageCrawlerInitError(ConfigFilesTestError):
+class ImageCrawlerInitError(ConfigFileTestError):
 
-    def __init__(self, config: Dict[Any, Any]) -> None:
+    def __init__(self, config: Dict[Any, Any]) -> None:  # pragma: no cover
         self._config = config
 
-    def __str__(self) -> str:
+    def __str__(self) -> str:  # pragma: no cover
         return 'Initialize ImageCrawler failed for {!r}'.format(self._config)
 
 
-class ImageCrawlerProbeCrawlError(ConfigFilesTestError):
+class ImageCrawlerProbeCrawlError(ConfigFileTestError):
 
-    def __init__(self, imagecrawler: BaseImageCrawler) -> None:
+    def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
         self._imagecrawler = imagecrawler
 
-    def __str__(self) -> str:
+    def __str__(self) -> str:  # pragma: no cover
         return 'Probe crawl failed for {!r}'.format(self._imagecrawler)
