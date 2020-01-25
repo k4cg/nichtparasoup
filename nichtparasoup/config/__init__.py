@@ -1,4 +1,5 @@
-__all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file"]
+__all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file",
+           "ImageCrawlerSetupError"]
 
 from os.path import dirname, join as path_join, realpath
 from typing import Any, Dict, Optional
@@ -12,6 +13,17 @@ _DEFAULTS_FILE = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
 
 
+class ImageCrawlerSetupError(Exception):
+
+    def __init__(self, ic_name: str, ic_class: type, ic_config: Dict[Any, Any]) -> None:  # pragma: no cover
+        self._name = ic_name
+        self._class = ic_class
+        self._config = ic_config
+
+    def __str__(self) -> str:  # pragma: no cover
+        return 'Failed setup crawler {!r} of type {!r} with config {!r}'.format(self._name, self._class, self._config)
+
+
 def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     from nichtparasoup.imagecrawler import get_imagecrawlers
     imagecrawler_name = config_crawler['name']
@@ -20,13 +32,9 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         raise ValueError('unknown crawler name {!r}'.format(imagecrawler_name))
     imagecrawler_config = config_crawler['config']
     try:
-        imagecrawler_obj = imagecrawler_class(**imagecrawler_config)
+        return imagecrawler_class(**imagecrawler_config)
     except Exception as e:
-        raise Exception(
-            'failed setup crawler {!r} of type {!r} with config {!r}'
-            .format(imagecrawler_name, imagecrawler_class, imagecrawler_config)
-        ) from e
-    return imagecrawler_obj
+        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from e
 
 
 def parse_yaml_file(file_path: str) -> Dict[str, Any]:
