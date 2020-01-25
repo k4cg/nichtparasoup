@@ -46,7 +46,7 @@ command_config = commands.add_parser(
 command_config_actions = command_config.add_mutually_exclusive_group(required=True)
 command_config_actions.add_argument(
     '--check',
-    help='validate a YAML config file',
+    help='validate and probe a YAML config file',
     action='store_const', dest='action', const='check',
 )
 command_config_actions.add_argument(
