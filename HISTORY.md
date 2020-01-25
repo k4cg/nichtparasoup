@@ -11,6 +11,7 @@
 ### Added
 
 * added image crawler for [pr0gramm](https://pr0gramm.com) - Read the [docs](./docs/imagecrawlers/pr0gramm.md).
+* added `nichtparasoup.testing.ConfigFilesTest.probe()`.
 
 
 ## 2.2.2
