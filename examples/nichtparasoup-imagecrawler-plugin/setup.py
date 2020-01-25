@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from setuptools import find_packages, setup
 from os import path
+
+from setuptools import find_packages, setup
 
 here = path.abspath(path.dirname(__file__))
 
@@ -17,7 +18,10 @@ setup(
         ],
     ),
     install_requires=[
-        'nichtparasoup',  # you want to pin a min-version ala `>2.2` -  was not done here, since its in-dev example
+        'nichtparasoup',
+        # This example requires `nichtparasoup>=2.3`
+        # You SHOULD write the min-version dependency in your real-world.
+        # This was not done here, since its an in-dev example.
     ],
     extras_require=dict(
         testing=[
