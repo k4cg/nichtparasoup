@@ -8,33 +8,36 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 class ConfigFileTest(TestCase):
 
-    def _validate_crawler_config(self, crawler_config: Dict[Any, Any]) -> BaseImageCrawler:
+    @staticmethod
+    def _validate_crawler_config(crawler_config: Dict[Any, Any]) -> BaseImageCrawler:  # pragma: no cover
         try:
-            imagecrawler = get_imagecrawler(crawler_config)
-        except BaseException as e:
+            return get_imagecrawler(crawler_config)
+        except Exception as e:
             raise ImageCrawlerInitError(crawler_config) from e
-        self.assertIsInstance(imagecrawler, BaseImageCrawler)
-        return imagecrawler
 
     def validate(self, file: str) -> None:
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
-        crawlers = []  # type: List[BaseImageCrawler]
+        imagecrawlers = []  # type: List[BaseImageCrawler]
         for crawler_config in config['crawlers']:
             imagecrawler = self._validate_crawler_config(crawler_config)
-            self.assertNotIn(imagecrawler, crawlers, msg='Duplicate ImageCrawler')
-            crawlers.append(imagecrawler)
+            self.assertNotIn(imagecrawler, imagecrawlers, msg='Duplicate ImageCrawler')
+            imagecrawlers.append(imagecrawler)
+
+    @staticmethod
+    def _probe_crawler(imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
+        try:
+            imagecrawler._crawl()
+        except Exception as e:
+            raise ImageCrawlerProbeCrawlError(imagecrawler) from e
 
     def probe(self, file: str) -> None:
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
-            try:
-                imagecrawler._crawl()
-                sleep(0.01)  # do not be greedy
-            except BaseException as e:
-                raise ImageCrawlerProbeCrawlError(imagecrawler) from e
+            self._probe_crawler(imagecrawler)
+            sleep(0.023)  # do not be too greedy
 
 
 class ConfigFileTestError(Exception):
@@ -56,4 +59,4 @@ class ImageCrawlerProbeCrawlError(ConfigFileTestError):
         self._imagecrawler = imagecrawler
 
     def __str__(self) -> str:  # pragma: no cover
-        return 'Probe crawl failed for {!r}'.format(self._imagecrawler)
+        return 'Probe-crawl failed for {!r}'.format(self._imagecrawler)
