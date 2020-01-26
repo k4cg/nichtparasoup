@@ -3,10 +3,13 @@
 
 ## Unreleased
 
+
+## 2.3.0
+
 ### Breaking changes
 
 * `nichtparasoup config --check`'s "duplicate image crawler" is no longer a Warning but an Error.
-* renamed `nichtparasoup.testing.config.ConfigFileTest` to `ConfigFileTest` - without an "s".
+* renamed `nichtparasoup.testing.config.ConfigFilesTest` to `ConfigFileTest` - without an "s".
 
 ### Changes
 
