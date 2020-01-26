@@ -18,7 +18,7 @@ It randomly displays images from
 Other crawlers are currently removed, but will be back soon.
 
 If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
-Contribute it to the _nichtparasoup_ project or write it as a independent plugin :-)
+Contribute it to the _nichtparasoup_ project or write it as an independent plugin :-)
 
 
 ![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
