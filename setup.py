@@ -68,7 +68,8 @@ EXTRAS = dict(
         'pytest',
         'ddt',
         # 'flake8-builtins',  # nice in general, but seams not bug-free, yet.
-        # 'lake8-docstrings', not in use, until pluggable ImageCrawlers are implemented.
+        # 'lake8-docstrings', # not in use, until all docs are done.
+        # 'flake8-quotes',    # not in use until black code styles are setup
     ],
 )
 
