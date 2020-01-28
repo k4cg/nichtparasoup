@@ -4,6 +4,13 @@
 ## Unreleased
 
 
+## 2.3.1
+
+### Fix
+
+*  fixed the paging of the `Pr0gramm` ImageCrawler in `promoted=True` mode.
+
+
 ## 2.3.0
 
 ### Breaking changes

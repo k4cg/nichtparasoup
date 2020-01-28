@@ -133,6 +133,8 @@ _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
         'get-flags_1-promoted_1-tags_s15000-video.json',
     '/api/items/get?flags=1&promoted=1&tags=%21%28s%3A1000%29+-%22video%22':
         'get-flags_1-promoted_1-tags_s1000-video.json',
+    '/api/items/get?flags=1&promoted=0&tags=%21%28s%3A1000%29+-%22video%22':
+        'get-flags_1-promoted_0-tags_s1000-video.json',
 }, base_dir=path_join(dirname(__file__), 'testdata_pr0gramm'))
 
 
@@ -148,6 +150,7 @@ class Pr0grammResetTest(unittest.TestCase):
         self.assertIsNone(crawler._older)
 
 
+@ddt
 class Pr0grammCrawlTest(unittest.TestCase):
 
     def test_reset_at_end(self) -> None:
@@ -170,16 +173,17 @@ class Pr0grammCrawlTest(unittest.TestCase):
         # assert
         self.assertFalse(crawler._reset_before_next_crawl)
 
-    def test_crawl_cursor(self) -> None:
+    @ddt_data((True, 503528), (False, 3652675))  # type: ignore
+    @ddt_unpack  # type: ignore
+    def test_crawl_cursor(self, promoted: bool, expected_cursor: Optional[int]) -> None:
         # arrange
-        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
+        crawler = Pr0gramm(flags=1, promoted=promoted, tags='!s:1000')
         crawler._remote_fetcher = _FILE_FETCHER
         crawler._older = None
-        expected_cursor = 3639645
         # act
         crawler._crawl()
         # assert
-        self.assertEqual(crawler._older, expected_cursor)
+        self.assertEqual(crawler._older, expected_cursor, msg='promoted={!r}'.format(promoted))
 
     def test_crawl_images(self) -> None:
         # arrange

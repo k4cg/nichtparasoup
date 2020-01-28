@@ -81,9 +81,10 @@ class Pr0gramm(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
+        promoted = self._config['promoted']
         api_uri = self._get_api_uri(
             flags=1,
-            promoted=self._config['promoted'],
+            promoted=promoted,
             tags=self._config.get('tags', None),
             older=self._older)
         response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
@@ -98,5 +99,5 @@ class Pr0gramm(BaseImageCrawler):
         if response['atEnd']:
             self.reset()
         else:
-            self._older = response['items'][-1]['id'] or None
+            self._older = response['items'][-1]['promoted' if promoted else 'id'] or None
         return images
