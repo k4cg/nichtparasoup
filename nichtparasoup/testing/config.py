@@ -13,7 +13,7 @@ class ConfigFileTest(TestCase):
     def validate(self, file: str) -> None:
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
-        imagecrawlers = []  # type: List[BaseImageCrawler]
+        imagecrawlers = list()  # type: List[BaseImageCrawler]
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             self.assertNotIn(imagecrawler, imagecrawlers, msg='Duplicate ImageCrawler')
