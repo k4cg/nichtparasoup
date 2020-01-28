@@ -142,7 +142,7 @@ class NPCore(object):
             self.blacklist.add(image.uri)
 
     def has_imagecrawler(self, imagecrawler: BaseImageCrawler) -> bool:
-        return imagecrawler in [crawler.imagecrawler for crawler in self.crawlers]
+        return imagecrawler in (crawler.imagecrawler for crawler in self.crawlers)
 
     def add_imagecrawler(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight) -> None:
         self.crawlers.append(Crawler(
