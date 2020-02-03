@@ -22,7 +22,7 @@ setup(
     extras_require=dict(
         testing=[
             'mypy',
-            'pytest>=5,<5.3.4',  # 5.3.4 has a bug: https://github.com/pytest-dev/pytest/issues/6517
+            'pytest>=5.3.5',  # 5.3.4 has a bug: https://github.com/pytest-dev/pytest/issues/6517
             'coverage',
             'ddt',
         ]
