@@ -3,6 +3,11 @@
 
 ## Unreleased
 
+### Fix
+
+* fixed https://github.com/k4cg/nichtparasoup/issues/187
+* prevent dependency `werkzeug` from using its upcoming untested version `1.0` until tests were made.
+
 
 ## 2.3.1
 
