@@ -3,17 +3,20 @@
 
 ## Unreleased
 
+### Changes
+
+* upgraded dependency `werkzeug` from `>=0.15` to `>=1.0`.
+
 ### Fix
 
-* fixed https://github.com/k4cg/nichtparasoup/issues/187
-* prevent dependency `werkzeug` from using its upcoming untested version `1.0` until tests were made.
+* fixed issue [#187](https://github.com/k4cg/nichtparasoup/issues/187).
 
 
 ## 2.3.1
 
 ### Fix
 
-*  fixed the paging of the `Pr0gramm` ImageCrawler in `promoted=True` mode.
+* fixed the paging of the `Pr0gramm` ImageCrawler in `promoted=True` mode.
 
 
 ## 2.3.0
