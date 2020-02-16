@@ -57,16 +57,17 @@ EXTRAS = dict(
         'isort>=4.3',
     ],
     testing=[
-        'flake8',
-        'flake8-annotations;python_version>="3.6"',
-        'flake8-bugbear',
-        'flake8-isort',
-        'flake8-pep3101',
-        'pep8-naming',
-        'mypy',
-        'coverage',
-        'pytest',
-        'ddt',
+        'flake8>=3.7',
+        'flake8-annotations>=2.0;python_version>="3.6"',
+        'flake8-bugbear>=20.1;python_version>="3.6"',
+        'flake8-bugbear>=19.8;python_version<"3.6"',
+        'flake8-isort>=2.8',
+        'flake8-pep3101>=1.3',
+        'pep8-naming>=0.9',
+        'mypy>=0.761',
+        'coverage>=5.0',
+        'pytest>=5.3',
+        'ddt>=1.2',
         # 'flake8-builtins',  # nice in general, but seams not bug-free, yet.
         # 'lake8-docstrings', # not in use, until all docs are done.
         # 'flake8-quotes',    # not in use until black code styles are setup

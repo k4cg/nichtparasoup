@@ -2,8 +2,9 @@
 
 show-source  = True
 
-# ignore self markers of https://github.com/python-discord/flake8-annotations
-ignore = TYP101,TYP102
+ignore =
+    # ignore `self`, `cls` markers of flake8-annotations>=2.0
+    ANN101,ANN102
 
 exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
     setup.py
