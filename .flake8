@@ -3,8 +3,6 @@
 show-source  = True
 
 ignore =
-    # ignore `self`, `cls` markers of flake8-annotations<2.0
-    TYP101,TYP102
     # ignore `self`, `cls` markers of flake8-annotations>=2.0
     ANN101,ANN102
 
