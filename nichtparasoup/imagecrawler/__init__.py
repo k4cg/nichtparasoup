@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 from copy import copy
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, Generator, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
 
@@ -57,13 +57,13 @@ class KnownImageCrawlers(object):
         # if everything went well .. add
         self._list.append((entry.name, loaded))
 
-    def names(self) -> Iterable[_ImagecrawlerName]:
+    def names(self) -> Generator[_ImagecrawlerName, Any, None]:
         return (ic_name for ic_name, _ in self._list)
 
-    def classes(self) -> Iterable[_ImagecrawlerClass]:
+    def classes(self) -> Generator[_ImagecrawlerClass, Any, None]:
         return (ic_class for _, ic_class in self._list)
 
-    def items(self) -> Iterable[_Imagecrawler]:
+    def items(self) -> Generator[_Imagecrawler, Any, None]:
         return (copy(imacrawler) for imacrawler in self._list)
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
