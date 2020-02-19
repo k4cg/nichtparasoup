@@ -55,6 +55,7 @@ EXTRAS = dict(
     development=[
         'tox>=3.14',
         'isort>=4.3',
+        'autopep8>=1.5',
     ],
     testing=[
         'flake8>=3.7',
