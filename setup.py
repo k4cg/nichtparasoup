@@ -45,6 +45,7 @@ REQUIRED = [
     'werkzeug>=1.0',  # for `webserver`
     'mako>=1.1',  # for `webserver`'s templates
     'setuptools>=40.0',  # for imagecrawler-plugin-architecture
+    'argcomplete>=1.11',  # for cli autocompletion
 ]
 
 # What packages are optional?
@@ -109,7 +110,7 @@ setup(
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*', 'tests.*', 'examples']),
     entry_points=dict(
         console_scripts=[
-            'nichtparasoup = nichtparasoup.cmdline:main',
+            'nichtparasoup = nichtparasoup.cli.main:main',
         ],
     ),
     setup_requires=['setuptools', 'setuptools_scm>=3.3.3'],

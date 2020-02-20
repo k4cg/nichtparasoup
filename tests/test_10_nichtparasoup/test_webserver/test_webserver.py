@@ -13,6 +13,7 @@ class WebserverTest(unittest.TestCase):
     def tearDown(self) -> None:
         del self.webserver
 
+    @unittest.skip("TODO: write the test")
     def test_webserver(self) -> None:
-        self.skipTest('TODO: write the test')  # TODO: write tests
         # maybe this helps? http://werkzeug.palletsprojects.com/en/0.16.x/test/
+        raise NotImplementedError()

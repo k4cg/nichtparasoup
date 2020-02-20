@@ -7,7 +7,8 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig
 
 
 class MockableImageCrawler(BaseImageCrawler):
-    """ imagecrawler that does nothing. use it for mocking ... """
+    """An imagecrawler that does nothing. use it for mocking ...
+    """
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
@@ -28,5 +29,7 @@ class MockableImageCrawler(BaseImageCrawler):
 
 
 class YetAnotherImageCrawler(MockableImageCrawler):
-    """ another implementation, to see if type matters """
+    """
+    another implementation, to see if type matters
+    """
     pass

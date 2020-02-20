@@ -1,5 +1,5 @@
 import sys
 
-from nichtparasoup.cmdline import main
+from nichtparasoup.cli.main import main as _main
 
-sys.exit(main())
+sys.exit(_main())

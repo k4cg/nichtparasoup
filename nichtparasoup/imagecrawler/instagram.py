@@ -168,8 +168,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     @classmethod
     @abstractmethod
     def _get_media_from_query_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:  # pragma: no cover
-        """
-        get the path for media edges in query response
+        """Get the path for media edges in query response
 
         example implementation:
             return response['data']['<aTYPE>']['edge_<bTYPE>_media']

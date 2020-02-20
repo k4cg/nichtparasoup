@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.pyhon_version }}
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
@@ -42,5 +42,5 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           flags: tests
-          name: od:${{ matrix.os }} py:${{ matrix.pyhon }}
+          name: "os:${{ matrix.os }} py:${{ matrix.pyhon }}"
           yml: ./codecov.yml

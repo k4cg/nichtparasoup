@@ -1,13 +1,7 @@
 import logging
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from nichtparasoup._internals import _message, _message_exception
-
-
-def _logging_init(level: int) -> None:  # pragma: no cover
-    if not logging.root.handlers:
-        logging.root.setLevel(level)
-        logging.root.addHandler(logging.StreamHandler())
 
 
 class Commands(object):
@@ -15,6 +9,7 @@ class Commands(object):
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
         from os.path import abspath
+        from nichtparasoup._internals import _logging_init
         from nichtparasoup.config import get_config, get_imagecrawler
         from nichtparasoup.core import NPCore
         from nichtparasoup.core.server import Server as ImageServer
@@ -35,7 +30,12 @@ class Commands(object):
             return 1
 
     @classmethod
-    def config(cls, action: str, config_file: str) -> int:
+    def config(cls, **actions: Any) -> int:
+        active_actions = dict((k, v) for k, v in actions.items() if v)
+        if len(active_actions) != 1:
+            _message_exception(ValueError('exactly one action required'))
+            return 255
+        action, config_file = active_actions.popitem()
         return dict(
             check=cls.config_check_file,
             dump=cls.config_dump_file,
@@ -44,10 +44,10 @@ class Commands(object):
     @staticmethod
     def config_dump_file(config_file: str) -> int:
         from os.path import abspath, isfile
+        from nichtparasoup._internals import _confirm
         from nichtparasoup.config import dump_defaults
         config_file = abspath(config_file)
         if isfile(config_file):
-            from nichtparasoup._internals import _confirm
             overwrite = _confirm('File already exists, overwrite?')
             if overwrite is not True:
                 _message('Abort.')
@@ -80,20 +80,20 @@ class Commands(object):
             _message_exception(ValueError('exactly one action required'))
             return 255
         action, action_value = active_actions.popitem()
-        return dict(
+        return dict(  # type: ignore
             version=cls.info_version,
             imagecrawler_list=cls.info_imagecrawler_list,
             imagecrawler_desc=cls.info_imagecrawler_desc,
         )[action](action_value)
 
     @staticmethod
-    def info_version(_: Any) -> int:
+    def info_version(_: Optional[Any] = None) -> int:
         from nichtparasoup import VERSION
         _message(VERSION)
         return 0
 
     @staticmethod
-    def info_imagecrawler_list(_: Any) -> int:
+    def info_imagecrawler_list(_: Optional[Any] = None) -> int:
         from nichtparasoup.imagecrawler import get_imagecrawlers
         imagecrawlers = get_imagecrawlers().names()
         if not imagecrawlers:
@@ -133,12 +133,12 @@ class Commands(object):
             ]))
         return 0
 
-
-def main(args: Optional[List[str]] = None) -> int:
-    from nichtparasoup.cmdline.argparse import parser as argparser
-    options = dict(argparser.parse_args(args=args).__dict__)
-    if options.pop('debug', False):
-        _logging_init(logging.DEBUG)
-        _message('DEBUG ENABLED :)', 'cyan')
-    command = options.pop('command')
-    return getattr(Commands, command)(**options)  # type: ignore
+    @staticmethod
+    def completion(shell: str) -> int:
+        from sys import stdout
+        from argcomplete import shellcode  # type: ignore
+        stdout.write(shellcode(
+            ['nichtparasoup'], shell=shell,
+            use_defaults=True, complete_arguments=None,
+        ))
+        return 0
