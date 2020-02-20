@@ -1,7 +1,8 @@
 __all__ = ['_logger', '_log', '_message', '_message_exception', '_confirm']
+
 """
-yes, everything is underscored.
-its internal foo that is not for public use.
+Yes, everything is underscored.
+Its internal foo that is not for public use.
 """
 
 import logging
@@ -28,6 +29,12 @@ def _log(level: _LOG_LEVEL, message: str, *args: Any, **kwargs: Any) -> None:
         _logger.setLevel(logging.INFO)
         _logger.addHandler(logging.StreamHandler())
     getattr(_logger, level)(message.rstrip(), *args, **kwargs)
+
+
+def _logging_init(level: int) -> None:  # pragma: no cover
+    if not logging.root.handlers:
+        logging.root.setLevel(level)
+        logging.root.addHandler(logging.StreamHandler())
 
 
 def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:

@@ -26,8 +26,7 @@ def _f(_: Image) -> None:
 
 
 class CrawlerIsImageAddableTestCase(unittest.TestCase):
-    """
-    test if the weakref is working as expected
+    """Test if the weakref is working as expected
     """
 
     def setUp(self) -> None:
@@ -79,7 +78,8 @@ class CrawlerIsImageAddableTestCase(unittest.TestCase):
         self.assertIsNone(self.crawler.get_is_image_addable())
 
     def test_function(self) -> None:
-        """ Remember: FunctionType is LambdaType """
+        """Remember: FunctionType is LambdaType
+        """
         # assert
         with self.assertRaises(Exception):
             # currently not supporting `function`. write the test, when writing it is supported
@@ -87,8 +87,7 @@ class CrawlerIsImageAddableTestCase(unittest.TestCase):
 
 
 class CrawlerImageAddedTestCase(unittest.TestCase):
-    """
-    test if the weakref is working as expected
+    """Test if the weakref is working as expected
     """
 
     def setUp(self) -> None:
@@ -140,7 +139,8 @@ class CrawlerImageAddedTestCase(unittest.TestCase):
         self.assertIsNone(self.crawler.get_image_added())
 
     def test_function(self) -> None:
-        """ Remember: FunctionType is LambdaType """
+        """Remember: FunctionType is LambdaType
+        """
         # assert
         with self.assertRaises(Exception):
             # currently not supporting `function`. write the test, when writing it is supported
@@ -214,8 +214,10 @@ class CrawlerCrawlCase(unittest.TestCase):
 
 class ServerRefillTest(unittest.TestCase):
 
+    @unittest.skip("TODO: write the test - use Random3Crawler")
     def test_fill_up_to(self) -> None:
-        self.skipTest("write the test - use Random3Crawler")
+        raise NotImplementedError()
 
+    @unittest.skip("TODO: write the test - use NullCrawler")
     def test_refill_null_crawler(self) -> None:
-        self.skipTest("write the test - use NullCrawler")
+        raise NotImplementedError()

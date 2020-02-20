@@ -9,8 +9,7 @@ SourceUri = str
 
 
 class Image(object):
-    """
-    Describe an image
+    """Describe an image
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.

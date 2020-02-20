@@ -195,7 +195,8 @@ class KnownImageCrawlersAddTest(unittest.TestCase):
 class KnownImageCrawlersBuiltinsTest(unittest.TestCase):
 
     def test_builtins(self) -> None:
-        """ test each builtin for the usual plugin needs """
+        """Test each builtin for the usual plugin needs
+        """
         builtins = KnownImageCrawlers._builtins()
         for _, bi_class in builtins.items():
             KnownImageCrawlers._test(bi_class)

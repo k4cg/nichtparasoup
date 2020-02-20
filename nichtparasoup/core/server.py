@@ -15,9 +15,10 @@ from nichtparasoup.core import Crawler, NPCore
 
 class Server(object):
     """
-    this class is intended to be thread save.
-    this class intended to be a stable interface.
-    its public methods return base types only.
+
+    This class is intended to be thread save.
+    This class intended to be a stable interface.
+    Its public methods return base types only.
     """
 
     def __init__(self, core: NPCore, crawler_upkeep: int = 30,
@@ -116,9 +117,9 @@ class Server(object):
 
 class ServerStatus(ABC):
     """
-    this class intended to be a stable interface.
-    all public methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
-    all public methods must be associated with stat(u)s!
+    This class intended to be a stable interface.
+    All public methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
+    All public methods must be associated with stat(u)s!
     """
 
     @staticmethod

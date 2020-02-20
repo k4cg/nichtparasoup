@@ -108,7 +108,7 @@ setup(
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*', 'tests.*', 'examples']),
     entry_points=dict(
         console_scripts=[
-            'nichtparasoup = nichtparasoup.cmdline:main',
+            'nichtparasoup = nichtparasoup.cli.main:main',
         ],
     ),
     setup_requires=['setuptools', 'setuptools_scm>=3.3.3'],

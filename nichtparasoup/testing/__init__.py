@@ -1,4 +1,4 @@
+"""Subpackage containing all of nichtparasoup's testing related code
 """
-in this package you will find stuff that helps with testing
 
-"""
+# This file intentionally does not import submodules

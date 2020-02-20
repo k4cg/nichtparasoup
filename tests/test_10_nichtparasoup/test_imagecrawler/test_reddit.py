@@ -54,8 +54,9 @@ class RedditConfigSubredditTest(unittest.TestCase):
             with self.assertRaises(ValueError, msg=repr(config_in)):
                 Reddit.check_config(config_in)
 
+    @unittest.skip("TODO: do we need this tested or even coded?")
     def test_check_config_not_existing(self) -> None:
-        self.skipTest('TODO do we need this tested or even coded?')
+        raise NotImplementedError
 
 
 class RedditBuildUriTest(unittest.TestCase):

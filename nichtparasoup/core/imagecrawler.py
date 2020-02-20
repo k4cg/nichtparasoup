@@ -16,8 +16,7 @@ _ImageCrawlerConfigKey = str
 
 
 class ImageCrawlerInfo(object):
-    """
-    ImageCrawler's Info.
+    """ImageCrawler's Info.
 
     .. seealso:: :method:`BaseImageCrawler.info()`
 
@@ -64,11 +63,9 @@ class BaseImageCrawler(ABC):
         return False
 
     def get_config(self) -> ImageCrawlerConfig:
-        """
-        Get all *public* information from the config
+        """Get all *public* information from the config
 
         For internal access to the config using `self._config` is encouraged
-
         """
         return ImageCrawlerConfig({
             k: v
@@ -99,8 +96,7 @@ class BaseImageCrawler(ABC):
     @classmethod
     @abstractmethod
     def info(cls) -> ImageCrawlerInfo:  # pragma: no cover
-        """
-        Get info of the crawler
+        """Get info of the crawler
 
         example implementation:
             return ImageCrawlerInfo(
@@ -117,15 +113,13 @@ class BaseImageCrawler(ABC):
                 ),
                 icon_url='https://my.imagesource.net/favicon.png'
             )
-
         """
         raise NotImplementedError()
 
     @classmethod
     @abstractmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:  # pragma: no cover
-        """
-        This function is intended to check if a config is valid and to strip unused config.
+        """This function is intended to check if a config is valid and to strip unused config.
 
         When implementing:
             Check if any config is viable. if not raise ValueError or TypeError or KeyError
@@ -138,21 +132,18 @@ class BaseImageCrawler(ABC):
                 raise TypeError("height {} is not int".format(height))
             if height <= 0:
                 raise ValueError("height {} <= 0".format(width))
-
         """
         raise NotImplementedError()
 
     @abstractmethod
     def _reset(self) -> None:  # pragma: no cover
-        """
-        This function is intended to reset the crawler to restart at front
+        """This function is intended to reset the crawler to restart at front
         """
         raise NotImplementedError()
 
     @abstractmethod
     def _crawl(self) -> ImageCollection:  # pragma: no cover
-        """
-        This function is intended to find and fetch ImageURIs
+        """This function is intended to find and fetch ImageURIs
         """
         raise NotImplementedError()
 
