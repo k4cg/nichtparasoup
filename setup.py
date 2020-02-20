@@ -45,6 +45,7 @@ REQUIRED = [
     'werkzeug>=1.0',  # for `webserver`
     'mako>=1.1',  # for `webserver`'s templates
     'setuptools>=40.0',  # for imagecrawler-plugin-architecture
+    'argcomplete>=1.11',  # for cli autocompletion
 ]
 
 # What packages are optional?

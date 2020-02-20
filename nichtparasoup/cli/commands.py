@@ -9,13 +9,11 @@ class Commands(object):
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
         from os.path import abspath
-
         from nichtparasoup._internals import _logging_init
         from nichtparasoup.config import get_config, get_imagecrawler
         from nichtparasoup.core import NPCore
         from nichtparasoup.core.server import Server as ImageServer
         from nichtparasoup.webserver import WebServer
-
         try:
             config = get_config(abspath(config_file) if config_file else None)
             _logging_init(getattr(logging, config['logging']['level']))
@@ -32,7 +30,12 @@ class Commands(object):
             return 1
 
     @classmethod
-    def config(cls, action: str, config_file: str) -> int:
+    def config(cls, **actions: Any) -> int:
+        active_actions = dict((k, v) for k, v in actions.items() if v)
+        if len(active_actions) != 1:
+            _message_exception(ValueError('exactly one action required'))
+            return 255
+        action, config_file = active_actions.popitem()
         return dict(
             check=cls.config_check_file,
             dump=cls.config_dump_file,
@@ -41,10 +44,8 @@ class Commands(object):
     @staticmethod
     def config_dump_file(config_file: str) -> int:
         from os.path import abspath, isfile
-
         from nichtparasoup._internals import _confirm
         from nichtparasoup.config import dump_defaults
-
         config_file = abspath(config_file)
         if isfile(config_file):
             overwrite = _confirm('File already exists, overwrite?')
@@ -61,9 +62,7 @@ class Commands(object):
     @staticmethod
     def config_check_file(config_file: str) -> int:
         from os.path import abspath
-
         from nichtparasoup.testing.config import ConfigFileTest
-
         config_file = abspath(config_file)
         config_test = ConfigFileTest()
         try:
@@ -97,7 +96,6 @@ class Commands(object):
     @staticmethod
     def info_imagecrawler_list(_: Optional[Any] = None) -> int:
         from nichtparasoup.imagecrawler import get_imagecrawlers
-
         imagecrawlers = get_imagecrawlers().names()
         if not imagecrawlers:
             _message_exception(Warning('no ImageCrawler found'))
@@ -110,7 +108,6 @@ class Commands(object):
         from nichtparasoup._internals import _log
         from nichtparasoup.core.server import type_module_name_str
         from nichtparasoup.imagecrawler import get_imagecrawlers
-
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
@@ -135,4 +132,14 @@ class Commands(object):
                 'Icon : {!r}'.format(imagecrawler_info.icon_url),
                 'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
             ]))
+        return 0
+
+    @staticmethod
+    def completion(shell: str) -> int:
+        from sys import stdout
+        from argcomplete import shellcode  # type: ignore
+        stdout.write(shellcode(
+            ['nichtparasoup'], shell=shell,
+            use_defaults=True, complete_arguments=None,
+        ))
         return 0

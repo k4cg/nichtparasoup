@@ -12,6 +12,10 @@
 * fixed issue [#187](https://github.com/k4cg/nichtparasoup/issues/187).
 * pinned test dependencies to greater/equal current latest minor version.
 
+### Added
+
+* commandline autocompletion via [`argcomplete`](https://pypi.org/project/argcomplete/).
+
 
 ## 2.3.1
 
