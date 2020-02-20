@@ -17,4 +17,6 @@ solution: add the `--user` switch to your `pip install` command.
 _nichtparasoup_ is using some dependencies in a certain minimal version.
 
 if you have issues with already installed package versions,
-just use [python's venv](https://docs.python.org/3/library/venv.html).
+just use
+[python's `venv`](https://docs.python.org/3/library/venv.html) or
+[`pipx`](https://pypi.org/project/pipx/).
