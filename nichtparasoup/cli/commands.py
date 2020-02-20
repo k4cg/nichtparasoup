@@ -89,7 +89,6 @@ class Commands(object):
     @staticmethod
     def info_version(_: Optional[Any] = None) -> int:
         from nichtparasoup import VERSION
-
         _message(VERSION)
         return 0
 
