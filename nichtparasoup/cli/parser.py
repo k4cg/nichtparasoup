@@ -8,7 +8,7 @@ from argcomplete import FilesCompleter  # type: ignore
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
-def imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:
+def imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
     return set(get_imagecrawlers().names())
 
 
