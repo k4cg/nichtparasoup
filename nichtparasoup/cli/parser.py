@@ -12,7 +12,7 @@ def imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:
     return set(get_imagecrawlers().names())
 
 
-yaml_file_completion = FilesCompleter(('yaml', 'yml'))
+yaml_file_completion = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
 
 
 def create_parser() -> ArgumentParser:  # pragma: no cover
