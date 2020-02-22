@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-add upcoming unreleased modiications here
+add upcoming unreleased modifications here
 
 ## 2.4.1
 
