@@ -6,6 +6,10 @@ from nichtparasoup._internals import _message, _message_exception
 
 class Commands(object):
 
+    # imports are not PIP8 conform for the following reason:
+    # each function is like an own ``__main__`` - each is independent.
+    # so there is no need ti import everything, if it is just not used.
+
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
         from os.path import abspath

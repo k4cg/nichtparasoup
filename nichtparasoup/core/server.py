@@ -3,8 +3,8 @@ __all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
 from abc import ABC
 from copy import copy
 from sys import getsizeof
-from threading import Lock, Thread
-from time import time
+from threading import Event, Lock, Thread
+from time import sleep, time
 from typing import Any, Dict, Optional, Type, Union
 from weakref import ref as weak_ref
 
@@ -173,7 +173,6 @@ def type_module_name_str(t: Type[Any]) -> str:
 
 class ServerRefiller(Thread):
     def __init__(self, server: Server, sleep: Union[int, float]) -> None:  # pragma: no cover
-        from threading import Event
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
         self._sleep = sleep
@@ -181,7 +180,6 @@ class ServerRefiller(Thread):
         self._run_lock = Lock()
 
     def run(self) -> None:
-        from time import sleep
         while not self._stop_event.is_set():
             server = self._server_wr()  # type: Optional[Server]
             if server:

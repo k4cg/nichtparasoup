@@ -38,10 +38,9 @@ def _logging_init(level: int) -> None:  # pragma: no cover
 
 
 def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:
-    from sys import stdout
     newline = '\r\n'
     if not file:
-        file = stdout
+        file = sys.stdout
     if color and colored:
         message = colored(message, color=color)
     file.write('{}{}'.format(message.rstrip(), newline))
@@ -49,8 +48,7 @@ def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] =
 
 def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
     if not file:
-        from sys import stderr
-        file = stderr
+        file = sys.stderr
     exception_name = type(exception).__name__
     if colored:
         color = 'yellow' if isinstance(exception, Warning) else 'red'

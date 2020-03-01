@@ -8,9 +8,11 @@ from mako.template import Template  # type: ignore
 from werkzeug.datastructures import Headers
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
+from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
+from nichtparasoup._internals import _log
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
@@ -124,8 +126,6 @@ class WebServer(object):
         return Response(css, mimetype='text/css')
 
     def run(self) -> None:
-        from werkzeug.serving import run_simple
-        from nichtparasoup._internals import _log
         self.imageserver.start()
         try:
             _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))

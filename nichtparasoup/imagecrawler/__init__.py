@@ -26,6 +26,7 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
+        # late import to prevent possible circular imports
         from .echo import Echo
         from .picsum import Picsum
         from .reddit import Reddit
