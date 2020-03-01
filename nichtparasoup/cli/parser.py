@@ -25,7 +25,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
 
     parser.add_argument(
         '--debug',
-        help='Enable debug output.',
+        help='enable debug output',
         action='store_true', dest="debug",
     )
 
@@ -54,15 +54,15 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
 
     command_config = commands.add_parser(
         'config',
+        help='config related functions',
         description='Get config related things done.',
-        help='Config related functions.',
         add_help=True,
         allow_abbrev=False,
     )
     command_config_switches = command_config.add_mutually_exclusive_group(required=True)
     __tmp_action = command_config_switches.add_argument(
         '--check',
-        help='Validate and probe a YAML config file;',
+        help='validate and probe a YAML config file',
         metavar='<file>',
         action='store', dest='check', type=str,
     )
@@ -70,27 +70,27 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
     del __tmp_action
     command_config_switches.add_argument(
         '--dump',
-        help='Dump YAML config into a file;',
+        help='dump YAML config into a file',
         metavar='<file>',
         action='store', dest='dump', type=str,
     )
 
     command_info = commands.add_parser(
         'info',
+        help='get info for several topics',
         description='Get info for several topics.',
-        help='Get info for several topics.',
         add_help=True,
         allow_abbrev=False,
     )
     command_info_switches = command_info.add_mutually_exclusive_group(required=True)
     command_info_switches.add_argument(
         '--imagecrawler-list',
-        help='List available image crawler types.',
+        help='list available image crawler types',
         action='store_true', dest='imagecrawler_list',
     )
     __tmp_action = command_info_switches.add_argument(
         '--imagecrawler-desc',
-        help='Describe an image crawler type and its config.',
+        help='describe an image crawler type and its config',
         metavar='<crawler>',
         action='store', dest='imagecrawler_desc', type=str,
     )
@@ -98,21 +98,21 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
     del __tmp_action
     command_info_switches.add_argument(
         '--version',
-        help="Show program's version number.",
+        help="show program's version number",
         action='store_true', dest='version',
     )
 
     command_completion = commands.add_parser(
         'completion',
+        help='helper command to be used for command completion',
         description='Helper command used for command completion.',
-        epilog='Autocompletion is powered by https://pypi.org/project/argcomplete/',
-        help='Helper command to be used for command completion.',
+        epilog='Completion is powered by https://pypi.org/project/argcomplete/',
         add_help=True,
         allow_abbrev=False,
     )
     command_completion.add_argument(
         '-s', '--shell',
-        help='Emit completion code for the specified shell.',
+        help='emit completion code for the specified shell',
         action='store', dest='shell', type=str, required=True,
         choices=('bash', 'tcsh', 'fish'),
     )
