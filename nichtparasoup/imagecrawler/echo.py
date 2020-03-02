@@ -38,10 +38,10 @@ class Echo(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        config = self.get_config()
+        image_uri = self.get_config()["image_uri"]
         images.add(Image(
-            uri=config["image_uri"],
-            source=config["image_uri"],
+            uri=image_uri,
+            source=image_uri,
             is_generic=True,
             this_is_a_dummy=True,
         ))

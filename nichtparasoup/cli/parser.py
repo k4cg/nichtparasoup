@@ -8,11 +8,16 @@ from argcomplete import FilesCompleter  # type: ignore
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
-def imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
+def _imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
+    """ImageCrawler completer.
+    see https://kislyuk.github.io/argcomplete/#specifying-completers
+    """
+    del args
+    del kwargs
     return set(get_imagecrawlers().names())
 
 
-yaml_file_completion = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
+_YAML_FILE_COMPLETION = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
 
 
 def create_parser() -> ArgumentParser:  # pragma: no cover
@@ -49,7 +54,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         metavar='<file>',
         action='store', dest="config_file", type=str,
     )
-    __tmp_action.completer = yaml_file_completion  # type: ignore
+    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
     del __tmp_action
 
     command_config = commands.add_parser(
@@ -66,7 +71,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         metavar='<file>',
         action='store', dest='check', type=str,
     )
-    __tmp_action.completer = yaml_file_completion  # type: ignore
+    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
     del __tmp_action
     command_config_switches.add_argument(
         '--dump',
@@ -94,7 +99,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         metavar='<crawler>',
         action='store', dest='imagecrawler_desc', type=str,
     )
-    __tmp_action.completer = imagecrawler_completion  # type: ignore
+    __tmp_action.completer = _imagecrawler_completion  # type: ignore
     del __tmp_action
     command_info_switches.add_argument(
         '--version',

@@ -18,15 +18,15 @@ from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
 class JsonRespone(Response):
-    def __init__(
-        self,
-        response: Optional[Any] = None,
-        status: Optional[Union[str, int]] = None,
-        headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
-        mimetype: Optional[str] = 'application/json',
-        content_type: Optional[str] = 'application/json',
-        direct_passthrough: bool = False,
-    ) -> None:
+
+    def __init__(self,
+                 response: Optional[Any] = None,
+                 status: Optional[Union[str, int]] = None,
+                 headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
+                 mimetype: Optional[str] = 'application/json',
+                 content_type: Optional[str] = 'application/json',
+                 direct_passthrough: bool = False
+                 ) -> None:
         super().__init__(
             response=json_encode(response),
             status=status,

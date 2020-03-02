@@ -1,9 +1,8 @@
-__all__ = ['_logger', '_log', '_message', '_message_exception', '_confirm']
-
-"""
-Yes, everything is underscored.
+"""Yes, everything is underscored.
 Its internal foo that is not for public use.
 """
+
+__all__ = ['_LOGGER', '_log', '_message', '_message_exception', '_confirm']
 
 import logging
 import sys
@@ -19,16 +18,16 @@ try:
 except ImportError:
     colored = None  # type: ignore
 
-_logger = logging.getLogger('nichtparasoup')
+_LOGGER = logging.getLogger('nichtparasoup')
 
 _LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
 
 
 def _log(level: _LOG_LEVEL, message: str, *args: Any, **kwargs: Any) -> None:
-    if not logging.root.handlers and _logger.level == logging.NOTSET:
-        _logger.setLevel(logging.INFO)
-        _logger.addHandler(logging.StreamHandler())
-    getattr(_logger, level)(message.rstrip(), *args, **kwargs)
+    if not logging.root.handlers and _LOGGER.level == logging.NOTSET:
+        _LOGGER.setLevel(logging.INFO)
+        _LOGGER.addHandler(logging.StreamHandler())
+    getattr(_LOGGER, level)(message.rstrip(), *args, **kwargs)
 
 
 def _logging_init(level: int) -> None:  # pragma: no cover
@@ -57,7 +56,7 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
 
 
 def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
-    rv = {
+    return_values = {
         'y': True,
         'yes': True,
         '': default,
@@ -67,6 +66,6 @@ def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
     options = 'Y/n' if default else 'y/N'
     try:
         value = input('{!s} [{}]: '.format(prompt, options)).lower().strip()
-        return rv[value]
+        return return_values[value]
     except (KeyboardInterrupt, EOFError, KeyError):
         return None
