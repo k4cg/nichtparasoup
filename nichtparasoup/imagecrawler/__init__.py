@@ -98,6 +98,8 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _test_abstract(some_type: Type[object]) -> None:
+        """Test if ABS is resolved.
+        """
         if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
             raise TypeError('{!r} is abstract'.format(some_type))
 
