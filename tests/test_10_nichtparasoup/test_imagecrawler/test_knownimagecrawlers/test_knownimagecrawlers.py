@@ -5,9 +5,7 @@ from pkg_resources import Distribution, EntryPoint
 
 from nichtparasoup.imagecrawler import KnownImageCrawlers
 
-from .testdata_imagecrawler_plugin import (
-    BaseLoadableImageCrawlerA, LoadableImageCrawlerA, LoadableImageCrawlerB, StandaloneLoadableImageCrawlerA,
-)
+from . import BaseLoadableImageCrawlerA, LoadableImageCrawlerA, LoadableImageCrawlerB, StandaloneLoadableImageCrawlerA
 
 _TEST_PLUGIN_DIST = Distribution(location=path.abspath('testdata_imagecrawler_plugin'),
                                  project_name='testdata-imagecrawler-plugin')
