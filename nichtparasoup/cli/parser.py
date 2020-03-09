@@ -5,6 +5,7 @@ from typing import Any, Set
 
 from argcomplete import FilesCompleter  # type: ignore
 
+from nichtparasoup import VERSION
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
@@ -33,6 +34,12 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
     parser = ArgumentParser(
         add_help=True,
         allow_abbrev=False,
+    )
+
+    parser.add_argument(
+        '--version',
+        action='version',
+        version=VERSION,
     )
 
     commands = parser.add_subparsers(
@@ -83,33 +90,28 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         action='store', dest='dump', type=str,
     )
 
-    command_info = commands.add_parser(
-        'info',
+    command_imagecrawler = commands.add_parser(
+        'imagecrawler',
         help='get info for several topics',
         description='Get info for several topics.',
         add_help=True,
         allow_abbrev=False,
         parents=[debug],
     )
-    command_info_switches = command_info.add_mutually_exclusive_group(required=True)
-    command_info_switches.add_argument(
-        '--imagecrawler-list',
+    command_imagecrawler_switches = command_imagecrawler.add_mutually_exclusive_group(required=True)
+    command_imagecrawler_switches.add_argument(
+        '--list',
         help='list available image crawler types',
-        action='store_true', dest='imagecrawler_list',
+        action='store_true', dest='list',
     )
-    __tmp_action = command_info_switches.add_argument(
-        '--imagecrawler-desc',
+    __tmp_action = command_imagecrawler_switches.add_argument(
+        '--desc',
         help='describe an image crawler type and its config',
         metavar='<crawler>',
-        action='store', dest='imagecrawler_desc', type=str,
+        action='store', dest='desc', type=str,
     )
     __tmp_action.completer = _imagecrawler_completion  # type: ignore
     del __tmp_action
-    command_info_switches.add_argument(
-        '--version',
-        help="show program's version number",
-        action='store_true', dest='version',
-    )
 
     command_completion = commands.add_parser(
         'completion',

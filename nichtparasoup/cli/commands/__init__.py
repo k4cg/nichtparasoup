@@ -21,7 +21,7 @@ _Command = namedtuple('_Command', 'module_name, class_name')
 _COMMANDS = dict(
     run=_Command('.run', 'RunCommand'),
     config=_Command('.config', 'ConfigCommand'),
-    info=_Command('.info', 'InfoCommand'),
+    imagecrawler=_Command('.imagecrawler', 'ImagecrawlerCommand'),
     completion=_Command('.completion', 'CompletionCommand'),
 )  # type: Dict[str, _Command]
 

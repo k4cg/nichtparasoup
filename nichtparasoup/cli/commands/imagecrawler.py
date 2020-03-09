@@ -1,15 +1,14 @@
-__all__ = ["InfoCommand"]
+__all__ = ["ImagecrawlerCommand"]
 
 from typing import Any, Dict, Optional
 
-from nichtparasoup import VERSION
 from nichtparasoup._internals import _log, _message, _message_exception
 from nichtparasoup.cli.commands import BaseCommand
 from nichtparasoup.core.server import type_module_name_str
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
-class InfoCommand(BaseCommand):
+class ImagecrawlerCommand(BaseCommand):
 
     def main(self, options: Dict[str, Any]) -> int:
         active_actions = {k: v for k, v in options.items() if v}  # type: Dict[str, Any]
@@ -21,12 +20,7 @@ class InfoCommand(BaseCommand):
         return action(action_value)  # type: ignore
 
     @staticmethod
-    def run_version(_: Optional[Any] = None) -> int:
-        _message(VERSION)
-        return 0
-
-    @staticmethod
-    def run_imagecrawler_list(_: Optional[Any] = None) -> int:
+    def run_list(_: Optional[Any] = None) -> int:
         imagecrawlers = get_imagecrawlers().names()
         if not imagecrawlers:
             _message_exception(Warning('no ImageCrawler found'))
@@ -35,7 +29,7 @@ class InfoCommand(BaseCommand):
         return 0
 
     @staticmethod
-    def run_imagecrawler_desc(imagecrawler: str) -> int:
+    def run_desc(imagecrawler: str) -> int:
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
