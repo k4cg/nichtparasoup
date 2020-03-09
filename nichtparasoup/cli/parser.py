@@ -23,15 +23,16 @@ _YAML_FILE_COMPLETION = FilesCompleter(allowednames=('yaml', 'yml'), directories
 def create_parser() -> ArgumentParser:  # pragma: no cover
     # used `__tmp_action`  several times, to omit type-checkers warning ala 'Action has no attribute "completer"'
 
-    parser = ArgumentParser(
-        add_help=True,
-        allow_abbrev=False,
-    )
-
-    parser.add_argument(
+    debug = ArgumentParser(add_help=False)
+    debug.add_argument(
         '--debug',
         help='enable debug output',
         action='store_true', dest="debug",
+    )
+
+    parser = ArgumentParser(
+        add_help=True,
+        allow_abbrev=False,
     )
 
     commands = parser.add_subparsers(
@@ -47,10 +48,11 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         description='Start a web-server to display random images.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
     __tmp_action = command_run.add_argument(
         '-c', '--use-config',
-        help='Use a YAML config file instead of the defaults.',
+        help='use a YAML config file instead of the defaults.',
         metavar='<file>',
         action='store', dest="config_file", type=str,
     )
@@ -63,6 +65,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         description='Get config related things done.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
     command_config_switches = command_config.add_mutually_exclusive_group(required=True)
     __tmp_action = command_config_switches.add_argument(
@@ -86,6 +89,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         description='Get info for several topics.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
     command_info_switches = command_info.add_mutually_exclusive_group(required=True)
     command_info_switches.add_argument(
