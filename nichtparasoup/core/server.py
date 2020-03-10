@@ -1,4 +1,4 @@
-__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
+__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller", "type_module_name_str"]
 
 from abc import ABC
 from copy import copy

@@ -2,7 +2,7 @@
 Its internal foo that is not for public use.
 """
 
-__all__ = ['_LOGGER', '_log', '_message', '_message_exception', '_confirm']
+__all__ = ['_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm']
 
 import logging
 import sys

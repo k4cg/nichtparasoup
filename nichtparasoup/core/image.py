@@ -1,4 +1,4 @@
-__all__ = ["Image", "ImageCollection"]
+__all__ = ["Image", "ImageCollection", "ImageUri", "SourceUri"]
 
 from typing import Any, Set
 from uuid import uuid4

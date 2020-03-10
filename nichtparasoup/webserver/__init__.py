@@ -17,7 +17,7 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
-class JsonRespone(Response):
+class JsonResponse(Response):
 
     def __init__(self,
                  response: Optional[Any] = None,
@@ -84,7 +84,7 @@ class WebServer(object):
 
     def on_get(self, _: Request) -> Response:
         image = self.imageserver.get_image()
-        return JsonRespone(image)
+        return JsonResponse(image)
 
     _STATUS_WHATS = dict(
         server=ServerStatus.server,
@@ -94,18 +94,18 @@ class WebServer(object):
 
     def on_status(self, _: Request) -> Response:
         status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}
-        return JsonRespone(status)
+        return JsonResponse(status)
 
     def on_status_what(self, _: Request, what: str) -> Response:
         status_what = self._STATUS_WHATS.get(what)
         if not status_what:
             raise NotFound()
         status = status_what(self.imageserver)
-        return JsonRespone(status)
+        return JsonResponse(status)
 
     def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
-        return JsonRespone(reset)
+        return JsonResponse(reset)
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers = {
