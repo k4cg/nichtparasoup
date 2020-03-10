@@ -28,12 +28,12 @@ _FILLUP_TIMEOUT_DEFAULT = 1.0
 
 class Crawler(object):
 
-    def __init__(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight,
+    def __init__(self, imagecrawler_: BaseImageCrawler, weight: _CrawlerWeight,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:  # pragma: no cover
         if weight <= 0:
             raise ValueError('weight <= 0')
-        self.imagecrawler = imagecrawler
+        self.imagecrawler = imagecrawler_
         self.weight = weight
         self.images = ImageCollection()
         self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
@@ -100,14 +100,14 @@ class Crawler(object):
     def get_random_image(self) -> Optional[Image]:
         if not self.images:
             return None
-        image = random_choice(list(self.images))
-        return image
+        image_ = random_choice(list(self.images))
+        return image_
 
     def pop_random_image(self) -> Optional[Image]:
-        image = self.get_random_image()
-        if image:
-            self.images.discard(image)
-        return image
+        image_ = self.get_random_image()
+        if image_:
+            self.images.discard(image_)
+        return image_
 
 
 class CrawlerCollection(List[Crawler]):
@@ -132,21 +132,21 @@ class NPCore(object):
         self.crawlers = CrawlerCollection()
         self.blacklist = _Blacklist()
 
-    def _is_image_not_in_blacklist(self, image: Image) -> bool:
+    def _is_image_not_in_blacklist(self, image_: Image) -> bool:
         # must be compatible to: _IsImageAddable
-        return image.uri not in self.blacklist
+        return image_.uri not in self.blacklist
 
-    def _add_image_to_blacklist(self, image: Image) -> None:
+    def _add_image_to_blacklist(self, image_: Image) -> None:
         # must be compatible to: _OnImageAdded
-        if not image.is_generic:
-            self.blacklist.add(image.uri)
+        if not image_.is_generic:
+            self.blacklist.add(image_.uri)
 
-    def has_imagecrawler(self, imagecrawler: BaseImageCrawler) -> bool:
-        return imagecrawler in (crawler.imagecrawler for crawler in self.crawlers)
+    def has_imagecrawler(self, imagecrawler_: BaseImageCrawler) -> bool:
+        return imagecrawler_ in (crawler.imagecrawler for crawler in self.crawlers)
 
-    def add_imagecrawler(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight) -> None:
+    def add_imagecrawler(self, imagecrawler_: BaseImageCrawler, weight: _CrawlerWeight) -> None:
         self.crawlers.append(Crawler(
-            imagecrawler, weight,
+            imagecrawler_, weight,
             self._is_image_not_in_blacklist, self._add_image_to_blacklist
         ))
 

@@ -9,10 +9,10 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 class _LoggingCrawler(Crawler):
     def __init__(self,
-                 imagecrawler: BaseImageCrawler, weight: _CrawlerWeight,
+                 imagecrawler_: BaseImageCrawler, weight: _CrawlerWeight,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None) -> None:
-        super().__init__(imagecrawler, weight, is_image_addable, on_image_added)
+        super().__init__(imagecrawler_, weight, is_image_addable, on_image_added)
         self.crawl_call_count = 0
         self.reset_call_count = 0
 
