@@ -50,6 +50,9 @@ class KnownImageCrawlers(object):
             except Exception as e:
                 _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
 
+    def __len__(self) -> int:
+        return len(self._list)
+
     def _add(self, entry: EntryPoint) -> None:
         self._test_duplicate_name(entry.name)
         loaded = self._load(entry)
