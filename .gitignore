@@ -1,6 +1,10 @@
 _OLD/
 _TEST/
 
+# build-dirs
+/nichtparasoup-*/
+
+
 
 ## https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore
 
