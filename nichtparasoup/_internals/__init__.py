@@ -37,12 +37,12 @@ def _logging_init(level: int) -> None:  # pragma: no cover
     if not logging.root.handlers:
         logging.root.setLevel(level)
         logging.root.addHandler(logging.StreamHandler())
+    _LOGGER.setLevel(level)
 
 
 def _log(level: _LOG_LEVEL, message: Union[str, List[str]], *args: Any, **kwargs: Any) -> None:
-    if not logging.root.handlers and _LOGGER.level == logging.NOTSET:
-        _LOGGER.setLevel(logging.INFO)
-        _LOGGER.addHandler(logging.StreamHandler())
+    if _LOGGER.level == logging.NOTSET:
+        _logging_init(logging.INFO)
     message = _format(message)
     getattr(_LOGGER, level)(message, *args, **kwargs)
 
