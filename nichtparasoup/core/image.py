@@ -15,7 +15,7 @@ class Image(object):
         The absolute URI of the image. This basically identifies the Image and makes it unique.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``schema`` must be either 'http' or 'https' - use 'https' if possible!
+            ``scheme`` must be either 'http' or 'https' - use 'https' if possible!
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
     `source`
@@ -25,7 +25,7 @@ class Image(object):
         In the idea of fair use, it is encouraged to point to the source as good as possible.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``schema`` must be either 'http' or 'https' - the last one is preferred.
+            ``scheme`` must be either 'http' or 'https' - the last one is preferred.
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
         Good examples are:
