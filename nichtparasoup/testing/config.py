@@ -26,13 +26,13 @@ class ConfigFileTest(TestCase):
         except Exception as e:
             raise ImageCrawlerProbeCrawlError(imagecrawler) from e
 
-    def probe(self, file: str) -> None:  # pragma: no cover
+    def probe(self, file: str, delay: float = 0.01) -> None:  # pragma: no cover
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             self._probe_crawl(imagecrawler)
-            sleep(0.023)  # do not be too greedy
+            sleep(delay)  # do not be too greedy
 
 
 class ImageCrawlerProbeCrawlError(Exception):
