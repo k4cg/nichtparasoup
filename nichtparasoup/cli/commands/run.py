@@ -4,7 +4,7 @@ import logging
 from os.path import abspath
 from typing import Any, Dict, Optional
 
-from nichtparasoup._internals import _logging_init, _message_exception
+from nichtparasoup._internals import _log, _logging_init, _message_exception
 from nichtparasoup.cli.commands import BaseCommand
 from nichtparasoup.config import get_config, get_imagecrawler
 from nichtparasoup.core import NPCore
@@ -19,9 +19,12 @@ class RunCommand(BaseCommand):
         return self.run_server(config_file)
 
     def run_server(self, config_file: Optional[str]) -> int:
+        config_file = abspath(config_file) if config_file else None
         try:
-            config = get_config(abspath(config_file) if config_file else None)
-            _logging_init(getattr(logging, config['logging']['level']))
+            config = get_config(config_file)
+            _logging_init(logging.DEBUG if self._debug else getattr(logging, config['logging']['level']))
+            _log('debug', 'ConfigFile: {}'.format(config_file or 'builtin SystemDefaults'))
+            _log('debug', 'Config: {!r}'.format(config))
             webserver = self._create_webserver(config)
             webserver.run()
             return 0

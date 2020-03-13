@@ -1,8 +1,9 @@
 __all__ = ["ImagecrawlerCommand"]
 
+from logging import DEBUG as L_DEBUG, ERROR as L_ERROR
 from typing import Any, Dict, Optional
 
-from nichtparasoup._internals import _log, _message, _message_exception
+from nichtparasoup._internals import _LINEBREAK, _log, _logging_init, _message, _message_exception
 from nichtparasoup.cli.commands import BaseCommand
 from nichtparasoup.core.server import type_module_name_str
 from nichtparasoup.imagecrawler import get_imagecrawlers
@@ -19,39 +20,39 @@ class ImagecrawlerCommand(BaseCommand):
         action = getattr(self, 'run_{}'.format(action_name))
         return action(action_value)  # type: ignore
 
-    @staticmethod
-    def run_list(_: Optional[Any] = None) -> int:
-        imagecrawlers = get_imagecrawlers().names()
-        if not imagecrawlers:
-            _message_exception(Warning('no ImageCrawler found'))
+    def run_list(self, _: Optional[Any] = None) -> int:
+        _logging_init(L_DEBUG if self._debug else L_ERROR)
+        imagecrawlers = get_imagecrawlers()  # may trigger debug output
+        _log('debug', '- List of loaded ImageCrawlers -')
+        if len(imagecrawlers) > 0:
+            _message(sorted(imagecrawlers.names()))
         else:
-            _message("\r\n".join(sorted(imagecrawlers)))
+            _message_exception(Warning('no ImageCrawler found'))
         return 0
 
-    @staticmethod
-    def run_desc(imagecrawler: str) -> int:
+    def run_desc(self, imagecrawler: str) -> int:
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
         if not imagecrawler_class:
             _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
             return 1
         info = []
-        info_linebreak = '\r\n'
         imagecrawler_info = imagecrawler_class.info()
         info.append(imagecrawler_info.description)
         if imagecrawler_info.long_description:
             info.append(imagecrawler_info.long_description)
         if imagecrawler_info.config:
-            info_bull = info_linebreak + ' * '
+            info_bull = _LINEBREAK + ' * '
             mlen = max(len(k) for k in imagecrawler_info.config.keys())
             info.append('Config: ' + info_bull + info_bull.join([
                 '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
                 for key, desc in imagecrawler_info.config.items()]))
-        _message((info_linebreak * 2).join(info))
-        _log('debug', info_linebreak.join(
-            [
-                info_linebreak,
-                'DEBUG INFO',
-                'Icon : {!r}'.format(imagecrawler_info.icon_url),
-                'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
-            ]))
+        _message((_LINEBREAK * 2).join(info))
+        if self._debug:
+            _message(
+                [
+                    _LINEBREAK,
+                    'DEBUG INFO',
+                    'Icon : {!r}'.format(imagecrawler_info.icon_url),
+                    'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
+                ])
         return 0
