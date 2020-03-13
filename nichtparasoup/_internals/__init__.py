@@ -2,11 +2,11 @@
 Its internal foo that is not for public use.
 """
 
-__all__ = ['_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm']
+__all__ = ["_LINEBREAK", '_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm']
 
 import logging
 import sys
-from typing import Any, Optional, TextIO
+from typing import Any, List, Optional, TextIO, Union
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -18,16 +18,19 @@ try:
 except ImportError:
     colored = None  # type: ignore
 
+_LINEBREAK = '\r\n'
+
 _LOGGER = logging.getLogger('nichtparasoup')
 
 _LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
 
 
-def _log(level: _LOG_LEVEL, message: str, *args: Any, **kwargs: Any) -> None:
-    if not logging.root.handlers and _LOGGER.level == logging.NOTSET:
-        _LOGGER.setLevel(logging.INFO)
-        _LOGGER.addHandler(logging.StreamHandler())
-    getattr(_LOGGER, level)(message.rstrip(), *args, **kwargs)
+def _format(message: Union[str, List[str]], color: Optional[str] = None) -> str:
+    if isinstance(message, list):
+        message = _LINEBREAK.join(message)
+    if color and colored:
+        message = colored(message, color=color)
+    return message.rstrip()
 
 
 def _logging_init(level: int) -> None:  # pragma: no cover
@@ -36,13 +39,19 @@ def _logging_init(level: int) -> None:  # pragma: no cover
         logging.root.addHandler(logging.StreamHandler())
 
 
-def _message(message: str, color: Optional[str] = None, file: Optional[TextIO] = None) -> None:
-    newline = '\r\n'
+def _log(level: _LOG_LEVEL, message: Union[str, List[str]], *args: Any, **kwargs: Any) -> None:
+    if not logging.root.handlers and _LOGGER.level == logging.NOTSET:
+        _LOGGER.setLevel(logging.INFO)
+        _LOGGER.addHandler(logging.StreamHandler())
+    message = _format(message)
+    getattr(_LOGGER, level)(message, *args, **kwargs)
+
+
+def _message(message: Union[str, List[str]], color: Optional[str] = None, file: Optional[TextIO] = None) -> None:
     if not file:
         file = sys.stdout
-    if color and colored:
-        message = colored(message, color=color)
-    file.write('{}{}'.format(message.rstrip(), newline))
+    message = _format(message, color)
+    file.write('{}{}'.format(message, _LINEBREAK))
 
 
 def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
@@ -65,7 +74,7 @@ def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
     }
     options = 'Y/n' if default else 'y/N'
     try:
-        value = input('{!s} [{}]: '.format(prompt, options)).lower().strip()
+        value = input('{} [{}]: '.format(prompt, options)).strip().lower()
         return return_values[value]
     except (KeyboardInterrupt, EOFError, KeyError):
         return None
