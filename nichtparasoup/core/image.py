@@ -64,7 +64,7 @@ class Image(object):
     def __eq__(self, other: Any) -> bool:
         if type(other) is type(self):
             return hash(self) == hash(other)
-        return False
+        return NotImplemented
 
     def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} object at {1:#x} {2.uri!r}>'.format(type(self), id(self), self)

@@ -60,7 +60,7 @@ class BaseImageCrawler(ABC):
         if type(self) is type(other):
             other_imagecrawler = other  # type: BaseImageCrawler
             return self._config == other_imagecrawler._config
-        return False
+        return NotImplemented
 
     def get_config(self) -> ImageCrawlerConfig:
         """Get all *public* information from the config
