@@ -35,7 +35,7 @@ class ConfigCommand(BaseCommand):
             return 0
         except Exception as e:
             _message_exception(e)
-            return 255
+            return 1
 
     def run_check(self, config_file: str) -> int:
         _logging_init(L_DEBUG if self._debug else L_ERROR)
@@ -47,5 +47,5 @@ class ConfigCommand(BaseCommand):
             config_test.probe(config_file)
         except Exception as e:
             _message_exception(e)
-            return 255
+            return 1
         return 0

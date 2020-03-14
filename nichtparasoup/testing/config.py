@@ -10,7 +10,7 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 class ConfigFileTest(TestCase):
 
-    def validate(self, file: str) -> None:
+    def validate(self, file: str) -> None:  # pragma: no cover
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
         imagecrawlers = list()  # type: List[BaseImageCrawler]

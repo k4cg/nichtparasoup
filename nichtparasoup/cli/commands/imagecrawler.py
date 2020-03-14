@@ -1,12 +1,12 @@
 __all__ = ["ImagecrawlerCommand"]
 
 from logging import DEBUG as L_DEBUG, ERROR as L_ERROR
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type
 
 from nichtparasoup._internals import _LINEBREAK, _log, _logging_init, _message, _message_exception
 from nichtparasoup.cli.commands import BaseCommand
 from nichtparasoup.core.server import type_module_name_str
-from nichtparasoup.imagecrawler import get_imagecrawlers
+from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 
 class ImagecrawlerCommand(BaseCommand):
@@ -32,27 +32,33 @@ class ImagecrawlerCommand(BaseCommand):
 
     def run_desc(self, imagecrawler: str) -> int:
         imagecrawler_class = get_imagecrawlers().get_class(imagecrawler)
-        if not imagecrawler_class:
-            _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
-            return 1
-        info = []
+        if imagecrawler_class:
+            self._print_imagecrawler_info(imagecrawler_class)
+            return 0
+        _message_exception(ValueError('unknown ImageCrawler {!r}'.format(imagecrawler)))
+        return 1
+
+    def _print_imagecrawler_info(self, imagecrawler_class: Type[BaseImageCrawler]) -> None:
+        bull = ' * '
         imagecrawler_info = imagecrawler_class.info()
-        info.append(imagecrawler_info.description)
+        _message(imagecrawler_info.description)
+        _message('')
         if imagecrawler_info.long_description:
-            info.append(imagecrawler_info.long_description)
+            _message(imagecrawler_info.long_description)
+            _message('')
         if imagecrawler_info.config:
-            info_bull = _LINEBREAK + ' * '
+            _message('CONFIG')
             mlen = max(len(k) for k in imagecrawler_info.config.keys())
-            info.append('Config: ' + info_bull + info_bull.join([
-                '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
-                for key, desc in imagecrawler_info.config.items()]))
-        _message((_LINEBREAK * 2).join(info))
+            _message(_LINEBREAK.join(
+                bull + '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
+                for key, desc
+                in imagecrawler_info.config.items()
+            ))
+            _message('')
         if self._debug:
-            _message(
-                [
-                    _LINEBREAK,
-                    'DEBUG INFO',
-                    'Icon : {!r}'.format(imagecrawler_info.icon_url),
-                    'Class: {!r}'.format(type_module_name_str(imagecrawler_class)),
-                ])
-        return 0
+            _message(_LINEBREAK.join([
+                'DEBUG INFO',
+                bull + 'Icon : {}'.format(imagecrawler_info.icon_url),
+                bull + 'Class: {}'.format(type_module_name_str(imagecrawler_class)),
+            ]))
+            _message('')
