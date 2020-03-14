@@ -8,12 +8,14 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.py]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.html]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
@@ -21,12 +23,14 @@ insert_final_newline = true
 
 
 [*.css]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.js]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
