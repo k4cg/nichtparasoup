@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/nichtparasoup)](https://pypi.org/project/nichtparasoup/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)  
-![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test)
+![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test/master)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/nichtparasoup?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=nichtparasoup)
 [![Codecov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup)](https://codecov.io/gh/k4cg/nichtparasoup/branch/master)  
 
