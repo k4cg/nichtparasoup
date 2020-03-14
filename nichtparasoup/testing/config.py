@@ -11,6 +11,10 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler
 class ConfigFileTest(TestCase):
 
     def validate(self, file: str) -> None:  # pragma: no cover
+        """Validate a config file.
+
+        :param file: file path to the config to validate.
+        """
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
         imagecrawlers = list()  # type: List[BaseImageCrawler]
@@ -27,6 +31,11 @@ class ConfigFileTest(TestCase):
             raise ImageCrawlerProbeCrawlError(imagecrawler) from e
 
     def probe(self, file: str, delay: float = 0.01) -> None:  # pragma: no cover
+        """Probe a config file.
+
+        :param file: file path to the config to probe.
+        :param delay: delay to wait between each crawler probes.
+        """
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
         for crawler_config in config['crawlers']:

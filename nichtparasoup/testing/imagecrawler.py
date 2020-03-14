@@ -103,7 +103,8 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
     @property
     @abstractmethod
     def ic_class(self) -> Type[BaseImageCrawler]:  # pragma: no cover
-        """the class of your ImageCrawler.
+        """
+        The class of your ImageCrawler.
 
         Example implementation:
             return MyImageCrawler
