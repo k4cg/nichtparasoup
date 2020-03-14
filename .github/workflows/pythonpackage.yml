@@ -1,4 +1,4 @@
-name: "Test"
+name: 'Test'
 
 on:
   push:
@@ -18,8 +18,15 @@ jobs:
     name: Testing os:${{ matrix.os }} py:${{ matrix.python }}
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python: ['3.5', '3.6', '3.7', '3.8']
+        os:
+          - 'ubuntu-latest'
+          - 'macos-latest'
+          - 'windows-latest'
+        python:
+          - '3.5'
+          - '3.6'
+          - '3.7'
+          - '3.8'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Fetch Code
@@ -39,7 +46,7 @@ jobs:
           python -m pip install --upgrade 'setuptools>=40' 'tox>=3.14'
       - name: Test nichtparasoup
         run: python -m tox -r -e py3-coverageReport-coverageXML
-      - name: "Test examples::nichtparasoup-imagecrawler-plugin"
+      - name: Test examples::nichtparasoup-imagecrawler-plugin
         run: python -m tox -r -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
         # see https://github.com/codecov/codecov-action
@@ -47,6 +54,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-          flags: "os:${{ matrix.os }}, py:${{ matrix.python }}"
-          name: 'GithubAction RunId ${{ github.run_id }}'
+          flags: os:${{ matrix.os }}, py:${{ matrix.python }}
+          name: GithubAction RunId ${{ github.run_id }}
           yml: ./codecov.yml

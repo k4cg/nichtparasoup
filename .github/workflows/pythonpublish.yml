@@ -1,4 +1,4 @@
-name: "Minimal test & Release"
+name: 'Minimal test & Release'
 
 on:
   release:
@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Minimal Testing
-    # these tests are just to ensure that a minimal quality is given. full tests are done in "pythonpackage" action
+    # these tests are just to ensure that a minimal quality is given. full tests are done in 'pythonpackage' action.
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -28,12 +28,13 @@ jobs:
           python -m pip install --upgrade 'setuptools>=40' 'tox>=3.14'
       - name: Test nichtparasoup
         run: python -m tox -r -e py3
-      - name: "Test examples::nichtparasoup-imagecrawler-plugin"
+      - name: Test examples::nichtparasoup-imagecrawler-plugin
         run: python -m tox -r -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     # build in an isolated env
-    needs: [test]
+    needs:
+      - 'test'
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -50,7 +51,7 @@ jobs:
           python -m pip install --upgrade setuptools setuptools_scm wheel twine
       - name: Build and publish
         env:
-          TWINE_USERNAME: "__token__"
+          TWINE_USERNAME: '__token__'
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           rm -rf build dist
