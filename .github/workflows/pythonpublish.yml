@@ -39,7 +39,7 @@ jobs:
       - name: Fetch Code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2
-      - name: Set up Python
+      - name: Setup Python
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
         with:
