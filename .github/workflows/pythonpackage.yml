@@ -2,7 +2,13 @@ name: "Test"
 
 on:
   push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '*'
   pull_request:
+    branches:
+      - 'master'
   schedule:
     # this means: “At 23:42 on Fridays.”
     - cron: '42 23 * * 5'
