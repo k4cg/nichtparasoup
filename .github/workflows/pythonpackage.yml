@@ -15,21 +15,21 @@ on:
 
 jobs:
   test:
-    name: Testing os:${{ matrix.os }} py:${{ matrix.pyhon }}
+    name: Testing os:${{ matrix.os }} py:${{ matrix.python }}
     strategy:
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        pyhon: ['3.5', '3.6', '3.7', '3.8']
+        python: ['3.5', '3.6', '3.7', '3.8']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.pyhon_version }}
+      - name: Set up Python ${{ matrix.python_version }}
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ matrix.pyhon }}
+          python-version: ${{ matrix.python }}
       - name: Python version
         run: python --version
       - name: Install dependencies
@@ -47,6 +47,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-          flags: tests
-          name: "os:${{ matrix.os }} py:${{ matrix.pyhon }}"
+          flags: "os:${{ matrix.os }}, py:${{ matrix.python }}"
+          name: 'GithubAction RunId ${{ github.run_id }}'
           yml: ./codecov.yml
