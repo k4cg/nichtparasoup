@@ -49,11 +49,12 @@ jobs:
       - name: Test examples::nichtparasoup-imagecrawler-plugin
         run: python -m tox -r -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest'
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-          flags: os:${{ matrix.os }}, py:${{ matrix.python }}
+          # flags:  # must be ^[\w\,]+$
           name: GithubAction RunId ${{ github.run_id }}
           yml: ./codecov.yml
