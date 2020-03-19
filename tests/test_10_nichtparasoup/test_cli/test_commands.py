@@ -1,60 +1,14 @@
 import unittest
 
-from nichtparasoup.cli.commands import Commands
+from ddt import ddt, idata as ddt_idata  # type: ignore
+
+from nichtparasoup.cli.commands import _COMMANDS, BaseCommand, create_command
 
 
-class CommandsRunTest(unittest.TestCase):
+@ddt
+class CreateCommandTest(unittest.TestCase):
 
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsConfigTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsConfigDumpFileTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsConfigCheckFileTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsInfoTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsInfoVersionTest(unittest.TestCase):
-
-    def test_version(self) -> None:
-        # TODO catch stdout and check against current nichtparasoup.VERSION
-        ret = Commands.info_version()
-        self.assertEqual(0, ret)
-
-
-class CommandsInfoImagecrawlerListTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
-
-
-class CommandsInfoImagecrawlerDescTest(unittest.TestCase):
-
-    @unittest.skip("TODO: write the test")
-    def test_(self) -> None:
-        raise NotImplementedError()
+    @ddt_idata(_COMMANDS.keys())  # type: ignore
+    def test_create_command(self, command_name: str) -> None:
+        command = create_command(command_name)
+        self.assertIsInstance(command, BaseCommand, command_name)
