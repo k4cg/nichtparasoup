@@ -4,16 +4,19 @@ root = true
 end_of_line = LF
 
 [.editorconfig]
+charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.py]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.html]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
@@ -21,42 +24,49 @@ insert_final_newline = true
 
 
 [*.css]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.js]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.ini]
+charset = latin1
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.{yml,yaml}]
+charset = utf-8
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.md]
+charset = latin1
 indent_style = space
-indent_size = 3
+indent_size = 2
 trim_trailing_whitespace = false
 insert_final_newline = true
 
 [*.{rst,txt}]
+charset = utf-8
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [{*.cfg,.pypirc,.coveragerc,.flake8}]
+charset = latin1
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
