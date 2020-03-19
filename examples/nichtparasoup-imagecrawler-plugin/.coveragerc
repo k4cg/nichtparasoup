@@ -3,6 +3,8 @@
 [run]
 
 data_file = .coverage
+relative_files = True
+
 branch = True
 
 source =
