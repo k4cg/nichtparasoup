@@ -1,0 +1,4 @@
+# ignore everything besides this file and yaml files
+*
+!/.gitignore
+!/*.yaml
