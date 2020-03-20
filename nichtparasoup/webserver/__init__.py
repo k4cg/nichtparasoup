@@ -8,23 +8,24 @@ from mako.template import Template  # type: ignore
 from werkzeug.datastructures import Headers
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map, Rule
+from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
+from nichtparasoup._internals import _log
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
 
 
-class JsonRespone(Response):
-    def __init__(
-        self,
-        response: Optional[Any] = None,
-        status: Optional[Union[str, int]] = None,
-        headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
-        mimetype: Optional[str] = 'application/json',
-        content_type: Optional[str] = 'application/json',
-        direct_passthrough: bool = False,
-    ) -> None:
+class JsonResponse(Response):
+    def __init__(self,
+                 response: Optional[Any] = None,
+                 status: Optional[Union[str, int]] = None,
+                 headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
+                 mimetype: Optional[str] = 'application/json',
+                 content_type: Optional[str] = 'application/json',
+                 direct_passthrough: bool = False,
+                 ) -> None:
         super().__init__(
             response=json_encode(response),
             status=status,
@@ -82,7 +83,7 @@ class WebServer(object):
 
     def on_get(self, _: Request) -> Response:
         image = self.imageserver.get_image()
-        return JsonRespone(image)
+        return JsonResponse(image)
 
     _STATUS_WHATS = dict(
         server=ServerStatus.server,
@@ -92,18 +93,18 @@ class WebServer(object):
 
     def on_status(self, _: Request) -> Response:
         status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}
-        return JsonRespone(status)
+        return JsonResponse(status)
 
     def on_status_what(self, _: Request, what: str) -> Response:
         status_what = self._STATUS_WHATS.get(what)
         if not status_what:
             raise NotFound()
         status = status_what(self.imageserver)
-        return JsonRespone(status)
+        return JsonResponse(status)
 
     def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
-        return JsonRespone(reset)
+        return JsonResponse(reset)
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers = {
@@ -124,8 +125,6 @@ class WebServer(object):
         return Response(css, mimetype='text/css')
 
     def run(self) -> None:
-        from werkzeug.serving import run_simple
-        from nichtparasoup._internals import _log
         self.imageserver.start()
         try:
             _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))

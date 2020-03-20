@@ -6,6 +6,7 @@
 import io
 import os
 import sys
+from textwrap import dedent
 
 from setuptools import find_packages, setup
 
@@ -14,9 +15,7 @@ REQUIRED_PYTHON = (3, 5)
 
 # This check and everything above must remain compatible with Python 2.7.
 if CURRENT_PYTHON < REQUIRED_PYTHON:
-    import textwrap
-
-    sys.stderr.write(textwrap.dedent('''
+    sys.stderr.write(dedent('''
     UNSUPPORTED PYTHON VERSION
 
     This version of nichtparasoup requires Python {py_required[0]}.{py_required[1]},

@@ -1,3 +1,4 @@
+import re
 import unittest
 from os import path
 
@@ -14,7 +15,6 @@ class ConfigFileValidateTest(unittest.TestCase):
         pass
 
     def test_detect_duplicates(self) -> None:
-        import re
         # arrange
         tester = ConfigFileTest()
         test_file = path.join(self._TESTDATA_DIR, 'duplicates.yaml')

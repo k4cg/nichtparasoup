@@ -1,5 +1,6 @@
 __all__ = ["Echo"]
 
+from textwrap import dedent
 from typing import Any, Dict
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
@@ -9,7 +10,6 @@ class Echo(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from textwrap import dedent
         return ImageCrawlerInfo(
             description='"Finds" the same image ... again ... and again.',
             long_description=dedent('''

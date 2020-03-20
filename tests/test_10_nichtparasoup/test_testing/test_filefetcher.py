@@ -1,6 +1,7 @@
 import unittest
 from os import path
 from pathlib import Path
+from urllib.response import addinfourl
 
 from nichtparasoup.testing.imagecrawler import FileFetcher
 
@@ -117,7 +118,6 @@ class FileFetcherTest(unittest.TestCase):
             filefetcher._get_file_uri('unknown_file')
 
     def test_get_stream(self) -> None:
-        from urllib.response import addinfourl
         # arrange
         filefetcher = FileFetcher(
             dict(

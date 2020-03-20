@@ -56,11 +56,10 @@ class BaseImageCrawler(ABC):
     def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} {1!r}>'.format(type(self), self.get_config())
 
-    def __eq__(self, other: Any) -> bool:
-        if type(self) is type(other):
-            other_imagecrawler = other  # type: BaseImageCrawler
-            return self._config == other_imagecrawler._config
-        return False
+    def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
+        if type(self) is not type(other):
+            return NotImplemented
+        return self._config == other._config
 
     def get_config(self) -> ImageCrawlerConfig:
         """Get all *public* information from the config

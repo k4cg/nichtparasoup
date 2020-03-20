@@ -282,13 +282,11 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from nichtparasoup import VERSION
         return ImageCrawlerInfo(
             description='A Crawler for profile pages of https://www.instagram.com/',
             config=dict(
                 user_name='the UserName on Instagram',
             ),
-            version=VERSION,
             icon_url=INSTAGRAM_ICON_URL,
         )
 
