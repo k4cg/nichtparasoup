@@ -1,6 +1,6 @@
 __all__ = ["Image", "ImageCollection"]
 
-from typing import Any, Set
+from typing import Any, Set, Union
 from uuid import uuid4
 
 ImageUri = str
@@ -56,15 +56,15 @@ class Image(object):
         self.source = source
         self.more = more
         self.is_generic = is_generic
-        self.__hash = hash(uuid4()) if self.is_generic else hash(self.uri)
+        self.__hash = hash(uuid4() if self.is_generic else self.uri)
 
     def __hash__(self) -> int:
         return self.__hash
 
-    def __eq__(self, other: Any) -> bool:
-        if type(other) is type(self):
-            return hash(self) == hash(other)
-        return False
+    def __eq__(self, other: Union['Image', Any]) -> bool:
+        if type(other) is not type(self):
+            return NotImplemented
+        return hash(self) == hash(other)
 
     def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} object at {1:#x} {2.uri!r}>'.format(type(self), id(self), self)
