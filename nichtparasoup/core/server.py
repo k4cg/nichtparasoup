@@ -5,11 +5,11 @@ from copy import copy
 from sys import getsizeof
 from threading import Event, Lock, Thread
 from time import sleep, time
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
 from nichtparasoup import VERSION
-from nichtparasoup._internals import _log
+from nichtparasoup._internals import _log, _type_module_name_str
 from nichtparasoup.core import Crawler, NPCore
 
 
@@ -48,7 +48,7 @@ class Server(object):
             more=image.more,
             crawler=dict(
                 id=id(crawler),
-                type=type_module_name_str(type(crawler.imagecrawler)),
+                type=_type_module_name_str(type(crawler.imagecrawler)),
             ),
         )
 
@@ -157,7 +157,7 @@ class ServerStatus(ABC):
             images = crawler.images.copy()
             status[crawler_id] = dict(
                 weight=crawler.weight,
-                type=type_module_name_str(type(crawler.imagecrawler)),
+                type=_type_module_name_str(type(crawler.imagecrawler)),
                 config=crawler.imagecrawler.get_config(),  # just a dict
                 images=dict(
                     len=len(images),
@@ -165,10 +165,6 @@ class ServerStatus(ABC):
                 ),
             )
         return status
-
-
-def type_module_name_str(t: Type[Any]) -> str:
-    return '{}:{}'.format(t.__module__, t.__name__)
 
 
 class ServerRefiller(Thread):

@@ -12,9 +12,9 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup._internals import _log
+from nichtparasoup._internals import _log, _type_module_name_str
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
-from nichtparasoup.core.server import Server, ServerStatus, type_module_name_str
+from nichtparasoup.core.server import Server, ServerStatus
 
 
 class JsonResponse(Response):
@@ -115,7 +115,7 @@ class WebServer(object):
             (name, icon)
             for name, icon
             in [
-                (type_module_name_str(imagecrawler), imagecrawler.info().icon_url)
+                (_type_module_name_str(imagecrawler), imagecrawler.info().icon_url)
                 for imagecrawler
                 in imagecrawlers]
             if icon]
