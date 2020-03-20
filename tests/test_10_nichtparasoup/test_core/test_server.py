@@ -1,4 +1,5 @@
 import unittest
+from time import time
 from typing import Any, Dict
 from unittest.mock import MagicMock
 
@@ -78,7 +79,6 @@ class ServerResetTest(unittest.TestCase):
         ))
 
     def test_running_under_timeout(self) -> None:
-        from time import time
         # arrange
         self.server.is_alive = lambda: True  # type: ignore
         self.server._stats.time_started = int(time())
@@ -92,7 +92,6 @@ class ServerResetTest(unittest.TestCase):
         ))
 
     def test_running_over_timeout(self) -> None:
-        from time import time
         # arrange
         self.server.is_alive = lambda: True  # type: ignore
         self.server._stats.time_started = int(time()) - 2 * self.server.reset_timeout

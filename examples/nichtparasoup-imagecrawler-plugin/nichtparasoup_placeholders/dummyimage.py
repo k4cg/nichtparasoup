@@ -1,5 +1,6 @@
 __all__ = ["DummyImage"]
 
+from textwrap import dedent
 from typing import Any, Dict
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
@@ -9,7 +10,6 @@ class DummyImage(BaseImageCrawler):
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
-        from textwrap import dedent
         return ImageCrawlerInfo(
             description='Dynamic Dummy Image from https://dummyimage.com',
             long_description=dedent('''

@@ -2,6 +2,7 @@ __all__ = ["Crawler", "CrawlerCollection", "NPCore"]
 
 from random import choice as random_choice, uniform as random_float
 from threading import Thread
+from time import sleep
 from types import MethodType
 from typing import Callable, List, Optional, Set, Union
 from weakref import ReferenceType, WeakMethod
@@ -86,7 +87,6 @@ class Crawler(object):
     def fill_up_to(self, to: int,
                    filled_by: Optional[_OnFill] = None,
                    timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
-        from time import sleep
         while len(self.images) < to:
             refilled = self.crawl()
             if filled_by:
