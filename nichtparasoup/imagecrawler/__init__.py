@@ -26,6 +26,7 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
+        # late import to prevent possible circular imports
         from .echo import Echo
         from .picsum import Picsum
         from .reddit import Reddit
@@ -44,12 +45,15 @@ class KnownImageCrawlers(object):
         self._list = [(n, c) for n, c in self._builtins().items()]  # type: List[_Imagecrawler]
         for entry in entries:
             try:
-                self._add(entry)
+                self._append(entry)
                 _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
             except Exception as e:
                 _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
 
-    def _add(self, entry: EntryPoint) -> None:
+    def __len__(self) -> int:
+        return len(self._list)
+
+    def _append(self, entry: EntryPoint) -> None:
         self._test_duplicate_name(entry.name)
         loaded = self._load(entry)
         self._test(loaded)
@@ -97,6 +101,8 @@ class KnownImageCrawlers(object):
 
     @staticmethod
     def _test_abstract(some_type: Type[object]) -> None:
+        """Test if ABS is resolved.
+        """
         if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
             raise TypeError('{!r} is abstract'.format(some_type))
 

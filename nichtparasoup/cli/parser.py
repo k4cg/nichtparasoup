@@ -5,18 +5,31 @@ from typing import Any, Set
 
 from argcomplete import FilesCompleter  # type: ignore
 
+from nichtparasoup import VERSION
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
-def imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
+def _imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
+    """ImageCrawler completer.
+    see https://kislyuk.github.io/argcomplete/#specifying-completers
+    """
+    del args
+    del kwargs
     return set(get_imagecrawlers().names())
 
 
-yaml_file_completion = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
+_YAML_FILE_COMPLETION = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
 
 
 def create_parser() -> ArgumentParser:  # pragma: no cover
     # used `__tmp_action`  several times, to omit type-checkers warning ala 'Action has no attribute "completer"'
+
+    debug = ArgumentParser(add_help=False)
+    debug.add_argument(
+        '--debug',
+        help='enable debug output',
+        action='store_true', dest="debug",
+    )
 
     parser = ArgumentParser(
         add_help=True,
@@ -24,9 +37,9 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
     )
 
     parser.add_argument(
-        '--debug',
-        help='Enable debug output.',
-        action='store_true', dest="debug",
+        '--version',
+        action='version',
+        version=VERSION,
     )
 
     commands = parser.add_subparsers(
@@ -42,77 +55,75 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
         description='Start a web-server to display random images.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
     __tmp_action = command_run.add_argument(
         '-c', '--use-config',
-        help='Use a YAML config file instead of the defaults.',
+        help='use a YAML config file instead of the defaults.',
         metavar='<file>',
         action='store', dest="config_file", type=str,
     )
-    __tmp_action.completer = yaml_file_completion  # type: ignore
+    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
     del __tmp_action
 
     command_config = commands.add_parser(
         'config',
+        help='config related functions',
         description='Get config related things done.',
-        help='Config related functions.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
     command_config_switches = command_config.add_mutually_exclusive_group(required=True)
     __tmp_action = command_config_switches.add_argument(
         '--check',
-        help='Validate and probe a YAML config file;',
+        help='validate and probe a YAML config file',
         metavar='<file>',
         action='store', dest='check', type=str,
     )
-    __tmp_action.completer = yaml_file_completion  # type: ignore
+    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
     del __tmp_action
     command_config_switches.add_argument(
         '--dump',
-        help='Dump YAML config into a file;',
+        help='dump YAML config into a file',
         metavar='<file>',
         action='store', dest='dump', type=str,
     )
 
-    command_info = commands.add_parser(
-        'info',
+    command_imagecrawler = commands.add_parser(
+        'imagecrawler',
+        help='get info for several topics',
         description='Get info for several topics.',
-        help='Get info for several topics.',
         add_help=True,
         allow_abbrev=False,
+        parents=[debug],
     )
-    command_info_switches = command_info.add_mutually_exclusive_group(required=True)
-    command_info_switches.add_argument(
-        '--imagecrawler-list',
-        help='List available image crawler types.',
-        action='store_true', dest='imagecrawler_list',
+    command_imagecrawler_switches = command_imagecrawler.add_mutually_exclusive_group(required=True)
+    command_imagecrawler_switches.add_argument(
+        '--list',
+        help='list available image crawler types',
+        action='store_true', dest='list',
     )
-    __tmp_action = command_info_switches.add_argument(
-        '--imagecrawler-desc',
-        help='Describe an image crawler type and its config.',
+    __tmp_action = command_imagecrawler_switches.add_argument(
+        '--desc',
+        help='describe an image crawler type and its config',
         metavar='<crawler>',
-        action='store', dest='imagecrawler_desc', type=str,
+        action='store', dest='desc', type=str,
     )
-    __tmp_action.completer = imagecrawler_completion  # type: ignore
+    __tmp_action.completer = _imagecrawler_completion  # type: ignore
     del __tmp_action
-    command_info_switches.add_argument(
-        '--version',
-        help="Show program's version number.",
-        action='store_true', dest='version',
-    )
 
     command_completion = commands.add_parser(
         'completion',
+        help='helper command to be used for command completion',
         description='Helper command used for command completion.',
-        epilog='Autocompletion is powered by https://pypi.org/project/argcomplete/',
-        help='Helper command to be used for command completion.',
+        epilog='Completion is powered by https://pypi.org/project/argcomplete/',
         add_help=True,
         allow_abbrev=False,
     )
     command_completion.add_argument(
         '-s', '--shell',
-        help='Emit completion code for the specified shell.',
+        help='emit completion code for the specified shell',
         action='store', dest='shell', type=str, required=True,
         choices=('bash', 'tcsh', 'fish'),
     )

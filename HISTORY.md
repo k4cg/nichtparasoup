@@ -4,6 +4,11 @@
 
 add upcoming unreleased modifications here
 
+## 2.5.0
+
+* Breaking changes
+  * commandline interface changed. See cli help via `nichtparasoup --help`.
+
 ## 2.4.1
 
 * Fixed
