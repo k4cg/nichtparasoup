@@ -47,10 +47,10 @@ class Picsum(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         for _ in range(0, self._bunch):
-            uri = self._get_image_uri(**config)
+            image_uri = self._get_image_uri(**config)
             images.add(Image(
-                uri=uri,
-                source=uri,
+                uri=image_uri,
+                source=image_uri,
                 is_generic=True,
             ))
         return images

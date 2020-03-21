@@ -49,10 +49,10 @@ class Reddit(BaseImageCrawler):
         listing = json_loads(listing_string)
         del listing_string  # free up some ram
         for child in listing['data']['children']:
-            image = self._get_image(child['data'])
-            if image:
+            image_uri = self._get_image(child['data'])
+            if image_uri:
                 images.add(Image(
-                    uri=image,
+                    uri=image_uri,
                     source=urljoin(uri, child['data']['permalink']),
                 ))
         # don't care if `after` is `None` after the crawl ... why not restarting at front when the end is reached?!
