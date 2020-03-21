@@ -2,11 +2,12 @@
 Its internal foo that is not for public use.
 """
 
-__all__ = ["_LINEBREAK", '_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm']
+__all__ = ["_LINEBREAK", '_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm',
+           '_type_module_name_str']
 
 import logging
 import sys
-from typing import Any, List, Optional, TextIO, Union
+from typing import Any, List, Optional, TextIO, Type, Union
 
 if sys.version_info >= (3, 8):
     from typing import Literal
@@ -78,3 +79,7 @@ def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
         return return_values[value]
     except (KeyboardInterrupt, EOFError, KeyError):
         return None
+
+
+def _type_module_name_str(t: Type[Any]) -> str:
+    return '{}:{}'.format(t.__module__, t.__name__)

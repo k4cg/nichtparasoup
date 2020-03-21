@@ -3,9 +3,10 @@ __all__ = ["ImagecrawlerCommand"]
 from logging import DEBUG as L_DEBUG, ERROR as L_ERROR
 from typing import Any, Dict, Optional, Type
 
-from nichtparasoup._internals import _LINEBREAK, _log, _logging_init, _message, _message_exception
+from nichtparasoup._internals import (
+    _LINEBREAK, _log, _logging_init, _message, _message_exception, _type_module_name_str,
+)
 from nichtparasoup.cli.commands import BaseCommand
-from nichtparasoup.core.server import type_module_name_str
 from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 
@@ -59,6 +60,6 @@ class ImagecrawlerCommand(BaseCommand):
             _message(_LINEBREAK.join([
                 'DEBUG INFO',
                 bull + 'Icon : {}'.format(imagecrawler_info.icon_url),
-                bull + 'Class: {}'.format(type_module_name_str(imagecrawler_class)),
+                bull + 'Class: {}'.format(_type_module_name_str(imagecrawler_class)),
             ]))
             _message('')
