@@ -9,10 +9,13 @@ add upcoming unreleased modifications here
 * Breaking changes
   * commandline interface changed. See cli help via `nichtparasoup --help`.
 
+* Changes
+  * `nichtparasoup.testing.config.ConfigFileTest.probe()` got an optional second param `delay`.
+
 ## 2.4.1
 
 * Fixed
-  * commandline autocompletion for config files to properly suggest `*.yaml` & `*.yml` files.
+  * commandline completion for config files to properly suggest `*.yaml` & `*.yml` files.
 
 ## 2.4.0
 
