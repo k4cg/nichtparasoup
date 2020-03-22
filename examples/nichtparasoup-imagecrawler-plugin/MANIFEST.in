@@ -1,12 +1,15 @@
 ## https://packaging.python.org/guides/using-manifest-in/
 
+# blank start
+global-exclude *
 
-# this file
+# required: this file
 include MANIFEST.in
 
 
 # minimum files
 
+include pyproject.toml
 include setup.py
 include README.md
 graft nichtparasoup_placeholders
@@ -15,11 +18,16 @@ graft nichtparasoup_placeholders
 # additional files and folders
 
 include INSTALL
-include LICENSE
 
 graft docs
 graft examples
 graft tests
+
+include .coveragerc
+include .flake8
+include pytest.ini
+include mypy.ini
+include tox.ini
 
 
 # excludes
