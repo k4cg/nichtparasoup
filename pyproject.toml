@@ -4,8 +4,13 @@
 
 [build-system]
 # see https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
-requires = ["setuptools>=43", "setuptools_scm[toml]>=3.4", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = [
+  'setuptools>=43',
+  'setuptools_scm[toml]>=3.4',
+  'wheel'
+]
+build-backend = 'setuptools.build_meta'
+
 
 [tool.setuptools_scm]
 # see https://pypi.org/project/setuptools-scm/
