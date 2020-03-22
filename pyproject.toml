@@ -1,0 +1,13 @@
+# build system specs
+# see https://www.python.org/dev/peps/pep-0517/
+# see https://www.python.org/dev/peps/pep-0518/
+
+[build-system]
+# see https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+requires = ["setuptools>=43", "setuptools_scm[toml]>=3.4", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+# see https://pypi.org/project/setuptools-scm/
+fallback_version = 'UNKNOWN.scm'
+write_to = 'nichtparasoup/__version__.py'

@@ -93,11 +93,6 @@ except FileNotFoundError:
 # Where the magic happens:
 setup(
     name=NAME,
-    use_scm_version=dict(
-        root=here,
-        fallback_version='UNKNOWN.scm',
-        write_to=os.path.join('nichtparasoup', '__version__.py'),
-    ),
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -112,7 +107,6 @@ setup(
             'nichtparasoup = nichtparasoup.cli.main:main',
         ],
     ),
-    setup_requires=['setuptools', 'setuptools_scm>=3.3.3'],
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
