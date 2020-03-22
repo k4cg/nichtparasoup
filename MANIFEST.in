@@ -36,6 +36,9 @@ include tox.ini
 
 # excludes
 
+## this is a fully working example. it might get moved to another standalone project.
+prune examples/nichtparasoup-imagecrawler-plugin
+
 global-exclude *_cache/*
 global-exclude __pycache__
 global-exclude *.py[cod]
