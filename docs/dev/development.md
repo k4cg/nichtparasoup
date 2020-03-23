@@ -9,9 +9,10 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 ## Backend
 
 Install the requirements: `ptyhon3 -m pip install -e .[development]`.  
-*ATTENTION*: `pip`'s option `--editable` in combination with `--user` might be broken for `pyproject.toml` based build envs.
+*ATTENTION*: `pip`'s option `--editable` in combination with `--user` might be broken for `pyproject.toml` based builds.
 This is a known [issue](https://github.com/pypa/pip/issues/6375).  
 A workaround would be to call `python3 setup.py develop --user -e -b build` manually.
+BUT you need to install the build requirements from `pyproject.toml` manually, first.
 
 Then just do whatever you would like.  
 
