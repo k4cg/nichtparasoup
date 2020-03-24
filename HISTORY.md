@@ -10,9 +10,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * build process is now conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
-    *ATTENTION*: `pip install -e` might be broken for `pyproject.toml` based builds.
+    *ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
     This is a known [issue](https://github.com/pypa/pip/issues/6375).
-    A Workaround might be found in the [development docs](docs/dev/development.md), if still necessary.
+    A workaround might be found in the [development docs](docs/dev/development.md).
 
 * Changes
   * `nichtparasoup.testing.config.ConfigFileTest.probe()` got an optional second param `delay`.

@@ -9,8 +9,9 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 ## Backend
 
 Install the requirements: `python -m pip install .[development]`.  
-*ATTENTION*: `pip install -e` might be broken for `pyproject.toml` based builds.
+*ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
 This is a known [issue](https://github.com/pypa/pip/issues/6375).
+A workaround is to install ala `python3 -c 'import setuptools; setuptools.setup();' develop --user`.
 
 Then just do whatever you would like.
 
