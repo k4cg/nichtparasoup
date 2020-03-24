@@ -8,11 +8,11 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 
 ## Backend
 
-Install the requirements: `ptyhon3 -m pip install -e .[development]`.  
-*ATTENTION*: `pip`'s option `--editable` in combination with `--user` might be broken for `pyproject.toml` based builds.
+Install the requirements: `python -m pip install .[development]`.  
+*ATTENTION*: `pip install -e` might be broken for `pyproject.toml` based builds.
 This is a known [issue](https://github.com/pypa/pip/issues/6375).
 
-Then just do whatever you would like.  
+Then just do whatever you would like.
 
 After writing the code have the code fixed via
 [`isort`](https://pypi.org/project/isort/) and
