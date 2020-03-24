@@ -2,30 +2,13 @@
 
 ## write tests
 
-```shell script
-python3 -m pip install -e .[testing]
-```
+install test requirements.
 
 then write your tests.  
-add additional needed requirements to the "testing" extras in `../setup.py`.
+add additional needed requirements to the "testing" extras in `../setup.cfg`.
 
 
-## run tests
-
-```shell script
-python3 -m pip install -e .[testing]
-python3 -m coverage run -m pytest 
-```
-
-then, to gather test coverage:
-
-```shell script
-python3 -m coverage report -m 
-python3 -m coverage html 
-```
-
-
-### via tox 
+### run tests via tox 
 
 ```shell script
 # run from project root:

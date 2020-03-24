@@ -7,7 +7,6 @@ ignore =
     ANN101,ANN102
 
 exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
-    setup.py
     docs
     examples
 

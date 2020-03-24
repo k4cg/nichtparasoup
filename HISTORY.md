@@ -7,6 +7,10 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 * Breaking changes
   * commandline interface changed. See cli help via `nichtparasoup --help`.
+  * build process is now conform to
+    [PEP517](https://www.python.org/dev/peps/pep-0517/) & 
+    [PEP518](https://www.python.org/dev/peps/pep-0518/). 
+    unfortunately `pip3 install -e` is still not ready for these PEP.
 
 * Changes
   * `nichtparasoup.testing.config.ConfigFileTest.probe()` got an optional second param `delay`.
