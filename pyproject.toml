@@ -5,9 +5,9 @@
 [build-system]
 # see https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
 requires = [
-  'setuptools>=43',
-  'setuptools_scm[toml]>=3.4',
-  'wheel'
+  'setuptools >= 46.1',
+  'setuptools_scm[toml] >= 3.5',
+  'wheel >= 0.34',
 ]
 build-backend = 'setuptools.build_meta'
 
