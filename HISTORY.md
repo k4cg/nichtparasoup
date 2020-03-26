@@ -2,9 +2,8 @@
 
 ## Unreleased
 
-add upcoming unreleased modifications here
-
-## 2.5.0
+! upcomng version will be `3.0.0` of __nichtparasoup__ !
+see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Breaking changes
   * commandline interface changed. See cli help via `nichtparasoup --help`.
