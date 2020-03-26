@@ -1,13 +1,16 @@
 ## https://packaging.python.org/guides/using-manifest-in/
 
+# blank start
+global-exclude *
 
-# this file
+# required: this file
 include MANIFEST.in
 
 
 # minimum files
 
-include setup.py
+include pyproject.toml
+include setup.cfg
 include README.md
 graft nichtparasoup
 
@@ -24,8 +27,17 @@ graft examples
 graft images
 graft tests
 
+include .coveragerc
+include .flake8
+include pytest.ini
+include mypy.ini
+include tox.ini
+
 
 # excludes
+
+## this is a fully working example. it might get moved to another standalone project.
+prune examples/nichtparasoup-imagecrawler-plugin
 
 global-exclude *_cache/*
 global-exclude __pycache__

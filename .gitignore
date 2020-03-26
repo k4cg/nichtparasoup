@@ -1,5 +1,8 @@
-_OLD/
-_TEST/
+
+
+# Distribution / packaging
+/nichtparasoup-*/
+
 
 
 ## https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore

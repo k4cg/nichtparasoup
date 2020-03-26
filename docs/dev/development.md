@@ -8,7 +8,11 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 
 ## Backend
 
-Install the requirements: `ptyhon3 -m pip install -e .[development]`.   
+Install the requirements: `python -m pip install .[development]`.  
+*ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
+This is a known [issue](https://github.com/pypa/pip/issues/6375).
+A workaround is to install ala `python3 -c 'import setuptools; setuptools.setup();' develop --user`.
+
 Then just do whatever you would like.
 
 After writing the code have the code fixed via
@@ -16,10 +20,10 @@ After writing the code have the code fixed via
 [`autopep3`](https://pypi.org/project/autopep3/).   
 These tools are already installed via `development` dependencies.
 
-Do not forget to [test](testing.md) the code.   
+Do not forget to [test](testing.md) the code.  
 This will also check for
 import order (fix via `isort`) and
-pycodestyle (fixevia `autopep8`).
+pycodestyle (fix via `autopep8`).
 
 ## Image crawler
 

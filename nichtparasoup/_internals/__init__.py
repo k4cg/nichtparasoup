@@ -34,7 +34,7 @@ def _format(message: Union[str, List[str]], color: Optional[str] = None) -> str:
     return message.rstrip()
 
 
-def _logging_init(level: int) -> None:  # pragma: no cover
+def _logging_init(level: int) -> None:
     if not logging.root.handlers:
         logging.root.setLevel(level)
         logging.root.addHandler(logging.StreamHandler())

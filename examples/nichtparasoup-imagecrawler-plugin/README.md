@@ -9,7 +9,7 @@ This project includes:
 * some **minimal** [`docs`](docs)
 * rules fo static code analysis and type-checks via `mypy`
 * preparation for unit tests via `pytest`
-* **minimal** install script [`setup.py`](setup.py)
+* **minimal** setup config [`setup.cfg`](setup.cfg)
 * some **minimal** project setup configs
 
 For details how write a ImageCrawler plugins,

@@ -17,6 +17,9 @@ This package requires `Python>=3.5`!
 1. clone the source from https://github.com/k4cg/nichtparasoup.git
 1. run `python3 -m pip install --user --editable .[development,testing]` from cloned project's root dir.
 
+*ATTENTION*: `pip install --editable` might be broken for `pyproject.toml` based builds.
+
+
 ## troubleshooting
 
 if you find yourself having issues on install, see [requirement docs](requirements.md)
