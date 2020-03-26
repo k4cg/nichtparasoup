@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-! upcomng version will be `3.0.0` of __nichtparasoup__ !
+! upcoming version will be `3.0.0` of __nichtparasoup__ !
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Breaking changes
