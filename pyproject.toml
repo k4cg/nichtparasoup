@@ -15,4 +15,5 @@ build-backend = 'setuptools.build_meta'
 [tool.setuptools_scm]
 # see https://pypi.org/project/setuptools-scm/
 fallback_version = 'UNKNOWN.scm'
-write_to = 'nichtparasoup/__version__.py'
+write_to = 'nichtparasoup/VERSION'
+write_to_template = '{version}'

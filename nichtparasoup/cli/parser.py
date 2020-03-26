@@ -5,7 +5,7 @@ from typing import Any, Set
 
 from argcomplete import FilesCompleter  # type: ignore
 
-from nichtparasoup import VERSION
+from nichtparasoup import __version__
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
@@ -39,7 +39,7 @@ def create_parser() -> ArgumentParser:  # pragma: no cover
     parser.add_argument(
         '--version',
         action='version',
-        version=VERSION,
+        version=__version__,
     )
 
     commands = parser.add_subparsers(
