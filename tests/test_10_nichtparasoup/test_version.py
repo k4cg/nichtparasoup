@@ -5,9 +5,9 @@ class VersionTest(unittest.TestCase):
 
     def test_version_known(self) -> None:
         # arrange
-        from nichtparasoup import VERSION
+        from nichtparasoup import __version__
         # assert
         self.assertFalse(
-            VERSION.startswith('UNKNOWN'),
-            'unknown version: {!r}'.format(VERSION)
+            __version__.startswith('UNKNOWN'),
+            'unknown version: {!r}'.format(__version__)
         )

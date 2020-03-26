@@ -13,6 +13,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     *ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
     This is a known [issue](https://github.com/pypa/pip/issues/6375).
     A workaround might be found in the [development docs](docs/dev/development.md).
+  * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
+    `nichtparasoup.__version__` is no longer a module but a string.
+  
 
 * Changes
   * `nichtparasoup.testing.config.ConfigFileTest.probe()` got an optional second param `delay`.

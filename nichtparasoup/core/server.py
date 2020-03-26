@@ -8,7 +8,7 @@ from time import sleep, time
 from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
-from nichtparasoup import VERSION
+from nichtparasoup import __version__
 from nichtparasoup._internals import _log, _type_module_name_str
 from nichtparasoup.core import Crawler, NPCore
 
@@ -128,7 +128,7 @@ class ServerStatus(ABC):
         now = int(time())
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
         return dict(
-            version=VERSION,
+            version=__version__,
             uptime=uptime,
             reset=dict(
                 count=stats.count_reset,
