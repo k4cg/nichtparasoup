@@ -19,12 +19,12 @@ def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
     parser.description = 'Start a web-server to display random images.'
     parser.add_argument(
         '--debug',
-        help='debug',
+        help='enable debug output',
         action='store_true', dest='debug',
     )
     parser.add_argument(
         '--develop',
-        help='develop',
+        help='set * for CORS header',
         action='store_true', dest='develop',
     )
     arg_config_file = parser.add_argument(
@@ -38,7 +38,7 @@ def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
 
 
 def run_command(config_file: Optional[str], *, debug: bool, develop: bool) -> int:  # pragma: no cover
-    del develop  # @TODO implement develop mode
+    del develop  # @TODO implement develop mode - enable arbitrary CORS
     config_file = abspath(config_file) if config_file else None
     try:
         config = get_config(config_file)

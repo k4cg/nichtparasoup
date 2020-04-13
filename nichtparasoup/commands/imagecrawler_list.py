@@ -14,7 +14,7 @@ def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
     parser.description = 'List available imagecrawlers.'
     parser.add_argument(
         '--debug',
-        help='debug',
+        help='enable debug output',
         action='store_true', dest='debug',
     )
     return parser

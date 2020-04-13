@@ -12,18 +12,19 @@ from nichtparasoup.config import dump_defaults
 
 def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
     parser = parser or ArgumentParser()
+    parser.description = 'Dump the builtin default YAML config into a file.'
     parser.add_argument(
         '--debug',
-        help='debug',
+        help='enable debug output',
         action='store_true', dest='debug',
     )
     parser.add_argument(
         '--overwrite',
-        help='overwrite',
+        help='overwrite file target',
         action='store_true', dest='overwrite',
     )
     parser.add_argument(
-        help='dump foo',
+        help='target YAML config file',
         metavar='file',
         action='store', dest='file', type=str,
     )

@@ -69,7 +69,7 @@ def create_parser() -> ArgumentParser:
 
     command_server_config = command_server.add_parser(
         'config',
-        help='config a server',
+        help='configure a server',
         **parser_globals
     ).add_subparsers(
         title='Commands',
@@ -109,7 +109,7 @@ def create_parser() -> ArgumentParser:
 
     command_imagecrawler = commands.add_parser(
         'imagecrawler',
-        help='imagecrawler',
+        help='imagecrawler related actions',
         description='imagecrawler',
         **parser_globals
     ).add_subparsers(

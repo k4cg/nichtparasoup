@@ -11,10 +11,10 @@ from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
     parser = parser or ArgumentParser()
-    parser.description = 'Describe an imagecrawler.'
+    parser.description = 'Describe an imagecrawler and its configuration.'
     parser.add_argument(
         '--debug',
-        help='debug',
+        help='enable debug output',
         action='store_true', dest='debug',
     )
     crawler_name = parser.add_argument(

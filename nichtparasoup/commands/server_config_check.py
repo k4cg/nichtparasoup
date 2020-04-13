@@ -8,14 +8,15 @@ from typing import Optional
 
 from nichtparasoup._internals import _log, _logging_init, _message_exception
 from nichtparasoup.commands._internal import _arg_float_ge_zero, _arg_int_ge_zero, _yaml_file_completer
-from nichtparasoup.testing.config import ConfigFileTest, PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT
+from nichtparasoup.testing.config import PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigFileTest
 
 
 def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
     parser = parser or ArgumentParser()
+    parser.description = 'Validate and probe a YAML config file.'
     parser.add_argument(
         '--debug',
-        help='debug',
+        help='enable debug output',
         action='store_true', dest='debug',
     )
     parser.add_argument(
