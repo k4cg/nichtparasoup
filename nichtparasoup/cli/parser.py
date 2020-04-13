@@ -1,131 +1,165 @@
-__all__ = ["create_parser"]
+__all__ = ['create_parser']
+
 
 from argparse import ArgumentParser
-from typing import Any, Set
+from os.path import dirname
+from sys import version_info
+from typing import Any, Dict
 
-from argcomplete import FilesCompleter  # type: ignore
+import nichtparasoup
+from nichtparasoup.cli.commands.completion import create_parser as completion
+from nichtparasoup.commands.imagecrawler_desc import create_parser as imagecrawler_desc
+from nichtparasoup.commands.imagecrawler_list import create_parser as imagecrawler_list
+from nichtparasoup.commands.server_config_check import create_parser as server_config_check
+from nichtparasoup.commands.server_config_defaults_dump import create_parser as server_config_defaults_dump
+from nichtparasoup.commands.server_run import create_parser as server_run
 
-from nichtparasoup import __version__
-from nichtparasoup.imagecrawler import get_imagecrawlers
-
-
-def _imagecrawler_completion(*args: Any, **kwargs: Any) -> Set[str]:  # pragma: no cover
-    """ImageCrawler completer.
-    see https://kislyuk.github.io/argcomplete/#specifying-completers
-    """
-    del args
-    del kwargs
-    return set(get_imagecrawlers().names())
-
-
-_YAML_FILE_COMPLETION = FilesCompleter(allowednames=('yaml', 'yml'), directories=True)
+VERSION_STRING = '{version} from {location} (python {py_version})'.format(
+    version=nichtparasoup.__version__,
+    location=dirname(nichtparasoup.__file__),
+    py_version='{}.{}'.format(version_info.major, version_info.minor)
+)
 
 
-def create_parser() -> ArgumentParser:  # pragma: no cover
-    # used `__tmp_action`  several times, to omit type-checkers warning ala 'Action has no attribute "completer"'
+def create_parser() -> ArgumentParser:
+    # @TODO add auto-completion hints ...
 
-    debug = ArgumentParser(add_help=False)
-    debug.add_argument(
-        '--debug',
-        help='enable debug output',
-        action='store_true', dest="debug",
-    )
-
-    parser = ArgumentParser(
+    parser_globals = dict(
         add_help=True,
         allow_abbrev=False,
-    )
+    )  # type: Dict[str, Any]
 
-    parser.add_argument(
-        '--version',
-        action='version',
-        version=__version__,
+    parser = ArgumentParser(
+        **parser_globals
     )
+    parser.add_argument('--version', action='version', version=VERSION_STRING)
 
     commands = parser.add_subparsers(
         title='Commands',
         metavar='<command>',
-        dest='command',
     )
     commands.required = True
 
-    command_run = commands.add_parser(
+    # region server
+
+    command_server = commands.add_parser(
+        'server',
+        help='server',
+        description='server',
+        **parser_globals
+    ).add_subparsers(
+        title='Commands',
+        metavar='<command>',
+    )
+    command_server.required = True
+
+    # region server.run
+
+    command_server_run = command_server.add_parser(
         'run',
         help='run a server',
-        description='Start a web-server to display random images.',
-        add_help=True,
-        allow_abbrev=False,
-        parents=[debug],
+        **parser_globals
     )
-    __tmp_action = command_run.add_argument(
-        '-c', '--use-config',
-        help='use a YAML config file instead of the defaults.',
-        metavar='<file>',
-        action='store', dest="config_file", type=str,
-    )
-    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
-    del __tmp_action
+    server_run(command_server_run)
+    command_server_run.set_defaults(_command='server_run')
 
-    command_config = commands.add_parser(
+    # endregion server.run
+
+    # region server.config
+
+    command_server_config = command_server.add_parser(
         'config',
-        help='config related functions',
-        description='Get config related things done.',
-        add_help=True,
-        allow_abbrev=False,
-        parents=[debug],
+        help='config a server',
+        **parser_globals
+    ).add_subparsers(
+        title='Commands',
+        metavar='<command>',
     )
-    command_config_switches = command_config.add_mutually_exclusive_group(required=True)
-    __tmp_action = command_config_switches.add_argument(
-        '--check',
+    command_server_config.required = True
+
+    # region server.config.check
+
+    command_server_config_check = command_server_config.add_parser(
+        'check',
         help='validate and probe a YAML config file',
-        metavar='<file>',
-        action='store', dest='check', type=str,
+        **parser_globals
     )
-    __tmp_action.completer = _YAML_FILE_COMPLETION  # type: ignore
-    del __tmp_action
-    command_config_switches.add_argument(
-        '--dump',
-        help='dump YAML config into a file',
-        metavar='<file>',
-        action='store', dest='dump', type=str,
+    server_config_check(command_server_config_check)
+    command_server_config_check.set_defaults(_command='server_config_check')
+
+    # endregion server.config.check
+
+    # region server.config.dump-defaults
+
+    command_server_config_dump = command_server_config.add_parser(
+        'dump-defaults',
+        help='dump default server config',
+        **parser_globals
     )
+    server_config_defaults_dump(command_server_config_dump)
+    command_server_config_dump.set_defaults(_command='server_config_dump_defaults')
+
+    # endregion server.config.dump-defaults
+
+    # endregion server.config
+
+    # endregion server
+
+    # region imagecrawler
 
     command_imagecrawler = commands.add_parser(
         'imagecrawler',
-        help='get info for several topics',
-        description='Get info for several topics.',
-        add_help=True,
-        allow_abbrev=False,
-        parents=[debug],
+        help='imagecrawler',
+        description='imagecrawler',
+        **parser_globals
+    ).add_subparsers(
+        title='Commands',
+        metavar='<command>',
     )
-    command_imagecrawler_switches = command_imagecrawler.add_mutually_exclusive_group(required=True)
-    command_imagecrawler_switches.add_argument(
-        '--list',
-        help='list available image crawler types',
-        action='store_true', dest='list',
+    command_imagecrawler.required = True
+
+    # region imagecrawler.list
+
+    command_imagecrawler_list = command_imagecrawler.add_parser(
+        'list',
+        help='list available imagecrawlers',
+        **parser_globals
     )
-    __tmp_action = command_imagecrawler_switches.add_argument(
-        '--desc',
-        help='describe an image crawler type and its config',
-        metavar='<crawler>',
-        action='store', dest='desc', type=str,
+    imagecrawler_list(command_imagecrawler_list)
+    command_imagecrawler_list.set_defaults(_command='imagecrawler_list')
+
+    # endregion imagecrawler.list
+
+    # region imagecrawler.desc
+
+    command_imagecrawler_desc = command_imagecrawler.add_parser(
+        'desc',
+        help='describe an imagecrawler',
+        **parser_globals
     )
-    __tmp_action.completer = _imagecrawler_completion  # type: ignore
-    del __tmp_action
+    imagecrawler_desc(command_imagecrawler_desc)
+    command_imagecrawler_desc.set_defaults(_command='imagecrawler_desc')
+
+    # endregion imagecrawler.desc
+
+    # region imagecrawler.run
+
+    # @TODO see https://github.com/k4cg/nichtparasoup/issues/221
+
+    # endregion imagecrawler.run
+
+    # endregion imagecrawler
+
+    # region completion
 
     command_completion = commands.add_parser(
         'completion',
-        help='helper command to be used for command completion',
-        description='Helper command used for command completion.',
-        epilog='Completion is powered by https://pypi.org/project/argcomplete/',
-        add_help=True,
-        allow_abbrev=False,
+        help='helper for command completion',
+        **parser_globals
     )
-    command_completion.add_argument(
-        '-s', '--shell',
-        help='emit completion code for the specified shell',
-        action='store', dest='shell', type=str, required=True,
-        choices=('bash', 'tcsh', 'fish'),
-    )
+    completion(command_completion)
+    command_completion.set_defaults(_command='completion')
+
+    # endregion completion
 
     return parser

@@ -1,21 +1,28 @@
-# PYTHON_ARGCOMPLETE_OK
+__all__ = ['main']
 
-__all__ = ["main"]
+from typing import Any, Callable, Dict
 
-from typing import List, Optional
-
-from argcomplete import autocomplete  # type: ignore
-
-from nichtparasoup.cli.commands import create_command
+from nichtparasoup.cli.commands.completion import autocomplete, run_command as completion
 from nichtparasoup.cli.parser import create_parser
+from nichtparasoup.commands.imagecrawler_desc import run_command as imagecrawler_desc
+from nichtparasoup.commands.imagecrawler_list import run_command as imagecrawler_list
+from nichtparasoup.commands.server_config_check import run_command as server_config_check
+from nichtparasoup.commands.server_config_defaults_dump import run_command as server_config_defaults_dump
+from nichtparasoup.commands.server_run import run_command as server_run
+
+_COMMANDS = dict(
+    server_run=server_run,
+    server_config_check=server_config_check,
+    server_config_dump_defaults=server_config_defaults_dump,
+    imagecrawler_list=imagecrawler_list,
+    imagecrawler_desc=imagecrawler_desc,
+    completion=completion,
+)  # type: Dict[str, Callable[..., int]]
 
 
-def main(args: Optional[List[str]] = None) -> int:  # pragma: no cover
+def main() -> int:  # pragma: no cover
     parser = create_parser()
     autocomplete(parser, always_complete_options='long')
-    options = dict(parser.parse_args(args=args).__dict__)  # TODO don't use dict .. use Namespace ...
-    del parser
-    debug = options.pop('debug', False)
-    command_name = options.pop('command')
-    command = create_command(command_name, debug)
-    return command.main(options)
+    options = parser.parse_args().__dict__  # type: Dict[str, Any]
+    command = options.pop('_command')  # type: str
+    return _COMMANDS[command](**options)
