@@ -4,21 +4,50 @@ from time import sleep
 from typing import List
 from unittest import TestCase
 
-from nichtparasoup.config import get_imagecrawler, parse_yaml_file
+from nichtparasoup.config import Config, get_imagecrawler, parse_yaml_file
 from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
-PROBE_DELAY_DEFAULT = 0.01  # type: float
+PROBE_DELAY_DEFAULT = 0.05  # type: float
 PROBE_RETRIES_DEFAULT = 2  # type: int
 
 
 class ConfigFileTest(TestCase):
 
-    def validate(self, file: str) -> None:
-        """Validate a config file.
-        :param file: file path to the config to validate.
+    def parse(self, file: str) -> Config:
+        """Parse a config file.
+        :param file: file path to the config to parse.
         """
         config = parse_yaml_file(file)
         self.assertIsInstance(config, dict)
+        return config
+
+    def validate(self, file: str) -> Config:
+        """Validate a config file.
+        :param file: file path to the config to validate.
+        """
+        config = self.parse(file)
+        ConfigTest().validate(config)
+        return config
+
+    def probe(self, file: str, *,
+              delay: float = PROBE_DELAY_DEFAULT, retries: int = PROBE_RETRIES_DEFAULT
+              ) -> Config:  # pragma: no cover
+        """Probe a config file.
+        :param file: config to probe.
+        :param delay: delay to wait between each crawler probes.
+        :param retries: number of retries in case an error occurred.
+        """
+        config = self.parse(file)
+        ConfigTest().probe(config, delay=delay, retries=retries)
+        return config
+
+
+class ConfigTest(TestCase):
+
+    def validate(self, config: Config) -> None:   # pragma: no cover
+        """Validate a config.
+         :param config: file path to the config to validate.
+         """
         imagecrawlers = list()  # type: List[BaseImageCrawler]
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
@@ -44,20 +73,18 @@ class ConfigFileTest(TestCase):
             sleep(delay)
             cls._probe_crawl_retry(imagecrawler, retries - 1, delay)
 
-    def probe(self, file: str,
-              delay: float = PROBE_RETRIES_DEFAULT, retries: int = PROBE_RETRIES_DEFAULT
+    def probe(self, config: Config, *,
+              delay: float = PROBE_DELAY_DEFAULT, retries: int = PROBE_RETRIES_DEFAULT
               ) -> None:  # pragma: no cover
-        """Probe a config file.
-        :param file: file path to the config to probe.
+        """Probe a config.
+        :param config: config to probe.
         :param delay: delay to wait between each crawler probes.
         :param retries: number of retries in case an error occurred.
         """
-        config = parse_yaml_file(file)
-        self.assertIsInstance(config, dict)
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             self._probe_crawl_retry(imagecrawler, retries, delay)
-            sleep(delay)  # do not be too greedy
+            sleep(delay)
 
 
 class ImageCrawlerProbeCrawlError(Exception):

@@ -1,66 +1,48 @@
-__all__ = ['create_parser', 'run_command']
+__all__ = ['main']
 
 import logging
-from argparse import ArgumentParser
-from os.path import abspath
-from sys import exit as sys_exit
-from typing import Any, Dict, Optional
+from typing import Optional
 
-from nichtparasoup._internals import _log, _logging_init, _message_exception
-from nichtparasoup.commands._internal import _yaml_file_completer
-from nichtparasoup.config import get_config, get_imagecrawler
+from click import BadParameter, Context, Parameter, Path, argument, command, option
+
+from nichtparasoup._internals import _LINEBREAK, _log, _logging_init
+from nichtparasoup.config import Config, get_config, get_imagecrawler
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.server import Server as ImageServer
 from nichtparasoup.webserver import WebServer
 
 
-def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
-    parser = parser or ArgumentParser()
-    parser.description = 'Start a web-server to display random images.'
-    parser.add_argument(
-        '--debug',
-        help='enable debug output',
-        action='store_true', dest='debug',
-    )
-    parser.add_argument(
-        '--develop',
-        help='set * for CORS header',
-        action='store_true', dest='develop',
-    )
-    arg_config_file = parser.add_argument(
-        '-c', '--config',
-        help='use a YAML config file instead of the defaults.',
-        metavar='<file>',
-        action='store', dest='config_file', type=str,
-    )
-    arg_config_file.completer = _yaml_file_completer  # type: ignore
-    return parser
-
-
-def run_command(config_file: Optional[str], *, debug: bool, develop: bool) -> int:  # pragma: no cover
-    del develop  # @TODO implement develop mode - enable arbitrary CORS
-    config_file = abspath(config_file) if config_file else None
+def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) -> Config:  # pragma: no cover
     try:
-        config = get_config(config_file)
-        _logging_init(logging.DEBUG if debug else getattr(logging, config['logging']['level']))
-        _log('debug', 'ConfigFile: {}'.format(config_file or 'builtin SystemDefaults'))
-        _log('debug', 'Config: {!r}'.format(config))
-        _create_webserver(config).run()
-        return 0
+        return get_config(config_file)
     except Exception as e:
-        _message_exception(e)
-        return 1
+        raise BadParameter(
+            '{}{}Use the "server config check" command for an analyse.'.format(e, _LINEBREAK),
+            param=param
+        ) from e
 
 
-def _create_webserver(config: Dict[str, Any]) -> WebServer:  # pragma: no cover
+@command(name='server-run')
+@argument('config', type=Path(exists=True, dir_okay=False, resolve_path=True),
+          required=False, default=None, callback=_param_get_config)
+@option('--debug', is_flag=True, help='enable debug output.')
+@option('--develop', is_flag=True, help='set * for CORS header.')
+def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:  # pragma: no cover
+    """Start a web-server to display random images.
+
+    Can use a custom YAML config file instead of the defaults.
+    """
+    del develop  # @TODO implement develop mode - enable arbitrary CORS
+    _logging_init(logging.DEBUG if debug else getattr(logging, config['logging']['level']))
+    _log('debug', 'Config: {!r}'.format(config))
     imageserver = ImageServer(NPCore(), **config['imageserver'])
     for crawler_config in config['crawlers']:
         imagecrawler = get_imagecrawler(crawler_config)
         if not imageserver.core.has_imagecrawler(imagecrawler):
             imageserver.core.add_imagecrawler(imagecrawler, crawler_config['weight'])
-    return WebServer(imageserver, **config['webserver'])
+    webserver = WebServer(imageserver, **config['webserver'])
+    webserver.run()
 
 
 if __name__ == '__main__':
-    options = create_parser().parse_args()
-    sys_exit(run_command(**options.__dict__))
+    main()

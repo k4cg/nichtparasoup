@@ -1,69 +1,49 @@
-__all__ = ['create_parser', 'run_command']
+__all__ = ['main']
 
-from argparse import ArgumentParser
 from logging import DEBUG as L_DEBUG, ERROR as L_ERROR
-from os.path import abspath
-from sys import exit as sys_exit
-from typing import Optional
 
-from nichtparasoup._internals import _log, _logging_init, _message_exception
-from nichtparasoup.commands._internal import _arg_float_ge_zero, _arg_int_ge_zero, _yaml_file_completer
-from nichtparasoup.testing.config import PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigFileTest
+from click import FloatRange, IntRange, Path, argument, command, option
+from click.exceptions import ClickException
 
-
-def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
-    parser = parser or ArgumentParser()
-    parser.description = 'Validate and probe a YAML config file.'
-    parser.add_argument(
-        '--debug',
-        help='enable debug output',
-        action='store_true', dest='debug',
-    )
-    parser.add_argument(
-        '--no-probe',
-        help="don't probe",
-        action='store_false', dest='probe',
-    )
-    parser.add_argument(
-        '--probe-retries',
-        help='number of probe retries in case of errors',
-        metavar='retries',
-        action='store', dest='probe_retries', type=_arg_int_ge_zero,
-        default=PROBE_RETRIES_DEFAULT,
-    )
-    parser.add_argument(
-        '--probe-delay',
-        help='probe delay in seconds',
-        metavar='seconds',
-        action='store', dest='probe_delay', type=_arg_float_ge_zero,
-        default=PROBE_DELAY_DEFAULT,
-    )
-    arg_file = parser.add_argument(
-        help='YAML config file',
-        metavar='<file>',
-        action='store', dest='file', type=str,
-    )
-    arg_file.completer = _yaml_file_completer  # type: ignore
-    return parser
+from nichtparasoup._internals import _log, _logging_init
+from nichtparasoup.config import Config
+from nichtparasoup.testing.config import PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigFileTest, ConfigTest
 
 
-def run_command(file: str, *,
-                probe: bool, probe_retries: int, probe_delay: int,
-                debug: bool) -> int:  # pragma: no cover
+@command(name='server-config-check')
+@argument('file', type=Path(exists=True, dir_okay=False, resolve_path=True))
+@option('--probe/--no-probe', default=True)
+@option('--probe-retries', metavar='retries', type=IntRange(min=0), default=PROBE_RETRIES_DEFAULT,
+        help='set number of probe retries in case of errors.')
+@option('--probe-delay', metavar='seconds', type=FloatRange(min=0), default=PROBE_DELAY_DEFAULT,
+        help='set probe delay in seconds.', )
+@option('--debug', is_flag=True, help='enable debug output.')
+def main(file: str, *,
+         probe: bool = True, probe_retries: int = PROBE_RETRIES_DEFAULT, probe_delay: float = PROBE_DELAY_DEFAULT,
+         debug: bool = False) -> None:  # pragma: no cover
+    """Validate and probe a YAML config file.
+    """
     _logging_init(L_DEBUG if debug else L_ERROR)
-    config_file = abspath(file)
-    _log('debug', 'ConfigFile: {}'.format(config_file))
-    config_test = ConfigFileTest()
+    _log('debug', 'ConfigFile: {}'.format(file))
+    config = _validate_file(file)
+    if probe:
+        _probe_config(config, retries=probe_retries, delay=probe_delay)
+
+
+def _validate_file(file: str) -> Config:  # pragma: no cover
     try:
-        config_test.validate(config_file)
-        if probe:
-            config_test.probe(config_file, probe_delay, probe_retries)
+        return ConfigFileTest().validate(file)
     except Exception as e:
-        _message_exception(e)
-        return 1
-    return 0
+        raise ClickException('ValidateError: {!s}'.format(e)) from e
+
+
+def _probe_config(config: Config, *, retries: int, delay: float) -> None:  # pragma: no cover
+    config_test = ConfigTest()
+    try:
+        config_test.probe(config, delay=delay, retries=retries)
+    except Exception as e:
+        raise ClickException('ProbeError: {!s}'.format(e)) from e
 
 
 if __name__ == '__main__':
-    options = create_parser().parse_args()
-    sys_exit(run_command(**options.__dict__))
+    main()

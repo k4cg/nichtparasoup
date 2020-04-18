@@ -1,4 +1,8 @@
-__all__ = ["ImageCrawlerConfig", "BaseImageCrawler", "ImageCrawlerInfo", "RemoteFetcher", "ImageRecognizer"]
+__all__ = [
+    "ImageCrawlerConfig",
+    "BaseImageCrawler",
+    "ImageCrawlerInfo", "RemoteFetcher", "ImageRecognizer"
+]
 
 from abc import ABC, abstractmethod
 from http.client import HTTPResponse

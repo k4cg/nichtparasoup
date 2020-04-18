@@ -1,4 +1,60 @@
-"""Subpackage containing all of nichtparasoup's command line interface related code
-"""
+from os.path import dirname
+from sys import version_info
 
-# This file intentionally does not import submodules
+from click import group, version_option
+
+import nichtparasoup
+from nichtparasoup.cli.completion import main as completion
+from nichtparasoup.commands.imagecrawler_desc import main as imagecrawler_desc
+from nichtparasoup.commands.imagecrawler_list import main as imagecrawler_list
+from nichtparasoup.commands.server_config_check import main as server_config_check
+from nichtparasoup.commands.server_config_dump_defaults import main as server_config_dump_defaults
+from nichtparasoup.commands.server_run import main as server_run
+
+VERSION_STRING = '%(version)s from {location} (python {py_version})'.format(
+    location=dirname(nichtparasoup.__file__),
+    py_version='{}.{}'.format(version_info.major, version_info.minor)
+)
+
+
+@group(name='nichtparasoup')
+@version_option(version=nichtparasoup.__version__, message=VERSION_STRING)
+def main() -> None:  # pragma: no cover
+    """Nichtparasoup
+    """
+    pass
+
+
+main.add_command(completion, name='completion')
+
+
+@main.group()
+def server() -> None:  # pragma: no cover
+    """Manage server
+    """
+    pass
+
+
+server.add_command(server_run, name='run')
+
+
+@server.group('config')
+def server_config() -> None:  # pragma: no cover
+    """Manage server configs
+    """
+    pass
+
+
+server_config.add_command(server_config_check, name='check')
+server_config.add_command(server_config_dump_defaults, name='dump-defaults')
+
+
+@main.group()
+def imagecrawler() -> None:  # pragma: no cover
+    """Manage imagecrawlers
+    """
+    pass
+
+
+imagecrawler.add_command(imagecrawler_list, name='list')
+imagecrawler.add_command(imagecrawler_desc, name='desc')

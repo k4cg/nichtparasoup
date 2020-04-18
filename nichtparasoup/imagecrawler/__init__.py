@@ -1,7 +1,7 @@
 __all__ = [
     "get_imagecrawlers",
     # for convenience, all classes that are needed to implement an ImageCrawler are exported, here
-    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "BaseImageCrawler", "ImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
     "Image", "ImageCollection",
     "RemoteFetcher", "ImageRecognizer",
 ]

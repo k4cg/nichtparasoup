@@ -1,38 +1,23 @@
-__all__ = ['create_parser', 'run_command']
+__all__ = ['main']
 
-from argparse import ArgumentParser
-from sys import exit as sys_exit
-from typing import Optional, Type
+from typing import Type
 
-from nichtparasoup._internals import _LINEBREAK, _message, _message_exception, _type_module_name_str
-from nichtparasoup.commands._internal import _imagecrawler_completer
+from click import BadParameter, Choice, argument, command, option
+
+from nichtparasoup._internals import _LINEBREAK, _message, _type_module_name_str
 from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 
-def create_parser(parser: Optional[ArgumentParser] = None) -> ArgumentParser:
-    parser = parser or ArgumentParser()
-    parser.description = 'Describe an imagecrawler and its configuration.'
-    parser.add_argument(
-        '--debug',
-        help='enable debug output',
-        action='store_true', dest='debug',
-    )
-    crawler_name = parser.add_argument(
-        help='crawler name',
-        metavar='<crawler_name>',
-        action='store', dest='crawler_name', type=str,
-    )
-    crawler_name.completer = _imagecrawler_completer  # type: ignore
-    return parser
-
-
-def run_command(crawler_name: str, *, debug: bool) -> int:  # pragma: no cover
-    imagecrawler_class = get_imagecrawlers().get_class(crawler_name)
-    if imagecrawler_class:
-        _print_imagecrawler_info(imagecrawler_class, debug=debug)
-        return 0
-    _message_exception(ValueError('unknown ImageCrawler {!r}'.format(crawler_name)))
-    return 1
+@command(name='imagecrawler-desc')
+@argument('name', type=Choice(tuple(get_imagecrawlers().names())), metavar='NAME')
+@option('--debug', is_flag=True, help='enable debug output.')
+def main(name: str, *, debug: bool = False) -> None:  # pragma: no cover
+    """Describe an imagecrawler and its configuration.
+    """
+    imagecrawler_class = get_imagecrawlers().get_class(name)
+    if not imagecrawler_class:
+        raise BadParameter(name, param_hint='name')
+    _print_imagecrawler_info(imagecrawler_class, debug=debug)
 
 
 def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler], *, debug: bool) -> None:
@@ -62,5 +47,4 @@ def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler], *, debu
 
 
 if __name__ == '__main__':
-    options = create_parser().parse_args()
-    sys_exit(run_command(**options.__dict__))
+    main()
