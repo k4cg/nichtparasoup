@@ -13,53 +13,52 @@ from nichtparasoup.imagecrawler import (
 )
 
 if sys.version_info >= (3, 8):
-    from typing import Literal
+    from typing import Literal  # pylint: disable=no-name-in-module,ungrouped-imports
 else:
     from typing_extensions import Literal
 
-"""
+#
+# INFO
+# ====
+#
+# Instagram provides an API. But it requires a access token, which requires an account ... don't have that.
+# Instagram provides a JSON based web endpoint, that is used for lazy loading on the website. Let's use it.
+#
+# WEB ENDPOINT
+# ------------
+#
+# The web end point takes some GET data: data is identified by `query_hash` and `<misc>`
+# From reverse engineering this seams to be valid information.
+# * query_hash - Like an access token. generated on first contact.
+#                This one is kind of consistent for certain network topology constraints.
+#                Important: hash is bound to a purpose: tags, profile, meta, user_info, ...
+# * variables  - JSON encoded map of:
+#     * first  - Number how many results are expected.
+#                This seams to be a vague idea. mostly you get more than expected.
+#     * after  - A cursor in a sliding window over the data
+#     * <misc> - Identifier of condition/clause.
+#                * 'id' for profiles
+#                * 'tag_name' for tags
+#                * etc.
+#
+# INTERNALS
+# ---------
+#
+# Since `query_hash` ins unique per purpose, its fetched once per class. so instances do share it.
+# Finding possible `query_hash` is quite easy my searching through instagram's root pge and included JavaScripts.
+# If a candidate is correct will be checked, if instagram's response to a request has the correct data format. This is
+# done by checking a response for a certain format that is unique to its purpose (see `query_hash` description)
+#
+# The actual response parsing is quite trivial... read the code, you will get it.
+#
+# CONCLUSION
+# ----------
+#
+# This implementation seams pretty complex.
+# If this crawler breaks, it might be a damn good idea to switch to a foreign library
+# or maybe even use the official API.
+#
 
-INFO
-====
-
-Instagra provides an API. But it requires a access token, which requires an account ... don't have that.
-Intagram provides a JSON based web endpoint, that is used for lazy loading on the website. Let's use it.
-
-WEB ENDPOINT
-------------
-
-The web end point takes some GET data: data is identified by `query_hash` and `<misc>`
-From reverse engineering this seams to be valid information.
-* query_hash - Like an access token. generated on first contact.
-               This one is kind of consistent for certain network topology constraints.
-               Important: hash is bound to a purpose: tags, profile, meta, user_info, ...
-* variables  - JSON encoded map of:
-    * first  - Number how many results are expected.
-               This seams to be a vague idea. mostly you get more than expected.
-    * after  - A cursor in a sliding window over the data
-    * <misc> - Identifier of condition/clause.
-               * 'id' for profiles
-               * 'tag_name' for tags
-               * etc.
-
-INTERNALS
----------
-
-Since `query_hash` ins unique per purpose, its fetched once per class. so instances do share it.
-Finding possible `query_hash` is quite easy my searching through instagram's root pge and included JavaScripts.
-If a candidate is correct will be checked, if instagram's response to a request has the correct data format. This is
-done by checking a response for a certain format that is unique to its purpose (see `query_hash` description)
-
-The actual response parsing is quite trivial... read the code, you will get it.
-
-CONCLUSION
-----------
-
-This implementation seams pretty complex.
-If this crawler breaks, it might be a damn good idea to switch to a foreign library
-or maybe even use the official API.
-
-"""
 
 INSTAGRAM_URL_ROOT = 'https://www.instagram.com/'
 
@@ -68,7 +67,7 @@ INSTAGRAM_ICON_URL = INSTAGRAM_URL_ROOT + 'static/images/ico/favicon-192.png/68d
 _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
 
-class InstagramQueryHashFinder(object):
+class InstagramQueryHashFinder:
     __CONTAINER_PATH_RE = {
         'tag': r'/static/bundles/metro/TagPageContainer\.js/.+?\.js',
         'profile': r'/static/bundles/metro/ProfilePageContainer\.js/.+?\.js',
@@ -77,8 +76,8 @@ class InstagramQueryHashFinder(object):
     __QUERY_HASH_RE = r'queryId:"(.+?)"'
 
     def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:  # pragma: no cover
-        self._container_re = re_compile(self.__class__.__CONTAINER_PATH_RE[container_type])
-        self._query_hash_re = re_compile(self.__class__.__QUERY_HASH_RE)
+        self._container_re = re_compile(self.__CONTAINER_PATH_RE[container_type])
+        self._query_hash_re = re_compile(self.__QUERY_HASH_RE)
         self._remote_fetcher = RemoteFetcher()
 
     def find_hashes(self) -> Set[str]:
@@ -95,12 +94,12 @@ class InstagramQueryHashFinder(object):
     def _get_from_remote_js(self, js_uri: str) -> Set[str]:
         try:
             js_src, _ = self._remote_fetcher.get_string(js_uri)
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             return set()
         return self._get_from_js(js_src)
 
-    def _get_from_js(self, js: str) -> Set[str]:
-        return set(self._query_hash_re.findall(js))
+    def _get_from_js(self, javascript: str) -> Set[str]:
+        return set(self._query_hash_re.findall(javascript))
 
 
 class BaseInstagramCrawler(BaseImageCrawler, ABC):
@@ -120,7 +119,9 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             self._get_query_hash(), self._amount, self._cursor, **self._get_query_variables())
         response = self._query(query_uri)
         for edge in response['edges']:
-            images.update(self.__class__._get_images_from_media_edge_node(edge['node']))
+            images.update(  # pylint: disable=no-member
+                self._get_images_from_media_edge_node(edge['node'])
+            )
             del edge
         page_info = response['page_info']  # type: Dict[str, Any]
         # don't care if this was the last page ... why not restarting at front when the end is reached?!
@@ -132,18 +133,22 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         images = ImageCollection()
         if not node['is_video']:
             source = cls._get_post_url(node['shortcode'])
-            images.add(Image(
-                uri=node['display_url'],
-                source=source,
-                dimensions=node.get('dimensions'),
-            ))
+            images.add(  # pylint: disable=no-member # false-positive
+                Image(
+                    uri=node['display_url'],
+                    source=source,
+                    dimensions=node.get('dimensions'),
+                )
+            )
             for side_edge in node.get('edge_sidecar_to_children', dict(edges=[]))['edges']:
                 if not side_edge['node']['is_video']:
-                    images.add(Image(
-                        uri=side_edge['node']['display_url'],
-                        source=source,
-                        dimensions=side_edge['node'].get('dimensions'),
-                    ))
+                    images.add(  # pylint: disable=no-member # false-positive
+                        Image(
+                            uri=side_edge['node']['display_url'],
+                            source=source,
+                            dimensions=side_edge['node'].get('dimensions'),
+                        )
+                    )
                 del side_edge
         return images
 
@@ -178,7 +183,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     __URL_QUERY = INSTAGRAM_URL_ROOT + 'graphql/query/'
 
     def _get_query_uri(self, query_hash: str, first: int, after: Optional[str], **variables: Any) -> str:
-        return self.__class__.__URL_QUERY + '?' + urlencode(dict(
+        return self.__URL_QUERY + '?' + urlencode(dict(
             query_hash=query_hash,
             variables=json_encode(dict(
                 first=first,
@@ -202,7 +207,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         try:
             self._query(uri)
             return True
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             return False
 
     def _find_query_hash(self) -> Optional[str]:
@@ -253,9 +258,9 @@ class InstagramHashtag(BaseInstagramCrawler):
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         tag_name = config["tag_name"]
-        if type(tag_name) is not str:
+        if type(tag_name) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError("tag_name {!r} is not str".format(tag_name))
-        if 0 == len(tag_name):
+        if len(tag_name) == 0:
             raise ValueError("tag_name {!r} is empty".format(tag_name))
         return ImageCrawlerConfig(
             tag_name=tag_name.lower(),
@@ -293,9 +298,9 @@ class InstagramProfile(BaseInstagramCrawler):
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         user_name = config["user_name"]
-        if type(user_name) is not str:
+        if type(user_name) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError("user_name {!r} is not str".format(user_name))
-        if 0 == len(user_name):
+        if len(user_name) == 0:
             raise ValueError("user_name {!r} is empty".format(user_name))
         return ImageCrawlerConfig(
             user_name=user_name.lower(),

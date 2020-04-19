@@ -32,9 +32,9 @@ class Reddit(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         subreddit = config["subreddit"]
-        if type(subreddit) is not str:
+        if type(subreddit) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError("subreddit {!r} is not str".format(subreddit))
-        if 0 == len(subreddit):
+        if len(subreddit) == 0:
             raise ValueError("subreddit {!r} is empty".format(subreddit))
         return ImageCrawlerConfig(
             subreddit=subreddit,
@@ -51,10 +51,12 @@ class Reddit(BaseImageCrawler):
         for child in listing['data']['children']:
             image_uri = self._get_image(child['data'])
             if image_uri:
-                images.add(Image(
-                    uri=image_uri,
-                    source=urljoin(uri, child['data']['permalink']),
-                ))
+                images.add(  # pylint: disable=no-member # false-positive
+                    Image(
+                        uri=image_uri,
+                        source=urljoin(uri, child['data']['permalink']),
+                    )
+                )
         # don't care if `after` is `None` after the crawl ... why not restarting at front when the end is reached?!
         self._after = listing['data']['after']
         return images

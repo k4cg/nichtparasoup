@@ -19,7 +19,7 @@ from nichtparasoup.core.image import ImageCollection
 _ImageCrawlerConfigKey = str
 
 
-class ImageCrawlerInfo(object):
+class ImageCrawlerInfo:
     """ImageCrawler's Info.
 
     .. seealso:: :method:`BaseImageCrawler.info()`
@@ -92,7 +92,7 @@ class BaseImageCrawler(ABC):
                 crawled = self._crawl()
                 _log('debug', 'crawling finished {!r}'.format(self))
                 return crawled
-            except Exception:
+            except Exception:  # pylint: disable=broad-except
                 _log('exception', 'caught an error during crawling {!r}'.format(self))
                 return ImageCollection()
 
@@ -151,7 +151,7 @@ class BaseImageCrawler(ABC):
         raise NotImplementedError()
 
 
-class RemoteFetcher(object):
+class RemoteFetcher:
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }
@@ -175,7 +175,7 @@ class RemoteFetcher(object):
         request = Request(uri, headers=self._headers)
         try:
             response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=True)
             raise e
         actual_uri = response.geturl()  # after following redirects ...
@@ -191,7 +191,7 @@ class RemoteFetcher(object):
         return response.read().decode(charset), actual_uri
 
 
-class ImageRecognizer(object):
+class ImageRecognizer:
     _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
 
     def path_is_image(self, uri: str) -> bool:

@@ -8,7 +8,7 @@ ImageUri = str
 SourceUri = str
 
 
-class Image(object):
+class Image:
     """Describe an image
 
     `uri`

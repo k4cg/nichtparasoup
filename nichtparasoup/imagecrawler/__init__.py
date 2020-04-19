@@ -1,7 +1,7 @@
 __all__ = [
     "get_imagecrawlers",
     # for convenience, all classes that are needed to implement an ImageCrawler are exported, here
-    "BaseImageCrawler", "ImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
     "Image", "ImageCollection",
     "RemoteFetcher", "ImageRecognizer",
 ]
@@ -22,11 +22,12 @@ _ImagecrawlerClass = Type[BaseImageCrawler]
 _Imagecrawler = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
 
 
-class KnownImageCrawlers(object):
+class KnownImageCrawlers:
 
     @staticmethod
     def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
         # late import to prevent possible circular imports
+        # pylint: disable=import-outside-toplevel
         from .echo import Echo
         from .picsum import Picsum
         from .reddit import Reddit
@@ -47,7 +48,7 @@ class KnownImageCrawlers(object):
             try:
                 self._append(entry)
                 _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
-            except Exception as e:
+            except Exception as e:  # pylint: disable=broad-except
                 _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
 
     def __len__(self) -> int:

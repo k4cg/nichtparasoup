@@ -47,4 +47,4 @@ def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler], *, debu
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pylint: disable=no-value-for-parameter

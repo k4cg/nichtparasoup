@@ -2,15 +2,14 @@
 Its internal foo that is not for public use.
 """
 
-__all__ = ["_LINEBREAK", '_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_confirm',
-           '_type_module_name_str']
+__all__ = ["_LINEBREAK", '_LOGGER', '_log', '_logging_init', '_message', '_message_exception', '_type_module_name_str']
 
 import logging
 import sys
 from typing import Any, List, Optional, TextIO, Type, Union
 
 if sys.version_info >= (3, 8):
-    from typing import Literal
+    from typing import Literal   # pylint: disable=no-name-in-module
 else:
     from typing_extensions import Literal
 
@@ -65,5 +64,5 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     _message('{}: {}'.format(exception_name, exception), file=file)
 
 
-def _type_module_name_str(t: Type[Any]) -> str:
-    return '{}:{}'.format(t.__module__, t.__name__)
+def _type_module_name_str(type_: Type[Any]) -> str:
+    return '{}:{}'.format(type_.__module__, type_.__name__)

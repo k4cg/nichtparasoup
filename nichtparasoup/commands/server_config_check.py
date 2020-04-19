@@ -46,4 +46,4 @@ def _probe_config(config: Config, *, retries: int, delay: float) -> None:  # pra
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pylint: disable=no-value-for-parameter

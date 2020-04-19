@@ -23,9 +23,9 @@ class Picsum(BaseImageCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         width = config["width"]
         height = config["height"]
-        if type(width) is not int:
+        if type(width) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
             raise TypeError("width {!r} is not int".format(width))
-        if type(height) is not int:
+        if type(height) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
             raise TypeError("height {!r} is not int".format(height))
         if width <= 0:
             raise ValueError("width {!r} <= 0".format(width))
@@ -47,10 +47,12 @@ class Picsum(BaseImageCrawler):
         images = ImageCollection()
         config = self.get_config()
         for _ in range(0, self._bunch):
-            image_uri = self._get_image_uri(**config)
-            images.add(Image(
-                uri=image_uri,
-                source=image_uri,
-                is_generic=True,
-            ))
+            image_uri = self._get_image_uri(**config)  # pylint: disable=not-a-mapping  # false-positive
+            images.add(  # pylint: disable=no-member # false-positive
+                Image(
+                    uri=image_uri,
+                    source=image_uri,
+                    is_generic=True,
+                )
+            )
         return images

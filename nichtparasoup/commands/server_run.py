@@ -44,4 +44,4 @@ def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pylint: disable=no-value-for-parameter
