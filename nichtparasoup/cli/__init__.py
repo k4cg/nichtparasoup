@@ -1,3 +1,5 @@
+__all__ = ['main']
+
 from os.path import dirname
 from sys import version_info
 
