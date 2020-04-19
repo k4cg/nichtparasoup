@@ -8,6 +8,9 @@ from click_completion import Shell, get_code, init  # type: ignore
 # click's builtin completion is insufficient and partially broken.
 # completes loaded sub commands as 'main' instead of the correct name
 init()
+# @FIXME unfortunately there is no proper completion for files
+# @FIXME and since there is no support for manual `autocomplete` callbacks, i cannot patch it in ...
+#   - see https://github.com/click-contrib/click-completion/pull/27
 
 ShellChoice = Choice(Shell.__members__.keys())
 

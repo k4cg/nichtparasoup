@@ -9,7 +9,7 @@ from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
 @command(name='imagecrawler-list')
-@option('--debug', is_flag=True, help='enable debug output.')
+@option('--debug', is_flag=True, help='Enable debug output.')
 def main(*, debug: bool = False) -> None:  # pragma: no cover
     """List available imagecrawlers.
     """

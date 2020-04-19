@@ -10,7 +10,7 @@ from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 @command(name='imagecrawler-desc')
 @argument('name', type=Choice(tuple(get_imagecrawlers().names())), metavar='NAME')
-@option('--debug', is_flag=True, help='enable debug output.')
+@option('--debug', is_flag=True, help='Enable debug output.')
 def main(name: str, *, debug: bool = False) -> None:  # pragma: no cover
     """Describe an imagecrawler and its configuration.
     """

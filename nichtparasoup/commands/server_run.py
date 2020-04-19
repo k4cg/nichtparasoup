@@ -3,7 +3,7 @@ __all__ = ['main']
 import logging
 from typing import Optional
 
-from click import BadParameter, Context, Parameter, Path, argument, command, option
+from click import BadParameter, Context, Parameter, Path, command, option
 
 from nichtparasoup._internals import _LINEBREAK, _log, _logging_init
 from nichtparasoup.config import Config, get_config, get_imagecrawler
@@ -23,10 +23,11 @@ def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) 
 
 
 @command(name='server-run')
-@argument('config', type=Path(exists=True, dir_okay=False, resolve_path=True),
-          required=False, default=None, callback=_param_get_config)
-@option('--debug', is_flag=True, help='enable debug output.')
-@option('--develop', is_flag=True, help='set * for CORS header.')
+@option('--config', type=Path(exists=True, dir_okay=False, resolve_path=True),
+        required=False, default=None, callback=_param_get_config,
+        help='Use custom YAML config file instead of the defaults.')
+@option('--debug', is_flag=True, help='Enable debug output.')
+@option('--develop', is_flag=True, help='Start the server in frontend-developer mode.')
 def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:  # pragma: no cover
     """Start a web-server to display random images.
 

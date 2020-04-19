@@ -4,7 +4,7 @@ from sys import version_info
 from click import group, version_option
 
 import nichtparasoup
-from nichtparasoup.cli.completion import main as completion
+# from nichtparasoup.cli.completion import main as completion # @FIXME removed until fixed -- see module itself
 from nichtparasoup.commands.imagecrawler_desc import main as imagecrawler_desc
 from nichtparasoup.commands.imagecrawler_list import main as imagecrawler_list
 from nichtparasoup.commands.server_config_check import main as server_config_check
@@ -25,12 +25,13 @@ def main() -> None:  # pragma: no cover
     pass
 
 
-main.add_command(completion, name='completion')
+# @FIXME removed until fixed -- see module itself
+# main.add_command(completion, name='completion')
 
 
-@main.group()
+@main.group(name='server')
 def server() -> None:  # pragma: no cover
-    """Manage server
+    """Manage server.
     """
     pass
 
@@ -38,9 +39,9 @@ def server() -> None:  # pragma: no cover
 server.add_command(server_run, name='run')
 
 
-@server.group('config')
+@server.group(name='config')
 def server_config() -> None:  # pragma: no cover
-    """Manage server configs
+    """Manage server configs.
     """
     pass
 
@@ -49,9 +50,9 @@ server_config.add_command(server_config_check, name='check')
 server_config.add_command(server_config_dump_defaults, name='dump-defaults')
 
 
-@main.group()
+@main.group(name='imagecrawler')
 def imagecrawler() -> None:  # pragma: no cover
-    """Manage imagecrawlers
+    """Manage imagecrawlers.
     """
     pass
 

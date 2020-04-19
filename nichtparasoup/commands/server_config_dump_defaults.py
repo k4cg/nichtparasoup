@@ -12,8 +12,8 @@ from nichtparasoup.config import dump_defaults
 
 @command(name='server-config-dump-defaults')
 @argument('file', type=Path(writable=True, dir_okay=False, resolve_path=True))
-@option('--overwrite/--no-overwrite', default=None, help='overwrite file target.')
-@option('--debug', is_flag=True, help='enable debug output.')
+@option('--overwrite/--no-overwrite', default=None, help='Overwrite file target.', show_default=True)
+@option('--debug', is_flag=True, help='Enable debug output.')
 def main(file: str, *, overwrite: Optional[bool] = None, debug: bool = False) -> None:  # pragma: no cover
     """Dump the builtin default YAML.
 
