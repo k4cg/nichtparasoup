@@ -31,7 +31,7 @@ class Pr0gramm(BaseImageCrawler):
     def __check_config_tags(tags: Optional[str]) -> Optional[str]:
         if tags is None:
             return None
-        if type(tags) is str:
+        if type(tags) is str:  # pylint: disable=unidiomatic-typecheck
             tags = tags.strip()
             if not tags.startswith('!'):
                 raise ValueError('tags {!r} must start with "!"'.format(tags))
@@ -43,7 +43,7 @@ class Pr0gramm(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         promoted = config['promoted'] if 'promoted' in config else True  # type: bool
-        if type(promoted) is not bool:
+        if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
             raise TypeError('promoted {!r} is not bool'.format(promoted))
         tags = config['tags'] if 'tags' in config else None
         tags = cls.__check_config_tags(tags)
@@ -85,17 +85,19 @@ class Pr0gramm(BaseImageCrawler):
         api_uri = self._get_api_uri(
             flags=1,
             promoted=promoted,
-            tags=self._config.get('tags', None),
+            tags=self._config.get('tags', None),  # pylint: disable=no-member # false-positive
             older=self._older)
         response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
         response = json_loads(response_raw)
         for item in response['items']:
-            images.add(Image(
-                uri=urljoin(self.__IMG_BASE_URL, str(item['image'])),
-                source=urljoin(self.__POST_BASE_URL, str(item['id'])),
-                width=item.get('width'),
-                height=item.get('height'),
-            ))
+            images.add(  # pylint: disable=no-member # false-positive
+                Image(
+                    uri=urljoin(self.__IMG_BASE_URL, str(item['image'])),
+                    source=urljoin(self.__POST_BASE_URL, str(item['id'])),
+                    width=item.get('width'),
+                    height=item.get('height'),
+                )
+            )
         if response['atEnd']:
             self.reset()
         else:

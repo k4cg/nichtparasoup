@@ -58,7 +58,7 @@ class ConfigTest(TestCase):
     def _probe_crawl(imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
         try:
             imagecrawler._crawl()
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             raise ImageCrawlerProbeCrawlError(imagecrawler) from e
 
     @classmethod
@@ -66,7 +66,7 @@ class ConfigTest(TestCase):
                            retries: int, delay: float) -> None:  # pragma: no cover
         try:
             imagecrawler._crawl()
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             if retries <= 0:
                 raise ImageCrawlerProbeCrawlError(imagecrawler) from e
             del e
@@ -90,6 +90,7 @@ class ConfigTest(TestCase):
 class ImageCrawlerProbeCrawlError(Exception):
 
     def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
+        super().__init__()
         self._imagecrawler = imagecrawler
 
     def __str__(self) -> str:  # pragma: no cover

@@ -24,7 +24,6 @@ VERSION_STRING = '%(version)s from {location} (python {py_version})'.format(
 def main() -> None:  # pragma: no cover
     """Nichtparasoup
     """
-    pass
 
 
 # @FIXME removed until fixed -- see module itself
@@ -35,7 +34,6 @@ def main() -> None:  # pragma: no cover
 def server() -> None:  # pragma: no cover
     """Manage server.
     """
-    pass
 
 
 server.add_command(server_run, name='run')
@@ -45,7 +43,6 @@ server.add_command(server_run, name='run')
 def server_config() -> None:  # pragma: no cover
     """Manage server configs.
     """
-    pass
 
 
 server_config.add_command(server_config_check, name='check')
@@ -56,7 +53,6 @@ server_config.add_command(server_config_dump_defaults, name='dump-defaults')
 def imagecrawler() -> None:  # pragma: no cover
     """Manage imagecrawlers.
     """
-    pass
 
 
 imagecrawler.add_command(imagecrawler_list, name='list')

@@ -30,4 +30,4 @@ def main(file: str, *, overwrite: Optional[bool] = None, debug: bool = False) ->
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pylint: disable=no-value-for-parameter

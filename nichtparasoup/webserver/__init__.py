@@ -36,7 +36,7 @@ class JsonResponse(Response):
         )
 
 
-class WebServer(object):
+class WebServer:
     _TEMPLATE_FILES = path_join(dirname(__file__), 'htdocs', 'template')
     _STATIC_FILES = path_join(dirname(__file__), 'htdocs', 'static')
     _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES

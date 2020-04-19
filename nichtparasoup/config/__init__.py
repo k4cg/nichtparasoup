@@ -23,6 +23,7 @@ Config = Dict[str, Any]
 class ImageCrawlerSetupError(Exception):
 
     def __init__(self, ic_name: str, ic_class: type, ic_config: Dict[Any, Any]) -> None:  # pragma: no cover
+        super().__init__()
         self._name = ic_name
         self._class = ic_class
         self._config = ic_config

@@ -12,12 +12,12 @@ init()
 # @FIXME and since there is no support for manual `autocomplete` callbacks, i cannot patch it in ...
 #   - see https://github.com/click-contrib/click-completion/pull/27
 
-ShellChoice = Choice(Shell.__members__.keys())
+SHELL_CHOICE = Choice(Shell.__members__.keys())
 
 
 @command(name='completion')
-@option('--shell', type=ShellChoice, default=None, metavar='SHELL',
-        help='Override auto-detection. Values: {}.'.format(', '.join(ShellChoice.choices)))
+@option('--shell', type=SHELL_CHOICE, default=None, metavar='SHELL',
+        help='Override auto-detection. Values: {}.'.format(', '.join(SHELL_CHOICE.choices)))
 def main(shell: Optional[Shell]) -> None:  # pragma: no cover
     """Emit completion code for the shell.
 

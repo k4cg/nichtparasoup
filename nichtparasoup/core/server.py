@@ -13,7 +13,7 @@ from nichtparasoup._internals import _log, _type_module_name_str
 from nichtparasoup.core import Crawler, NPCore
 
 
-class Server(object):
+class Server:
     """
 
     This class is intended to be thread save.
@@ -208,7 +208,7 @@ class ServerRefiller(Thread):
             self._run_lock.release()
 
 
-class ServerStatistics(object):
+class ServerStatistics:
     def __init__(self) -> None:  # pragma: no cover
         self.time_started = None  # type: Optional[int]
         self.count_images_served = 0  # type: int
@@ -217,7 +217,7 @@ class ServerStatistics(object):
         self.cum_blacklist_on_flush = 0  # type: int
 
 
-class _ServerLocks(object):
+class _ServerLocks:
     def __init__(self) -> None:  # pragma: no cover
         self.stats_get_image = Lock()
         self.reset = Lock()
