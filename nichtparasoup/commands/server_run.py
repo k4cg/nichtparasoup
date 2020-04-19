@@ -30,8 +30,6 @@ def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) 
 @option('--develop', is_flag=True, help='Start the server in frontend-developer mode.')
 def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:  # pragma: no cover
     """Start a web-server to display random images.
-
-    Can use a custom YAML config file instead of the defaults.
     """
     del develop  # @TODO implement develop mode - enable arbitrary CORS
     _logging_init(logging.DEBUG if debug else getattr(logging, config['logging']['level']))
