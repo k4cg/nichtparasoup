@@ -1,5 +1,5 @@
 __all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file",
-           "ImageCrawlerSetupError"]
+           "ImageCrawlerSetupError", "Config"]
 
 from copy import deepcopy
 from os.path import dirname, join as path_join, realpath
@@ -16,6 +16,8 @@ _schema = None  # type: Optional[Any]
 
 _DEFAULTS_FILE = realpath(path_join(dirname(__file__), "defaults.yaml"))
 _defaults = None  # type: Optional[Dict[str, Any]]
+
+Config = Dict[str, Any]
 
 
 class ImageCrawlerSetupError(Exception):
@@ -41,7 +43,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from e
 
 
-def parse_yaml_file(file_path: str) -> Dict[str, Any]:
+def parse_yaml_file(file_path: str) -> Config:
     global _schema
     if not _schema:
         _schema = yamale.make_schema(_SCHEMA_FILE, parser='ruamel')
@@ -59,14 +61,14 @@ def dump_defaults(file_path: str) -> None:
     copyfile(_DEFAULTS_FILE, file_path)
 
 
-def get_defaults() -> Dict[str, Any]:
+def get_defaults() -> Config:
     global _defaults
     if not _defaults:
         _defaults = parse_yaml_file(_DEFAULTS_FILE)
     return deepcopy(_defaults)
 
 
-def get_config(config_file: Optional[str] = None) -> Dict[str, Any]:
+def get_config(config_file: Optional[str] = None) -> Config:
     if not config_file:
         return get_defaults()
     try:

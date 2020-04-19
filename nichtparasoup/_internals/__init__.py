@@ -65,21 +65,5 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     _message('{}: {}'.format(exception_name, exception), file=file)
 
 
-def _confirm(prompt: str, default: bool = False) -> Optional[bool]:
-    return_values = {
-        'y': True,
-        'yes': True,
-        '': default,
-        'n': False,
-        'no': False,
-    }
-    options = 'Y/n' if default else 'y/N'
-    try:
-        value = input('{} [{}]: '.format(prompt, options)).strip().lower()
-        return return_values[value]
-    except (KeyboardInterrupt, EOFError, KeyError):
-        return None
-
-
 def _type_module_name_str(t: Type[Any]) -> str:
     return '{}:{}'.format(t.__module__, t.__name__)
