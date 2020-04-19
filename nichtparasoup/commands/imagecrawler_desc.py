@@ -1,19 +1,14 @@
-__all__ = ['main']
+__all__ = ['main', 'cli']
 
 from typing import Type
 
-from click import BadParameter, Choice, argument, command, option
+from click import Argument, BadParameter, Choice, Command, Option
 
 from nichtparasoup._internals import _LINEBREAK, _message, _type_module_name_str
 from nichtparasoup.imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 
-@command(name='imagecrawler-desc')
-@argument('name', type=Choice(tuple(get_imagecrawlers().names())), metavar='NAME')
-@option('--debug', is_flag=True, help='Enable debug output.')
 def main(name: str, *, debug: bool = False) -> None:  # pragma: no cover
-    """Describe an imagecrawler and its configuration.
-    """
     imagecrawler_class = get_imagecrawlers().get_class(name)
     if not imagecrawler_class:
         raise BadParameter(name, param_hint='name')
@@ -46,5 +41,23 @@ def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler], *, debu
         _message('')
 
 
+cli = Command(
+    name='imagecrawler-desc',
+    help='Describe an imagecrawler and its configuration.',
+    callback=main,
+    params=[
+        Argument(
+            param_decls=['name'],
+            metavar='NAME',
+            type=Choice(tuple(get_imagecrawlers().names())),
+        ),
+        Option(
+            param_decls=['--debug'],
+            help='Enable debug output.',
+            is_flag=True,
+        ),
+    ],
+)
+
 if __name__ == '__main__':
-    main()  # pylint: disable=no-value-for-parameter
+    cli.main()  # pylint: disable=no-value-for-parameter
