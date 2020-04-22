@@ -1,18 +1,14 @@
-__all__ = ['main']
+__all__ = ['main', 'cli']
 
 from logging import DEBUG as L_DEBUG, ERROR as L_ERROR
 
-from click import command, option
+from click import Command, Option
 
 from nichtparasoup._internals import _log, _logging_init, _message, _message_exception
 from nichtparasoup.imagecrawler import get_imagecrawlers
 
 
-@command(name='imagecrawler-list')
-@option('--debug', is_flag=True, help='Enable debug output.')
 def main(*, debug: bool = False) -> None:  # pragma: no cover
-    """List available imagecrawlers.
-    """
     _logging_init(L_DEBUG if debug else L_ERROR)
     imagecrawlers = get_imagecrawlers()  # may trigger debug output
     _log('debug', '- List of loaded ImageCrawlers -')
@@ -22,5 +18,18 @@ def main(*, debug: bool = False) -> None:  # pragma: no cover
         _message_exception(Warning('no ImageCrawler found.'))
 
 
+cli = Command(
+    name='imagecrawler-list',
+    help='List available imagecrawlers.',
+    callback=main,
+    params=[
+        Option(
+            param_decls=['--debug'],
+            help='Enable debug output.',
+            is_flag=True,
+        ),
+    ]
+)
+
 if __name__ == '__main__':
-    main()  # pylint: disable=no-value-for-parameter
+    cli.main()  # pylint: disable=no-value-for-parameter
