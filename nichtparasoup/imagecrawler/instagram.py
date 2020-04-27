@@ -206,9 +206,10 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         uri = self._get_query_uri(query_hash, 1, None, **self._get_query_variables())
         try:
             self._query(uri)
-            return True
         except Exception:  # pylint: disable=broad-except
             return False
+        else:
+            return True
 
     def _find_query_hash(self) -> Optional[str]:
         query_hashes = self._get_queryhashfinder().find_hashes()

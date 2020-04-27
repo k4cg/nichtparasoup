@@ -24,7 +24,7 @@ class JsonResponse(Response):
                  headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
                  mimetype: Optional[str] = 'application/json',
                  content_type: Optional[str] = 'application/json',
-                 direct_passthrough: bool = False,
+                 direct_passthrough: bool = False
                  ) -> None:
         super().__init__(
             response=json_encode(response),
