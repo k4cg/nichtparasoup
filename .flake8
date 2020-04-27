@@ -10,7 +10,7 @@ exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
     docs
     examples
 
-max-complexity = 5
+max-complexity = 6
 
 # allow up to 119 characters as this is the width of GitHub code review
 max-line-length = 120
