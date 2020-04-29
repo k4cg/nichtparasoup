@@ -36,7 +36,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     imagecrawler_name = config_crawler['name']
     imagecrawler_class = get_imagecrawlers().get_class(imagecrawler_name)
     if not imagecrawler_class:
-        raise ValueError('unknown crawler name {!r}'.format(imagecrawler_name))
+        raise ValueError('Unknown crawler name {!r}'.format(imagecrawler_name))
     imagecrawler_config = config_crawler['config']
     try:
         return imagecrawler_class(**imagecrawler_config)

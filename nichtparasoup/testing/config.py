@@ -1,18 +1,27 @@
 __all__ = ["ConfigFileTest", "ConfigTest",
            'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT',
-           "ProbeCallbackReason",
-           "BaseProbeCrawlError", "ProbeCrawlError", "ProbeCrawMultipleError"]
+           "ProbeCallbackReason", "ConfigProbeCallback"
+           ]
 
 from enum import Enum, auto
 from time import sleep
 from typing import Any, Callable, List, Optional
 from unittest import TestCase
 
-from nichtparasoup.config import Config, get_imagecrawler, parse_yaml_file
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from ..config import Config, get_imagecrawler, parse_yaml_file
+from ..core.imagecrawler import BaseImageCrawler
+from .imagecrawler import (
+    PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ImagecrawlerProbeResult as ImagecrawlerProbeResult_, ImageCrawlerTest,
+)
 
-PROBE_DELAY_DEFAULT = 0.05  # type: float
-PROBE_RETRIES_DEFAULT = 2  # type: int
+
+class ImagecrawlerProbeResult:
+    def __init__(self, imagecrawler: BaseImageCrawler, result: ImagecrawlerProbeResult_) -> None:  # pragma: no cover
+        self.imagecrawler = imagecrawler
+        self.result = result
+
+
+ConfigProbeResults = List[ImagecrawlerProbeResult]
 
 
 class ConfigFileTest(TestCase):
@@ -21,19 +30,20 @@ class ConfigFileTest(TestCase):
     def validate(file: str) -> Config:  # pragma: no cover
         """Validate a config file.
         :param file: file path to the config to validate
+        :return: config
         """
         config = parse_yaml_file(file)
-        ConfigTest().validate(config)
+        ConfigTest().find_duplicates(config)
         return config
 
     @staticmethod
-    def probe(file: str, *args: Any, **kwargs: Any) -> Config:  # pragma: no cover
+    def probe(file: str, *args: Any, **kwargs: Any) -> ConfigProbeResults:  # pragma: no cover
         """Probe a config file.
         :param file: config to probe
+        :return: probe result
         """
         config = parse_yaml_file(file)
-        ConfigTest().probe(config, **kwargs)
-        return config
+        return ConfigTest().probe(config, **kwargs)
 
 
 class ProbeCallbackReason(Enum):
@@ -43,86 +53,54 @@ class ProbeCallbackReason(Enum):
     failure = auto()
 
 
-ProbeCallback = Callable[[ProbeCallbackReason, BaseImageCrawler, Optional[Exception]], None]
+# :param: reason why called
+# :param: imagecrawler processed
+# :param: error if reason is a ``ProbeCallbackReason.retry``
+# :return: continue with retry
+ConfigProbeCallback = Callable[[ProbeCallbackReason, BaseImageCrawler, Optional[BaseException]], Optional[bool]]
 
 
 class ConfigTest(TestCase):
 
-    def validate(self, config: Config) -> None:
+    def find_duplicates(self, config: Config) -> List[BaseImageCrawler]:
         """Validate a config.
          :param config: file path to the config to validate
+         :return: duplicates
          """
-        imagecrawlers = list()  # type: List[BaseImageCrawler]
+        imagecrawlers = []  # type: List[BaseImageCrawler]
+        duplicates = []  # type: List[BaseImageCrawler]
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
-            self.assertNotIn(imagecrawler, imagecrawlers, msg='Duplicate ImageCrawler')
-            imagecrawlers.append(imagecrawler)
-
-    @classmethod
-    def _probe_crawl_retry(cls, imagecrawler: BaseImageCrawler,
-                           retries: int, delay: float, *,
-                           callback: Optional[ProbeCallback] = None) -> None:
-        try:
-            imagecrawler._crawl()
-        except Exception as e:  # pylint: disable=broad-except
-            if retries <= 0:
-                raise ProbeCrawlError(imagecrawler) from e
-            sleep(delay)
-            callback and callback(ProbeCallbackReason.retry, imagecrawler, e)
-            cls._probe_crawl_retry(imagecrawler, retries - 1, delay, callback=callback)
+            (duplicates if imagecrawler in imagecrawlers else imagecrawlers).append(imagecrawler)
+        return duplicates
 
     def probe(self, config: Config, *,
               delay: float = PROBE_DELAY_DEFAULT, retries: int = PROBE_RETRIES_DEFAULT,
-              fail_fast: bool = False,
-              callback: Optional[ProbeCallback] = None,
-              ) -> None:
+              callback: Optional[ConfigProbeCallback] = None
+              ) -> ConfigProbeResults:
         """Probe a config.
         :param config: config to probe
         :param delay: delay to wait between each crawler probes
         :param retries: number of retries in case an error occurred
-        :param fail_fast: fail fast or collect exceptions. influence the raise behaviour
-        :param callback: callback when
-        :raises ProbeCrawlError: raised on error if ``fail_fast``
-        :raises ProbeCrawMultipleError: raised on error if not ``fail_fast``
+        :param callback: callback function
+        :return: probe results
         """
-        errors = []  # type: List[ProbeCrawlError]
-        for crawler_config in config['crawlers']:
+        result = []  # type: ConfigProbeResults
+        ic_test = ImageCrawlerTest()
+        for c, crawler_config in enumerate(config['crawlers']):
+            if c > 0:
+                sleep(delay)
             imagecrawler = get_imagecrawler(crawler_config)
             callback and callback(ProbeCallbackReason.start, imagecrawler, None)
-            try:
-                self._probe_crawl_retry(imagecrawler, retries, delay, callback=callback)
-            except ProbeCrawlError as e:
-                callback and callback(ProbeCallbackReason.failure, imagecrawler, e)
-                if fail_fast:
-                    raise e
-                errors.append(e)
-            else:
-                callback and callback(ProbeCallbackReason.finish, imagecrawler, None)
-            sleep(delay)
-        if len(errors) > 0:
-            raise ProbeCrawMultipleError(errors)
-
-
-class BaseProbeCrawlError(Exception):
-    pass
-
-
-class ProbeCrawlError(BaseProbeCrawlError):
-
-    def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
-        super().__init__()
-        self.imagecrawler = imagecrawler
-
-    def __str__(self) -> str:  # pragma: no cover
-        return 'Probe-crawl failed for {!r}'.format(self.imagecrawler)
-
-
-class ProbeCrawMultipleError(BaseProbeCrawlError):
-
-    def __init__(self, imagecrawlers: List[ProbeCrawlError]) -> None:  # pragma: no cover
-        super().__init__()
-        self.imagecrawlers = imagecrawlers
-
-    def __str__(self) -> str:  # pragma: no cover
-        return 'Multiple probe-crawl errors:\n\t' + \
-               '\n\t'.join(map(str, self.imagecrawlers))
+            ic_probe_result = ic_test.probe(
+                imagecrawler,
+                retries=retries, retry_delay=delay,
+                retry_callback=lambda ic, ex: not callback or callback(ProbeCallbackReason.retry, ic, ex) is not False
+            )
+            result.append(ImagecrawlerProbeResult(imagecrawler, ic_probe_result))
+            if callback and callback(
+                ProbeCallbackReason.failure if ic_probe_result.is_failure() else ProbeCallbackReason.finish,
+                imagecrawler, None
+            ) is False and ic_probe_result.is_failure():
+                break
+        return result

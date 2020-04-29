@@ -5,7 +5,7 @@ from typing import Any, Dict
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import ImageCrawlerConfig, ImageCrawlerInfo
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.testing.config import ConfigTest, ProbeCallbackReason, ProbeCrawlError
+from nichtparasoup.testing.config import ConfigTest, ProbeCallbackReason
 
 
 class ConfigValidateTest(unittest.TestCase):
@@ -38,7 +38,7 @@ class ConfigValidateTest(unittest.TestCase):
         tester = ConfigTest()
         # act & assert
         with self.assertRaisesRegex(Exception, re.compile(r'duplicate ImageCrawler', re.IGNORECASE)):
-            tester.validate(test_config)
+            tester.find_duplicates(test_config)
 
 
 class ConfigProbeRCrawlRetryTest(unittest.TestCase):
