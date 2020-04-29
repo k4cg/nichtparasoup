@@ -1,5 +1,6 @@
 __all__ = ["FileFetcher", "ImageCrawlerLoaderTest",
-           'ImageCrawlerTest', 'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT', 'ImagecrawlerProbeResult'
+           'ImageCrawlerTest', 'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT', 'ImagecrawlerProbeResult',
+           'ImagecrawlerProbeRetryCallback'
            ]
 
 from abc import ABC, abstractmethod
@@ -138,6 +139,12 @@ PROBE_RETRIES_DEFAULT = 2  # type: int
 
 
 ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, BaseException], bool]
+"""ImageCrawlerTest probe callback.
+See :ref:``ImageCrawlerTest.probe``
+:param: imagecrawler
+:param: error
+:return: retry crawl
+"""
 
 
 class ImagecrawlerProbeResult:
@@ -145,11 +152,13 @@ class ImagecrawlerProbeResult:
         self.images = images
         self.errors = errors
 
+    @property
     def is_failure(self) -> bool:
+        """Is this a failure?"""
         return self.images is None
 
 
-class ImageCrawlerTest(TestCase):
+class ImageCrawlerTest:
 
     def probe(self, imagecrawler: BaseImageCrawler, *,
               retries: int = PROBE_RETRIES_DEFAULT,

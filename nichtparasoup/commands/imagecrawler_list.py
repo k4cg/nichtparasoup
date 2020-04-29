@@ -1,17 +1,16 @@
 __all__ = ['main', 'cli']
 
-from click import Command
+from click import ClickException, Command, echo
 
-from .._internals import _message, _message_exception
 from ..imagecrawler import get_imagecrawlers
 
 
 def main() -> None:  # pragma: no cover
     imagecrawlers = get_imagecrawlers()  # may trigger debug output
-    if len(imagecrawlers) > 0:
-        _message(sorted(imagecrawlers.names()))
+    for imagecrawler in sorted(imagecrawlers.names()):
+        echo(imagecrawler)
     else:
-        _message_exception(Warning('no ImageCrawler found.'))
+        raise ClickException('No ImageCrawler found.')
 
 
 cli = Command(

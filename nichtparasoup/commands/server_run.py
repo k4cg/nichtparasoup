@@ -5,7 +5,7 @@ from typing import Optional
 
 from click import BadParameter, Command, Context, Option, Parameter, Path
 
-from .._internals import _LINEBREAK, _log, _logging_init
+from .._internals import _log, _logging_init
 from ..config import Config, get_config, get_imagecrawler
 from ..core import NPCore
 from ..core.server import Server as ImageServer
@@ -30,7 +30,7 @@ def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) 
         return get_config(config_file)
     except Exception as ex:
         raise BadParameter(
-            '{}{}Use the "server config check" command for an analyse.'.format(ex, _LINEBREAK),
+            '{}\n\tUse the "server config check" command for an analyse.'.format(ex),
             param=param
         ) from ex
 

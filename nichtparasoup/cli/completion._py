@@ -1,3 +1,6 @@
+# noqa:
+raise NotImplementedError('COMPLETION MODULE IS CURRENTLY ON HALT')  # FIXME
+
 __all__ = ['main', 'cli']
 
 from typing import Any, Optional

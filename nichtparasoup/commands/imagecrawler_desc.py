@@ -2,9 +2,8 @@ __all__ = ['main', 'cli']
 
 from typing import Type
 
-from click import Argument, BadParameter, Choice, Command
+from click import Argument, BadParameter, Choice, Command, echo
 
-from .._internals import _LINEBREAK, _message
 from ..imagecrawler import BaseImageCrawler, get_imagecrawlers
 
 
@@ -15,31 +14,31 @@ def main(name: str) -> None:  # pragma: no cover
     _print_imagecrawler_info(imagecrawler_class)
 
 
-def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None:
+def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None:   # pragma: no cover
     bull = ' * '
     imagecrawler_info = imagecrawler_class.info()
-    _message(imagecrawler_info.description)
-    _message('')
+    echo(imagecrawler_info.description)
+    echo()
     if imagecrawler_info.long_description:
-        _message(imagecrawler_info.long_description)
-        _message('')
+        echo(imagecrawler_info.long_description)
+        echo()
     if imagecrawler_info.config:
-        _message('CONFIG')
+        echo('CONFIG')
         mlen = max(len(k) for k in imagecrawler_info.config.keys())
-        _message(_LINEBREAK.join(
+        echo('\n'.join(
             bull + '{key:{mlen}}: {desc}'.format(mlen=mlen, key=key, desc=desc)
             for key, desc
             in imagecrawler_info.config.items()
         ))
-        _message('')
+        echo()
     # @TODO
     # if debug:
-    #     _message(_LINEBREAK.join([
+    #     echo(_LINEBREAK.join([
     #         'DEBUG INFO',
     #         bull + 'Icon : {}'.format(imagecrawler_info.icon_url),
     #         bull + 'Class: {}'.format(_type_module_name_str(imagecrawler_class)),
     #     ]))
-    #     _message('')
+    #     echo()
 
 
 cli = Command(

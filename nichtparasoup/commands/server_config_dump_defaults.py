@@ -22,9 +22,9 @@ def main(file: str, *, overwrite: Optional[bool] = None) -> None:  # pragma: no 
 def _write_file(file: str) -> None:  # pragma: no cover
     try:
         dump_defaults(file)
-    except Exception as e:  # pylint: disable=broad-except
-        _log('debug', '', exc_info=True)
-        raise ClickException(str(e)) from e
+    except Exception as ex:  # pylint: disable=broad-except
+        _log('debug', 'Handled exception: %s', ex, exc_info=ex)
+        raise ClickException(str(ex)) from ex
 
 
 cli = Command(

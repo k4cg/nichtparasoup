@@ -6,11 +6,11 @@ from typing import Optional
 from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, get_terminal_size, style
 from click.exceptions import ClickException
 
-from ..config import Config
+from ..config import Config, parse_yaml_file
 from ..imagecrawler import BaseImageCrawler
 from ..testing.config import (
-    PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigFileTest, ConfigProbeCallback, ConfigProbeResults, ConfigTest,
-    ProbeCallbackReason,
+    PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigProbeCallback, ConfigProbeCallbackReason, ConfigProbeResults,
+    ConfigTest,
 )
 
 
@@ -20,30 +20,34 @@ def main(file: str, *,
          verbose: bool = False
          ) -> None:  # pragma: no cover
     verbose and echo('* VALIDATING...')  # type: ignore
-    config = _validate_file(file)
+    try:
+        config = parse_yaml_file(file)
+    except Exception as ex:
+        raise ClickException('ValidateError: {}'.format(ex)) from ex
     verbose and echo('Config: {}'.format(config))    # type: ignore
+    check_config(config)
     if probe:
         verbose and echo('* PROBING...')  # type: ignore
         probe_config(config, retries=probe_retries, delay=probe_delay, fail_fast=probe_fail_fast, verbose=verbose)
 
 
-def _validate_file(file: str) -> Config:  # pragma: no cover
+def check_config(config: Config) -> None:  # pragma: no cover
     try:
-        return ConfigFileTest().validate(file)
-    except Exception as e:
-        raise ClickException('ValidateError: {!s}'.format(e)) from e
+        ConfigTest().check_duplicates(config)
+    except Exception as ex:
+        raise ClickException('ValidateError: {}'.format(ex)) from ex
 
 
-def make_probe_status_callback(fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
-    def probe_status_callback(reason: ProbeCallbackReason, imagecrawler: BaseImageCrawler,
+def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
+    def probe_status_callback(reason: ConfigProbeCallbackReason, imagecrawler: BaseImageCrawler,
                               _: Optional[BaseException]) -> Optional[bool]:
-        if reason is ProbeCallbackReason.failure:
-            verbose and echo(style('FAILED', fg='red'), nl=True)  # type: ignore
+        if reason is ConfigProbeCallbackReason.failure:
+            verbose and echo(style('x FAILED', fg='red'), nl=True)  # type: ignore
             return not fail_fast  # stop all the other tests if ``failfast``
-        elif reason is ProbeCallbackReason.finish:
-            verbose and echo(style('PASSED', fg='green'), nl=True)  # type: ignore
-        elif reason is ProbeCallbackReason.retry:
-            verbose and echo(style('RETRY ', fg='yellow'), nl=False)  # type: ignore
+        elif reason is ConfigProbeCallbackReason.finish:
+            verbose and echo(style('. PASSED', fg='green'), nl=True)  # type: ignore
+        elif reason is ConfigProbeCallbackReason.retry:
+            verbose and echo(style('r', fg='yellow'), nl=False)  # type: ignore
             return True  # continue with retry
         else:
             verbose and echo('{!s} '.format(imagecrawler), nl=False)  # type: ignore
@@ -55,17 +59,19 @@ def make_probe_status_callback(fail_fast: bool = False, verbose: bool = False) -
 def probe_config(config: Config, *,
                  retries: int, delay: float,
                  fail_fast: bool = False,
-                 verbose: bool = False) -> None:
-    config_probe_results = ConfigTest().probe(config, delay=delay, retries=retries,
-                                              callback=make_probe_status_callback(fail_fast, verbose))
+                 verbose: bool = False) -> None:  # pragma: no cover
+    config_probe_results = ConfigTest().probe(
+        config, delay=delay, retries=retries,
+        callback=make_probe_status_callback(fail_fast=fail_fast, verbose=verbose))
     verbose and print_probe_errors(config_probe_results)  # type: ignore
-    errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure()]
+    errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure]
     if any(errors):
-        raise ClickException(style('ProbeError(s) occurred', fg='red') + ' for:\n\t' + '\n\t'.join(
+        raise ClickException('ProbeError(s) occurred' + ' for:\n\t' + '\n\t'.join(
             str(error.imagecrawler) for error in errors))
 
 
-def print_probe_errors(probe_results: ConfigProbeResults) -> None:
+def print_probe_errors(probe_results: ConfigProbeResults) -> None:  # pragma: no cover
+    echo()
     formatter = Formatter()
     term_width = get_terminal_size()[0]
     printed_errors = False

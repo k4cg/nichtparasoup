@@ -16,7 +16,7 @@ from ..commands.server_run import cli as server_run
 # from .completion import cli as completion  # @FIXME removed until fixed -- see module itself
 
 
-def _cli_print_version(ctx: Context, _: Any, value: Any) -> None:
+def _cli_print_version(ctx: Context, _: Any, value: Any) -> None:  # pragma: no cover
     if not value or ctx.resilient_parsing:
         return
     echo('{version} from {location} (python {py_version})'.format(

@@ -1,21 +1,20 @@
 __all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file",
-           "ImageCrawlerSetupError", "Config"]
+           "ImageCrawlerSetupError",
+           "DEFAULTS_FILE", "SCHEMA_FILE",
+           "Config"]
 
-from copy import deepcopy
-from os.path import dirname, join as path_join, realpath
+from os.path import dirname, join, realpath
 from shutil import copyfile
 from typing import Any, Dict, Optional
 
-import yamale  # type: ignore
+from yamale import make_data, make_schema, validate as yamale_validate  # type: ignore
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawler import get_imagecrawlers
+from ..core.imagecrawler import BaseImageCrawler
+from ..imagecrawler import get_imagecrawlers
 
-_SCHEMA_FILE = realpath(path_join(dirname(__file__), "schema.yaml"))
-_schema = None  # type: Optional[Any]
+DEFAULTS_FILE = join(dirname(realpath(__file__)), "defaults.yaml")
+SCHEMA_FILE = join(dirname(realpath(__file__)), "schema.yaml")
 
-_DEFAULTS_FILE = realpath(path_join(dirname(__file__), "defaults.yaml"))
-_defaults = None  # type: Optional[Dict[str, Any]]
 
 Config = Dict[str, Any]
 
@@ -45,11 +44,10 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
 
 
 def parse_yaml_file(file_path: str) -> Config:
-    global _schema
-    if not _schema:
-        _schema = yamale.make_schema(_SCHEMA_FILE, parser='ruamel')
-    _data = yamale.make_data(file_path, parser='ruamel')
-    config = yamale.validate(_schema, _data, strict=True)[0][0]  # type: Dict[str, Any]
+    _data = make_data(file_path, parser='ruamel')
+    _schema = make_schema(SCHEMA_FILE, parser='ruamel')
+    yamale_validate(_schema, _data, strict=True)
+    config = _data[0][0]  # type: Config
     config.setdefault('logging', dict())
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
@@ -58,15 +56,12 @@ def parse_yaml_file(file_path: str) -> Config:
     return config
 
 
-def dump_defaults(file_path: str) -> None:
-    copyfile(_DEFAULTS_FILE, file_path)
+def dump_defaults(file_path: str) -> None:  # pragma: no cover
+    copyfile(DEFAULTS_FILE, file_path)
 
 
-def get_defaults() -> Config:
-    global _defaults
-    if not _defaults:
-        _defaults = parse_yaml_file(_DEFAULTS_FILE)
-    return deepcopy(_defaults)
+def get_defaults() -> Config:  # pragma: no cover
+    return parse_yaml_file(DEFAULTS_FILE)
 
 
 def get_config(config_file: Optional[str] = None) -> Config:
@@ -74,5 +69,5 @@ def get_config(config_file: Optional[str] = None) -> Config:
         return get_defaults()
     try:
         return parse_yaml_file(config_file)
-    except Exception as e:
-        raise ValueError('invalid config file {!r}'.format(config_file)) from e
+    except BaseException as ex:
+        raise ValueError('invalid config file {!r}: {}'.format(config_file, ex)) from ex
