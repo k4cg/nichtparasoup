@@ -5,16 +5,16 @@ from typing import Optional
 
 from click import BadParameter, Command, Context, Option, Parameter, Path
 
-from nichtparasoup._internals import _LINEBREAK, _log, _logging_init
-from nichtparasoup.config import Config, get_config, get_imagecrawler
-from nichtparasoup.core import NPCore
-from nichtparasoup.core.server import Server as ImageServer
-from nichtparasoup.webserver import WebServer
+from .._internals import _log, _logging_init
+from ..config import Config, get_config, get_imagecrawler
+from ..core import NPCore
+from ..core.server import Server as ImageServer
+from ..webserver import WebServer
 
 
-def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:  # pragma: no cover
+def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     del develop  # @TODO implement develop mode - enable arbitrary CORS
-    _logging_init(logging.DEBUG if debug else getattr(logging, config['logging']['level']))
+    _logging_init(getattr(logging, config['logging']['level']))
     _log('debug', 'Config: {!r}'.format(config))
     imageserver = ImageServer(NPCore(), **config['imageserver'])
     for crawler_config in config['crawlers']:
@@ -28,11 +28,11 @@ def main(config: Config, *, debug: bool = False, develop: bool = False) -> None:
 def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) -> Config:  # pragma: no cover
     try:
         return get_config(config_file)
-    except Exception as e:
+    except Exception as ex:
         raise BadParameter(
-            '{}{}Use the "server config check" command for an analyse.'.format(e, _LINEBREAK),
+            '{}\n\tUse the "server config check" command for an analyse.'.format(ex),
             param=param
-        ) from e
+        ) from ex
 
 
 cli = Command(
@@ -42,15 +42,10 @@ cli = Command(
     params=[
         Option(
             param_decls=['--config'],
-            help='Use custom YAML config file instead of the defaults.',
+            help='Use custom config instead of the defaults.',
             type=Path(exists=True, dir_okay=False, resolve_path=True),
             required=False, default=None,
             callback=_param_get_config,
-        ),
-        Option(
-            param_decls=['--debug'],
-            help='Enable debug output.',
-            is_flag=True,
         ),
         Option(
             param_decls=['--develop'],

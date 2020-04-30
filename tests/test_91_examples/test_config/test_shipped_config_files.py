@@ -11,7 +11,7 @@ from nichtparasoup.testing.config import ConfigTest
 
 @ddt
 class ShippedExampleConfigFileTest(unittest.TestCase):
-    __EXAMPLE_DIR = join(dirname(__file__), '..', '..', 'examples')
+    __EXAMPLE_DIR = join(dirname(__file__), '..', '..', '..', 'examples', 'config')
     __EXAMPLE_FILES = [basename(f) for f in glob(join(__EXAMPLE_DIR, '*.*'), recursive=False)]
 
     def test_has_examples(self) -> None:

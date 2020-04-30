@@ -51,6 +51,10 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 class BaseImageCrawler(ABC):
 
+    # internal name used in nichtparasoup configs
+    # value is assigned automatically
+    _np_name = None  # type: Optional[str]  # TODO assign on load
+
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)  # intended to be immutable from now on
         self._reset_before_next_crawl = True
@@ -58,7 +62,10 @@ class BaseImageCrawler(ABC):
         _log('debug', 'crawler initialized: {!r}'.format(self))
 
     def __repr__(self) -> str:  # pragma: no cover
-        return '<{0.__module__}.{0.__name__} {1!r}>'.format(type(self), self.get_config())
+        return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
+
+    def __str__(self) -> str:  # pragma: no cover
+        return '<{0._np_name!s} {0.config!r}>'.format(self) if self._np_name else self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
         if type(self) is not type(other):
@@ -77,6 +84,8 @@ class BaseImageCrawler(ABC):
             if not k.startswith('_')
         })
 
+    config = property(fget=get_config)
+
     def reset(self) -> None:
         self._reset_before_next_crawl = True
         _log('debug', 'crawler reset planned for {!r}'.format(self))
@@ -92,8 +101,8 @@ class BaseImageCrawler(ABC):
                 crawled = self._crawl()
                 _log('debug', 'crawling finished {!r}'.format(self))
                 return crawled
-            except Exception:  # pylint: disable=broad-except
-                _log('exception', 'caught an error during crawling {!r}'.format(self))
+            except Exception as ex:  # pylint: disable=broad-except
+                _log('error', 'caught an error during crawling {!r}'.format(self), exc_inf=ex)
                 return ImageCollection()
 
     @classmethod
@@ -175,9 +184,9 @@ class RemoteFetcher:
         request = Request(uri, headers=self._headers)
         try:
             response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
-        except Exception as e:  # pylint: disable=broad-except
-            _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=True)
-            raise e
+        except Exception as ex:  # pylint: disable=broad-except
+            _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=ex)
+            raise RemoteFetchError(str(ex), uri) from ex
         actual_uri = response.geturl()  # after following redirects ...
         return response, actual_uri
 
@@ -189,6 +198,17 @@ class RemoteFetcher:
         response, actual_uri = self.get_stream(uri)
         charset = str(response.info().get_param('charset', charset_fallback))
         return response.read().decode(charset), actual_uri
+
+
+class RemoteFetchError(Exception):
+
+    def __init__(self, msg: str, uri: str) -> None:  # pragma: no cover
+        super().__init__()
+        self.msg = msg
+        self.uri = uri
+
+    def __str__(self) -> str:  # pragma: no cover
+        return '{} for {!r}'.format(self.msg or 'RemoteFetchError', self.uri)
 
 
 class ImageRecognizer:

@@ -1,17 +1,23 @@
-__all__ = ["FileFetcher", "ImageCrawlerLoaderTest"]
+__all__ = ["FileFetcher", "ImageCrawlerLoaderTest",
+           'ImageCrawlerTest', 'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT', 'ImagecrawlerProbeResult',
+           'ImagecrawlerProbeRetryCallback'
+           ]
 
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 from http.client import HTTPResponse
 from os.path import join as path_join
 from pathlib import Path
-from typing import Dict, Tuple, Type, Union
+from time import sleep
+from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 from unittest import TestCase
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from urllib.response import addinfourl
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler, RemoteFetcher
 from nichtparasoup.imagecrawler import get_imagecrawlers
+
+from ..core.image import ImageCollection
 
 
 class FileFetcher(RemoteFetcher):
@@ -126,3 +132,53 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
         imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
         # assert
         self.assertEqual(imagecrawler_name, self.ic_name)
+
+
+PROBE_DELAY_DEFAULT = 0.05  # type: float
+PROBE_RETRIES_DEFAULT = 2  # type: int
+
+
+ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, BaseException], bool]
+"""ImageCrawlerTest probe callback.
+See :ref:``ImageCrawlerTest.probe``
+:param: imagecrawler
+:param: error
+:return: retry crawl
+"""
+
+
+class ImagecrawlerProbeResult:
+    def __init__(self, images: Optional[ImageCollection], errors: List[BaseException]) -> None:  # pragma: no cover
+        self.images = images
+        self.errors = errors
+
+    @property
+    def is_failure(self) -> bool:
+        """Is this a failure?"""
+        return self.images is None
+
+
+class ImageCrawlerTest:
+
+    def probe(self, imagecrawler: BaseImageCrawler, *,
+              retries: int = PROBE_RETRIES_DEFAULT,
+              retry_delay: float = PROBE_DELAY_DEFAULT,
+              retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
+              ) -> ImagecrawlerProbeResult:
+        """
+        :param imagecrawler:
+        :param retries: number of retries if probing failed
+        :param retry_delay: delay between retries
+        :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
+        :return: images and errors
+        """
+        errors = []  # type: List[BaseException]
+        for retry in range(retries + 1):
+            retry > 0 and sleep(retry_delay)  # type: ignore
+            try:
+                return ImagecrawlerProbeResult(imagecrawler._crawl(), errors)
+            except BaseException as ex:
+                errors.append(ex)
+                if retry >= retries or (retry_callback and not retry_callback(imagecrawler, ex)):
+                    break
+        return ImagecrawlerProbeResult(None, errors)
