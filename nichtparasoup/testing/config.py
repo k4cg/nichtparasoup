@@ -4,7 +4,7 @@ __all__ = ["ConfigTest",
            'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT'  # for convenience
            ]
 
-from enum import Enum, auto
+from enum import Enum, unique
 from time import sleep
 from typing import Callable, List, Optional
 
@@ -23,11 +23,13 @@ class ConfigImagecrawlerProbeResult:
 ConfigProbeResults = List[ConfigImagecrawlerProbeResult]
 
 
+@unique
 class ConfigProbeCallbackReason(Enum):
-    start = auto()
-    retry = auto()
-    finish = auto()
-    failure = auto()
+    # TODO: on py>=36 - use ``auto()``
+    start = 1
+    retry = 2
+    finish = 3
+    failure = 4
 
 
 ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Optional[BaseException]], Optional[bool]]
@@ -83,7 +85,7 @@ class ConfigTest:
 
     def probe(self, config: Config, *,
               delay: float = PROBE_DELAY_DEFAULT, retries: int = PROBE_RETRIES_DEFAULT,
-              callback: Optional[ConfigProbeCallback] = None,
+              callback: Optional[ConfigProbeCallback] = None
               ) -> ConfigProbeResults:
         """Probe a config.
         :param config: config to probe
