@@ -46,7 +46,7 @@ class ImageCrawlerInfo:
 
 
 class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
-    pass
+    ...
 
 
 class BaseImageCrawler(ABC):

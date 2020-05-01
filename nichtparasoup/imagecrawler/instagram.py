@@ -340,4 +340,4 @@ class InstagramProfile(BaseInstagramCrawler):
 
 
 class InstagramError(Exception):
-    pass
+    ...

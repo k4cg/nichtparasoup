@@ -14,7 +14,7 @@ _CrawlerWeight = Union[int, float]  # constraint: > 0
 
 
 class _Blacklist(Set[ImageUri]):
-    pass
+    ...
 
 
 _IsImageAddable = Callable[[Image], bool]
