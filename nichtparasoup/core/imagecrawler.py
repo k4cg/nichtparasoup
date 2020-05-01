@@ -13,8 +13,8 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.response import addinfourl
 
-from nichtparasoup._internals import _log
-from nichtparasoup.core.image import ImageCollection
+from .._internals import _log
+from .image import ImageCollection
 
 _ImageCrawlerConfigKey = str
 

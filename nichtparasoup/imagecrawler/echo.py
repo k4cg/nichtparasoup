@@ -3,7 +3,7 @@ __all__ = ["Echo"]
 from textwrap import dedent
 from typing import Any, Dict
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
+from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Echo(BaseImageCrawler):

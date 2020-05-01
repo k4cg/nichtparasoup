@@ -12,9 +12,9 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup._internals import _log, _type_module_name_str
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
-from nichtparasoup.core.server import Server, ServerStatus
+from .._internals import _log, _type_module_name_str
+from ..core.imagecrawler import BaseImageCrawler
+from ..core.server import Server, ServerStatus
 
 
 class JsonResponse(Response):

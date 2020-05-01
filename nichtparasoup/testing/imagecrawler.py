@@ -14,10 +14,9 @@ from unittest import TestCase
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from urllib.response import addinfourl
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, RemoteFetcher
-from nichtparasoup.imagecrawler import get_imagecrawlers
-
 from ..core.image import ImageCollection
+from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
+from ..imagecrawler import get_imagecrawlers
 
 
 class FileFetcher(RemoteFetcher):

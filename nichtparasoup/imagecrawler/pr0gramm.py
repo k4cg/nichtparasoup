@@ -4,9 +4,7 @@ from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import urlencode, urljoin
 
-from nichtparasoup.imagecrawler import (
-    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
-)
+from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
 
 class Pr0gramm(BaseImageCrawler):

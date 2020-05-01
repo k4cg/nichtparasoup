@@ -10,11 +10,9 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
 
-from nichtparasoup._internals import _log
-from nichtparasoup.core.image import Image, ImageCollection
-from nichtparasoup.core.imagecrawler import (
-    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
-)
+from .._internals import _log
+from ..core.image import Image, ImageCollection
+from ..core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher
 
 _ImagecrawlerName = str
 _ImagecrawlerClass = Type[BaseImageCrawler]
