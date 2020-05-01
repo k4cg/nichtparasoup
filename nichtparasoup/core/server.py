@@ -187,25 +187,19 @@ class ServerRefiller(Thread):
                 sleep(self._sleep)
 
     def start(self) -> None:
-        self._run_lock.acquire()
-        try:
+        with self._run_lock:
             if self.is_alive():
                 raise RuntimeError('already running')
             _log('info', ' * starting %s', type(self).__name__)
             self._stop_event.clear()
             super().start()
-        finally:
-            self._run_lock.release()
 
     def stop(self) -> None:
-        self._run_lock.acquire()
-        try:
+        with self._run_lock:
             if not self.is_alive():
                 raise RuntimeError('not running')
             _log('info', ' * stopping %s', type(self).__name__)
             self._stop_event.set()
-        finally:
-            self._run_lock.release()
 
 
 class ServerStatistics:

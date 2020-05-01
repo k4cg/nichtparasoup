@@ -62,9 +62,10 @@ class WebServer:
         try:
             endpoint, values = adapter.match()
             response = getattr(self, 'on_{}'.format(endpoint))(request, **values)  # type: Response
+        except HTTPException as ex:
+            return ex
+        else:
             return response
-        except HTTPException as e:
-            return e
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)
