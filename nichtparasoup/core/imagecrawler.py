@@ -59,7 +59,7 @@ class BaseImageCrawler(ABC):
         self._config = self.check_config(config)  # intended to be immutable from now on
         self._reset_before_next_crawl = True
         self._crawl_lock = Lock()
-        _log('debug', 'crawler initialized: {!r}'.format(self))
+        _log('debug', 'crawler initialized: %r', self)
 
     def __repr__(self) -> str:  # pragma: no cover
         return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
@@ -88,21 +88,21 @@ class BaseImageCrawler(ABC):
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
-        _log('debug', 'crawler reset planned for {!r}'.format(self))
+        _log('debug', 'crawler reset planned for %r', self)
 
     def crawl(self) -> ImageCollection:  # pragma: no cover
         with self._crawl_lock:
             try:
                 if self._reset_before_next_crawl:
-                    _log('debug', 'crawler resetting {!r}'.format(self))
+                    _log('debug', 'crawler resetting %r', self)
                     self._reset()
                     self._reset_before_next_crawl = False
-                _log('debug', 'crawling started {!r}'.format(self))
+                _log('debug', 'crawling started %r', self)
                 crawled = self._crawl()
-                _log('debug', 'crawling finished {!r}'.format(self))
+                _log('debug', 'crawling finished %r', self)
                 return crawled
             except Exception as ex:  # pylint: disable=broad-except
-                _log('error', 'caught an error during crawling {!r}'.format(self), exc_inf=ex)
+                _log('error', 'caught an error during crawling %s', self, exc_inf=ex)
                 return ImageCollection()
 
     @classmethod
@@ -178,14 +178,13 @@ class RemoteFetcher:
 
     def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
         if not self._valid_uri(uri):
-            raise ValueError('not remote: ' + uri)
-        _log('debug', 'fetch remote {!r} in {}s with {!r}'.format(
-            uri, self._timeout, self._headers))
+            raise ValueError('not remote: {!r}'.format(uri))
+        _log('debug', 'fetch remote %r in %ss with %r', uri, self._timeout, self._headers)
         request = Request(uri, headers=self._headers)
         try:
             response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
         except Exception as ex:  # pylint: disable=broad-except
-            _log('debug', 'caught error on fetch remote {!r}'.format(uri), exc_info=ex)
+            _log('debug', 'caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
         actual_uri = response.geturl()  # after following redirects ...
         return response, actual_uri

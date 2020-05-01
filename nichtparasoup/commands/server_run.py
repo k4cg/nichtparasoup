@@ -10,12 +10,13 @@ from ..config import Config, get_config, get_imagecrawler
 from ..core import NPCore
 from ..core.server import Server as ImageServer
 from ..webserver import WebServer
+from ._internals import _cli_option_debug
 
 
 def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     del develop  # @TODO implement develop mode - enable arbitrary CORS
     _logging_init(getattr(logging, config['logging']['level']))
-    _log('debug', 'Config: {!r}'.format(config))
+    _log('debug', 'Config: %r', config)
     imageserver = ImageServer(NPCore(), **config['imageserver'])
     for crawler_config in config['crawlers']:
         imagecrawler = get_imagecrawler(crawler_config)
@@ -52,6 +53,7 @@ cli = Command(
             help='Start the server in frontend-developer mode.',
             is_flag=True,
         ),
+        _cli_option_debug,
     ],
 )
 

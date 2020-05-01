@@ -7,10 +7,11 @@ from click import Argument, BadParameter, ClickException, Command, Option, Path,
 
 from .._internals import _log
 from ..config import dump_defaults
+from ._internals import _cli_option_debug
 
 
 def main(file: str, *, overwrite: Optional[bool] = None) -> None:  # pragma: no cover
-    _log('debug', 'ConfigFile: {}'.format(file))
+    _log('debug', 'ConfigFile: %r', file)
     if isfile(file):
         if overwrite is None:
             confirm('File already exists, overwrite?', default=False, abort=True)
@@ -42,7 +43,8 @@ cli = Command(
             help='Control target overwrite. If omitted confirmation question might appear.',
             default=None,
             show_default=True,
-        )
+        ),
+        _cli_option_debug,
     ]
 )
 

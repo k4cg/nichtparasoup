@@ -21,8 +21,9 @@ except ImportError:
 _LINEBREAK = '\r\n'
 
 _LOGGER = logging.getLogger('nichtparasoup')
+_LOG_LEVEL_DEFAULT = logging.ERROR
 
-_LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical', 'log', 'exception']
+_LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical']
 
 
 def _format(message: Union[str, List[str]], color: Optional[str] = None) -> str:
@@ -33,16 +34,16 @@ def _format(message: Union[str, List[str]], color: Optional[str] = None) -> str:
     return message.rstrip()
 
 
-def _logging_init(level: int) -> None:
+def _logging_init(level: int = _LOG_LEVEL_DEFAULT) -> None:
+    if _LOGGER.level == logging.NOTSET:
+        _LOGGER.setLevel(level)
     if not logging.root.handlers:
-        logging.root.setLevel(level)
         logging.root.addHandler(logging.StreamHandler())
-    _LOGGER.setLevel(level)
+        logging.root.setLevel(_LOGGER.level)
 
 
 def _log(level: _LOG_LEVEL, message: Union[str, List[str]], *args: Any, **kwargs: Any) -> None:
-    if _LOGGER.level == logging.NOTSET:
-        _logging_init(logging.INFO)
+    _logging_init()
     message = _format(message)
     getattr(_LOGGER, level)(message, *args, **kwargs)
 

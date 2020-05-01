@@ -126,8 +126,8 @@ class WebServer:
 
     def run(self) -> None:
         self.imageserver.start()
+        _log('info', ' * starting %s bound to %s:%d', type(self).__name__, self.hostname, self.port)
         try:
-            _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
             run_simple(
                 self.hostname, self.port,
                 application=self,
@@ -135,9 +135,11 @@ class WebServer:
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=False)
-            _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-        except Exception as e:
-            _log('exception', ' * Error occurred. stopping everything')
-            raise e
+        except BaseException as ex:
+            _log('debug', 'Handled exception: %s', ex, exc_info=ex)
+            _log('error', ' * Error occurred. stopping everything')
+            raise ex
+        else:
+            _log('info', ' * stopped %s bound to %s:%d', type(self).__name__, self.hostname, self.port)
         finally:
             self.imageserver.stop()

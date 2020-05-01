@@ -6,8 +6,7 @@ __all__ = [
     "RemoteFetcher", "ImageRecognizer",
 ]
 
-from copy import copy
-from typing import Any, Dict, Generator, Iterable, List, Optional, Tuple, Type
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
 
@@ -44,12 +43,13 @@ class KnownImageCrawlers:
 
     def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
         self._list = [(n, c) for n, c in self._builtins().items()]  # type: List[_Imagecrawler]
+        _log('debug', 'Builtin imagecrawlers loaded: %r', self._list)
         for entry in entries:
             try:
                 self._append(entry)
-                _log('debug', 'Entry point added: {} from {!r}'.format(entry, entry.dist))
-            except Exception as e:  # pylint: disable=broad-except
-                _log('debug', 'Entry point skipped: {} from {!r}\r\n\t{}'.format(entry, entry.dist, e), exc_info=True)
+                _log('debug', 'Entry point added: %r from %r', entry.name, entry.dist)
+            except Exception as ex:  # pylint: disable=broad-except
+                _log('debug', 'Entry point skipped: %r from %r\n\t%s', entry.name, entry.dist, ex, exc_info=ex)
 
     def __len__(self) -> int:
         return len(self._list)
@@ -62,14 +62,14 @@ class KnownImageCrawlers:
         # if everything went well .. add
         self._list.append((entry.name, loaded))
 
-    def names(self) -> Generator[_ImagecrawlerName, Any, None]:
-        return (ic_name for ic_name, _ in self._list)
+    def names(self) -> List[_ImagecrawlerName]:
+        return [ic_name for ic_name, _ in self._list]
 
-    def classes(self) -> Generator[_ImagecrawlerClass, Any, None]:
-        return (ic_class for _, ic_class in self._list)
+    def classes(self) -> List[_ImagecrawlerClass]:
+        return [ic_class for _, ic_class in self._list]
 
-    def items(self) -> Generator[_Imagecrawler, Any, None]:
-        return (copy(imacrawler) for imacrawler in self._list)
+    def items(self) -> List[_Imagecrawler]:
+        return self._list.copy()
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
         for ic_name, ic_class in self._list:
