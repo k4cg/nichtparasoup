@@ -2,7 +2,7 @@ import unittest
 from typing import Type
 
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawler.picsum import Picsum
+from nichtparasoup.imagecrawlers.picsum import Picsum
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 _picsum_right_config = {'width': 800, 'height': 600}

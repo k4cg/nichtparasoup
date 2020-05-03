@@ -82,7 +82,7 @@ class ServerResetTest(unittest.TestCase):
     def test_running_under_timeout(self) -> None:
         # arrange
         self.server.is_alive = lambda: True  # type: ignore
-        self.server._stats.time_started = int(time())
+        self.server.stats.time_started = int(time())
         # act
         res = self.server.request_reset()
         # assert
@@ -95,7 +95,7 @@ class ServerResetTest(unittest.TestCase):
     def test_running_over_timeout(self) -> None:
         # arrange
         self.server.is_alive = lambda: True  # type: ignore
-        self.server._stats.time_started = int(time()) - 2 * self.server.reset_timeout
+        self.server.stats.time_started = int(time()) - 2 * self.server.reset_timeout
         # act
         res = self.server.request_reset()
         # assert

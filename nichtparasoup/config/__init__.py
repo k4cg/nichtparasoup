@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional
 from yamale import make_data, make_schema, validate as yamale_validate  # type: ignore
 
 from ..core.imagecrawler import BaseImageCrawler
-from ..imagecrawler import get_imagecrawlers
+from ..imagecrawlers import get_imagecrawlers
 
 DEFAULTS_FILE = join(dirname(realpath(__file__)), "defaults.yaml")
 SCHEMA_FILE = join(dirname(realpath(__file__)), "schema.yaml")
@@ -38,9 +38,12 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         raise ValueError('Unknown crawler name {!r}'.format(imagecrawler_name))
     imagecrawler_config = config_crawler['config']
     try:
-        return imagecrawler_class(**imagecrawler_config)
+        imagecrawler = imagecrawler_class(**imagecrawler_config)
     except Exception as e:
         raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from e
+    else:
+        imagecrawler._np_name = imagecrawler_name
+        return imagecrawler
 
 
 def parse_yaml_file(file_path: str) -> Config:

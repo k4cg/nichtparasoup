@@ -7,8 +7,9 @@ example response:
 ```json
 {
   "140647222227296": {
-    "type": "Reddit",
+    "name": "Reddit",
     "weight": 3,
+    "type": "nichtparasoup.imagecrawlers.reddit:Reddit",
     "config": {
       "subreddit": "EarthPorn"
     },
@@ -18,8 +19,9 @@ example response:
     }
   },
   "140647222227912": {
-    "type": "Picsum",
+    "name": "Picsum",
     "weight": 1,
+    "type": "nichtparasoup.imagecrawlers.picsum:Picsum",
     "config": {
       "width": 300,
       "height": 600
@@ -38,16 +40,22 @@ example response:
 - a crawlers id 
 
 
-## `type`
+## `name`
 
-- the ImageCrawler's type
-- type: string
+- the ImageCrawler's name, just like in the config
+- type: string or null
 
 
 ## `weight`
 
 - the probability an random image is used thom this crawler
 - type: integer or float
+
+## `type`
+
+- the ImageCrawler's type representation
+- format: "path.to.namespace:ClassName"
+- type: string
 
 ## `config
 

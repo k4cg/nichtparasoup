@@ -6,19 +6,30 @@
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Breaking changes
-  * commandline interface changed. See cli help via `nichtparasoup --help`.
-  * build process is now conform to
+  * CommandLine Interface overhaul. See cli help via `nichtparasoup --help`.
+    * CLI is done via `click` now.
+    * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
+    * Proper subcommands are used now.
+  * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
+    `nichtparasoup.__version__` is no longer a module but a string.
+  * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
+    Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`. 
+  * Class `nichtparasoup.testing.config.ConfigFileTest` was removed.  
+    Its functionality was replaced by `nichtparasoup.testing.config.ConfigTest`.
+  * Build process is now conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
     *ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
     This is a known [issue](https://github.com/pypa/pip/issues/6375).
     A workaround might be found in the [development docs](docs/dev/development.md).
-  * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
-    `nichtparasoup.__version__` is no longer a module but a string.
-  
 
 * Changes
-  * `nichtparasoup.testing.config.ConfigFileTest.probe()` got an optional second param `delay`.
+  * Added `nichtparasoup.testing.config.ConfigTest`.
+  * Added `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status_crawlers.md).
+  * Added public `nichtparasoup.code.server.Server.stats`.
+  * Internal imports were made relative (again).
+  
+
 
 ## 2.4.1
 

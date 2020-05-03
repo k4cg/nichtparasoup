@@ -3,7 +3,7 @@ from os.path import dirname, join as path_join
 from typing import Type
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
-from nichtparasoup.imagecrawler.reddit import Reddit
+from nichtparasoup.imagecrawlers.reddit import Reddit
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 _reddit_right_config = dict(subreddit='aww')

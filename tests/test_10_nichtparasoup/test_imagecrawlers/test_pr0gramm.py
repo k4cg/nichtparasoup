@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlsplit
 from ddt import data as ddt_data, ddt, idata as ddt_idata, unpack as ddt_unpack  # type: ignore
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
-from nichtparasoup.imagecrawler.pr0gramm import Pr0gramm
+from nichtparasoup.imagecrawlers.pr0gramm import Pr0gramm
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 

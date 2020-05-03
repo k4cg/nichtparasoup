@@ -16,7 +16,7 @@ from urllib.response import addinfourl
 
 from ..core.image import ImageCollection
 from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
-from ..imagecrawler import get_imagecrawlers
+from ..imagecrawlers import get_imagecrawlers
 
 
 class FileFetcher(RemoteFetcher):

@@ -5,7 +5,8 @@ from typing import Type
 from click import Argument, BadParameter, Command, echo
 
 from .._internals import _log
-from ..imagecrawler import BaseImageCrawler, get_imagecrawlers
+from ..core.imagecrawler import BaseImageCrawler
+from ..imagecrawlers import get_imagecrawlers
 from ._internals import _cli_option_debug
 
 

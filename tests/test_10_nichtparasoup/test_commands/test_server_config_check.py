@@ -3,7 +3,7 @@ import unittest
 from ddt import data, ddt, unpack  # type: ignore
 
 from nichtparasoup.commands.server_config_check import make_probe_status_callback
-from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason
 
 

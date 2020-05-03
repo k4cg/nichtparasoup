@@ -50,10 +50,11 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
-
-    # internal name used in nichtparasoup configs
-    # value is assigned automatically
-    _np_name = None  # type: Optional[str]  # TODO assign on load
+    _np_name = None  # type: Optional[str]
+    """Internal name used in nichtparasoup configs.
+    Value is assigned automatically.
+    see :ref:``internal_name``
+    """
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)  # intended to be immutable from now on
@@ -65,12 +66,20 @@ class BaseImageCrawler(ABC):
         return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
 
     def __str__(self) -> str:  # pragma: no cover
-        return '<{0._np_name!s} {0.config!r}>'.format(self) if self._np_name else self.__repr__()
+        return '<NamedImagecrawler {0._np_name!r} {0.config!r}>'.format(self) \
+            if self._np_name \
+            else self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
         if type(self) is not type(other):
             return NotImplemented
         return self._config == other._config
+
+    def get_internal_name(self) -> Optional[str]:
+        """get the internal name"""
+        return self._np_name
+
+    internal_name = property(fget=get_internal_name)
 
     def get_config(self) -> ImageCrawlerConfig:
         """Get all *public* information from the config

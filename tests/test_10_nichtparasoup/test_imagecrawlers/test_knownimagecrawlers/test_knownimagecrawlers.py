@@ -3,7 +3,7 @@ from os import path
 
 from pkg_resources import Distribution, EntryPoint
 
-from nichtparasoup.imagecrawler import KnownImageCrawlers
+from nichtparasoup.imagecrawlers import KnownImageCrawlers
 
 from . import BaseLoadableImageCrawlerA, LoadableImageCrawlerA, LoadableImageCrawlerB, StandaloneLoadableImageCrawlerA
 

@@ -2,7 +2,7 @@ import unittest
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
 
