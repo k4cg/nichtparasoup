@@ -12,9 +12,9 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from nichtparasoup._internals import _log, _type_module_name_str
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
-from nichtparasoup.core.server import Server, ServerStatus
+from .._internals import _log, _type_module_name_str
+from ..core.imagecrawler import BaseImageCrawler
+from ..core.server import Server, ServerStatus
 
 
 class JsonResponse(Response):
@@ -62,9 +62,10 @@ class WebServer:
         try:
             endpoint, values = adapter.match()
             response = getattr(self, 'on_{}'.format(endpoint))(request, **values)  # type: Response
+        except HTTPException as ex:
+            return ex
+        else:
             return response
-        except HTTPException as e:
-            return e
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)
@@ -126,8 +127,8 @@ class WebServer:
 
     def run(self) -> None:
         self.imageserver.start()
+        _log('info', ' * starting %s bound to %s:%d', type(self).__name__, self.hostname, self.port)
         try:
-            _log('info', ' * starting {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
             run_simple(
                 self.hostname, self.port,
                 application=self,
@@ -135,9 +136,11 @@ class WebServer:
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=False)
-            _log('info', ' * stopped {0} bound to {1.hostname} on port {1.port}'.format(type(self).__name__, self))
-        except Exception as e:
-            _log('exception', ' * Error occurred. stopping everything')
-            raise e
+        except BaseException as ex:
+            _log('debug', 'Handled exception: %s', ex, exc_info=ex)
+            _log('error', ' * Error occurred. stopping everything')
+            raise ex
+        else:
+            _log('info', ' * stopped %s bound to %s:%d', type(self).__name__, self.hostname, self.port)
         finally:
             self.imageserver.stop()

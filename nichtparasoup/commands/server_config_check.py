@@ -12,6 +12,7 @@ from ..testing.config import (
     PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigProbeCallback, ConfigProbeCallbackReason, ConfigProbeResults,
     ConfigTest,
 )
+from ._internals import _cli_option_debug
 
 
 def main(file: str, *,
@@ -127,6 +128,7 @@ cli = Command(
             help='Enable more output.',
             is_flag=True,
         ),
+        _cli_option_debug,
     ]
 )
 

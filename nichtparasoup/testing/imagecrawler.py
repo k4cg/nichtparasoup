@@ -14,10 +14,9 @@ from unittest import TestCase
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from urllib.response import addinfourl
 
-from nichtparasoup.core.imagecrawler import BaseImageCrawler, RemoteFetcher
-from nichtparasoup.imagecrawler import get_imagecrawlers
-
 from ..core.image import ImageCollection
+from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
+from ..imagecrawler import get_imagecrawlers
 
 
 class FileFetcher(RemoteFetcher):
@@ -172,13 +171,16 @@ class ImageCrawlerTest:
         :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
         :return: images and errors
         """
+        images = None
         errors = []  # type: List[BaseException]
         for retry in range(retries + 1):
             retry > 0 and sleep(retry_delay)  # type: ignore
             try:
-                return ImagecrawlerProbeResult(imagecrawler._crawl(), errors)
+                images = imagecrawler._crawl()
             except BaseException as ex:
                 errors.append(ex)
-                if retry >= retries or (retry_callback and not retry_callback(imagecrawler, ex)):
-                    break
-        return ImagecrawlerProbeResult(None, errors)
+                if retry_callback and not retry_callback(imagecrawler, ex):
+                    break  # for .. in ..
+            else:
+                break  # for .. in ..
+        return ImagecrawlerProbeResult(images, errors)

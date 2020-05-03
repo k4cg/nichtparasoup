@@ -8,9 +8,7 @@ from threading import Lock
 from typing import Any, Dict, Optional, Pattern, Set
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
-from nichtparasoup.imagecrawler import (
-    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
-)
+from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
 if sys.version_info >= (3, 8):
     from typing import Literal  # pylint: disable=no-name-in-module,ungrouped-imports
@@ -342,4 +340,4 @@ class InstagramProfile(BaseInstagramCrawler):
 
 
 class InstagramError(Exception):
-    pass
+    ...

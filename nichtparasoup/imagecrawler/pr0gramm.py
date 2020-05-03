@@ -4,9 +4,7 @@ from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import urlencode, urljoin
 
-from nichtparasoup.imagecrawler import (
-    BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher,
-)
+from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
 
 class Pr0gramm(BaseImageCrawler):
@@ -42,10 +40,10 @@ class Pr0gramm(BaseImageCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        promoted = config['promoted'] if 'promoted' in config else True  # type: bool
+        promoted = config.get('promoted', True)  # type: bool
         if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
             raise TypeError('promoted {!r} is not bool'.format(promoted))
-        tags = config['tags'] if 'tags' in config else None
+        tags = config.get('tags', None)
         tags = cls.__check_config_tags(tags)
         return ImageCrawlerConfig(
             promoted=promoted,

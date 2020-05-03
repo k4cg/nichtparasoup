@@ -8,9 +8,9 @@ from time import sleep, time
 from typing import Any, Dict, Optional, Union
 from weakref import ref as weak_ref
 
-from nichtparasoup import __version__
-from nichtparasoup._internals import _log, _type_module_name_str
-from nichtparasoup.core import Crawler, NPCore
+from .. import __version__ as nichtparasoup_version
+from .._internals import _log, _type_module_name_str
+from . import Crawler, NPCore
 
 
 class Server:
@@ -56,7 +56,7 @@ class Server:
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
         # must be compatible to nichtparasoup.core._OnFill
         if refilled > 0:
-            _log('info', "refilled by {} via {!r}".format(refilled, crawler.imagecrawler))
+            _log('info', 'refilled by %d via %s', refilled, crawler.imagecrawler)
 
     def refill(self) -> Dict[str, bool]:
         with self._locks.refill:
@@ -92,8 +92,8 @@ class Server:
         with self._locks.run:
             if self.__running:
                 raise RuntimeError('already running')
-            _log('info', " * starting {}".format(type(self).__name__))
-            _log('info', ' * fill all crawlers up to {}'.format(self.keep))
+            _log('info', ' * starting %s', type(self).__name__)
+            _log('info', ' * fill all crawlers up to %d', self.keep)
             self.refill()  # initial fill
             if not self._refiller:
                 self._refiller = ServerRefiller(self, 1)
@@ -108,7 +108,7 @@ class Server:
         with self._locks.run:
             if not self.__running:
                 raise RuntimeError('not running')
-            _log('info', "\r\n * stopping {}".format(type(self).__name__))
+            _log('info', "\r\n * stopping %s", type(self).__name__)
             if self._refiller:
                 self._refiller.stop()
                 self._refiller = None
@@ -128,7 +128,7 @@ class ServerStatus(ABC):
         now = int(time())
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
         return dict(
-            version=__version__,
+            version=nichtparasoup_version,
             uptime=uptime,
             reset=dict(
                 count=stats.count_reset,
@@ -181,31 +181,25 @@ class ServerRefiller(Thread):
             if server:
                 server.refill()
             else:
-                _log('info', " * server gone. stopping {}".format(type(self).__name__))
+                _log('info', ' * server gone. stopping %s', type(self).__name__)
                 self._stop_event.set()
             if not self._stop_event.is_set():
                 sleep(self._sleep)
 
     def start(self) -> None:
-        self._run_lock.acquire()
-        try:
+        with self._run_lock:
             if self.is_alive():
                 raise RuntimeError('already running')
-            _log('info', " * starting {}".format(type(self).__name__))
+            _log('info', ' * starting %s', type(self).__name__)
             self._stop_event.clear()
             super().start()
-        finally:
-            self._run_lock.release()
 
     def stop(self) -> None:
-        self._run_lock.acquire()
-        try:
+        with self._run_lock:
             if not self.is_alive():
                 raise RuntimeError('not running')
-            _log('info', " * stopping {}".format(type(self).__name__))
+            _log('info', ' * stopping %s', type(self).__name__)
             self._stop_event.set()
-        finally:
-            self._run_lock.release()
 
 
 class ServerStatistics:

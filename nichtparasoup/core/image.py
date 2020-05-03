@@ -71,4 +71,4 @@ class Image:
 
 
 class ImageCollection(Set[Image]):
-    pass
+    ...

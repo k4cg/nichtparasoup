@@ -7,14 +7,14 @@ from types import MethodType
 from typing import Callable, List, Optional, Set, Union
 from weakref import ReferenceType, WeakMethod
 
-from nichtparasoup.core.image import Image, ImageCollection, ImageUri
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
+from .image import Image, ImageCollection, ImageUri
+from .imagecrawler import BaseImageCrawler
 
 _CrawlerWeight = Union[int, float]  # constraint: > 0
 
 
 class _Blacklist(Set[ImageUri]):
-    pass
+    ...
 
 
 _IsImageAddable = Callable[[Image], bool]
