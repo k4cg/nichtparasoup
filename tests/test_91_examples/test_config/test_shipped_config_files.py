@@ -5,12 +5,11 @@ from os.path import basename, dirname, join
 import pytest  # type: ignore
 from ddt import data, ddt  # type: ignore
 
-from nichtparasoup.config import parse_yaml_file
-from nichtparasoup.testing.config import ConfigTest
+from nichtparasoup.testing.configfile import ConfigFileTest
 
 
 @ddt
-class ShippedExampleConfigFileTest(unittest.TestCase):
+class ShippedExampleConfigFileTest(unittest.TestCase, ConfigFileTest):
     __EXAMPLE_DIR = join(dirname(__file__), '..', '..', '..', 'examples', 'config')
     __EXAMPLE_FILES = [basename(f) for f in glob(join(__EXAMPLE_DIR, '*.*'), recursive=False)]
 
@@ -22,7 +21,4 @@ class ShippedExampleConfigFileTest(unittest.TestCase):
     @data(*__EXAMPLE_FILES)  # type: ignore
     def test_example(self, filename: str) -> None:
         file = join(self.__EXAMPLE_DIR, filename)
-        config = parse_yaml_file(file)
-        tester = ConfigTest()
-        tester.check_duplicates(config)
-        tester.probe(config)
+        self.check_file(file)

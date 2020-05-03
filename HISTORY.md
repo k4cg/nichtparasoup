@@ -14,8 +14,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     `nichtparasoup.__version__` is no longer a module but a string.
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`. 
-  * Class `nichtparasoup.testing.config.ConfigFileTest` was removed.  
-    Its functionality was replaced by `nichtparasoup.testing.config.ConfigTest`.
+  * Class `nichtparasoup.testing.config.ConfigFileTest` was reworked.  
   * Build process is now conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
