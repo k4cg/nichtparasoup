@@ -15,12 +15,10 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`. 
   * Class `nichtparasoup.testing.config.ConfigFileTest` was reworked.  
-  * Build process is now conform to
+  * Build process is now isolated and conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
-    *ATTENTION*: `pip3 install -e` might be broken for `pyproject.toml` based builds.
-    This is a known [issue](https://github.com/pypa/pip/issues/6375).
-    A workaround might be found in the [development docs](docs/dev/development.md).
+    *ATTENTION*: `pip install`'s `--editable` flag might requires the `--no-build-isolation` flag.
 
 * Changes
   * Added `nichtparasoup.testing.config.ConfigTest`.
