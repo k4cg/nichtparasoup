@@ -2,7 +2,7 @@ __all__ = ["WebServer"]
 
 from json import dumps as json_encode
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple, Type, Union
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Type, Union
 
 from mako.template import Template  # type: ignore
 from werkzeug.datastructures import Headers
@@ -111,15 +111,18 @@ class WebServer:
         imagecrawlers = {
             type(crawler.imagecrawler)
             for crawler
-            in self.imageserver.core.crawlers}  # type: Set[Type[BaseImageCrawler]]
+            in self.imageserver.core.crawlers
+        }  # type: Set[Type[BaseImageCrawler]]
         names_icons_list = [
-            (name, icon)
-            for name, icon
+            (_type_module_name_str(imagecrawler), icon)
+            for imagecrawler, icon
             in [
-                (_type_module_name_str(imagecrawler), imagecrawler.info().icon_url)
+                (imagecrawler, imagecrawler.info().icon_url)
                 for imagecrawler
-                in imagecrawlers]
-            if icon]
+                in imagecrawlers
+            ]
+            if icon
+        ]  # type: List[Tuple[str, str]]
         # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
         template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
         css = template.render(names_icons_list=names_icons_list)

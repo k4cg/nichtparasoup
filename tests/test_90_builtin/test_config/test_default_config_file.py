@@ -2,16 +2,13 @@ import unittest
 
 import pytest  # type: ignore
 
-from nichtparasoup.config import DEFAULTS_FILE, parse_yaml_file
-from nichtparasoup.testing.config import ConfigTest
+from nichtparasoup.config import DEFAULTS_FILE
+from nichtparasoup.testing.configfile import ConfigFileTest
 
 
-class DefaultConfigFileTest(unittest.TestCase):
+class DefaultConfigFileTest(unittest.TestCase, ConfigFileTest):
 
     @pytest.mark.online  # type: ignore  # probing goes over the internet
     @pytest.mark.slow  # type: ignore  # probing might be slow
     def test_default(self) -> None:
-        config = parse_yaml_file(DEFAULTS_FILE)
-        tester = ConfigTest()
-        tester.check_duplicates(config)
-        tester.probe(config)
+        self.check_file(DEFAULTS_FILE)

@@ -1,19 +1,14 @@
-import unittest
-
-from ddt import data, ddt, unpack  # type: ignore
+import pytest  # type: ignore
 
 from nichtparasoup.commands.server_config_check import make_probe_status_callback
-from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason
 
 
-@ddt
-class MakeProbeStatusCallbackTest(unittest.TestCase):
+@pytest.mark.parametrize('verbose', [True, False])
+@pytest.mark.parametrize('fail_fast', [True, False])
+class TestMakeProbeStatusCallback:
 
-    __CALLBACK_PARAM_COMBINATIONS = [(False, False), (False, True), (True, False), (True, True)]
-
-    @data(*__CALLBACK_PARAM_COMBINATIONS)  # type: ignore
-    @unpack  # type: ignore
     def test_start(self, fail_fast: bool, verbose: bool) -> None:
         # arrange
         callback = make_probe_status_callback(fail_fast=fail_fast, verbose=verbose)
@@ -22,8 +17,6 @@ class MakeProbeStatusCallbackTest(unittest.TestCase):
         # assert
         # return does not matter
 
-    @data(*__CALLBACK_PARAM_COMBINATIONS)  # type: ignore
-    @unpack  # type: ignore
     def test_finish(self, fail_fast: bool, verbose: bool) -> None:
         # arrange
         callback = make_probe_status_callback(fail_fast=fail_fast, verbose=verbose)
@@ -32,16 +25,20 @@ class MakeProbeStatusCallbackTest(unittest.TestCase):
         # assert
         # return does not matter
 
-    @data(*__CALLBACK_PARAM_COMBINATIONS)  # type: ignore
-    @unpack  # type: ignore
     def test_retry(self, fail_fast: bool, verbose: bool) -> None:
+        # arrange
         callback = make_probe_status_callback(fail_fast=fail_fast, verbose=verbose)
+        # act
         res = callback(ConfigProbeCallbackReason.retry, Echo(image_uri='https://foo.bar'), Exception())
-        self.assertIs(True, res)
+        # assert
+        assert isinstance(res, bool)
+        assert res is True
 
-    @data(*__CALLBACK_PARAM_COMBINATIONS)  # type: ignore
-    @unpack  # type: ignore
     def test_failure(self, fail_fast: bool, verbose: bool) -> None:
+        # arrange
         callback = make_probe_status_callback(fail_fast=fail_fast, verbose=verbose)
+        # act
         res = callback(ConfigProbeCallbackReason.failure, Echo(image_uri='https://foo.bar'), Exception())
-        self.assertIs(not fail_fast, res)
+        # assert
+        assert isinstance(res, bool)
+        assert res is not fail_fast

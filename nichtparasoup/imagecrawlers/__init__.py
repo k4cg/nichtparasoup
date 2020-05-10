@@ -1,9 +1,5 @@
 __all__ = [
     "get_imagecrawlers",
-    # for convenience, all classes that are needed to implement an ImageCrawler are exported, here
-    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
-    "Image", "ImageCollection",
-    "RemoteFetcher", "ImageRecognizer",
 ]
 
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
@@ -11,8 +7,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 from pkg_resources import EntryPoint, iter_entry_points
 
 from .._internals import _log
-from ..core.image import Image, ImageCollection
-from ..core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher
+from ..core.imagecrawler import BaseImageCrawler
 
 _ImagecrawlerName = str
 _ImagecrawlerClass = Type[BaseImageCrawler]

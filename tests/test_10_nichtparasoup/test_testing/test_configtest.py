@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult
 

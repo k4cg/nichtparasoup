@@ -2,7 +2,7 @@ import unittest
 from typing import Type
 
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawler.echo import Echo
+from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 

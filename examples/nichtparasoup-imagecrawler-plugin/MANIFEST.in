@@ -11,6 +11,7 @@ include MANIFEST.in
 
 include pyproject.toml
 include setup.cfg
+include setup.py
 include README.md
 graft nichtparasoup_placeholders
 

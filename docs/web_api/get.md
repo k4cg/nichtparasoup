@@ -14,7 +14,7 @@ example response:
   "more": {},
   "crawler": {
     "id": 140647222227296, 
-    "type": "Reddit"
+    "type": "nichtparasoup.imagecrawlers.reddit:Reddit"
   }
 }
 ```
@@ -52,7 +52,7 @@ example response:
 
 ### `id`
 
-- the ImageCrawler's id - see also [status docs](status.md)
+- the ImageCrawler's id - see also [crawlers status](status_crawlers.md)
 - type: integer
 
 

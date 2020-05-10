@@ -2,7 +2,7 @@ __all__ = ['main', 'cli']
 
 from click import ClickException, Command, echo
 
-from ..imagecrawler import get_imagecrawlers
+from ..imagecrawlers import get_imagecrawlers
 from ._internals import _cli_option_debug
 
 

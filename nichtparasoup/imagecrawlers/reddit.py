@@ -4,7 +4,7 @@ from json import loads as json_loads
 from typing import Any, Dict, Optional
 from urllib.parse import quote_plus as url_quote, urljoin
 
-from . import (
+from ..imagecrawler import (
     BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher,
 )
 

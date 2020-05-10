@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
+from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
 
 __all__ = ["Picsum"]
 

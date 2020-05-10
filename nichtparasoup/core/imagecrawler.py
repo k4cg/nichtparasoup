@@ -18,6 +18,8 @@ from .image import ImageCollection
 
 _ImageCrawlerConfigKey = str
 
+_Uri = str
+
 
 class ImageCrawlerInfo:
     """ImageCrawler's Info.
@@ -29,7 +31,7 @@ class ImageCrawlerInfo:
     def __init__(self, *,
                  description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
-                 icon_url: Optional[str] = None,
+                 icon_url: Optional[_Uri] = None,
                  **more: Any) -> None:  # pragma: no cover
         """
         :param description: short description
@@ -50,10 +52,11 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
-
-    # internal name used in nichtparasoup configs
-    # value is assigned automatically
-    _np_name = None  # type: Optional[str]  # TODO assign on load
+    _np_name = None  # type: Optional[str]
+    """Internal name used in nichtparasoup configs.
+    Value is assigned automatically.
+    see :ref:``internal_name``
+    """
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)  # intended to be immutable from now on
@@ -65,12 +68,20 @@ class BaseImageCrawler(ABC):
         return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
 
     def __str__(self) -> str:  # pragma: no cover
-        return '<{0._np_name!s} {0.config!r}>'.format(self) if self._np_name else self.__repr__()
+        return '<NamedImagecrawler {0._np_name!r} {0.config!r}>'.format(self) \
+            if self._np_name \
+            else self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
         if type(self) is not type(other):
             return NotImplemented
         return self._config == other._config
+
+    def get_internal_name(self) -> Optional[str]:
+        """get the internal name"""
+        return self._np_name
+
+    internal_name = property(fget=get_internal_name)
 
     def get_config(self) -> ImageCrawlerConfig:
         """Get all *public* information from the config
@@ -170,16 +181,15 @@ class RemoteFetcher:
 
     def __init__(self, timeout: float = 10.0, headers: Optional[Dict[str, str]] = None) -> None:  # pragma: no cover
         self._timeout = timeout
-        self._headers = self.__class__._HEADERS_DEFAULT.copy()
+        self._headers = self._HEADERS_DEFAULT.copy()
         if headers:
             self._headers.update(headers)
 
     @staticmethod
-    def _valid_uri(uri: str) -> bool:
-        (scheme, _, _, _, _, _) = urlparse(uri)
-        return scheme in {'http', 'https'}
+    def _valid_uri(uri: _Uri) -> bool:
+        return urlparse(uri).scheme in {'http', 'https'}
 
-    def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
+    def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
         if not self._valid_uri(uri):
             raise ValueError('Not remote: {!r}'.format(uri))
         _log('debug', 'Fetch remote %r in %ss with %r', uri, self._timeout, self._headers)
@@ -192,11 +202,11 @@ class RemoteFetcher:
         actual_uri = response.geturl()  # after following redirects ...
         return response, actual_uri
 
-    def get_bytes(self, uri: str) -> Tuple[bytes, str]:
+    def get_bytes(self, uri: _Uri) -> Tuple[bytes, _Uri]:
         response, actual_uri = self.get_stream(uri)
         return response.read(), actual_uri
 
-    def get_string(self, uri: str, charset_fallback: str = 'UTF-8') -> Tuple[str, str]:
+    def get_string(self, uri: _Uri, charset_fallback: str = 'UTF-8') -> Tuple[str, _Uri]:
         response, actual_uri = self.get_stream(uri)
         charset = str(response.info().get_param('charset', charset_fallback))
         return response.read().decode(charset), actual_uri
@@ -204,7 +214,7 @@ class RemoteFetcher:
 
 class RemoteFetchError(Exception):
 
-    def __init__(self, msg: str, uri: str) -> None:  # pragma: no cover
+    def __init__(self, msg: str, uri: _Uri) -> None:  # pragma: no cover
         super().__init__()
         self.msg = msg
         self.uri = uri
@@ -216,5 +226,5 @@ class RemoteFetchError(Exception):
 class ImageRecognizer:
     _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
 
-    def path_is_image(self, uri: str) -> bool:
+    def path_is_image(self, uri: _Uri) -> bool:
         return self._PATH_RE.match(uri) is not None

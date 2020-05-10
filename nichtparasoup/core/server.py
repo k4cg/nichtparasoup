@@ -1,6 +1,5 @@
 __all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
 
-from abc import ABC
 from copy import copy
 from sys import getsizeof
 from threading import Event, Lock, Thread
@@ -13,6 +12,15 @@ from .._internals import _log, _type_module_name_str
 from . import Crawler, NPCore
 
 
+class ServerStatistics:
+    def __init__(self) -> None:  # pragma: no cover
+        self.time_started = None  # type: Optional[int]
+        self.count_images_served = 0  # type: int
+        self.count_reset = 0  # type: int
+        self.time_last_reset = None  # type: Optional[int]
+        self.cum_blacklist_on_flush = 0  # type: int
+
+
 class Server:
     """
 
@@ -21,12 +29,14 @@ class Server:
     Its public methods return base types only.
     """
 
-    def __init__(self, core: NPCore, crawler_upkeep: int = 30,
-                 reset_timeout: int = 60 * 60) -> None:  # pragma: no cover
+    def __init__(self, core: NPCore, *,
+                 crawler_upkeep: int = 30,
+                 reset_timeout: int = 60 * 60
+                 ) -> None:  # pragma: no cover
         self.core = core
         self.keep = crawler_upkeep
         self.reset_timeout = reset_timeout
-        self._stats = ServerStatistics()
+        self.stats = ServerStatistics()
         self._refiller = None  # type: Optional[ServerRefiller]
         self._trigger_reset = False
         self._locks = _ServerLocks()
@@ -40,7 +50,7 @@ class Server:
         if not image:
             return None
         with self._locks.stats_get_image:
-            self._stats.count_images_served += 1
+            self.stats.count_images_served += 1
         return dict(
             uri=image.uri,
             is_generic=image.is_generic,
@@ -65,9 +75,9 @@ class Server:
 
     def _reset(self) -> None:
         with self._locks.reset:
-            self._stats.cum_blacklist_on_flush += self.core.reset()
-            self._stats.count_reset += 1
-            self._stats.time_last_reset = int(time())
+            self.stats.cum_blacklist_on_flush += self.core.reset()
+            self.stats.count_reset += 1
+            self.stats.time_last_reset = int(time())
 
     def request_reset(self) -> Dict[str, Any]:
         if not self.is_alive():
@@ -75,9 +85,9 @@ class Server:
             timeout = 0
         else:
             now = int(time())
-            time_started = self._stats.time_started or now
+            time_started = self.stats.time_started or now
             timeout_base = self.reset_timeout
-            time_last_reset = self._stats.time_last_reset
+            time_last_reset = self.stats.time_last_reset
             reset_after = timeout_base + (time_last_reset or time_started)
             request_valid = now > reset_after
             timeout = timeout_base if request_valid else (reset_after - now)
@@ -98,7 +108,7 @@ class Server:
             if not self._refiller:
                 self._refiller = ServerRefiller(self, 1)
                 self._refiller.start()  # start threaded periodical refill
-            self._stats.time_started = int(time())
+            self.stats.time_started = int(time())
             self.__running = True
 
     def is_alive(self) -> bool:
@@ -115,7 +125,7 @@ class Server:
             self.__running = False
 
 
-class ServerStatus(ABC):
+class ServerStatus:
     """
     This class intended to be a stable interface.
     All public methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
@@ -124,7 +134,7 @@ class ServerStatus(ABC):
 
     @staticmethod
     def server(server: Server) -> Dict[str, Any]:
-        stats = copy(server._stats)
+        stats = server.stats
         now = int(time())
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
         return dict(
@@ -156,6 +166,7 @@ class ServerStatus(ABC):
             crawler = copy(crawler)
             images = crawler.images.copy()
             status[crawler_id] = dict(
+                name=crawler.imagecrawler.internal_name,
                 weight=crawler.weight,
                 type=_type_module_name_str(type(crawler.imagecrawler)),
                 config=crawler.imagecrawler.get_config(),  # just a dict
@@ -200,15 +211,6 @@ class ServerRefiller(Thread):
                 raise RuntimeError('not running')
             _log('info', ' * stopping %s', type(self).__name__)
             self._stop_event.set()
-
-
-class ServerStatistics:
-    def __init__(self) -> None:  # pragma: no cover
-        self.time_started = None  # type: Optional[int]
-        self.count_images_served = 0  # type: int
-        self.count_reset = 0  # type: int
-        self.time_last_reset = None  # type: Optional[int]
-        self.cum_blacklist_on_flush = 0  # type: int
 
 
 class _ServerLocks:

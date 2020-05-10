@@ -8,7 +8,7 @@ from threading import Lock
 from typing import Any, Dict, Optional, Pattern, Set
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
-from . import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
+from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
 if sys.version_info >= (3, 8):
     from typing import Literal  # pylint: disable=no-name-in-module,ungrouped-imports
@@ -150,11 +150,9 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
                 del side_edge
         return images
 
-    __URL_POST_TEMPLATE = INSTAGRAM_URL_ROOT + 'p/{}/'
-
     @classmethod
     def _get_post_url(cls, shortcode: str) -> str:
-        return cls.__URL_POST_TEMPLATE.format(url_quote(shortcode))
+        return INSTAGRAM_URL_ROOT + 'p/' + url_quote(shortcode) + '/'
 
     def _query(self, uri: str) -> Dict[str, Any]:
         response_string, uri = self._remote_fetcher.get_string(uri)
@@ -185,7 +183,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             query_hash=query_hash,
             variables=json_encode(dict(
                 first=first,
-                after=(after or ""),
+                after=(after or ''),
                 **variables
             ))
         ))
@@ -333,10 +331,8 @@ class InstagramProfile(BaseInstagramCrawler):
                 self.__profile_id = self._fetch_profile_id()
         return self.__profile_id
 
-    __PROFILE_URL_TEMPLATE = INSTAGRAM_URL_ROOT + '{}/'
-
     def _get_profile_url(self) -> str:
-        return self.__class__.__PROFILE_URL_TEMPLATE.format(url_quote(self._config['user_name']))
+        return INSTAGRAM_URL_ROOT + url_quote(self._config['user_name']) + '/'
 
 
 class InstagramError(Exception):
