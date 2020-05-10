@@ -77,8 +77,7 @@ class FileFetcher(RemoteFetcher):
 
     @staticmethod
     def _valid_uri(uri: str) -> bool:
-        scheme, _, _, _, _, _ = urlparse(uri)
-        return scheme == 'file'
+        return urlparse(uri).scheme == 'file'
 
     def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
         response, _ = super().get_stream(self._get_file_uri(uri))

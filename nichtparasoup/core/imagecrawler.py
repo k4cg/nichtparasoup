@@ -185,8 +185,7 @@ class RemoteFetcher:
 
     @staticmethod
     def _valid_uri(uri: str) -> bool:
-        (scheme, _, _, _, _, _) = urlparse(uri)
-        return scheme in {'http', 'https'}
+        return urlparse(uri).scheme in {'http', 'https'}
 
     def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
         if not self._valid_uri(uri):
