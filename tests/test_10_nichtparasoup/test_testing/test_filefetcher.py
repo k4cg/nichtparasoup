@@ -59,21 +59,21 @@ class TestFileFetcher:
         # assert
         assert uri_exp_parsed == FileFetcher._uri_sort_query(uri_parsed)
 
-    def test__get_file_uri__without_basedir(self) -> None:
+    def test__build_file__without_basedir(self) -> None:
         # arrange
         test_file = 'test.txt'
         # act & assert
         with pytest.raises(FileNotFoundError, match='Path not absolute'):
             FileFetcher._build_file(test_file, None)
 
-    def test__get_file_uri__unknown_file(self) -> None:
+    def test__build_file__unknown_file(self) -> None:
         # arrange
         test_file = path.join(self._TESTDATA_DIR, 'unknown.file')
         # act & assert
         with pytest.raises(FileNotFoundError, match='Not a file'):
             FileFetcher._build_file(test_file, None)
 
-    def test__get_file_uri__absolute_basedir(self) -> None:
+    def test__build_file__absolute_basedir(self) -> None:
         # arrange
         test_file = path.join(self._TESTDATA_DIR, 'test.txt')
         # act
@@ -82,7 +82,7 @@ class TestFileFetcher:
         assert True is file.startswith('file://'), repr(file)
         assert Path(test_file).as_uri() == file
 
-    def test__get_file_uri__with_basedir(self) -> None:
+    def test__build_file__with_basedir(self) -> None:
         # arrange
         test_file = 'test.txt'
         test_base = self._TESTDATA_DIR
@@ -92,7 +92,7 @@ class TestFileFetcher:
         assert True is file.startswith('file://'), repr(file)
         assert Path(path.join(test_base, test_file)).as_uri() == file
 
-    def test__get_file_uri__unknown_basedir(self) -> None:
+    def test__build_file__unknown_basedir(self) -> None:
         # arrange
         filefetcher = FileFetcher(dict())
         # act & assert

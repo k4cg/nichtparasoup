@@ -18,6 +18,9 @@ from ..core.image import ImageCollection
 from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
 from ..imagecrawlers import get_imagecrawlers
 
+_Uri = str
+_Path = str  # @TODO make pathlike
+
 
 class FileFetcher(RemoteFetcher):
     r"""
@@ -31,25 +34,25 @@ class FileFetcher(RemoteFetcher):
 
     """
 
-    def __init__(self, known_files: Dict[str, str], *,
-                 base_url: Optional[str] = None, base_dir: Optional[str] = None
+    def __init__(self, known_files: Dict[_Uri, _Path], *,
+                 base_url: Optional[_Uri] = None, base_dir: Optional[_Path] = None
                  ) -> None:  # pragma: no cover
         super().__init__()
         self._known = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
             in known_files.items()
-        }  # type: Dict[UrlParseResult, str]
+        }  # type: Dict[UrlParseResult, _Path]
 
     @classmethod
-    def _build_uri(cls, uri: str, base: Optional[str]) -> UrlParseResult:
+    def _build_uri(cls, uri: _Uri, base: Optional[_Uri]) -> UrlParseResult:
         # @TODO write tests
         return cls._uri_sort_query(urlparse(
             urljoin(base, uri) if base else uri
         ))
 
     @classmethod
-    def _build_file(cls, file: str, base: Optional[str]) -> str:
+    def _build_file(cls, file: _Path, base: Optional[_Path]) -> _Uri:
         file_path = Path(path_join(base, file) if base else file)
         cls._test_path(file_path)
         return file_path.as_uri()
@@ -79,20 +82,21 @@ class FileFetcher(RemoteFetcher):
             uri_parsed.fragment
         )
 
-    def _get_file_uri(self, uri: str) -> str:
+    def _get_file_uri(self, uri: _Uri) -> Tuple[_Path, _Uri]:
         uri_sorted = self._uri_sort_query(urlparse(uri))
         known = self._known.get(uri_sorted)
         if not known:
             raise FileNotFoundError('URI unknown: {!r}'.format(uri_sorted.geturl()))
-        return known
+        return known, uri_sorted.geturl()
 
     @staticmethod
-    def _valid_uri(uri: str) -> bool:
+    def _valid_uri(uri: _Uri) -> bool:
         return urlparse(uri).scheme == 'file'
 
-    def get_stream(self, uri: str) -> Tuple[Union[HTTPResponse, addinfourl], str]:
-        response, _ = super().get_stream(self._get_file_uri(uri))
-        return response, uri
+    def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
+        file, actual_uri = self._get_file_uri(uri)
+        response, _ = super().get_stream(file)
+        return response, actual_uri
 
 
 class ImageCrawlerLoaderTest(TestCase, ABC):

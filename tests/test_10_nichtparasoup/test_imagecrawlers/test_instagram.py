@@ -19,14 +19,13 @@ class _InstagramFileFetcher(FileFetcher):
         if uri_parsed.query == '':
             return uri_parsed
         query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
-        if 'variables' in query_dict:
-            variables = query_dict['variables'][0]
-            variables_dict = json_loads(variables)
-            variables_dict_sorted = OrderedDict((k, variables_dict[k]) for k in sorted(variables_dict))
-            query_dict['variables'][0] = json_dumps(variables_dict_sorted)
-            query_sorted = urlencode(query_dict, doseq=True)
-        else:
-            query_sorted = uri_parsed.query
+        if 'variables' not in query_dict:
+            return uri_parsed
+        variables = query_dict['variables'][0]
+        variables_dict = json_loads(variables)
+        variables_dict_sorted = OrderedDict((k, variables_dict[k]) for k in sorted(variables_dict))
+        query_dict['variables'][0] = json_dumps(variables_dict_sorted)
+        query_sorted = urlencode(query_dict, doseq=True)
         return super()._uri_sort_query(UrlParseResult(
             uri_parsed.scheme,
             uri_parsed.netloc,
