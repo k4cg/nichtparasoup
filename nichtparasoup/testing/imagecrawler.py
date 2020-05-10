@@ -58,13 +58,19 @@ class FileFetcher(RemoteFetcher):
     def _uri_sort_query(cls, uri: str) -> str:
         uri_parsed = urlparse(uri)
         if uri_parsed.query == '':
-            return uri
+            query_sorted = ''
         else:
             query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
             query_dict_sorted = OrderedDict((k, query_dict[k]) for k in sorted(query_dict))
-            uri_parsed.query = urlencode(query_dict_sorted, doseq=True)
-        uri_sorted = urlunparse(uri_parsed)
-        return uri_sorted
+            query_sorted = urlencode(query_dict_sorted, doseq=True)
+        return urlunparse((
+            uri_parsed.scheme,
+            uri_parsed.netloc,
+            uri_parsed.path,
+            uri_parsed.params,
+            query_sorted,
+            uri_parsed.fragment
+        ))
 
     def _get_file_uri(self, uri: str) -> str:
         _, _, url, params, query, fragment = urlparse(uri)
@@ -134,7 +140,6 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
 
 PROBE_DELAY_DEFAULT = 0.05  # type: float
 PROBE_RETRIES_DEFAULT = 2  # type: int
-
 
 ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, BaseException], bool]
 """ImageCrawlerTest probe callback.
