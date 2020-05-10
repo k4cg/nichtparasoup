@@ -76,20 +76,20 @@ class FileFetcherTest(unittest.TestCase):
         test_file = 'test.txt'
         # act & assert
         with self.assertRaisesRegex(FileNotFoundError, 'Path not absolute'):
-            FileFetcher._build_uri(test_file)
+            FileFetcher._build_file(test_file, None)
 
     def test__get_file_uri__unknown_file(self) -> None:
         # arrange
         test_file = path.join(self._TESTDATA_DIR, 'unknown.file')
         # act & assert
         with self.assertRaisesRegex(FileNotFoundError, 'Not a file'):
-            FileFetcher._build_uri(test_file)
+            FileFetcher._build_file(test_file, None)
 
     def test__get_file_uri__absolute_basedir(self) -> None:
         # arrange
         test_file = path.join(self._TESTDATA_DIR, 'test.txt')
         # act
-        file = FileFetcher._build_uri(test_file)
+        file = FileFetcher._build_file(test_file, None)
         # assert
         self.assertTrue(file.startswith('file://'), file)
         self.assertEqual(
@@ -102,7 +102,7 @@ class FileFetcherTest(unittest.TestCase):
         test_file = 'test.txt'
         test_base = self._TESTDATA_DIR
         # act
-        file = FileFetcher._build_uri(test_file, test_base)
+        file = FileFetcher._build_file(test_file, test_base)
         # assert
         self.assertTrue(file.startswith('file://'), file)
         self.assertEqual(

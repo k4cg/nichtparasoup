@@ -140,7 +140,7 @@ _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
         'get-flags_1-promoted_1-tags_s1000-video.json',
     '/api/items/get?flags=1&promoted=0&tags=%21%28s%3A1000%29+-%22video%22':
         'get-flags_1-promoted_0-tags_s1000-video.json',
-}, base_dir=path_join(dirname(__file__), 'testdata_pr0gramm'))
+}, base_url='https://pr0gramm.com', base_dir=path_join(dirname(__file__), 'testdata_pr0gramm'))
 
 
 class TestPr0grammCrawl:

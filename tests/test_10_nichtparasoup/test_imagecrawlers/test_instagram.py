@@ -65,7 +65,7 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
         'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-5,after,id-787132}',
-}, base_dir=path_join(dirname(__file__), 'testdata_instagram'))
+}, base_url='https://www.instagram.com/', base_dir=path_join(dirname(__file__), 'testdata_instagram'))
 
 _QUERYHASHES_EXPECTED_TAG = {'f0986789a5c5d17c2400faebf16efd0d',
                              'ff260833edf142911047af6024eb634a',

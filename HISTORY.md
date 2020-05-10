@@ -10,8 +10,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * CLI is done via `click` now.
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
     * Proper subcommands are used now.
-  * API
-    * `Crawler.type` of to `status/crawlers` API is now a fill qualified class name.
+  * API: `Crawler.type` of to `status/crawlers` API is now a fill qualified class name.
       See the [docs](docs/web_api/status_crawlers.md).  
       The old short-typed version is still available as the optional `Crawler.name` 
       (optional means: can be missing or `null`, if manually added).
@@ -23,12 +22,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
       `nichtparasoup.__version__` is no longer a module but a string.
-  * Package `nichtparasoup.testing` hot a huge overhaul. 
+  * Package `nichtparasoup.testing` got a huge overhaul. 
     * Classes do no longer implement `unittets.Testcase` anymore.
     * Functionality was split into chunks for easier use.
-    * Class  `nichtparasoup.testing.configfile.ConfigFileTest` 
-      (previously `nichtparasoup.testing.config.ConfigFileTest`) 
-      was reworked.
+    * Class `.configfile.ConfigFileTest` (previously named `.config.ConfigFileTest`) was reworked.
+    * Class `.imagecrawler.FileFetcher` supports fully qualified urls now, including schema and netloc.
+      Therefore an optional parameter `base_url` was added.
 
 * Added
   * API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status_crawlers.md).

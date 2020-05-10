@@ -108,7 +108,7 @@ class RedditResetTest(unittest.TestCase):
 
 _FILE_FETCHER = FileFetcher({  # relative to "./testdata_instagram"
     '/r/aww.json?after=': 'aww.json',
-}, base_dir=path_join(dirname(__file__), 'testdata_reddit'))
+}, base_url='https://www.reddit.com', base_dir=path_join(dirname(__file__), 'testdata_reddit'))
 
 
 class RedditCrawlTest(unittest.TestCase):
