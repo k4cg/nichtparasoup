@@ -56,14 +56,14 @@ class FileFetcher(RemoteFetcher):
 
     @classmethod
     def _uri_sort_query(cls, uri: str) -> str:
-        scheme, netloc, path, params, query, fragment = urlparse(uri)
-        if query == '':
-            query_sorted = query
+        uri_parsed = urlparse(uri)
+        if uri_parsed.query == '':
+            return uri
         else:
-            query_dict = parse_qs(query, keep_blank_values=True)
+            query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
             query_dict_sorted = OrderedDict((k, query_dict[k]) for k in sorted(query_dict))
-            query_sorted = urlencode(query_dict_sorted, doseq=True)
-        uri_sorted = urlunparse((scheme, netloc, path, params, query_sorted, fragment))
+            uri_parsed.query = urlencode(query_dict_sorted, doseq=True)
+        uri_sorted = urlunparse(uri_parsed)
         return uri_sorted
 
     def _get_file_uri(self, uri: str) -> str:
