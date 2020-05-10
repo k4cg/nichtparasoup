@@ -15,7 +15,7 @@ class TestCrawlers:
             ([], 0, None), ([], 1, None),
             ([1], 0, 0), ([1], 0.5, 0), ([1], 1, 0),
             ([1, 2], 0, 0), ([0.7, 2], 0.5, 0), ([1, 2], 1.001, 1), ([1, 2], 3, 1)
-        ], )
+        ])
     def test_get_random(self, weights: List[_CrawlerWeight],
                         weight_rnd: _CrawlerWeight, expected_choice: Optional[int]
                         ) -> None:

@@ -13,8 +13,6 @@ source =
 omit =
     # Don't complain if non-runnable code isn't run:
     */__main__.py
-    # this __version__ file is optional; its generated on install
-    */__version__.py
 
 
 [paths]
