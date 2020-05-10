@@ -336,7 +336,7 @@ class InstagramProfile(BaseInstagramCrawler):
     __PROFILE_URL_TEMPLATE = INSTAGRAM_URL_ROOT + '{}/'
 
     def _get_profile_url(self) -> str:
-        return self.__class__.__PROFILE_URL_TEMPLATE.format(url_quote(self._config['user_name']))
+        return self.__PROFILE_URL_TEMPLATE.format(url_quote(self._config['user_name']))
 
 
 class InstagramError(Exception):

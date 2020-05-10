@@ -34,7 +34,7 @@ class FileFetcher(RemoteFetcher):
     def __init__(self, known_files: Dict[str, str], base_dir: str = '') -> None:  # pragma: no cover
         super().__init__()
         self._known = {
-            self.__class__._uri_sort_query(k): self._build_uri(v, base_dir)
+            self._uri_sort_query(k): self._build_uri(v, base_dir)
             for k, v
             in known_files.items()
         }  # type: Dict[str, str]
@@ -69,7 +69,7 @@ class FileFetcher(RemoteFetcher):
     def _get_file_uri(self, uri: str) -> str:
         _, _, url, params, query, fragment = urlparse(uri)
         uri_abs = urlunparse(('', '', url, params, query, fragment))
-        uri_sorted = self.__class__._uri_sort_query(uri_abs)
+        uri_sorted = self._uri_sort_query(uri_abs)
         known = self._known.get(uri_sorted)
         if not known:
             raise FileNotFoundError('uri unexpected: {}'.format(uri_sorted))
