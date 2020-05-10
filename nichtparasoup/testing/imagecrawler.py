@@ -11,7 +11,7 @@ from pathlib import Path
 from time import sleep
 from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 from unittest import TestCase
-from urllib.parse import parse_qs, urlencode, urljoin, urlparse, urlunparse
+from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
 
 from ..core.image import ImageCollection
@@ -36,10 +36,17 @@ class FileFetcher(RemoteFetcher):
                  ) -> None:  # pragma: no cover
         super().__init__()
         self._known = {
-            self._uri_sort_query(urljoin(base_url, uri) if base_url else uri): self._build_file(file, base_dir)
+            self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
             in known_files.items()
-        }  # type: Dict[str, str]
+        }  # type: Dict[UrlParseResult, str]
+
+    @classmethod
+    def _build_uri(cls, uri: str, base: Optional[str]) -> UrlParseResult:
+        # @TODO write tests
+        return cls._uri_sort_query(urlparse(
+            urljoin(base, uri) if base else uri
+        ))
 
     @classmethod
     def _build_file(cls, file: str, base: Optional[str]) -> str:
@@ -57,28 +64,26 @@ class FileFetcher(RemoteFetcher):
         file_path.open('r').close()
 
     @classmethod
-    def _uri_sort_query(cls, uri: str) -> str:
-        uri_parsed = urlparse(uri)
+    def _uri_sort_query(cls, uri_parsed: UrlParseResult) -> UrlParseResult:
         if uri_parsed.query == '':
-            query_sorted = ''
-        else:
-            query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
-            query_dict_sorted = OrderedDict((key, query_dict[key]) for key in sorted(query_dict))
-            query_sorted = urlencode(query_dict_sorted, doseq=True)
-        return urlunparse((
+            return uri_parsed
+        query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
+        query_dict_sorted = OrderedDict((key, query_dict[key]) for key in sorted(query_dict))
+        query_sorted = urlencode(query_dict_sorted, doseq=True)
+        return UrlParseResult(
             uri_parsed.scheme,
             uri_parsed.netloc,
             uri_parsed.path,
             uri_parsed.params,
             query_sorted,
             uri_parsed.fragment
-        ))
+        )
 
     def _get_file_uri(self, uri: str) -> str:
-        uri_sorted = self._uri_sort_query(uri)
+        uri_sorted = self._uri_sort_query(urlparse(uri))
         known = self._known.get(uri_sorted)
         if not known:
-            raise FileNotFoundError('URI unknown: {!r}'.format(uri_sorted))
+            raise FileNotFoundError('URI unknown: {!r}'.format(uri_sorted.geturl()))
         return known
 
     @staticmethod

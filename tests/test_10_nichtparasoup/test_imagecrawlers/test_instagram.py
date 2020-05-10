@@ -3,7 +3,7 @@ from collections import OrderedDict
 from json import dumps as json_dumps, loads as json_loads
 from os.path import dirname, join as path_join
 from typing import Any, Dict, Type
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawlers.instagram import (
@@ -15,22 +15,26 @@ from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTe
 class _InstagramFileFetcher(FileFetcher):
 
     @classmethod
-    def _uri_sort_query(cls, uri: str) -> str:
-        scheme, netloc, path, params, query, fragment = urlparse(uri)
-        if query == '':
-            query_sorted = query
+    def _uri_sort_query(cls, uri_parsed: UrlParseResult) -> UrlParseResult:
+        if uri_parsed.query == '':
+            return uri_parsed
+        query_dict = parse_qs(uri_parsed.query, keep_blank_values=True)
+        if 'variables' in query_dict:
+            variables = query_dict['variables'][0]
+            variables_dict = json_loads(variables)
+            variables_dict_sorted = OrderedDict((k, variables_dict[k]) for k in sorted(variables_dict))
+            query_dict['variables'][0] = json_dumps(variables_dict_sorted)
+            query_sorted = urlencode(query_dict, doseq=True)
         else:
-            query_dict = parse_qs(query, keep_blank_values=True)
-            if 'variables' in query_dict:
-                variables = query_dict['variables'][0]
-                variables_dict = json_loads(variables)
-                variables_dict_sorted = OrderedDict((k, variables_dict[k]) for k in sorted(variables_dict))
-                query_dict['variables'][0] = json_dumps(variables_dict_sorted)
-                query_sorted = urlencode(query_dict, doseq=True)
-            else:
-                query_sorted = query
-        uri_sorted = urlunparse((scheme, netloc, path, params, query_sorted, fragment))
-        return super()._uri_sort_query(uri_sorted)
+            query_sorted = uri_parsed.query
+        return super()._uri_sort_query(UrlParseResult(
+            uri_parsed.scheme,
+            uri_parsed.netloc,
+            uri_parsed.path,
+            uri_parsed.params,
+            query_sorted,
+            uri_parsed.fragment
+        ))
 
 
 _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
@@ -331,7 +335,6 @@ class InstagramHashtagLoaderTest(ImageCrawlerLoaderTest):
 
 
 class InstagramProfileTest(unittest.TestCase):
-
     _PROFILE_ID = '787132'
     _QUERY_HASH = '2c5d4d8b70cad329c4a6ebe3abb6eedd'
 
