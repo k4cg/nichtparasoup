@@ -256,9 +256,9 @@ class InstagramHashtag(BaseInstagramCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         tag_name = config["tag_name"]
         if type(tag_name) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("tag_name {!r} is not str".format(tag_name))
+            raise TypeError(f'tag_name {tag_name!r} is not str')
         if len(tag_name) == 0:
-            raise ValueError("tag_name {!r} is empty".format(tag_name))
+            raise ValueError(f'tag_name {tag_name!r} is empty')
         return ImageCrawlerConfig(
             tag_name=tag_name.lower(),
         )
@@ -296,9 +296,9 @@ class InstagramProfile(BaseInstagramCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         user_name = config["user_name"]
         if type(user_name) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("user_name {!r} is not str".format(user_name))
+            raise TypeError(f'user_name {user_name!r} is not str')
         if len(user_name) == 0:
-            raise ValueError("user_name {!r} is empty".format(user_name))
+            raise ValueError(f'user_name {user_name!r} is empty')
         return ImageCrawlerConfig(
             user_name=user_name.lower(),
         )

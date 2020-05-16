@@ -31,7 +31,7 @@ def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) 
         return get_config(config_file)
     except Exception as ex:
         raise BadParameter(
-            '{}\n\tUse the "server config check" command for an analyse.'.format(ex),
+            f'{ex}\n\tUse the "server config check" command for an analyse.',
             param=param
         ) from ex
 

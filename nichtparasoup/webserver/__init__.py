@@ -61,7 +61,7 @@ class WebServer:
         adapter = self.url_map.bind_to_environ(request.environ)
         try:
             endpoint, values = adapter.match()
-            response: Response = getattr(self, 'on_{}'.format(endpoint))(request, **values)
+            response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
         else:

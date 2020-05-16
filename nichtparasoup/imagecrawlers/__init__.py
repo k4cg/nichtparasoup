@@ -82,7 +82,7 @@ class KnownImageCrawlers:
         try:
             return entry.load()
         except Exception as e:
-            raise ImportError('Error on loading entry {}'.format(entry)) from e
+            raise ImportError(f'Error on loading entry {entry}') from e
 
     @classmethod
     def _test(cls, something: Any) -> None:  # pragma: no cover
@@ -92,24 +92,24 @@ class KnownImageCrawlers:
     @staticmethod
     def _test_inheritance(something: Any) -> None:
         if not issubclass(something, BaseImageCrawler):
-            raise TypeError('{!r} is not a {!r}'.format(something, BaseImageCrawler))
+            raise TypeError(f'{something!r} is not a {BaseImageCrawler!r}')
 
     @staticmethod
     def _test_abstract(some_type: Type[object]) -> None:
         """Test if ABS is resolved.
         """
         if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
-            raise TypeError('{!r} is abstract'.format(some_type))
+            raise TypeError(f'{some_type!r} is abstract')
 
     def _test_duplicate_name(self, imagecrawler_name: str) -> None:
         for ic_name, _ in self._list:
             if ic_name == imagecrawler_name:
-                raise KeyError('Duplicate ImageCrawler {!r}'.format(imagecrawler_name))
+                raise KeyError(f'Duplicate ImageCrawler {imagecrawler_name!r}')
 
     def _test_duplicate_class(self, imagecrawler_class: _ImagecrawlerClass) -> None:
         for _, ic_class in self._list:
             if ic_class == imagecrawler_class:
-                raise TypeError('Duplicate ImageCrawler {!r}'.format(imagecrawler_class))
+                raise TypeError(f'Duplicate ImageCrawler {imagecrawler_class!r}')
 
 
 __ENTRY_POINT_NAME = 'nichtparasoup_imagecrawler'

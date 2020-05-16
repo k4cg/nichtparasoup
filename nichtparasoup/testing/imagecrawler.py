@@ -60,9 +60,9 @@ class FileFetcher(RemoteFetcher):
     @staticmethod
     def _test_path(file_path: Path) -> None:
         if not file_path.is_absolute():
-            raise FileNotFoundError('Path not absolute: {!r}'.format(file_path))
+            raise FileNotFoundError(f'Path not absolute: {file_path!r}')
         if not file_path.is_file():
-            raise FileNotFoundError('Not a file: {!r}'.format(file_path))
+            raise FileNotFoundError(f'Not a file: {file_path!r}')
         # test if readable. will raise errors on its own
         file_path.open('r').close()
 
@@ -86,7 +86,7 @@ class FileFetcher(RemoteFetcher):
         uri_sorted = self._uri_sort_query(urlparse(uri))
         known = self._known.get(uri_sorted)
         if not known:
-            raise FileNotFoundError('URI unknown: {!r}'.format(uri_sorted.geturl()))
+            raise FileNotFoundError(f'URI unknown: {uri_sorted.geturl()!r}')
         return known, uri_sorted.geturl()
 
     @staticmethod

@@ -26,9 +26,9 @@ class Echo(BaseImageCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         image_uri = config["image_uri"]
         if type(image_uri) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("image_uri {!r} is not str".format(image_uri))
+            raise TypeError(f'image_uri {image_uri!r} is not str')
         if len(image_uri) == 0:
-            raise ValueError("image_uri {!r} is empty".format(image_uri))
+            raise ValueError(f'image_uri {image_uri!r} is empty')
         return ImageCrawlerConfig(
             image_uri=image_uri,
         )

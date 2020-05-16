@@ -19,11 +19,8 @@ from ..commands.server_run import cli as server_run
 def _cli_print_version(ctx: Context, _: Any, value: Any) -> None:  # pragma: no cover
     if not value or ctx.resilient_parsing:
         return
-    echo('{version} from {location} (python {py_version})'.format(
-        version=nichtparasoup_version,
-        location=join(dirname(__file__), '..'),
-        py_version='{}.{}'.format(version_info.major, version_info.minor)
-    ))
+    location = join(dirname(__file__), '..')
+    echo(f'{nichtparasoup_version} from {location} (python {version_info.major}.{version_info.minor})')
     ctx.exit()
 
 

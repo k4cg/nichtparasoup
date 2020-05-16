@@ -13,7 +13,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.response import addinfourl
 
-from .._internals import _log
+from .._internals import _log, _type_module_name_str
 from .image import ImageCollection
 
 _ImageCrawlerConfigKey = str
@@ -65,10 +65,10 @@ class BaseImageCrawler(ABC):
         _log('debug', 'crawler initialized: %r', self)
 
     def __repr__(self) -> str:  # pragma: no cover
-        return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
+        return f'<{_type_module_name_str(type(self))} {self.config!r}>'
 
     def __str__(self) -> str:  # pragma: no cover
-        return '<NamedImagecrawler {0._np_name!r} {0.config!r}>'.format(self) \
+        return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>' \
             if self._np_name \
             else self.__repr__()
 
@@ -152,11 +152,11 @@ class BaseImageCrawler(ABC):
             Return the viable config for this crawler instance.
 
         Example implementation:
-            height = config["height"]  # will raise KeyError automatically
+            height = config['height']  # will raise KeyError automatically
             if type(height) is not int:
-                raise TypeError("height {} is not int".format(height))
+                raise TypeError(f'height {height!r} is not int')
             if height <= 0:
-                raise ValueError("height {} <= 0".format(width))
+                raise ValueError(f'height {height} <= 0')
         """
         raise NotImplementedError()
 
@@ -191,7 +191,7 @@ class RemoteFetcher:
 
     def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
         if not self._valid_uri(uri):
-            raise ValueError('Not remote: {!r}'.format(uri))
+            raise ValueError(f'Not remote: {uri!r}')
         _log('debug', 'Fetch remote %r in %ss with %r', uri, self._timeout, self._headers)
         request = Request(uri, headers=self._headers)
         try:
@@ -220,7 +220,7 @@ class RemoteFetchError(Exception):
         self.uri = uri
 
     def __str__(self) -> str:  # pragma: no cover
-        return '{} for {!r}'.format(self.msg or 'RemoteFetchError', self.uri)
+        return f'{self.msg or "RemoteFetchError"} for {self.uri!r}'
 
 
 class ImageRecognizer:

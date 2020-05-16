@@ -13,8 +13,7 @@ class Reddit(BaseImageCrawler):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
-        self._uri_base = 'https://www.reddit.com/r/{}.json?after='.format(
-            url_quote(self._config['subreddit']))
+        self._uri_base = f'https://www.reddit.com/r/{url_quote(self._config["subreddit"])}.json?after='
         self._after: Optional[str] = None
         self._remote_fetcher = RemoteFetcher()
         self._image_recognizer = ImageRecognizer()
@@ -33,9 +32,9 @@ class Reddit(BaseImageCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         subreddit = config["subreddit"]
         if type(subreddit) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("subreddit {!r} is not str".format(subreddit))
+            raise TypeError(f'subreddit {subreddit!r} is not str')
         if len(subreddit) == 0:
-            raise ValueError("subreddit {!r} is empty".format(subreddit))
+            raise ValueError(f'subreddit {subreddit!r} is empty')
         return ImageCrawlerConfig(
             subreddit=subreddit,
         )

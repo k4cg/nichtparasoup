@@ -48,7 +48,7 @@ class Crawler:
         elif MethodType is t_is_image_addable:
             self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
         else:
-            raise NotImplementedError('type {} not supported, yet'.format(t_is_image_addable))
+            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
         # TODO: add function and other types - and write proper tests for it
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
@@ -61,7 +61,7 @@ class Crawler:
         elif MethodType is t_image_added:
             self._image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
-            raise NotImplementedError('type {} not supported, yet'.format(t_image_added))
+            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
         # TODO: add function and other types - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:

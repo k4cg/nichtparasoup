@@ -24,8 +24,8 @@ def main(file: str, *,
     try:
         config = parse_yaml_file(file)
     except Exception as ex:
-        raise ClickException('ValidateError: {}'.format(ex)) from ex
-    verbose and echo('Config: {}'.format(config))    # type: ignore
+        raise ClickException(f'ValidateError: {ex}') from ex
+    verbose and echo(f'Config: {config!r}')    # type: ignore
     check_config(config)
     if probe:
         verbose and echo('* PROBING...')  # type: ignore
@@ -36,7 +36,7 @@ def check_config(config: Config) -> None:  # pragma: no cover
     try:
         ConfigTest().check_duplicates(config)
     except Exception as ex:
-        raise ClickException('ValidateError: {}'.format(ex)) from ex
+        raise ClickException(f'ValidateError: {ex}') from ex
 
 
 def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
@@ -51,7 +51,7 @@ def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False
             verbose and echo(style('r', fg='yellow'), nl=False)  # type: ignore
             return True  # continue with retry
         else:
-            verbose and echo('{!s} '.format(imagecrawler), nl=False)  # type: ignore
+            verbose and echo(f'{imagecrawler} ', nl=False)  # type: ignore
         return None
 
     return probe_status_callback
@@ -67,7 +67,7 @@ def probe_config(config: Config, *,
     verbose and print_probe_errors(config_probe_results)  # type: ignore
     errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure]
     if any(errors):
-        raise ClickException('ProbeError(s) occurred' + ' for:\n\t' + '\n\t'.join(
+        raise ClickException('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
             str(error.imagecrawler) for error in errors))
 
 
@@ -78,7 +78,7 @@ def print_probe_errors(probe_results: ConfigProbeResults) -> None:  # pragma: no
     printed_errors = False
     for ic_res in probe_results:
         for ec, error in enumerate(ic_res.result.errors):
-            echo(' {} '.format(ic_res.imagecrawler).center(term_width, '-' if ec > 0 else '='), err=True)
+            echo(f' {ic_res.imagecrawler} '.center(term_width, '-' if ec > 0 else '='), err=True)
             echo(formatter.formatException((type(error), error, error.__traceback__)), err=True)
             echo(style(str(error), fg='red'), err=True)
             printed_errors = True

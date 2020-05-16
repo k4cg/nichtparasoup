@@ -28,14 +28,14 @@ class ImageCrawlerSetupError(Exception):
         self._config = ic_config
 
     def __str__(self) -> str:  # pragma: no cover
-        return 'Failed setup crawler {!r} of type {!r} with config {!r}'.format(self._name, self._class, self._config)
+        return f'Failed setup crawler {self._name!r} of type {self._class!r} with config {self._config!r}'
 
 
 def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     imagecrawler_name = config_crawler['name']
     imagecrawler_class = get_imagecrawlers().get_class(imagecrawler_name)
     if not imagecrawler_class:
-        raise ValueError('Unknown crawler name {!r}'.format(imagecrawler_name))
+        raise ValueError(f'Unknown crawler name {imagecrawler_name!r}')
     imagecrawler_config = config_crawler['config']
     try:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
@@ -73,4 +73,4 @@ def get_config(config_file: Optional[str] = None) -> Config:
     try:
         return parse_yaml_file(config_file)
     except BaseException as ex:
-        raise ValueError('invalid config file {!r}: {}'.format(config_file, ex)) from ex
+        raise ValueError(f'invalid config file {config_file!r}: {ex}') from ex
