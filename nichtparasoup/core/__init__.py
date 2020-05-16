@@ -1,4 +1,4 @@
-__all__ = ["Crawler", "CrawlerCollection", "NPCore"]
+__all__ = ["Crawler", "CrawlerCollection", "NPCore", "Blacklist"]
 
 from random import choice, choices
 from threading import Thread
@@ -13,17 +13,15 @@ from .imagecrawler import BaseImageCrawler
 _CrawlerWeight = Union[int, float]  # constraint: > 0
 
 
-class _Blacklist(Set[ImageUri]):
+class Blacklist(Set[ImageUri]):
     ...
 
 
 _IsImageAddable = Callable[[Image], bool]
-
 _OnImageAdded = Callable[[Image], None]
-
 _OnFill = Callable[["Crawler", int], None]
 
-_FILLUP_TIMEOUT_DEFAULT = 1.0
+_FILLUP_TIMEOUT_DEFAULT: float = 1.0
 
 
 class Crawler:
@@ -124,7 +122,7 @@ class NPCore:
 
     def __init__(self) -> None:  # pragma: no cover
         self.crawlers = CrawlerCollection()
-        self.blacklist = _Blacklist()
+        self.blacklist = Blacklist()
 
     def _is_image_not_in_blacklist(self, image: Image) -> bool:
         # must be compatible to: _IsImageAddable

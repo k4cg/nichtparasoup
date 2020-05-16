@@ -20,7 +20,8 @@ class ConfigImagecrawlerProbeResult:
         self.result = result
 
 
-ConfigProbeResults = List[ConfigImagecrawlerProbeResult]
+class ConfigProbeResults(List[ConfigImagecrawlerProbeResult]):
+    ...
 
 
 @unique
@@ -93,7 +94,7 @@ class ConfigTest:
         :param callback: callback function
         :return: probe results
         """
-        result: ConfigProbeResults = []
+        result = ConfigProbeResults()
         retry_callback = self._make_probe_retry_callback(callback) if callback else None
         for c, crawler_config in enumerate(config['crawlers']):
             c > 0 and sleep(delay)  # type: ignore
