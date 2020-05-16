@@ -1,6 +1,6 @@
 # install
 
-This package requires `Python>=3.5`!  
+This package requires `Python>=3.6`!  
 
 ## official
 

@@ -6,6 +6,7 @@
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Breaking changes
+  * Requires `python>=3.6` (was `python>=3.5`) now.
   * CommandLine Interface overhaul. See cli help via `nichtparasoup --help`.
     * CLI is done via `click` now.
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).

@@ -23,7 +23,7 @@ docker run \
   -v "$PWD":/usr/src/nichtparasoup \
   -w /usr/src/nichtparasoup \
   --rm \
-  python:3.5 bash -c \
+  python:3.6 bash -c \
   "python3 -m pip install tox; python3 -m tox; rm -rf .tox;"
 ```
 

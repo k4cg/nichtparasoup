@@ -23,7 +23,6 @@ jobs:
           - 'macos-latest'
           - 'windows-latest'
         pyhon:
-          - '3.5'
           - '3.6'
           - '3.7'
           - '3.8'
