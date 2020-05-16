@@ -19,7 +19,8 @@ class Blacklist(Set[ImageUri]):
 
 _IsImageAddable = Callable[[Image], bool]
 _OnImageAdded = Callable[[Image], None]
-_OnFill = Callable[["Crawler", int], None]
+
+_OnFill = Callable[['Crawler', int], None]
 
 _FILLUP_TIMEOUT_DEFAULT: float = 1.0
 
