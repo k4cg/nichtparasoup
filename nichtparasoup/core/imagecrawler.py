@@ -6,7 +6,7 @@ __all__ = [
 
 from abc import ABC, abstractmethod
 from http.client import HTTPResponse
-from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
+from pathlib import PurePath
 from threading import Lock
 from typing import Any, Dict, Optional, Tuple, Union
 from urllib.parse import urlparse
@@ -229,7 +229,9 @@ class RemoteFetchError(Exception):
 
 
 class ImageRecognizer:
-    _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)
+    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg'}
 
     def path_is_image(self, uri: _Uri) -> bool:
-        return self._PATH_RE.match(uri) is not None
+        return PurePath(
+            urlparse(uri).path
+        ).suffix in self._IMAGE_SUFFIXES
