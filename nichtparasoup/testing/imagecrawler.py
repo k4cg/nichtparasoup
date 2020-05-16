@@ -38,11 +38,11 @@ class FileFetcher(RemoteFetcher):
                  base_url: Optional[_Uri] = None, base_dir: Optional[_Path] = None
                  ) -> None:  # pragma: no cover
         super().__init__()
-        self._known = {
+        self._known: Dict[UrlParseResult, _Path] = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
             in known_files.items()
-        }  # type: Dict[UrlParseResult, _Path]
+        }
 
     @classmethod
     def _build_uri(cls, uri: _Uri, base: Optional[_Uri]) -> UrlParseResult:
@@ -147,8 +147,8 @@ class ImageCrawlerLoaderTest(TestCase, ABC):
         self.assertEqual(imagecrawler_name, self.ic_name)
 
 
-PROBE_DELAY_DEFAULT = 0.05  # type: float
-PROBE_RETRIES_DEFAULT = 2  # type: int
+PROBE_DELAY_DEFAULT: float = 0.05
+PROBE_RETRIES_DEFAULT: int = 2
 
 ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, BaseException], bool]
 """ImageCrawlerTest probe callback.
@@ -185,7 +185,7 @@ class ImageCrawlerTest:
         :return: images and errors
         """
         images = None
-        errors = []  # type: List[BaseException]
+        errors: List[BaseException] = []
         for retry in range(retries + 1):
             retry > 0 and sleep(retry_delay)  # type: ignore
             try:

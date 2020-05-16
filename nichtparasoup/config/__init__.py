@@ -50,7 +50,7 @@ def parse_yaml_file(file_path: str) -> Config:
     _data = make_data(file_path, parser='ruamel')
     _schema = make_schema(SCHEMA_FILE, parser='ruamel')
     yamale_validate(_schema, _data, strict=True)
-    config = _data[0][0]  # type: Config
+    config: Config = _data[0][0]
     config.setdefault('logging', dict())
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:

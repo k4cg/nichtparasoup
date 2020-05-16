@@ -35,7 +35,7 @@ class KnownImageCrawlers:
         )
 
     def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
-        self._list = [(n, c) for n, c in self._builtins().items()]  # type: List[_Imagecrawler]
+        self._list: List[_Imagecrawler] = [(n, c) for n, c in self._builtins().items()]
         _log('debug', 'Builtin imagecrawlers loaded: %r', self._list)
         for entry in entries:
             try:
@@ -114,7 +114,7 @@ class KnownImageCrawlers:
 
 __ENTRY_POINT_NAME = 'nichtparasoup_imagecrawler'
 
-__imagecrawlers = None  # type: Optional[KnownImageCrawlers]
+__imagecrawlers: Optional[KnownImageCrawlers] = None
 
 
 def get_imagecrawlers() -> KnownImageCrawlers:  # pragma: no cover

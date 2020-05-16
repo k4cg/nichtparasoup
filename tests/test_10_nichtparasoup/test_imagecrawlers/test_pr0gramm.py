@@ -22,7 +22,7 @@ class TestPr0grammConfigPromoted:
 
     def test_check_missing_value_defaults_to_true(self) -> None:
         # arrange
-        config_in = dict()  # type: Dict[Any, Any]
+        config_in: Dict[Any, Any] = dict()
         # act
         config_out = Pr0gramm.check_config(config_in)
         # assert
@@ -38,7 +38,7 @@ class TestPr0grammConfigTags:
 
     def test_check_missing_value(self) -> None:
         # arrange
-        config_in = dict()  # type: Dict[Any, Any]
+        config_in: Dict[Any, Any] = dict()
         # act
         config_out = Pr0gramm.check_config(config_in)
         # assert
@@ -115,7 +115,7 @@ class TestPr0grammUrlBuilder:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=False, older=older)
         query_string = urlsplit(api_uri).query
-        older_res = parse_qs(query_string).get('older', [None])  # type: Sequence[Optional[str]]
+        older_res: Sequence[Optional[str]] = parse_qs(query_string).get('older', [None])
         # assert
         assert isinstance(older_res, list)
         assert older_res == [older_exp]

@@ -11,7 +11,7 @@ class Pr0gramm(BaseImageCrawler):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
-        self._older = None  # type: Optional[int]
+        self._older: Optional[int] = None
         self._remote_fetcher = RemoteFetcher()
 
     @classmethod
@@ -40,7 +40,7 @@ class Pr0gramm(BaseImageCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        promoted = config.get('promoted', True)  # type: bool
+        promoted: bool = config.get('promoted', True)
         if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
             raise TypeError('promoted {!r} is not bool'.format(promoted))
         tags = config.get('tags', None)

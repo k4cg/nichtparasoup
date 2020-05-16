@@ -51,7 +51,7 @@ class ServerGetImageTest(unittest.TestCase):
             self.assertEqual(image_got.get("source"), image_crawled.source)
             self.assertEqual(image_got.get("more"), image_crawled.more)
             self.assertIsInstance(image_got.get("crawler"), dict)
-            image_got_crawler = image_got["crawler"]  # type: Dict[str, Any]
+            image_got_crawler: Dict[str, Any] = image_got["crawler"]
             self.assertEqual(image_got_crawler.get("id"), id(crawler))
             self.assertEqual(image_got_crawler.get("type"), _type_module_name_str(type(imagecrawler)))
 

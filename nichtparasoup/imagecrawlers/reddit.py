@@ -15,7 +15,7 @@ class Reddit(BaseImageCrawler):
         super().__init__(**config)
         self._uri_base = 'https://www.reddit.com/r/{}.json?after='.format(
             url_quote(self._config['subreddit']))
-        self._after = None  # type: Optional[str]
+        self._after: Optional[str] = None
         self._remote_fetcher = RemoteFetcher()
         self._image_recognizer = ImageRecognizer()
 
@@ -65,5 +65,5 @@ class Reddit(BaseImageCrawler):
         return self._uri_base + (url_quote(after) if after else '')
 
     def _get_image(self, data: Dict[str, Any]) -> Optional[str]:
-        uri = data.get('url')  # type: Optional[str]
+        uri: Optional[str] = data.get('url')
         return uri if uri and self._image_recognizer.path_is_image(uri) else None

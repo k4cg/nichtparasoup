@@ -13,7 +13,7 @@ class ConfigTestCheckDuplicatesTest(unittest.TestCase):
     def test_duplicates(self) -> None:
         # arrange
         tester = ConfigTest()
-        duplicates = [Echo(image_uri='https://foo.bar.baz')]  # type: List[BaseImageCrawler]
+        duplicates: List[BaseImageCrawler] = [Echo(image_uri='https://foo.bar.baz')]
         tester.find_duplicates = lambda _: duplicates  # type: ignore
         # act & assert
         with self.assertRaises(DuplicateImagecrawlersException) as ar:
@@ -23,7 +23,7 @@ class ConfigTestCheckDuplicatesTest(unittest.TestCase):
     def test_no_duplicates(self) -> None:
         # arrange
         tester = ConfigTest()
-        duplicates = []  # type: List[BaseImageCrawler]
+        duplicates: List[BaseImageCrawler] = []
         tester.find_duplicates = lambda _: duplicates  # type: ignore
         # act
         tester.check_duplicates({})

@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from http.client import HTTPResponse
 from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.response import addinfourl
@@ -52,7 +52,7 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
-    _np_name = None  # type: Optional[str]
+    _np_name: Optional[str] = None
     """Internal name used in nichtparasoup configs.
     Value is assigned automatically.
     see :ref:``internal_name``
@@ -195,7 +195,7 @@ class RemoteFetcher:
         _log('debug', 'Fetch remote %r in %ss with %r', uri, self._timeout, self._headers)
         request = Request(uri, headers=self._headers)
         try:
-            response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
+            response: Union[HTTPResponse, addinfourl] = urlopen(request, timeout=self._timeout)
         except Exception as ex:  # pylint: disable=broad-except
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
@@ -224,7 +224,7 @@ class RemoteFetchError(Exception):
 
 
 class ImageRecognizer:
-    _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
+    _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)
 
     def path_is_image(self, uri: _Uri) -> bool:
         return self._PATH_RE.match(uri) is not None

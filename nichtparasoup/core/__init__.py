@@ -36,8 +36,8 @@ class Crawler:
         self.imagecrawler = imagecrawler
         self.weight = weight
         self.images = ImageCollection()
-        self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
-        self._image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
+        self._is_image_addable_wr: Optional[ReferenceType[_IsImageAddable]] = None
+        self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
 
@@ -48,7 +48,7 @@ class Crawler:
         elif MethodType is t_is_image_addable:
             self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
         else:
-            raise Exception('type {} not supported, yet'.format(t_is_image_addable))
+            raise NotImplementedError('type {} not supported, yet'.format(t_is_image_addable))
         # TODO: add function and other types - and write proper tests for it
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
@@ -61,7 +61,7 @@ class Crawler:
         elif MethodType is t_image_added:
             self._image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
-            raise Exception('type {} not supported, yet'.format(t_image_added))
+            raise NotImplementedError('type {} not supported, yet'.format(t_image_added))
         # TODO: add function and other types - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
@@ -149,7 +149,7 @@ class NPCore:
         )
 
     def fill_up_to(self, to: int, on_refill: Optional[_OnFill], timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
-        fill_treads = list()  # type: List[Thread]
+        fill_treads: List[Thread] = []
         for crawler in self.crawlers:  # pylint: disable=not-an-iterable
             fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, timeout), daemon=True)
             fill_treads.append(fill_tread)
@@ -158,7 +158,7 @@ class NPCore:
             fill_tread.join()
 
     def reset(self) -> int:
-        reset_treads = list()  # type: List[Thread]
+        reset_treads: List[Thread] = []
         for crawler in self.crawlers.copy():  # pylint: disable=no-member
             reset_tread = Thread(target=crawler.reset, daemon=True)
             reset_treads.append(reset_tread)
