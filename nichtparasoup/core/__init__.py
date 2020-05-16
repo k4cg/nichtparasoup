@@ -1,6 +1,6 @@
 __all__ = ["Crawler", "CrawlerCollection", "NPCore"]
 
-from random import choice as random_choice, uniform as random_float
+from random import choice, choices
 from threading import Thread
 from time import sleep
 from types import MethodType
@@ -100,7 +100,7 @@ class Crawler:
     def get_random_image(self) -> Optional[Image]:
         if not self.images:
             return None
-        image = random_choice(list(self.images))
+        image = choice(list(self.images))
         return image
 
     def pop_random_image(self) -> Optional[Image]:
@@ -112,18 +112,12 @@ class Crawler:
 
 class CrawlerCollection(List[Crawler]):
 
-    def _random_weight(self) -> _CrawlerWeight:
-        return random_float(0, sum(crawler.weight for crawler in self))  # pylint: disable=not-an-iterable
-
     def get_random(self) -> Optional[Crawler]:
-        cum_weight_goal = self._random_weight()
-        # IDEA: cum_weight_goal == 0 is an edge case and could be handled if needed ...
-        cum_weight = 0  # type: _CrawlerWeight
-        for crawler in self:  # pylint: disable=not-an-iterable
-            cum_weight += crawler.weight
-            if cum_weight >= cum_weight_goal:
-                return crawler
-        return None
+        crawlers = self.copy()
+        if not crawlers:
+            return None
+        weights = [crawler.weight for crawler in crawlers]
+        return choices(crawlers, weights=weights, k=1)[0]
 
 
 class NPCore:
