@@ -14,8 +14,10 @@ from ..testing.config import (
 )
 from ._internals import _cli_option_debug
 
+_FilePath = str
 
-def main(file: str, *,
+
+def main(file: _FilePath, *,
          probe: bool = True, probe_retries: int = PROBE_RETRIES_DEFAULT, probe_delay: float = PROBE_DELAY_DEFAULT,
          probe_fail_fast: bool = False,
          verbose: bool = False

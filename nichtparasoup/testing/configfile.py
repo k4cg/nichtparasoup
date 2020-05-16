@@ -3,10 +3,13 @@ __all__ = ["ConfigFileTest"]
 from ..config import parse_yaml_file
 from .config import ConfigTest
 
+_FilePath = str
+
 
 class ConfigFileTest:
 
-    def check_file(self, file: str) -> None:  # pragma: no cover
+    @staticmethod
+    def check_file(file: _FilePath) -> None:  # pragma: no cover
         """Do all necessary tests a file might need.
         """
         config = parse_yaml_file(file)

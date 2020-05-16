@@ -9,8 +9,10 @@ from .._internals import _log
 from ..config import dump_defaults
 from ._internals import _cli_option_debug
 
+_FilePath = str
 
-def main(file: str, *, overwrite: Optional[bool] = None) -> None:  # pragma: no cover
+
+def main(file: _FilePath, *, overwrite: Optional[bool] = None) -> None:  # pragma: no cover
     _log('debug', 'ConfigFile: %r', file)
     if isfile(file):
         if overwrite is None:
@@ -20,7 +22,7 @@ def main(file: str, *, overwrite: Optional[bool] = None) -> None:  # pragma: no 
     _write_file(file)
 
 
-def _write_file(file: str) -> None:  # pragma: no cover
+def _write_file(file: _FilePath) -> None:  # pragma: no cover
     try:
         dump_defaults(file)
     except Exception as ex:  # pylint: disable=broad-except

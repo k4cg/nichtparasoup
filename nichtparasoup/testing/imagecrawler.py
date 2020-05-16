@@ -19,7 +19,8 @@ from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
 from ..imagecrawlers import get_imagecrawlers
 
 _Uri = str
-_Path = str  # @TODO make pathlike
+_FilePath = str
+_DirPath = str  # @TODO make pathlike
 
 
 class FileFetcher(RemoteFetcher):
@@ -34,11 +35,11 @@ class FileFetcher(RemoteFetcher):
 
     """
 
-    def __init__(self, known_files: Dict[_Uri, _Path], *,
-                 base_url: Optional[_Uri] = None, base_dir: Optional[_Path] = None
+    def __init__(self, known_files: Dict[_Uri, _FilePath], *,
+                 base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None
                  ) -> None:  # pragma: no cover
         super().__init__()
-        self._known: Dict[UrlParseResult, _Path] = {
+        self._known: Dict[UrlParseResult, _FilePath] = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
             in known_files.items()
@@ -52,7 +53,7 @@ class FileFetcher(RemoteFetcher):
         ))
 
     @classmethod
-    def _build_file(cls, file: _Path, base: Optional[_Path]) -> _Uri:
+    def _build_file(cls, file: _FilePath, base: Optional[_DirPath]) -> _Uri:
         file_path = Path(path_join(base, file) if base else file)
         cls._test_path(file_path)
         return file_path.as_uri()
@@ -82,7 +83,7 @@ class FileFetcher(RemoteFetcher):
             uri_parsed.fragment
         )
 
-    def _get_file_uri(self, uri: _Uri) -> Tuple[_Path, _Uri]:
+    def _get_file_uri(self, uri: _Uri) -> Tuple[_FilePath, _Uri]:
         uri_sorted = self._uri_sort_query(urlparse(uri))
         known = self._known.get(uri_sorted)
         if not known:

@@ -36,10 +36,14 @@ class JsonResponse(Response):
         )
 
 
+_DirPath = str
+_FilePath = str
+
+
 class WebServer:
-    _TEMPLATE_FILES = path_join(dirname(__file__), 'htdocs', 'template')
-    _STATIC_FILES = path_join(dirname(__file__), 'htdocs', 'static')
-    _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES
+    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'template')
+    _STATIC_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'static')
+    _STATIC_INDEX: _FilePath = 'index.html'  # relative to cls._STATIC_FILES
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
         self.imageserver = imageserver

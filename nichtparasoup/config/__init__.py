@@ -12,11 +12,12 @@ from yamale import make_data, make_schema, validate as yamale_validate  # type: 
 from ..core.imagecrawler import BaseImageCrawler
 from ..imagecrawlers import get_imagecrawlers
 
-DEFAULTS_FILE = join(dirname(realpath(__file__)), "defaults.yaml")
-SCHEMA_FILE = join(dirname(realpath(__file__)), "schema.yaml")
-
+_FilePath = str
 
 Config = Dict[str, Any]
+
+DEFAULTS_FILE: _FilePath = join(dirname(realpath(__file__)), "defaults.yaml")
+SCHEMA_FILE: _FilePath = join(dirname(realpath(__file__)), "schema.yaml")
 
 
 class ImageCrawlerSetupError(Exception):
@@ -46,7 +47,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         return imagecrawler
 
 
-def parse_yaml_file(file_path: str) -> Config:
+def parse_yaml_file(file_path: _FilePath) -> Config:
     _data = make_data(file_path, parser='ruamel')
     _schema = make_schema(SCHEMA_FILE, parser='ruamel')
     yamale_validate(_schema, _data, strict=True)
@@ -59,7 +60,7 @@ def parse_yaml_file(file_path: str) -> Config:
     return config
 
 
-def dump_defaults(file_path: str) -> None:  # pragma: no cover
+def dump_defaults(file_path: _FilePath) -> None:  # pragma: no cover
     copyfile(DEFAULTS_FILE, file_path)
 
 
@@ -67,7 +68,7 @@ def get_defaults() -> Config:  # pragma: no cover
     return parse_yaml_file(DEFAULTS_FILE)
 
 
-def get_config(config_file: Optional[str] = None) -> Config:
+def get_config(config_file: Optional[_FilePath] = None) -> Config:
     if not config_file:
         return get_defaults()
     try:
