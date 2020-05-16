@@ -11,13 +11,17 @@ from .. import __version__ as nichtparasoup_version
 from .._internals import _log, _type_module_name_str
 from . import Crawler, NPCore
 
+_Timestamp = int
+"""Time in seconds since the Epoch
+"""
+
 
 class ServerStatistics:
     def __init__(self) -> None:  # pragma: no cover
-        self.time_started: Optional[int] = None
+        self.time_started: Optional[_Timestamp] = None
         self.count_images_served: int = 0
         self.count_reset: int = 0
-        self.time_last_reset: Optional[int] = None
+        self.time_last_reset: Optional[_Timestamp] = None
         self.cum_blacklist_on_flush: int = 0
 
 

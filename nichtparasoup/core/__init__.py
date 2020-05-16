@@ -97,10 +97,8 @@ class Crawler:
                 sleep(timeout)
 
     def get_random_image(self) -> Optional[Image]:
-        if not self.images:
-            return None
-        image = choice(list(self.images))
-        return image
+        images = list(self.images)
+        return choice(images) if images else None
 
     def pop_random_image(self) -> Optional[Image]:
         image = self.get_random_image()

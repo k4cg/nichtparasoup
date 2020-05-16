@@ -77,6 +77,11 @@ class BaseImageCrawler(ABC):
             return NotImplemented
         return self._config == other._config
 
+    def __ne__(self, other: Union['BaseImageCrawler', Any]) -> bool:
+        if type(self) is not type(other):
+            return NotImplemented
+        return self._config != other._config
+
     def get_internal_name(self) -> Optional[str]:
         """get the internal name"""
         return self._np_name

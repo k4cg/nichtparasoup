@@ -68,8 +68,16 @@ class Image:
             return NotImplemented
         return hash(self) == hash(other)
 
+    def __ne__(self, other: Union['Image', Any]) -> bool:
+        if type(other) is not type(self):
+            return NotImplemented
+        return hash(self) != hash(other)
+
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'
+
+    def __str__(self) -> str:
+        return self.uri
 
 
 class ImageCollection(Set[Image]):
