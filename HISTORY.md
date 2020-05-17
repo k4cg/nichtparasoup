@@ -18,7 +18,6 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`.
   * Class `nichtparasoup.testing.config.ConfigFileTest` was moved to `nichtparasoup.testing.configfile.ConfigFileTest`.
-
 * Changes
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
@@ -29,7 +28,10 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * Class `.configfile.ConfigFileTest` (previously named `.config.ConfigFileTest`) was reworked.
     * Class `.imagecrawler.FileFetcher` supports fully qualified urls now, including schema and netloc.
       Therefore an optional parameter `base_url` was added.
-
+* Fixed
+  * False-positives in `nichtparasoup.core.imagecrawler.ImageRecognizer.path_is_image()`.
+* Removed:
+  * `nichtparasoup.core.server.type_module_name_str()`
 * Added
   * API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status_crawlers.md).
   * Public CLI modules `nichtparasoup.commands.*` for use via `python3 -m`:
@@ -49,24 +51,21 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * Function `__str__()` .  
       Returns `<NamedImagecrawler {INTERNAL_NAME} {CONFIG}>` if `internal_name` is set, 
       otherwise the behaviour falls back to `__repr__()`.
-
-Removed:
-  * `nichtparasoup.core.server.type_module_name_str()`
-
 * Misc
   * Build process is now isolated and conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
     *ATTENTION*: `pip install`'s `--editable` flag might requires the `--no-build-isolation` flag.
   * Improved some [docs](docs).
-  * internal
+  * Internal
     * All internal imports were made relative (again).
     * Logging reviewed, uses %-strings as params, now.
     * `try`/`except` got some overhaul to cover needed parts, only.
     * CLI is now powered by [`click`](https://click.palletsprojects.com).
       Was made via `argparse` before.
   * Removed `ddt` from the testing dependencies. Closes [issue #233](https://github.com/k4cg/nichtparasoup/issues/233).
-  * version-bumped some dependencies
+  * Version-bumped some dependencies
+  * Added some more tests.
   
 
 
