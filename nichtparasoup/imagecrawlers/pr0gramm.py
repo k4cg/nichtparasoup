@@ -11,7 +11,7 @@ class Pr0gramm(BaseImageCrawler):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
-        self._older = None  # type: Optional[int]
+        self._older: Optional[int] = None
         self._remote_fetcher = RemoteFetcher()
 
     @classmethod
@@ -26,23 +26,23 @@ class Pr0gramm(BaseImageCrawler):
         )
 
     @staticmethod
-    def __check_config_tags(tags: Optional[str]) -> Optional[str]:
+    def __check_config_tags(tags: Optional[Any]) -> Optional[str]:
         if tags is None:
             return None
-        if type(tags) is str:  # pylint: disable=unidiomatic-typecheck
-            tags = tags.strip()
-            if not tags.startswith('!'):
-                raise ValueError('tags {!r} must start with "!"'.format(tags))
-            if not len(tags) > 1:
-                raise ValueError('tags {!r} is empty'.format(tags))
-            return tags
-        raise TypeError('tags {!r} is not str or None'.format(tags))
+        if not isinstance(tags, str):
+            raise TypeError(f'tags {tags!r} is not str')
+        tags = tags.strip()
+        if not tags.startswith('!'):
+            raise ValueError(f'tags {tags!r} must start with "!"')
+        if not len(tags) > 1:
+            raise ValueError(f'tags {tags!r} is empty')
+        return tags
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        promoted = config.get('promoted', True)  # type: bool
+        promoted: bool = config.get('promoted', True)
         if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
-            raise TypeError('promoted {!r} is not bool'.format(promoted))
+            raise TypeError(f'promoted {promoted!r} is not bool')
         tags = config.get('tags', None)
         tags = cls.__check_config_tags(tags)
         return ImageCrawlerConfig(
@@ -62,11 +62,12 @@ class Pr0gramm(BaseImageCrawler):
         :param tags: None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197
         :param older: page through the search
         """
-        params = dict(
-            flags=str(flags),
-            promoted=('1' if promoted else '0'),
-            tags='!{} -"video"'.format('({})'.format(tags.lstrip('!')) if tags else '')
-        )
+        tags = f'({tags.lstrip("!")})' if tags else ''
+        params: Dict[str, str] = {
+            'flags': str(flags),
+            'promoted': '1' if promoted else '0',
+            'tags': f'!{tags} -"video"'
+        }
         if older:
             params['older'] = str(older)
         return cls.__API_GET_URL + '?' + urlencode(params)

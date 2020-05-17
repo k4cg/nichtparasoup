@@ -105,7 +105,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self._amount = 10
-        self._cursor = None  # type: Optional[str]
+        self._cursor: Optional[str] = None
         self._remote_fetcher = RemoteFetcher()
 
     def _reset(self) -> None:
@@ -121,7 +121,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
                 self._get_images_from_media_edge_node(edge['node'])
             )
             del edge
-        page_info = response['page_info']  # type: Dict[str, Any]
+        page_info: Dict[str, Any] = response['page_info']
         # don't care if this was the last page ... why not restarting at front when the end is reached?!
         self._cursor = page_info['end_cursor'] if page_info['has_next_page'] else None
         return images
@@ -215,7 +215,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         return None
 
     _QUERY_HASH_LOCK = Lock()  # global lock. may be overwritten in subclass
-    _query_hash = None  # type: Optional[str]
+    _query_hash: Optional[str] = None
 
     def _get_query_hash(self) -> str:
         cls = self.__class__
@@ -256,9 +256,9 @@ class InstagramHashtag(BaseInstagramCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         tag_name = config["tag_name"]
         if type(tag_name) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("tag_name {!r} is not str".format(tag_name))
+            raise TypeError(f'tag_name {tag_name!r} is not str')
         if len(tag_name) == 0:
-            raise ValueError("tag_name {!r} is empty".format(tag_name))
+            raise ValueError(f'tag_name {tag_name!r} is empty')
         return ImageCrawlerConfig(
             tag_name=tag_name.lower(),
         )
@@ -279,7 +279,7 @@ class InstagramProfile(BaseInstagramCrawler):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
-        self.__profile_id = None  # type: Optional[str]
+        self.__profile_id: Optional[str] = None
         self.__profile_id_lock = Lock()
 
     @classmethod
@@ -296,9 +296,9 @@ class InstagramProfile(BaseInstagramCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         user_name = config["user_name"]
         if type(user_name) is not str:  # pylint: disable=unidiomatic-typecheck
-            raise TypeError("user_name {!r} is not str".format(user_name))
+            raise TypeError(f'user_name {user_name!r} is not str')
         if len(user_name) == 0:
-            raise ValueError("user_name {!r} is empty".format(user_name))
+            raise ValueError(f'user_name {user_name!r} is empty')
         return ImageCrawlerConfig(
             user_name=user_name.lower(),
         )

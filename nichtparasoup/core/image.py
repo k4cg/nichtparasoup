@@ -3,6 +3,8 @@ __all__ = ["Image", "ImageCollection", "ImageUri", "SourceUri"]
 from typing import Any, Set, Union
 from uuid import uuid4
 
+from .._internals import _type_module_name_str
+
 ImageUri = str
 
 SourceUri = str
@@ -66,8 +68,16 @@ class Image:
             return NotImplemented
         return hash(self) == hash(other)
 
+    def __ne__(self, other: Union['Image', Any]) -> bool:
+        if type(other) is not type(self):
+            return NotImplemented
+        return hash(self) != hash(other)
+
     def __repr__(self) -> str:  # pragma: no cover
-        return '<{0.__module__}.{0.__name__} object at {1:#x} {2.uri!r}>'.format(type(self), id(self), self)
+        return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'
+
+    def __str__(self) -> str:
+        return self.uri
 
 
 class ImageCollection(Set[Image]):

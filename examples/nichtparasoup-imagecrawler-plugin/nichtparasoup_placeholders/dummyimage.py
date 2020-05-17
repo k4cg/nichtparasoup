@@ -25,27 +25,25 @@ class DummyImage(BaseImageCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        width = config["width"]
-        height = config["height"]
+        width = config['width']
+        height = config['height']
         if type(width) is not int:
-            raise TypeError("width {!r} is not int".format(width))
+            raise TypeError(f'width {width!r} is not int')
         if type(height) is not int:
-            raise TypeError("height {!r} is not int".format(height))
+            raise TypeError(f'height {height!r} is not int')
         if width <= 0:
-            raise ValueError("width {!r} <= 0".format(width))
+            raise ValueError(f'width {width} <= 0')
         if height <= 0:
-            raise ValueError("height {!r} <= 0".format(height))
+            raise ValueError(f'height {height} <= 0')
         return ImageCrawlerConfig(
             width=width,
             height=height,
         )
 
-    # trailing '?' is needed to prevent random technical issues with the generator
-    _IMAGE_URI_TEMPLATE = 'https://dummyimage.com/{}x{}/567/fed/?'
-
-    @classmethod
-    def _get_image_uri(cls, width: int, height: int) -> str:
-        return cls._IMAGE_URI_TEMPLATE.format(width, height)
+    @staticmethod
+    def _get_image_uri(width: int, height: int) -> str:
+        # trailing '?' is needed to prevent random technical issues with the generator
+        return f'https://dummyimage.com/{width}x{height}/567/fed/?'
 
     def _reset(self) -> None:
         # nothing to reset since this is a generic crawler

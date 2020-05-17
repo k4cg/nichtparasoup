@@ -8,12 +8,12 @@ from abc import ABC, abstractmethod
 from http.client import HTTPResponse
 from re import IGNORECASE as RE_IGNORECASE, compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.response import addinfourl
 
-from .._internals import _log
+from .._internals import _log, _type_module_name_str
 from .image import ImageCollection
 
 _ImageCrawlerConfigKey = str
@@ -52,7 +52,7 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
-    _np_name = None  # type: Optional[str]
+    _np_name: Optional[str] = None
     """Internal name used in nichtparasoup configs.
     Value is assigned automatically.
     see :ref:``internal_name``
@@ -65,10 +65,10 @@ class BaseImageCrawler(ABC):
         _log('debug', 'crawler initialized: %r', self)
 
     def __repr__(self) -> str:  # pragma: no cover
-        return '<{0.__module__}.{0.__name__} {1.config!r}>'.format(type(self), self)
+        return f'<{_type_module_name_str(type(self))} {self.config!r}>'
 
     def __str__(self) -> str:  # pragma: no cover
-        return '<NamedImagecrawler {0._np_name!r} {0.config!r}>'.format(self) \
+        return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>' \
             if self._np_name \
             else self.__repr__()
 
@@ -76,6 +76,11 @@ class BaseImageCrawler(ABC):
         if type(self) is not type(other):
             return NotImplemented
         return self._config == other._config
+
+    def __ne__(self, other: Union['BaseImageCrawler', Any]) -> bool:
+        if type(self) is not type(other):
+            return NotImplemented
+        return self._config != other._config
 
     def get_internal_name(self) -> Optional[str]:
         """get the internal name"""
@@ -152,11 +157,11 @@ class BaseImageCrawler(ABC):
             Return the viable config for this crawler instance.
 
         Example implementation:
-            height = config["height"]  # will raise KeyError automatically
+            height = config['height']  # will raise KeyError automatically
             if type(height) is not int:
-                raise TypeError("height {} is not int".format(height))
+                raise TypeError(f'height {height!r} is not int')
             if height <= 0:
-                raise ValueError("height {} <= 0".format(width))
+                raise ValueError(f'height {height} <= 0')
         """
         raise NotImplementedError()
 
@@ -191,11 +196,11 @@ class RemoteFetcher:
 
     def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
         if not self._valid_uri(uri):
-            raise ValueError('Not remote: {!r}'.format(uri))
+            raise ValueError(f'Not remote: {uri!r}')
         _log('debug', 'Fetch remote %r in %ss with %r', uri, self._timeout, self._headers)
         request = Request(uri, headers=self._headers)
         try:
-            response = urlopen(request, timeout=self._timeout)  # type: Union[HTTPResponse, addinfourl]
+            response: Union[HTTPResponse, addinfourl] = urlopen(request, timeout=self._timeout)
         except Exception as ex:  # pylint: disable=broad-except
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
@@ -220,11 +225,11 @@ class RemoteFetchError(Exception):
         self.uri = uri
 
     def __str__(self) -> str:  # pragma: no cover
-        return '{} for {!r}'.format(self.msg or 'RemoteFetchError', self.uri)
+        return f'{self.msg or "RemoteFetchError"} for {self.uri!r}'
 
 
 class ImageRecognizer:
-    _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)  # type: Pattern[str]
+    _PATH_RE = re_compile(r'.+\.(?:jpeg|jpg|png|gif|svg)(?:[?#].*)?$', flags=RE_IGNORECASE)
 
     def path_is_image(self, uri: _Uri) -> bool:
         return self._PATH_RE.match(uri) is not None

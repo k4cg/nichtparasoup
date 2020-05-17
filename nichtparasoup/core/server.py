@@ -11,14 +11,18 @@ from .. import __version__ as nichtparasoup_version
 from .._internals import _log, _type_module_name_str
 from . import Crawler, NPCore
 
+_Timestamp = int
+"""Time in seconds since the Epoch
+"""
+
 
 class ServerStatistics:
     def __init__(self) -> None:  # pragma: no cover
-        self.time_started = None  # type: Optional[int]
-        self.count_images_served = 0  # type: int
-        self.count_reset = 0  # type: int
-        self.time_last_reset = None  # type: Optional[int]
-        self.cum_blacklist_on_flush = 0  # type: int
+        self.time_started: Optional[_Timestamp] = None
+        self.count_images_served: int = 0
+        self.count_reset: int = 0
+        self.time_last_reset: Optional[_Timestamp] = None
+        self.cum_blacklist_on_flush: int = 0
 
 
 class Server:
@@ -37,7 +41,7 @@ class Server:
         self.keep = crawler_upkeep
         self.reset_timeout = reset_timeout
         self.stats = ServerStatistics()
-        self._refiller = None  # type: Optional[ServerRefiller]
+        self._refiller: Optional[ServerRefiller] = None
         self._trigger_reset = False
         self._locks = _ServerLocks()
         self.__running = False
@@ -188,7 +192,7 @@ class ServerRefiller(Thread):
 
     def run(self) -> None:
         while not self._stop_event.is_set():
-            server = self._server_wr()  # type: Optional[Server]
+            server: Optional[Server] = self._server_wr()
             if server:
                 server.refill()
             else:

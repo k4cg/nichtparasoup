@@ -1,6 +1,6 @@
-__all__ = ["Crawler", "CrawlerCollection", "NPCore"]
+__all__ = ["Crawler", "CrawlerCollection", "NPCore", "Blacklist"]
 
-from random import choice as random_choice, uniform as random_float
+from random import choice, choices
 from threading import Thread
 from time import sleep
 from types import MethodType
@@ -13,17 +13,16 @@ from .imagecrawler import BaseImageCrawler
 _CrawlerWeight = Union[int, float]  # constraint: > 0
 
 
-class _Blacklist(Set[ImageUri]):
+class Blacklist(Set[ImageUri]):
     ...
 
 
 _IsImageAddable = Callable[[Image], bool]
-
 _OnImageAdded = Callable[[Image], None]
 
-_OnFill = Callable[["Crawler", int], None]
+_OnFill = Callable[['Crawler', int], None]
 
-_FILLUP_TIMEOUT_DEFAULT = 1.0
+_FILLUP_TIMEOUT_DEFAULT: float = 1.0
 
 
 class Crawler:
@@ -36,8 +35,8 @@ class Crawler:
         self.imagecrawler = imagecrawler
         self.weight = weight
         self.images = ImageCollection()
-        self._is_image_addable_wr = None  # type: Optional[ReferenceType[_IsImageAddable]]
-        self._image_added_wr = None  # type: Optional[ReferenceType[_OnImageAdded]]
+        self._is_image_addable_wr: Optional[ReferenceType[_IsImageAddable]] = None
+        self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
 
@@ -48,7 +47,7 @@ class Crawler:
         elif MethodType is t_is_image_addable:
             self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
         else:
-            raise Exception('type {} not supported, yet'.format(t_is_image_addable))
+            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
         # TODO: add function and other types - and write proper tests for it
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
@@ -61,7 +60,7 @@ class Crawler:
         elif MethodType is t_image_added:
             self._image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
-            raise Exception('type {} not supported, yet'.format(t_image_added))
+            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
         # TODO: add function and other types - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
@@ -98,10 +97,8 @@ class Crawler:
                 sleep(timeout)
 
     def get_random_image(self) -> Optional[Image]:
-        if not self.images:
-            return None
-        image = random_choice(list(self.images))
-        return image
+        images = list(self.images)
+        return choice(images) if images else None
 
     def pop_random_image(self) -> Optional[Image]:
         image = self.get_random_image()
@@ -112,25 +109,19 @@ class Crawler:
 
 class CrawlerCollection(List[Crawler]):
 
-    def _random_weight(self) -> _CrawlerWeight:
-        return random_float(0, sum(crawler.weight for crawler in self))  # pylint: disable=not-an-iterable
-
     def get_random(self) -> Optional[Crawler]:
-        cum_weight_goal = self._random_weight()
-        # IDEA: cum_weight_goal == 0 is an edge case and could be handled if needed ...
-        cum_weight = 0  # type: _CrawlerWeight
-        for crawler in self:  # pylint: disable=not-an-iterable
-            cum_weight += crawler.weight
-            if cum_weight >= cum_weight_goal:
-                return crawler
-        return None
+        crawlers = self.copy()
+        if not crawlers:
+            return None
+        weights = [crawler.weight for crawler in crawlers]
+        return choices(crawlers, weights=weights, k=1)[0]
 
 
 class NPCore:
 
     def __init__(self) -> None:  # pragma: no cover
         self.crawlers = CrawlerCollection()
-        self.blacklist = _Blacklist()
+        self.blacklist = Blacklist()
 
     def _is_image_not_in_blacklist(self, image: Image) -> bool:
         # must be compatible to: _IsImageAddable
@@ -155,7 +146,7 @@ class NPCore:
         )
 
     def fill_up_to(self, to: int, on_refill: Optional[_OnFill], timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
-        fill_treads = list()  # type: List[Thread]
+        fill_treads: List[Thread] = []
         for crawler in self.crawlers:  # pylint: disable=not-an-iterable
             fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, timeout), daemon=True)
             fill_treads.append(fill_tread)
@@ -164,7 +155,7 @@ class NPCore:
             fill_tread.join()
 
     def reset(self) -> int:
-        reset_treads = list()  # type: List[Thread]
+        reset_treads: List[Thread] = []
         for crawler in self.crawlers.copy():  # pylint: disable=no-member
             reset_tread = Thread(target=crawler.reset, daemon=True)
             reset_treads.append(reset_tread)

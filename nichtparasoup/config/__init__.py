@@ -12,11 +12,12 @@ from yamale import make_data, make_schema, validate as yamale_validate  # type: 
 from ..core.imagecrawler import BaseImageCrawler
 from ..imagecrawlers import get_imagecrawlers
 
-DEFAULTS_FILE = join(dirname(realpath(__file__)), "defaults.yaml")
-SCHEMA_FILE = join(dirname(realpath(__file__)), "schema.yaml")
-
+_FilePath = str
 
 Config = Dict[str, Any]
+
+DEFAULTS_FILE: _FilePath = join(dirname(realpath(__file__)), "defaults.yaml")
+SCHEMA_FILE: _FilePath = join(dirname(realpath(__file__)), "schema.yaml")
 
 
 class ImageCrawlerSetupError(Exception):
@@ -28,14 +29,14 @@ class ImageCrawlerSetupError(Exception):
         self._config = ic_config
 
     def __str__(self) -> str:  # pragma: no cover
-        return 'Failed setup crawler {!r} of type {!r} with config {!r}'.format(self._name, self._class, self._config)
+        return f'Failed setup crawler {self._name!r} of type {self._class!r} with config {self._config!r}'
 
 
 def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     imagecrawler_name = config_crawler['name']
     imagecrawler_class = get_imagecrawlers().get_class(imagecrawler_name)
     if not imagecrawler_class:
-        raise ValueError('Unknown crawler name {!r}'.format(imagecrawler_name))
+        raise ValueError(f'Unknown crawler name {imagecrawler_name!r}')
     imagecrawler_config = config_crawler['config']
     try:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
@@ -46,11 +47,11 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         return imagecrawler
 
 
-def parse_yaml_file(file_path: str) -> Config:
+def parse_yaml_file(file_path: _FilePath) -> Config:
     _data = make_data(file_path, parser='ruamel')
     _schema = make_schema(SCHEMA_FILE, parser='ruamel')
     yamale_validate(_schema, _data, strict=True)
-    config = _data[0][0]  # type: Config
+    config: Config = _data[0][0]
     config.setdefault('logging', dict())
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
@@ -59,7 +60,7 @@ def parse_yaml_file(file_path: str) -> Config:
     return config
 
 
-def dump_defaults(file_path: str) -> None:  # pragma: no cover
+def dump_defaults(file_path: _FilePath) -> None:  # pragma: no cover
     copyfile(DEFAULTS_FILE, file_path)
 
 
@@ -67,10 +68,10 @@ def get_defaults() -> Config:  # pragma: no cover
     return parse_yaml_file(DEFAULTS_FILE)
 
 
-def get_config(config_file: Optional[str] = None) -> Config:
+def get_config(config_file: Optional[_FilePath] = None) -> Config:
     if not config_file:
         return get_defaults()
     try:
         return parse_yaml_file(config_file)
     except BaseException as ex:
-        raise ValueError('invalid config file {!r}: {}'.format(config_file, ex)) from ex
+        raise ValueError(f'invalid config file {config_file!r}: {ex}') from ex

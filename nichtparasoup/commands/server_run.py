@@ -12,6 +12,8 @@ from ..core.server import Server as ImageServer
 from ..webserver import WebServer
 from ._internals import _cli_option_debug
 
+_FilePath = str
+
 
 def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     del develop  # @TODO implement develop mode - enable arbitrary CORS
@@ -26,12 +28,12 @@ def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     webserver.run()
 
 
-def _param_get_config(_: Context, param: Parameter, config_file: Optional[str]) -> Config:  # pragma: no cover
+def _param_get_config(_: Context, param: Parameter, config_file: Optional[_FilePath]) -> Config:  # pragma: no cover
     try:
         return get_config(config_file)
     except Exception as ex:
         raise BadParameter(
-            '{}\n\tUse the "server config check" command for an analyse.'.format(ex),
+            f'{ex}\n\tUse the "server config check" command for an analyse.',
             param=param
         ) from ex
 

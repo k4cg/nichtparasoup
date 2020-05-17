@@ -52,7 +52,7 @@ def _message(message: Union[str, List[str]], color: Optional[str] = None, file: 
     if not file:
         file = sys.stdout
     message = _format(message, color)
-    file.write('{}{}'.format(message, _LINEBREAK))
+    file.write(message + _LINEBREAK)
 
 
 def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
@@ -62,8 +62,8 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     if colored:
         color = 'yellow' if isinstance(exception, Warning) else 'red'
         exception_name = colored(exception_name, color)
-    _message('{}: {}'.format(exception_name, exception), file=file)
+    _message(f'{exception_name}: {exception}', file=file)
 
 
 def _type_module_name_str(type_: Type[Any]) -> str:
-    return '{}:{}'.format(type_.__module__, type_.__name__)
+    return f'{type_.__module__}:{type_.__name__}'

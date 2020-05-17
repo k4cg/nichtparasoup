@@ -4,7 +4,7 @@ __all__ = ["ConfigTest",
            'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT'  # for convenience
            ]
 
-from enum import Enum, unique
+from enum import Enum, auto, unique
 from time import sleep
 from typing import Callable, List, Optional
 
@@ -20,16 +20,16 @@ class ConfigImagecrawlerProbeResult:
         self.result = result
 
 
-ConfigProbeResults = List[ConfigImagecrawlerProbeResult]
+class ConfigProbeResults(List[ConfigImagecrawlerProbeResult]):
+    ...
 
 
 @unique
 class ConfigProbeCallbackReason(Enum):
-    # TODO: on py>=36 - use ``auto()``
-    start = 1
-    retry = 2
-    finish = 3
-    failure = 4
+    start = auto()
+    retry = auto()
+    finish = auto()
+    failure = auto()
 
 
 ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Optional[BaseException]], Optional[bool]]
@@ -70,8 +70,8 @@ class ConfigTest:
          :param config: file path to the config to validate
          :return: duplicates
          """
-        imagecrawlers = []  # type: List[BaseImageCrawler]
-        duplicates = []  # type: List[BaseImageCrawler]
+        imagecrawlers: List[BaseImageCrawler] = []
+        duplicates: List[BaseImageCrawler] = []
         for crawler_config in config['crawlers']:
             imagecrawler = get_imagecrawler(crawler_config)
             (duplicates if imagecrawler in imagecrawlers else imagecrawlers).append(imagecrawler)
@@ -94,7 +94,7 @@ class ConfigTest:
         :param callback: callback function
         :return: probe results
         """
-        result = []  # type: ConfigProbeResults
+        result = ConfigProbeResults()
         retry_callback = self._make_probe_retry_callback(callback) if callback else None
         for c, crawler_config in enumerate(config['crawlers']):
             c > 0 and sleep(delay)  # type: ignore

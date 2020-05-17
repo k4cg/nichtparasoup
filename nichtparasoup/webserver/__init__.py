@@ -36,10 +36,14 @@ class JsonResponse(Response):
         )
 
 
+_DirPath = str
+_FilePath = str
+
+
 class WebServer:
-    _TEMPLATE_FILES = path_join(dirname(__file__), 'htdocs', 'template')
-    _STATIC_FILES = path_join(dirname(__file__), 'htdocs', 'static')
-    _STATIC_INDEX = 'index.html'  # relative to cls._STATIC_FILES
+    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'template')
+    _STATIC_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'static')
+    _STATIC_INDEX: _FilePath = 'index.html'  # relative to cls._STATIC_FILES
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
         self.imageserver = imageserver
@@ -61,7 +65,7 @@ class WebServer:
         adapter = self.url_map.bind_to_environ(request.environ)
         try:
             endpoint, values = adapter.match()
-            response = getattr(self, 'on_{}'.format(endpoint))(request, **values)  # type: Response
+            response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
         else:
@@ -108,12 +112,12 @@ class WebServer:
         return JsonResponse(reset)
 
     def on_sourceicons(self, _: Request) -> Response:
-        imagecrawlers = {
+        imagecrawlers: Set[Type[BaseImageCrawler]] = {
             type(crawler.imagecrawler)
             for crawler
             in self.imageserver.core.crawlers
-        }  # type: Set[Type[BaseImageCrawler]]
-        names_icons_list = [
+        }
+        names_icons_list: List[Tuple[str, str]] = [
             (_type_module_name_str(imagecrawler), icon)
             for imagecrawler, icon
             in [
@@ -122,7 +126,7 @@ class WebServer:
                 in imagecrawlers
             ]
             if icon
-        ]  # type: List[Tuple[str, str]]
+        ]
         # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
         template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
         css = template.render(names_icons_list=names_icons_list)

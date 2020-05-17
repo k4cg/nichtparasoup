@@ -24,13 +24,13 @@ class Picsum(BaseImageCrawler):
         width = config["width"]
         height = config["height"]
         if type(width) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
-            raise TypeError("width {!r} is not int".format(width))
+            raise TypeError(f'width {width!r} is not int')
         if type(height) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
-            raise TypeError("height {!r} is not int".format(height))
+            raise TypeError(f'height {height!r} is not int')
         if width <= 0:
-            raise ValueError("width {!r} <= 0".format(width))
+            raise ValueError(f'width {width} <= 0')
         if height <= 0:
-            raise ValueError("height {!r} <= 0".format(height))
+            raise ValueError(f'height {height} <= 0')
         return ImageCrawlerConfig(
             width=width,
             height=height,
@@ -38,7 +38,7 @@ class Picsum(BaseImageCrawler):
 
     @staticmethod
     def _get_image_uri(width: int, height: int) -> str:
-        return "https://picsum.photos/{}/{}".format(width, height)
+        return f'https://picsum.photos/{width}/{height}'
 
     def _reset(self) -> None:  # pragma: no cover
         pass

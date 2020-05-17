@@ -27,11 +27,11 @@ class ServerStatusStableTest(unittest.TestCase):
         self.assertIsInstance(status.get("version"), str)
         self.assertIsInstance(status.get("uptime"), int)
         self.assertIsInstance(status.get("reset"), dict)
-        status_reser = status["reset"]  # type: Dict[Any, Any]
+        status_reser: Dict[Any, Any] = status["reset"]
         self.assertIsInstance(status_reser.get("since"), int)
         self.assertIsInstance(status_reser.get("count"), int)
         self.assertIsInstance(status.get("images"), dict)
-        status_images = status["images"]  # type: Dict[Any, Any]
+        status_images: Dict[Any, Any] = status["images"]
         self.assertIsInstance(status_images.get("served"), int)
         self.assertIsInstance(status_images.get("crawled"), int)
 
@@ -52,12 +52,12 @@ class ServerStatusStableTest(unittest.TestCase):
         for crawler in self.server.core.crawlers:
             crawler_id = id(crawler)
             self.assertIsInstance(status.get(crawler_id), dict)
-            crawler_status = status[crawler_id]  # type: Dict[Any, Any]
+            crawler_status: Dict[Any, Any] = status[crawler_id]
             self.assertIsInstance(crawler_status, dict)
             self.assertIsInstance(crawler_status.get("type"), str)
             self.assertIsInstance(crawler_status.get("weight"), (int, float))
             self.assertIsInstance(crawler_status.get("config"), dict)
             self.assertIsInstance(crawler_status.get("images"), dict)
-            crawler_status_images = crawler_status["images"]  # type: Dict[Any, Any]
+            crawler_status_images: Dict[Any, Any] = crawler_status["images"]
             self.assertIsInstance(crawler_status_images.get("len"), int)
             self.assertIsInstance(crawler_status_images.get("size"), int)
