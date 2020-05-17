@@ -12,9 +12,9 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from .._internals import _log, _type_module_name_str
-from ..core.imagecrawler import BaseImageCrawler
-from ..core.server import Server, ServerStatus
+from ._internals import _log, _type_module_name_str
+from .core.imagecrawler import BaseImageCrawler
+from .core.server import Server, ServerStatus
 
 
 class JsonResponse(Response):
@@ -41,8 +41,8 @@ _FilePath = str
 
 
 class WebServer:
-    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'template')
-    _STATIC_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'static')
+    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'template')
+    _STATIC_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'static')
     _STATIC_INDEX: _FilePath = 'index.html'  # relative to cls._STATIC_FILES
 
     def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Setup for old tools that don't implement PEP517 & PEP518
 Modern setup is triggered via `pyproject.toml`.
 

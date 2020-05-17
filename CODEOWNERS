@@ -1,0 +1,17 @@
+# This file provides an overview of code owners in this repository.
+# See https://help.github.com/articles/about-codeowners
+
+# Each line is a file pattern followed by one or more owners. They will be requested for review when someone opens
+# a pull request.
+# The last matching pattern has the most precedence.
+
+# These people will be the default owners for everything in the repo. Unless a later match takes precedence.
+*   @jkowalleck
+
+# nichtparasoup files are basically owned by theses people:
+src/nichtparasoup/*     @jkowalleck
+tests/nichtparasoup/*   @jkowalleck
+
+# web-ui builder files are basically owned by theses people:
+src/web-ui/*        @jkowalleck
+tests/web-ui/*      @jkowalleck

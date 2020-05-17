@@ -1,1 +1,10 @@
 ## see https://docs.codecov.io/docs/codecovyml-reference
+## validate via `curl --data-binary @codecov.yml https://codecov.io/validate`
+
+coverage:
+  status:
+    project:
+      default:  # This can be anything, but it needs to exist as the name
+        paths:
+          - "src/nichtparasoup/"
+        informational: true
