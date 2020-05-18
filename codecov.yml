@@ -1,10 +1,37 @@
 ## see https://docs.codecov.io/docs/codecovyml-reference
 ## validate via `curl --data-binary @codecov.yml https://codecov.io/validate`
-
 coverage:
   status:
     project:
-      default:  # This can be anything, but it needs to exist as the name
+      nichtparasoup:
         paths:
           - "src/nichtparasoup/"
+          - "tests/nichtparasoup/"
         informational: true
+      web-ui:
+        paths:
+          - "src/web-ui/"
+          - "tests/web-ui/"
+        informational: true
+      patch:
+        nichtparasoup:
+          paths:
+            - "src/nichtparasoup/"
+            - "tests/nichtparasoup/"
+          informational: true
+        web-ui:
+          paths:
+            - "src/web-ui/"
+            - "tests/web-ui/"
+          informational: true
+      changes:
+        nichtparasoup:
+          paths:
+            - "src/nichtparasoup/"
+            - "tests/nichtparasoup/"
+          informational: true
+        web-ui:
+          paths:
+            - "src/web-ui/"
+            - "tests/web-ui/"
+          informational: true
