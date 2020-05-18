@@ -12,9 +12,9 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
-from .._internals import _log, _type_module_name_str
-from ..core.imagecrawler import BaseImageCrawler
-from ..core.server import Server, ServerStatus
+from ._internals import _log, _type_module_name_str
+from .core.imagecrawler import BaseImageCrawler
+from .core.server import Server, ServerStatus
 
 
 class JsonResponse(Response):
@@ -41,11 +41,21 @@ _FilePath = str
 
 
 class WebServer:
-    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'template')
-    _STATIC_FILES: _DirPath = path_join(dirname(__file__), 'htdocs', 'static')
+    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'template')
+    _STATIC_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'static')
     _STATIC_INDEX: _FilePath = 'index.html'  # relative to cls._STATIC_FILES
 
-    def __init__(self, imageserver: Server, hostname: str, port: int) -> None:  # pragma: no cover
+    def __init__(self, imageserver: Server,
+                 hostname: str, port: int,
+                 *,
+                 developer_mode: bool = False) -> None:  # pragma: no cover
+        """
+        :param imageserver: The imageserver to represent.
+        :param hostname: The hostname to bind to.
+        :param port: The port to bind to.
+        :param developer_mode: Run in insecure web-developer mode; sets CORS to "*".
+        """
+        self.developer_mode = developer_mode
         self.imageserver = imageserver
         self.hostname = hostname
         self.port = port
@@ -68,8 +78,9 @@ class WebServer:
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
-        else:
-            return response
+        if self.developer_mode:
+            response.access_control_allow_origin = '*'  # type: ignore # via `werkzeug.wrappers.CORSResponseMixin`
+        return response
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)
@@ -134,6 +145,8 @@ class WebServer:
 
     def run(self) -> None:
         self.imageserver.start()
+        if self.developer_mode:
+            _log('info', ' * starting %s in web-developer mode', type(self).__name__)
         _log('info', ' * starting %s bound to %s:%d', type(self).__name__, self.hostname, self.port)
         try:
             run_simple(

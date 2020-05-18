@@ -7,21 +7,16 @@ global-exclude *
 include MANIFEST.in
 
 
-# minimum files
-
-include pyproject.toml
-include setup.cfg
-include setup.py
+# project files
 include README.md
-graft nichtparasoup
+include pyproject.toml
+include setup.cfg include setup.py
+graft src/nichtparasoup
 
 
 # additional files and folders
 
-include AUTHORS
-include HISTORY.md
-include INSTALL
-include LICENSE
+include LICENSE AUTHORS INSTALL HISTORY.md
 
 graft docs
 graft examples

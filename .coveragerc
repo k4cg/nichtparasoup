@@ -8,6 +8,7 @@ relative_files = True
 branch = True
 
 source =
+    # go with packages instead of directories, so we can run in tox correctly
     nichtparasoup
 
 omit =
@@ -18,7 +19,7 @@ omit =
 [paths]
 
 source =
-    ./nichtparasoup
+    ./src/nichtparasoup
     .tox/*/lib/python*/site-packages/nichtparasoup
     .tox/pypy/site-packages/nichtparasoup
 

@@ -28,4 +28,4 @@ _TODO_
 
 ## Frontend
 
-_TODO_
+See [web-ui development docs](../web-ui/development.md)

@@ -41,6 +41,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.commands.server_config_dump_defaults`
     * `nichtparasoup.commands.server_run`
   * Public CLI module `nichtparasoup.cli.main` for use via `python3 -m`.
+  * Class `nichtparasoup.webserver.WebServer` got an optional argument `developer_mode` (default: `False`)
+    which enables an insecure web-developer mode and sets
+    [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) to "*".
   * Class `nichtparasoup.testing.config.ConfigTest` was added.
   * Property `nichtparasoup.core.server.Server.stats` was made available to the public.
   * Implementations of `nichtparasoup.core.imagecrawer.BaseImageCrawler`

@@ -1,4 +1,10 @@
 [flake8]
+## https://flake8.pycqa.org/en/latest/user/configuration.html
+
+exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
+    docs
+    examples
+    src/web-ui,tests/web-ui
 
 show-source  = True
 
@@ -6,9 +12,6 @@ ignore =
     # ignore `self`, `cls` markers of flake8-annotations>=2.0
     ANN101,ANN102
 
-exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
-    docs
-    examples
 
 max-complexity = 5
 
