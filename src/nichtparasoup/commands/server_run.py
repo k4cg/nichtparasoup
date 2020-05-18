@@ -16,7 +16,6 @@ _FilePath = str
 
 
 def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
-    del develop  # @TODO implement develop mode - enable arbitrary CORS
     _logging_init(getattr(logging, config['logging']['level']))
     _log('debug', 'Config: %r', config)
     imageserver = ImageServer(NPCore(), **config['imageserver'])
@@ -24,8 +23,11 @@ def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
         imagecrawler = get_imagecrawler(crawler_config)
         if not imageserver.core.has_imagecrawler(imagecrawler):
             imageserver.core.add_imagecrawler(imagecrawler, crawler_config['weight'])
-    webserver = WebServer(imageserver, **config['webserver'])
-    webserver.run()
+    WebServer(
+        imageserver,
+        config['webserver']['hostname'], config['webserver']['port'],
+        developer_mode=develop
+    ).run()
 
 
 def _param_get_config(_: Context, param: Parameter, config_file: Optional[_FilePath]) -> Config:  # pragma: no cover
@@ -52,7 +54,7 @@ cli = Command(
         ),
         Option(
             param_decls=['--develop'],
-            help='Start the server in frontend-developer mode.',
+            help='Run in insecure web-developer mode; sets CORS to "*".',
             is_flag=True,
         ),
         _cli_option_debug,
