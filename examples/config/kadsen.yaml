@@ -1,5 +1,5 @@
 ## This is a config file for nichtprasoup (v2.3)
-## This is an example file. For a better kickStart run: nichtparasoup config --help
+## This is an example file. For a better kickStart run: nichtparasoup server config --help
 
 webserver:
   hostname: "0.0.0.0"

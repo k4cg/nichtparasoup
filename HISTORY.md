@@ -12,16 +12,17 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
     * Proper subcommands are used now.
   * API: `Crawler.type` of to `status/crawlers` API is now a fill qualified class name.
-      See the [docs](docs/web_api/status_crawlers.md).  
-      The old short-typed version is still available as the optional `Crawler.name` 
-      (optional means: can be missing or `null`, if manually added).
+    See the [docs](docs/web_api/status_crawlers.md).  
+    The old short-typed version is still available as the optional `Crawler.name` 
+    (optional means: can be missing or `null`, if manually added).
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`.
   * Class `nichtparasoup.testing.config.ConfigFileTest` was moved to `nichtparasoup.testing.configfile.ConfigFileTest`.
 * Changes
+  * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
-      `nichtparasoup.__version__` is no longer a module but a string.
+    `nichtparasoup.__version__` is no longer a module but a string.
   * Package `nichtparasoup.testing` got a huge overhaul. 
     * Classes do no longer implement `unittets.Testcase` anymore.
     * Functionality was split into chunks for easier use.

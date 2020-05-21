@@ -184,7 +184,10 @@ class RemoteFetcher:
         'User-Agent': 'NichtParasoup',
     }
 
-    def __init__(self, timeout: float = 10.0, headers: Optional[Dict[str, str]] = None) -> None:  # pragma: no cover
+    def __init__(self, *,
+                 timeout: float = 10.0,
+                 headers: Optional[Dict[str, str]] = None
+                 ) -> None:  # pragma: no cover
         self._timeout = timeout
         self._headers = self._HEADERS_DEFAULT.copy()
         if headers:

@@ -25,14 +25,14 @@ class KnownImageCrawlers:
         from .reddit import Reddit
         from .instagram import InstagramHashtag, InstagramProfile
         from .pr0gramm import Pr0gramm
-        return dict(
-            Echo=Echo,
-            Picsum=Picsum,
-            Reddit=Reddit,
-            InstagramProfile=InstagramProfile,
-            InstagramHashtag=InstagramHashtag,
-            Pr0gramm=Pr0gramm,
-        )
+        return {
+            'Echo': Echo,
+            'Picsum': Picsum,
+            'Reddit': Reddit,
+            'InstagramProfile': InstagramProfile,
+            'InstagramHashtag': InstagramHashtag,
+            'Pr0gramm': Pr0gramm,
+        }
 
     def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
         self._list: List[_Imagecrawler] = [(n, c) for n, c in self._builtins().items()]

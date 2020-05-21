@@ -9,7 +9,7 @@ from http.client import HTTPResponse
 from os.path import join as path_join
 from pathlib import Path
 from time import sleep
-from typing import Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 from unittest import TestCase
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
@@ -36,9 +36,10 @@ class FileFetcher(RemoteFetcher):
     """
 
     def __init__(self, known_files: Dict[_Uri, _FilePath], *,
-                 base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None
+                 base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None,
+                 **kwargs: Any
                  ) -> None:  # pragma: no cover
-        super().__init__()
+        super().__init__(**kwargs)
         self._known: Dict[UrlParseResult, _FilePath] = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
