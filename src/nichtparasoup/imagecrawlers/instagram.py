@@ -128,25 +128,29 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     @classmethod
     def _get_images_from_media_edge_node(cls, node: Dict[str, Any]) -> ImageCollection:
         images = ImageCollection()
-        if not node['is_video']:
-            source = cls._get_post_url(node['shortcode'])
+        if node['is_video']:
+            return images
+        source = cls._get_post_url(node['shortcode'])
+        images.add(  # pylint: disable=no-member # false-positive
+            Image(
+                uri=node['display_url'],
+                source=source,
+                dimensions=node.get('dimensions'),
+            )
+        )
+        if 'edge_sidecar_to_children' not in node:
+            return images
+        for side_edge in node['edge_sidecar_to_children']['edges']:
+            if side_edge['node']['is_video']:
+                continue  # for side_edge in ...
             images.add(  # pylint: disable=no-member # false-positive
                 Image(
-                    uri=node['display_url'],
+                    uri=side_edge['node']['display_url'],
                     source=source,
-                    dimensions=node.get('dimensions'),
+                    dimensions=side_edge['node'].get('dimensions'),
                 )
             )
-            for side_edge in node.get('edge_sidecar_to_children', {'edges': []})['edges']:
-                if not side_edge['node']['is_video']:
-                    images.add(  # pylint: disable=no-member # false-positive
-                        Image(
-                            uri=side_edge['node']['display_url'],
-                            source=source,
-                            dimensions=side_edge['node'].get('dimensions'),
-                        )
-                    )
-                del side_edge
+            del side_edge
         return images
 
     @classmethod
@@ -183,7 +187,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             'variables': json_encode({
                 **variables,
                 'first': first,
-                'after': after or '',
+                'after': '' if after is None else after,
             })
         })
 
