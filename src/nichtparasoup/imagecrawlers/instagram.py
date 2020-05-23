@@ -113,8 +113,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        query_uri = self._get_query_uri(
-            self._get_query_hash(), self._amount, self._cursor, **self._get_query_variables())
+        query_uri = self._get_query_uri(self._get_query_hash(), self._amount, self._cursor, self._get_query_variables())
         response = self._query(query_uri)
         for edge in response['edges']:
             images.update(  # pylint: disable=no-member
@@ -138,7 +137,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
                     dimensions=node.get('dimensions'),
                 )
             )
-            for side_edge in node.get('edge_sidecar_to_children', dict(edges=[]))['edges']:
+            for side_edge in node.get('edge_sidecar_to_children', {'edges': []})['edges']:
                 if not side_edge['node']['is_video']:
                     images.add(  # pylint: disable=no-member # false-positive
                         Image(
@@ -178,15 +177,15 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
     __URL_QUERY = INSTAGRAM_URL_ROOT + 'graphql/query/'
 
-    def _get_query_uri(self, query_hash: str, first: int, after: Optional[str], **variables: Any) -> str:
-        return self.__URL_QUERY + '?' + urlencode(dict(
-            query_hash=query_hash,
-            variables=json_encode(dict(
-                first=first,
-                after=(after or ''),
-                **variables
-            ))
-        ))
+    def _get_query_uri(self, query_hash: str, first: int, after: Optional[str], variables: Dict[str, Any]) -> str:
+        return self.__URL_QUERY + '?' + urlencode({
+            'query_hash': query_hash,
+            'variables': json_encode({
+                **variables,
+                'first': first,
+                'after': after or '',
+            })
+        })
 
     @abstractmethod
     def _get_queryhashfinder(self) -> InstagramQueryHashFinder:  # pragma: no cover
@@ -199,7 +198,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         raise NotImplementedError()
 
     def _check_query_hash(self, query_hash: str) -> bool:
-        uri = self._get_query_uri(query_hash, 1, None, **self._get_query_variables())
+        uri = self._get_query_uri(query_hash, 1, None, self._get_query_variables())
         try:
             self._query(uri)
         except Exception:  # pylint: disable=broad-except
@@ -234,7 +233,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         return the variables that are required for a query url
 
         example implementation:
-            return dict(foo='bar')
+            return {'foo': 'bar'}
         """
         raise NotImplementedError()
 
@@ -246,9 +245,9 @@ class InstagramHashtag(BaseInstagramCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for hash tag posts of https://www.instagram.com/',
-            config=dict(
-                tag_name='the HashTag on Instagram',
-            ),
+            config={
+                'tag_name': 'the HashTag on Instagram',
+            },
             icon_url=INSTAGRAM_ICON_URL,
         )
 
@@ -267,7 +266,7 @@ class InstagramHashtag(BaseInstagramCrawler):
         return InstagramQueryHashFinder('tag')
 
     def _get_query_variables(self) -> Dict[str, Any]:
-        return dict(tag_name=self._config['tag_name'])
+        return {'tag_name': self._config['tag_name']}
 
     @classmethod
     def _get_media_from_query_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:
@@ -286,9 +285,9 @@ class InstagramProfile(BaseInstagramCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for profile pages of https://www.instagram.com/',
-            config=dict(
-                user_name='the UserName on Instagram',
-            ),
+            config={
+                'user_name': 'the UserName on Instagram',
+            },
             icon_url=INSTAGRAM_ICON_URL,
         )
 
@@ -311,7 +310,7 @@ class InstagramProfile(BaseInstagramCrawler):
         return response['data']['user']['edge_owner_to_timeline_media']  # type: ignore
 
     def _get_query_variables(self) -> Dict[str, Any]:
-        return dict(id=self._get_profile_id())
+        return {'id': self._get_profile_id()}
 
     def _fetch_profile(self) -> Dict[str, Any]:
         # this is much easier than parsing `window._sharedData` from the website - let's hope it is stable again

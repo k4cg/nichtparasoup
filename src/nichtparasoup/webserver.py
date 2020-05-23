@@ -101,11 +101,11 @@ class WebServer:
         image = self.imageserver.get_image()
         return JsonResponse(image)
 
-    _STATUS_WHATS = dict(
-        server=ServerStatus.server,
-        blacklist=ServerStatus.blacklist,
-        crawlers=ServerStatus.crawlers,
-    )
+    _STATUS_WHATS = {
+        'server': ServerStatus.server,
+        'blacklist': ServerStatus.blacklist,
+        'crawlers': ServerStatus.crawlers,
+    }
 
     def on_status(self, _: Request) -> Response:
         status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}

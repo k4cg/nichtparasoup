@@ -52,11 +52,11 @@ def parse_yaml_file(file_path: _FilePath) -> Config:
     _schema = make_schema(SCHEMA_FILE, parser='ruamel')
     yamale_validate(_schema, _data, strict=True)
     config: Config = _data[0][0]
-    config.setdefault('logging', dict())
+    config.setdefault('logging', {})
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
         config_crawler.setdefault("weight", 1)
-        config_crawler.setdefault('config', dict())
+        config_crawler.setdefault('config', {})
     return config
 
 

@@ -12,10 +12,10 @@ class Picsum(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='Find images from https://picsum.photos',
-            config=dict(
-                width='how many pixels of the image to find should be wide',
-                height='how many pixels of the image to find should be high',
-            ),
+            config={
+                'width': 'how many pixels of the image to find should be wide',
+                'height': 'how many pixels of the image to find should be high',
+            },
             icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png',
         )
 

@@ -55,16 +55,16 @@ class Server:
             return None
         with self._locks.stats_get_image:
             self.stats.count_images_served += 1
-        return dict(
-            uri=image.uri,
-            is_generic=image.is_generic,
-            source=image.source,
-            more=image.more,
-            crawler=dict(
-                id=id(crawler),
-                type=_type_module_name_str(type(crawler.imagecrawler)),
-            ),
-        )
+        return {
+            'uri': image.uri,
+            'is_generic': image.is_generic,
+            'source': image.source,
+            'more': image.more,
+            'crawler': {
+                'id': id(crawler),
+                'type': _type_module_name_str(type(crawler.imagecrawler)),
+            },
+        }
 
     @staticmethod
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
@@ -75,7 +75,7 @@ class Server:
     def refill(self) -> Dict[str, bool]:
         with self._locks.refill:
             self.core.fill_up_to(self.keep, self._log_refill_crawler)
-            return dict(refilled=True)
+            return {'refilled': True}
 
     def _reset(self) -> None:
         with self._locks.reset:
@@ -97,10 +97,10 @@ class Server:
             timeout = timeout_base if request_valid else (reset_after - now)
         if request_valid:
             self._reset()
-        return dict(
-            requested=request_valid,
-            timeout=timeout,
-        )
+        return {
+            'requested': request_valid,
+            'timeout': timeout,
+        }
 
     def start(self) -> None:
         with self._locks.run:
@@ -141,44 +141,44 @@ class ServerStatus:
         stats = server.stats
         now = int(time())
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
-        return dict(
-            version=nichtparasoup_version,
-            uptime=uptime,
-            reset=dict(
-                count=stats.count_reset,
-                since=(now - stats.time_last_reset) if stats.time_last_reset else uptime,
-            ),
-            images=dict(
-                served=stats.count_images_served,
-                crawled=stats.cum_blacklist_on_flush + len(server.core.blacklist),
-            ),
-        )
+        return {
+            'version': nichtparasoup_version,
+            'uptime': uptime,
+            'reset': {
+                'count': stats.count_reset,
+                'since': (now - stats.time_last_reset) if stats.time_last_reset else uptime,
+            },
+            'images': {
+                'served': stats.count_images_served,
+                'crawled': stats.cum_blacklist_on_flush + len(server.core.blacklist),
+            },
+        }
 
     @staticmethod
     def blacklist(server: Server) -> Dict[str, Any]:
         blacklist = server.core.blacklist.copy()
-        return dict(
-            len=len(blacklist),
-            size=getsizeof(blacklist),
-        )
+        return {
+            'len': len(blacklist),
+            'size': getsizeof(blacklist),
+        }
 
     @staticmethod
     def crawlers(server: Server) -> Dict[int, Dict[str, Any]]:
-        status = dict()
+        status = {}
         for crawler in server.core.crawlers.copy():
             crawler_id = id(crawler)
             crawler = copy(crawler)
             images = crawler.images.copy()
-            status[crawler_id] = dict(
-                name=crawler.imagecrawler.internal_name,
-                weight=crawler.weight,
-                type=_type_module_name_str(type(crawler.imagecrawler)),
-                config=crawler.imagecrawler.get_config(),  # just a dict
-                images=dict(
-                    len=len(images),
-                    size=getsizeof(images),
-                ),
-            )
+            status[crawler_id] = {
+                'name': crawler.imagecrawler.internal_name,
+                'weight': crawler.weight,
+                'type': _type_module_name_str(type(crawler.imagecrawler)),
+                'config': crawler.imagecrawler.get_config(),  # just a dict
+                'images': {
+                    'len': len(images),
+                    'size': getsizeof(images),
+                },
+            }
         return status
 
 

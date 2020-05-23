@@ -135,12 +135,12 @@ class BaseImageCrawler(ABC):
                 You may want write a long description of the ImageCrawler. Feel free to do so.
                 This is the place where you can do this.
                 ''').strip(),
-                config=dict(
+                config={
                     # leave the dict empty, if there is nothing to configure. or just don't pass a config at all.
-                    param1='purpose & meaning of param1',
+                    'param1': 'purpose & meaning of param1',
                     # ...
-                    paramN='purpose & meaning of paramN',
-                ),
+                    'paramN': 'purpose & meaning of paramN',
+                },
                 icon_url='https://my.imagesource.net/favicon.png'
             )
         """

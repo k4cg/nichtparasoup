@@ -18,10 +18,10 @@ class Pr0gramm(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for https://pr0gramm.com',
-            config=dict(
-                promoted='Boolean. Search only top("beliebt") voted content? Otherwise search anything("neu").',
-                tags='Filter. None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197',
-            ),
+            config={
+                'promoted': 'Boolean. Search only top("beliebt") voted content? Otherwise search anything("neu").',
+                'tags': 'Filter. None, or a string that starts with "!" - see https://pr0gramm.com/new/2782197',
+            },
             icon_url='https://pr0gramm.com/media/pr0gramm-favicon.png',
         )
 
