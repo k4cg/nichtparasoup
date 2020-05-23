@@ -81,8 +81,8 @@ class KnownImageCrawlers:
     def _load(entry: EntryPoint) -> Any:
         try:
             return entry.load()
-        except Exception as e:
-            raise ImportError(f'Error on loading entry {entry}') from e
+        except Exception as ex:
+            raise ImportError(f'Error on loading entry {entry}') from ex
 
     @classmethod
     def _test(cls, something: Any) -> None:  # pragma: no cover

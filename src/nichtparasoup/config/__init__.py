@@ -40,8 +40,8 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     imagecrawler_config = config_crawler['config']
     try:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
-    except Exception as e:
-        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from e
+    except Exception as ex:
+        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from ex
     else:
         imagecrawler._np_name = imagecrawler_name
         return imagecrawler

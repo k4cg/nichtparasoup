@@ -166,8 +166,8 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             raise InstagramError('response not ok')
         try:
             return self._get_media_from_query_response(response)
-        except KeyError as e:
-            raise InstagramError('no media') from e
+        except KeyError as ex:
+            raise InstagramError('no media') from ex
 
     @classmethod
     @abstractmethod
@@ -325,8 +325,8 @@ class InstagramProfile(BaseInstagramCrawler):
         profile = self._fetch_profile()
         try:
             return profile['graphql']['user']['id']  # type: ignore
-        except KeyError as e:
-            raise InstagramError('profile_id not found') from e
+        except KeyError as ex:
+            raise InstagramError('profile_id not found') from ex
 
     def _get_profile_id(self) -> str:
         with self.__profile_id_lock:
