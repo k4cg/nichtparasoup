@@ -20,6 +20,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Class `nichtparasoup.testing.config.ConfigFileTest` was moved to `nichtparasoup.testing.configfile.ConfigFileTest`.
 * Changes
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
+  * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
     `nichtparasoup.__version__` is no longer a module but a string.

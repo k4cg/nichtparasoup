@@ -232,7 +232,7 @@ class RemoteFetchError(Exception):
 
 
 class ImageRecognizer:
-    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg'}
+    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg', '.webp'}
 
     def path_is_image(self, uri: _Uri) -> bool:
         return PurePath(
