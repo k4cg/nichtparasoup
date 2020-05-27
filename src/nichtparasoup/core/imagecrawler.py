@@ -116,7 +116,7 @@ class BaseImageCrawler(ABC):
             try:
                 crawled = self._crawl()
             except Exception as ex:  # pylint: disable=broad-except
-                _log('debug', 'Error during crawling %r: %s', self, ex, exc_inf=ex)
+                _log('debug', 'Error during crawling %r: %s', self, ex, exc_info=ex)
                 _log('error', 'Handled an error during crawling %s', self)
                 return ImageCollection()
             else:
