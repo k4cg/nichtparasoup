@@ -32,7 +32,7 @@ docker run \
 stick to these rules:
 
 * add your tests somewhere in this dir
-* write the test with`unittest`: test cases inherit `unittest.TestCase.`
+* write the test for `pytest`. `assert`-style preferred over python's `unittest`.
 * each testable package/module has its own folder: name the test folder `test_*`
 * each testable function/class has its own file:   name the test file   `test_*.py`
 * test files are performed in alphabetical order - so add a number to have them ordered
