@@ -30,4 +30,4 @@ _TODO_
 
 ## Frontend
 
-See [web-ui development docs](../web-ui/development.md)
+See [web-ui development docs](../web-ui/index.md)

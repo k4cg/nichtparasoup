@@ -6,7 +6,6 @@ example response:
 
 ```json
 {
-  "version": "2.0.0",
   "uptime": 689,
   "reset": {
     "count": 0,
@@ -18,12 +17,6 @@ example response:
   }
 }
 ```
-
-
-## `version`
-
-- version of the server
-- type: string
 
 
 ## `uptime`
@@ -39,13 +32,13 @@ example response:
 
 ### `count`
 
-- who often was the server reset during it's life time
+- how often was the server reset during it's life time
 - type: integer
 
 
 ### `since`
 
-- how may seconds ago was the last reset
+- how many seconds ago was the last reset
 - type: integer
 
 

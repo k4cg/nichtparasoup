@@ -66,15 +66,9 @@ only once - unless the server was reset. (This might change in the future)
 Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 
 
-## Install, Usage, Config, etc 
+## Install, Usage, Config, etc
 
-see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs).
-
-
-## ImageCrawler (plugin) development
-
-see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs/plugin-development).
-
+see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs/index.md).
 
 ## License
 

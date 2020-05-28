@@ -65,7 +65,7 @@ logging:
 - ATTENTION: crawlers are treated like a unique list. the combination of type and config makes them unique
 - for a list of available types see the commandline help `nichtparasoup info --imagecrawler-list`
 - for description of a crawler and how to configure, see commandline help `nichtparasoup info --imagecrawler-desc`
-  or read the [docs](imagecrawlers)
+  or read the [docs](../imagecrawlers/index.md)
 - type: list
 
 ### `name` 
@@ -86,7 +86,7 @@ logging:
 
 - the crawler's own config
 - for description of a crawler and how to configure, see commandline help `nichtparasoup info --imagecrawler-desc`  
-  or read the [docs](imagecrawlers)
+  or read the [docs](../imagecrawlers/index.md)
 - type: map
 - optional
 
