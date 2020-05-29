@@ -1,4 +1,4 @@
-# _nichtparasoup_'s web-ui
+# _nichtparasoup_'s web-api
 
 See 
 * [get](get.md)
