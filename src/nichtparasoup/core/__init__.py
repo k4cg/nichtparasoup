@@ -110,7 +110,7 @@ class Crawler:
 class CrawlerCollection(List[Crawler]):
 
     def get_random(self) -> Optional[Crawler]:
-        crawlers = self.copy()
+        crawlers = self.copy()  # pylint: disable=no-member
         if not crawlers:
             return None
         weights = [crawler.weight for crawler in crawlers]

@@ -25,7 +25,7 @@ class _SimpleJsonEncoder(JSONEncoder):
         return super().default(o)
 
 
-class _SimpleJsonResponse(Response):
+class _SimpleJsonResponse(Response):  # pylint: disable=too-many-ancestors
     _json_encoder = _SimpleJsonEncoder()
 
     def __init__(self,

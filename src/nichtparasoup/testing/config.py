@@ -42,8 +42,8 @@ ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Opt
 
 
 def _default_probe_callback(reason: ConfigProbeCallbackReason,
-                            crawler: BaseImageCrawler,
-                            error: Optional[BaseException]
+                            crawler: BaseImageCrawler,  # pylint: disable=unused-argument
+                            error: Optional[BaseException]  # pylint: disable=unused-argument
                             ) -> Optional[bool]:
     """default implementation of ``ConfigProbeCallback``
 
@@ -82,7 +82,8 @@ class ConfigTest:
         if duplicates:
             raise DuplicateImagecrawlersException(duplicates)
 
-    def find_duplicates(self, config: Config) -> List[BaseImageCrawler]:
+    def find_duplicates(self,  # pylint: disable=no-self-use
+                        config: Config) -> List[BaseImageCrawler]:
         """Find duplicate imagecrawlers in a config.
          :param config: file path to the config to validate
          :return: duplicates
@@ -94,7 +95,8 @@ class ConfigTest:
             (duplicates if imagecrawler in imagecrawlers else imagecrawlers).append(imagecrawler)
         return duplicates
 
-    def _make_probe_retry_callback(self, callback: ConfigProbeCallback) -> ImagecrawlerProbeRetryCallback:
+    def _make_probe_retry_callback(self,  # pylint: disable=no-self-use
+                                   callback: ConfigProbeCallback) -> ImagecrawlerProbeRetryCallback:
         def retry_callback(imagecrawler: BaseImageCrawler, ex: BaseException) -> bool:
             return callback(ConfigProbeCallbackReason.retry, imagecrawler, ex) is not False
 

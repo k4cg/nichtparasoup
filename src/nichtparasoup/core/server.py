@@ -186,10 +186,10 @@ class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler']):
 
 
 class ServerRefiller(Thread):
-    def __init__(self, server: Server, sleep: Union[int, float]) -> None:  # pragma: no cover
+    def __init__(self, server: Server, sleep_: Union[int, float]) -> None:  # pragma: no cover
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
-        self._sleep = sleep
+        self._sleep = sleep_
         self._stop_event = Event()
         self._run_lock = Lock()
 

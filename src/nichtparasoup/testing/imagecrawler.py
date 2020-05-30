@@ -174,7 +174,8 @@ class ImagecrawlerProbeResult:
 
 class ImageCrawlerTest:
 
-    def probe(self, imagecrawler: BaseImageCrawler, *,
+    def probe(self,  # pylint: disable=no-self-use
+              imagecrawler: BaseImageCrawler, *,
               retries: int = PROBE_RETRIES_DEFAULT,
               retry_delay: float = PROBE_DELAY_DEFAULT,
               retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
@@ -189,10 +190,10 @@ class ImageCrawlerTest:
         images = None
         errors: List[BaseException] = []
         for retry in range(retries + 1):
-            retry > 0 and sleep(retry_delay)  # type: ignore
+            retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned
             try:
-                images = imagecrawler._crawl()
-            except BaseException as ex:
+                images = imagecrawler._crawl()  # pylint: disable=protected-access
+            except BaseException as ex:  # pylint: disable=broad-except
                 errors.append(ex)
                 if retry_callback and not retry_callback(imagecrawler, ex):
                     break  # for .. in ..

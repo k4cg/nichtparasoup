@@ -19,9 +19,9 @@ def __cli_enable_debug(ctx: Context, _: Any, value: bool) -> None:  # pragma: no
     if not value or ctx.resilient_parsing:
         return
     level = logging.DEBUG
-    sh = logging.StreamHandler()
-    sh.setFormatter(logging.Formatter(fmt='{levelname}:{name}: {message}', style='{'))
-    logging.root.addHandler(sh)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(logging.Formatter(fmt='{levelname}:{name}: {message}', style='{'))
+    logging.root.addHandler(stream_handler)
     logging.root.setLevel(level)
     _LOGGER.setLevel(level)
     _LOGGER.debug(' *** DEBUG ENABLED ***')

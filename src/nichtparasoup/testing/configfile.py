@@ -8,8 +8,8 @@ _FilePath = str
 
 class ConfigFileTest:
 
-    @staticmethod
-    def check_file(file: _FilePath) -> None:  # pragma: no cover
+    def check_file(self,  # pylint: disable=no-self-use
+                   file: _FilePath) -> None:  # pragma: no cover
         """Do all necessary tests a file might need.
         """
         config = parse_yaml_file(file)

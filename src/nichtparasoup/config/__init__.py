@@ -43,7 +43,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     except Exception as ex:
         raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from ex
     else:
-        imagecrawler._np_name = imagecrawler_name
+        imagecrawler._np_name = imagecrawler_name  # pylint: disable=protected-access
         return imagecrawler
 
 
