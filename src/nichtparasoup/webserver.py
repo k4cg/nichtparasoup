@@ -22,7 +22,7 @@ class _SimpleJsonEncoder(JSONEncoder):
     def default(self, o: Any) -> Any:
         if hasattr(o, '__dict__'):
             return o.__dict__
-        super().default(o)
+        return super().default(o)
 
 
 class _SimpleJsonResponse(Response):
