@@ -135,7 +135,7 @@ class KnownImageCrawlersTest(unittest.TestCase):
         kic._list = {'test': LoadableImageCrawlerA}
         # act
         ic_names = kic.names()
-        # arrange
+        # assert
         self.assertListEqual(['test'], ic_names)
 
     def test_classes(self) -> None:
@@ -144,7 +144,7 @@ class KnownImageCrawlersTest(unittest.TestCase):
         kic._list = {'test': LoadableImageCrawlerA}
         # act
         ic_classes = kic.classes()
-        # arrange
+        # assert
         self.assertListEqual([LoadableImageCrawlerA], ic_classes)
 
     def test_items(self) -> None:
@@ -153,7 +153,7 @@ class KnownImageCrawlersTest(unittest.TestCase):
         kic._list = {'test': LoadableImageCrawlerA}
         # act
         ic_items = kic.items()
-        # arrange
+        # assert
         self.assertListEqual([('test', LoadableImageCrawlerA)], ic_items)
 
     def test_get_name(self) -> None:
@@ -163,7 +163,7 @@ class KnownImageCrawlersTest(unittest.TestCase):
         # act
         ic_name_known = kic.get_name(LoadableImageCrawlerA)
         ic_name_unknown = kic.get_name(LoadableImageCrawlerB)
-        # arrange
+        # assert
         self.assertEqual('testKnown', ic_name_known)
         self.assertIsNone(ic_name_unknown)
 
@@ -174,9 +174,21 @@ class KnownImageCrawlersTest(unittest.TestCase):
         # act
         ic_class_known = kic.get_class('testKnown')
         ic_class_unknown = kic.get_class('testUnknown')
-        # arrange
+        # assert
         self.assertIs(LoadableImageCrawlerA, ic_class_known)
         self.assertIsNone(ic_class_unknown)
+
+    def test_len(self) -> None:
+        kic1 = KnownImageCrawlers([])
+        kic1._list = {}
+        kic2 = KnownImageCrawlers([])
+        kic2._list = {'testKnown': LoadableImageCrawlerA}
+        # act
+        len1 = len(kic1)
+        len2 = len(kic2)
+        # assert
+        self.assertEqual(0, len1)
+        self.assertEqual(1, len2)
 
 
 class KnownImageCrawlersAddTest(unittest.TestCase):
@@ -186,7 +198,7 @@ class KnownImageCrawlersAddTest(unittest.TestCase):
         kic._list = {}
         # act
         kic._append(_TEST_PLUGIN_ENTRY)
-        # arrange
+        # assert
         self.assertDictEqual({_TEST_PLUGIN_ENTRY.name: _TEST_PLUGIN_CLASS}, kic._list)
 
 
