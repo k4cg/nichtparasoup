@@ -37,8 +37,25 @@ ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Opt
 :param: reason why called
 :param: imagecrawler processed
 :param: error if reason is a ``ProbeCallbackReason.retry``
-:return: continue with retry
+:return: whether to continue probing on failure. Else: retry or run next crawler.
 """
+
+
+def _default_probe_callback(reason: ConfigProbeCallbackReason,
+                            crawler: BaseImageCrawler,
+                            error: Optional[BaseException]
+                            ) -> Optional[bool]:
+    """default implementation of ``ConfigProbeCallback``
+
+    impact:
+    * retry a crawler until success or limit reached
+    * continue with the next crawler if one failed = not fail-fast
+    """
+    if reason is ConfigProbeCallbackReason.retry:
+        return True
+    if reason is ConfigProbeCallbackReason.failure:
+        return True
+    return None
 
 
 class DuplicateImagecrawlersException(Exception):
@@ -78,8 +95,8 @@ class ConfigTest:
         return duplicates
 
     def _make_probe_retry_callback(self, callback: ConfigProbeCallback) -> ImagecrawlerProbeRetryCallback:
-        def retry_callback(ic: BaseImageCrawler, ex: BaseException) -> bool:
-            return callback(ConfigProbeCallbackReason.retry, ic, ex) is not False
+        def retry_callback(imagecrawler: BaseImageCrawler, ex: BaseException) -> bool:
+            return callback(ConfigProbeCallbackReason.retry, imagecrawler, ex) is not False
 
         return retry_callback
 
@@ -96,17 +113,24 @@ class ConfigTest:
         """
         result = ConfigProbeResults()
         retry_callback = self._make_probe_retry_callback(callback) if callback else None
-        for c, crawler_config in enumerate(config['crawlers']):
-            c > 0 and sleep(delay)  # type: ignore
+        callback_: ConfigProbeCallback = callback or _default_probe_callback
+        for crawler_num, crawler_config in enumerate(config['crawlers']):
+            if crawler_num > 0:
+                sleep(delay)
             imagecrawler = get_imagecrawler(crawler_config)
-            callback and callback(ConfigProbeCallbackReason.start, imagecrawler, None)
+            callback_(ConfigProbeCallbackReason.start, imagecrawler, None)
             ic_probe_result = self._ic_test.probe(imagecrawler,
                                                   retries=retries, retry_delay=delay,
                                                   retry_callback=retry_callback)
             result.append(ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
-            if callback and callback(
-                ConfigProbeCallbackReason.failure if ic_probe_result.is_failure else ConfigProbeCallbackReason.finish,
-                imagecrawler, None
-            ) is False and ic_probe_result.is_failure:
+            probe_continue = callback_(
+                ConfigProbeCallbackReason.failure
+                if ic_probe_result.is_failure
+                else ConfigProbeCallbackReason.finish,
+                imagecrawler,
+                None
+            )
+            if ic_probe_result.is_failure and probe_continue is False:
+                # fail fast
                 break
         return result
