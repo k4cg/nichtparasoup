@@ -35,7 +35,7 @@ class KnownImageCrawlers:
         }
 
     def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
-        self._list: List[_Imagecrawler] = [(n, c) for n, c in self._builtins().items()]
+        self._list: Dict[_ImagecrawlerName, _ImagecrawlerClass] = self._builtins().copy()
         _log('debug', 'Builtin imagecrawlers loaded: %r', self._list)
         for entry in entries:
             try:
@@ -54,25 +54,25 @@ class KnownImageCrawlers:
         self._test(loaded)
         self._test_duplicate_class(loaded)
         # if everything went well .. add
-        self._list.append((entry.name, loaded))
+        self._list[entry.name] = loaded
 
     def names(self) -> List[_ImagecrawlerName]:
-        return [ic_name for ic_name, _ in self._list]
+        return list(self._list.keys())
 
     def classes(self) -> List[_ImagecrawlerClass]:
-        return [ic_class for _, ic_class in self._list]
+        return list(self._list.values())
 
     def items(self) -> List[_Imagecrawler]:
-        return self._list.copy()
+        return list(self._list.items())
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
-        for ic_name, ic_class in self._list:
-            if ic_class == imagecrawler_class:
+        for ic_name, ic_class in self._list.items():
+            if ic_class is imagecrawler_class:
                 return ic_name
         return None
 
     def get_class(self, imagecrawler_name: _ImagecrawlerName) -> Optional[_ImagecrawlerClass]:
-        for ic_name, ic_class in self._list:
+        for ic_name, ic_class in self._list.items():
             if ic_name == imagecrawler_name:
                 return ic_class
         return None
@@ -101,15 +101,13 @@ class KnownImageCrawlers:
         if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
             raise TypeError(f'{some_type!r} is abstract')
 
-    def _test_duplicate_name(self, imagecrawler_name: str) -> None:
-        for ic_name, _ in self._list:
-            if ic_name == imagecrawler_name:
-                raise KeyError(f'Duplicate ImageCrawler {imagecrawler_name!r}')
+    def _test_duplicate_name(self, imagecrawler_name: _ImagecrawlerName) -> None:
+        if imagecrawler_name in self._list:
+            raise KeyError(f'Duplicate ImageCrawler {imagecrawler_name!r}')
 
     def _test_duplicate_class(self, imagecrawler_class: _ImagecrawlerClass) -> None:
-        for _, ic_class in self._list:
-            if ic_class == imagecrawler_class:
-                raise TypeError(f'Duplicate ImageCrawler {imagecrawler_class!r}')
+        if imagecrawler_class in self._list.values():
+            raise TypeError(f'Duplicate ImageCrawler {imagecrawler_class!r}')
 
 
 __ENTRY_POINT_NAME = 'nichtparasoup_imagecrawler'
