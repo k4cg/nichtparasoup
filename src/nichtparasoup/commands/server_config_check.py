@@ -1,7 +1,5 @@
-__all__ = ['main', 'cli']
-
 from logging import Formatter
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, get_terminal_size, style
 from click.exceptions import ClickException
@@ -13,6 +11,9 @@ from ..testing.config import (
     ConfigTest,
 )
 from ._internals import _cli_option_debug
+
+__all__ = ['main', 'cli']
+
 
 _FilePath = str
 
@@ -46,22 +47,36 @@ def check_config(config: Config) -> None:  # pragma: no cover
         raise ClickException(f'ValidateError: {ex}') from ex
 
 
-def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
-    def probe_status_callback(reason: ConfigProbeCallbackReason, imagecrawler: BaseImageCrawler,
-                              _: Optional[BaseException]) -> Optional[bool]:
-        if reason is ConfigProbeCallbackReason.failure:
-            _print_if(verbose, style('x FAILED', fg='red'), nl=True)
-            return not fail_fast  # stop all the other tests if ``failfast``
-        elif reason is ConfigProbeCallbackReason.finish:
-            _print_if(verbose, style('. PASSED', fg='green'), nl=True)
-        elif reason is ConfigProbeCallbackReason.retry:
-            _print_if(verbose, style('r', fg='yellow'), nl=False)
-            return True  # continue with retry
-        else:
-            _print_if(verbose, f'{imagecrawler} ', nl=False)
-        return None
+class _ProbeStatusCallbackBehaviour:
+    def __init__(self,
+                 return_value: Optional[bool],
+                 print_string: str,
+                 print_newline: bool
+                 ) -> None:  # pragma: no cover
+        self.return_value = return_value
+        self.print_string = print_string
+        self.print_newline = print_newline
 
-    return probe_status_callback
+
+def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
+    callback_behaviour: Dict[ConfigProbeCallbackReason, _ProbeStatusCallbackBehaviour] = {
+        ConfigProbeCallbackReason.start:
+            _ProbeStatusCallbackBehaviour(None, '{imagecrawler} ', False),
+        ConfigProbeCallbackReason.retry:
+            _ProbeStatusCallbackBehaviour(True, style('r', fg='yellow'), False),
+        ConfigProbeCallbackReason.failure:
+            _ProbeStatusCallbackBehaviour(not fail_fast, style('x FAILED', fg='red'), True),
+        ConfigProbeCallbackReason.finish:
+            _ProbeStatusCallbackBehaviour(None, style('. PASSED', fg='green'), True),
+    }
+
+    def callback(reason: ConfigProbeCallbackReason, imagecrawler: BaseImageCrawler,
+                 _: Optional[BaseException]) -> Optional[bool]:
+        apply = callback_behaviour[reason]
+        _print_if(verbose, apply.print_string.format(imagecrawler=imagecrawler), nl=apply.print_newline)
+        return apply.return_value
+
+    return callback
 
 
 def probe_config(config: Config, *,
@@ -73,7 +88,7 @@ def probe_config(config: Config, *,
         callback=make_probe_status_callback(fail_fast=fail_fast, verbose=verbose))
     if verbose:
         print_probe_errors(config_probe_results)
-    errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure]
+    errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure]  # pylint: disable=not-an-iterable
     if any(errors):
         raise ClickException('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
             str(error.imagecrawler) for error in errors))
@@ -85,8 +100,8 @@ def print_probe_errors(probe_results: ConfigProbeResults) -> None:  # pragma: no
     term_width = get_terminal_size()[0]
     printed_errors = False
     for ic_res in probe_results:
-        for ec, error in enumerate(ic_res.result.errors):
-            echo(f' {ic_res.imagecrawler} '.center(term_width, '-' if ec > 0 else '='), err=True)
+        for error_num, error in enumerate(ic_res.result.errors):
+            echo(f' {ic_res.imagecrawler} '.center(term_width, '-' if error_num > 0 else '='), err=True)
             echo(formatter.formatException((type(error), error, error.__traceback__)), err=True)
             echo(style(str(error), fg='red'), err=True)
             printed_errors = True

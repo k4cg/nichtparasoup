@@ -122,7 +122,8 @@ class ConfigTest:
             ic_probe_result = self._ic_test.probe(imagecrawler,
                                                   retries=retries, retry_delay=delay,
                                                   retry_callback=retry_callback)
-            result.append(ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
+            result.append(  # pylint: disable=no-member # false-positive
+                ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
             probe_continue = callback_(
                 ConfigProbeCallbackReason.failure
                 if ic_probe_result.is_failure
