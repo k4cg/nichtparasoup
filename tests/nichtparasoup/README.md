@@ -5,7 +5,7 @@
 install test requirements.
 
 then write your tests.  
-add additional needed requirements to the "testing" extras in `../setup.cfg`.
+add additional needed requirements to the respective [requirements file](../../requirements/tests.txt).
 
 
 ### run tests via tox 

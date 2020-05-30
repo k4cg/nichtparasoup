@@ -1,0 +1,5 @@
+-r style.txt
+-r tests.txt
+isort >= 4.3
+autopep8 >= 1.5
+tox >= 3.14

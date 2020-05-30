@@ -9,10 +9,10 @@ include MANIFEST.in
 
 # minimum files
 
-include pyproject.toml
-include setup.cfg
-include setup.py
 include README.md
+include pyproject.toml
+include setup.cfg setup.py
+graft requirements
 graft nichtparasoup_placeholders
 
 

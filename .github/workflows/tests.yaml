@@ -1,0 +1,77 @@
+name: 'Test'
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+    branches:
+      - 'master'
+  schedule:
+    # this means: at 23:42 on Fridays
+    - cron: '42 23 * * 5'
+
+jobs:
+  test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Style
+            os: ubuntu-latest
+            python: '3.8'
+            tox: style
+          - name: Linux
+            os: ubuntu-latest
+            python: '3.8'
+            tox: py38-coverageReport-coverageXML
+            codecov: true
+          - name: Windows
+            os: windows-latest
+            python: '3.8'
+            tox: py38
+          - name: MacOs
+            os: macos-latest
+            python: '3.8'
+            tox: py38
+          - name: '3.7'
+            os: ubuntu-latest
+            python: '3.7'
+            tox: py37
+          - name: '3.6'
+            os: ubuntu-latest
+            python: '3.6'
+            tox: py36
+    steps:
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+      - name: Setup Python ${{ matrix.python_version }}
+        # see https://github.com/actions/setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        # install requirements as set in `setup.py`
+        run: |
+          python -m pip install --upgrade wheel
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade 'tox>=3.14'
+      - name: Test nichtparasoup
+        run: python -m tox -r -e ${{ matrix.tox }}
+      - name: 'Test examples::nichtparasoup-imagecrawler-plugin'
+        run: python -m tox -r -e ${{ matrix.tox }} -c examples/nichtparasoup-imagecrawler-plugin/
+      - name: Upload coverage to Codecov
+        if: ${{ matrix.codecov }}
+        # see https://github.com/codecov/codecov-action
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          # flags:  # must be ^[\w\,]+$
+          name: os:${{ matrix.os }} py:${{ matrix.python }}
