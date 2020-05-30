@@ -13,25 +13,25 @@ coverage:
           - "src/web-ui/"
           - "tests/web-ui/"
         informational: true
-      patch:
-        nichtparasoup:
-          paths:
-            - "src/nichtparasoup/"
-            - "tests/nichtparasoup/"
-          informational: true
-        web-ui:
-          paths:
-            - "src/web-ui/"
-            - "tests/web-ui/"
-          informational: true
-      changes:
-        nichtparasoup:
-          paths:
-            - "src/nichtparasoup/"
-            - "tests/nichtparasoup/"
-          informational: true
-        web-ui:
-          paths:
-            - "src/web-ui/"
-            - "tests/web-ui/"
-          informational: true
+    patch:
+      nichtparasoup:
+        paths:
+          - "src/nichtparasoup/"
+          - "tests/nichtparasoup/"
+        informational: true
+      web-ui:
+        paths:
+          - "src/web-ui/"
+          - "tests/web-ui/"
+        informational: true
+    changes:
+      nichtparasoup:
+        paths:
+          - "src/nichtparasoup/"
+          - "tests/nichtparasoup/"
+        informational: true
+      web-ui:
+        paths:
+          - "src/web-ui/"
+          - "tests/web-ui/"
+        informational: true
