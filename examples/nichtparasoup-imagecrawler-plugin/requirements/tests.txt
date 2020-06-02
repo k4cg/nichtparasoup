@@ -5,14 +5,12 @@
 #    pip-compile examples/nichtparasoup-imagecrawler-plugin/requirements/tests.in
 #
 attrs==19.3.0             # via pytest
-coverage==5.1             # via -r examples/nichtparasoup-imagecrawler-plugin/requirements/tests.in
-importlib-metadata==1.6.0  # via pluggy, pytest
+coverage==5.1             # via -r requirements/tests.in
 more-itertools==8.3.0     # via pytest
 packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
 py==1.8.1                 # via pytest
 pyparsing==2.4.7          # via packaging
-pytest==5.4.2             # via -r examples/nichtparasoup-imagecrawler-plugin/requirements/tests.in
+pytest==5.4.3             # via -r requirements/tests.in
 six==1.15.0               # via packaging
 wcwidth==0.2.2            # via pytest
-zipp==3.1.0               # via importlib-metadata
