@@ -9,8 +9,9 @@ include MANIFEST.in
 
 # project files
 include README.md
+include requirements/*.txt
 include pyproject.toml
-include setup.cfg include setup.py
+include setup.cfg setup.py
 graft src/nichtparasoup
 
 
