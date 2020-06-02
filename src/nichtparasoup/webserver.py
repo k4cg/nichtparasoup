@@ -127,17 +127,20 @@ class WebServer:
     }
 
     def on_status(self, _: Request) -> _SimpleJsonResponse:
-        return _SimpleJsonResponse({
-            'version': nichtparasoup_version,
-            **{what: status(self.imageserver) for what, status in self._STATUS_WHATS.items()},
-        })
+        response = {what: status_type(self.imageserver) for what, status_type in self._STATUS_WHATS.items()}
+        response['version'] = nichtparasoup_version
+        return _SimpleJsonResponse(response)
 
     def on_status_what(self, _: Request, what: str) -> Union[NotFound, _SimpleJsonResponse]:
-        status_what = self._STATUS_WHATS.get(what)
-        return _SimpleJsonResponse(status_what(self.imageserver)) if status_what else NotFound()
+        status_type = self._STATUS_WHATS.get(what)
+        return _SimpleJsonResponse(status_type(self.imageserver)) if status_type else NotFound()
 
     def on_reset(self, _: Request) -> _SimpleJsonResponse:
-        return _SimpleJsonResponse(self.imageserver.request_reset())
+        reset = self.imageserver.request_reset()
+        return _SimpleJsonResponse({
+            'requested': reset.requested,
+            'timeout': reset.timeout,
+        })
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers: Set[Type[BaseImageCrawler]] = {
