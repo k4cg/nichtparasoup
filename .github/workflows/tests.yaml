@@ -1,3 +1,6 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
 name: 'Test'
 
 on:
@@ -8,8 +11,9 @@ on:
       - '*'
   pull_request:
     branches:
-      - 'master'
+      - master
   schedule:
+    # schedule weekly tests, since install dependencies are not pinned
     # this means: at 23:42 on Fridays
     - cron: '42 23 * * 5'
 
@@ -21,15 +25,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # check the style
           - name: Style
             os: ubuntu-latest
             python: '3.8'
             tox: style
+          # check latest Python for all OS
           - name: Linux
             os: ubuntu-latest
             python: '3.8'
             tox: py38-coverageReport-coverageXML
-            codecov: true
           - name: Windows
             os: windows-latest
             python: '3.8'
@@ -38,6 +43,7 @@ jobs:
             os: macos-latest
             python: '3.8'
             tox: py38
+          # check older Python
           - name: '3.7'
             os: ubuntu-latest
             python: '3.7'
@@ -67,7 +73,7 @@ jobs:
       - name: 'Test examples::nichtparasoup-imagecrawler-plugin'
         run: python -m tox -r -e ${{ matrix.tox }} -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
-        if: ${{ matrix.codecov }}
+        if: contains(matrix.tox, '-coverageXML')
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1
         with:

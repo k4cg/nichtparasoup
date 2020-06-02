@@ -11,5 +11,5 @@ import setuptools
 
 if __name__ == '__main__':
     setuptools.setup(
-        # actual config is done via `setup.cfg`
+        # actual config is done via `setup.cfg`/`pyproject.toml`
     )

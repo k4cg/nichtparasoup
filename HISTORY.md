@@ -28,10 +28,14 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * Class `.configfile.ConfigFileTest` (previously named `.config.ConfigFileTest`) was reworked.
     * Class `.imagecrawler.FileFetcher` supports fully qualified urls now, including schema and netloc.
       Therefore an optional parameter `base_url` was added.
+  * install extras `development` and `testing` were changed to be separate (`pip-compile`d pinned) files:
+    * [dev requirements](requirements/dev.txt)
+    * [tests requirements](requirements/tests.txt)
 * Fixed
   * False-positives in `nichtparasoup.core.imagecrawler.ImageRecognizer.path_is_image()`.
 * Removed:
   * `nichtparasoup.core.server.type_module_name_str()`
+  * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
 * Added
   * API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status_crawlers.md).
   * Public CLI modules `nichtparasoup.commands.*` for use via `python3 -m`:

@@ -1,9 +1,11 @@
 [flake8]
 ## https://flake8.pycqa.org/en/latest/user/configuration.html
 
-exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
+exclude =
+    build,dist,__pycache__,.eggs,*_cache
+    .git,.tox,.venv,venv
+    _OLD,_TEST,
     docs
-    examples
     src/web-ui,tests/web-ui
 
 show-source  = True

@@ -1,14 +1,17 @@
+# GitHubActions for releasing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
 name: 'Minimal test & Release'
 
 on:
   release:
     types:
-      - 'created'
+      - created
 
 jobs:
   test:
     name: Minimal Testing
-    # these tests are just to ensure that a minimal quality is given. full tests are done in `pythonpackage` action
+    # these tests are just to ensure that a minimal quality is given. full tests are done in `tests` action
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -20,16 +23,15 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install dependencies
-        # install requirements as set in `setup.py`
         run: |
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade pip
           python -m pip install --upgrade 'tox>=3.14'
       - name: Test nichtparasoup
-        run: python -m tox -r -e py3 -e style,py38
+        run: python -m tox -r -e py38 -e style,py38
       - name: 'Test examples::nichtparasoup-imagecrawler-plugin'
-        run: python -m tox -r -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
+        run: python -m tox -r -e py38 -c examples/nichtparasoup-imagecrawler-plugin/
   publish:
     name: Publishing
     # build in an isolated env

@@ -1,0 +1,3 @@
+-r style.in
+-r tests.in
+pip-tools >= 5.2
