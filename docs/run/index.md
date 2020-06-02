@@ -1,6 +1,6 @@
 # run _nichtparasoup_
 
-Via commandline, run `python3 -m nichtparasoup.cli`
+Via commandline, run `python -m nichtparasoup.cli`
 or just simply run `nichtparasoup`.
 
 The switch `--help` will display help.

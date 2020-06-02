@@ -12,8 +12,8 @@ add additional needed requirements to the respective [requirements file](../../r
 
 ```shell script
 # run from project root:
-python3 -m pip install --upgrade tox
-python3 -m tox
+python -m pip install --upgrade tox
+python -m tox
 ```
 
 ```shell script
@@ -24,7 +24,7 @@ docker run \
   -w /usr/src/nichtparasoup \
   --rm \
   python:3.6 bash -c \
-  "python3 -m pip install tox; python3 -m tox; rm -rf .tox;"
+  "python -m pip install tox; python -m tox; rm -rf .tox;"
 ```
 
 ## contribution 

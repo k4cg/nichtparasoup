@@ -1,7 +1,7 @@
 # ImageCrawler Plugin Development: Example
 
 There is a example implementation that was created to show you the basics:
-[nichtparasoup_placeholders](../../examples/nichtparasoup-imagecrawler-plugin).  
+[nichtparasoup_placeholders](../../../../examples/nichtparasoup-imagecrawler-plugin).  
 Feel free to look into it for details.
 *ATTENTION*: the example might not be part of the source distribution.
 
