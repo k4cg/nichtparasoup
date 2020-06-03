@@ -169,7 +169,10 @@ class ImagecrawlerProbeResult:
     There might have happened ``errors`` on the way to get ``images``.
     """
 
-    def __init__(self, images: Optional[ImageCollection], errors: List[BaseException]) -> None:  # pragma: no cover
+    def __init__(self,
+                 images: Optional[ImageCollection],
+                 errors: List[BaseException]
+                 ) -> None:  # pragma: no cover
         self.images = images
         self.errors = errors
 
@@ -187,15 +190,15 @@ class ImagecrawlerProbeResult:
 
 
 class ImageCrawlerTest:
+    def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
+        self.imagecrawler = imagecrawler
 
-    def probe(self,  # pylint: disable=no-self-use
-              imagecrawler: BaseImageCrawler, *,
+    def probe(self, *,
               retries: int = PROBE_RETRIES_DEFAULT,
               retry_delay: float = PROBE_DELAY_DEFAULT,
               retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
               ) -> ImagecrawlerProbeResult:
         """
-        :param imagecrawler:
         :param retries: number of retries if probing failed
         :param retry_delay: delay between retries
         :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
@@ -206,10 +209,10 @@ class ImageCrawlerTest:
         for retry in range(retries + 1):
             retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned
             try:
-                images = imagecrawler._crawl()  # pylint: disable=protected-access
+                images = self.imagecrawler._crawl()  # pylint: disable=protected-access
             except BaseException as ex:  # pylint: disable=broad-except
                 errors.append(ex)
-                if retry_callback and not retry_callback(imagecrawler, ex):
+                if retry_callback and not retry_callback(self.imagecrawler, ex):
                     break  # for .. in ..
             else:
                 break  # for .. in ..

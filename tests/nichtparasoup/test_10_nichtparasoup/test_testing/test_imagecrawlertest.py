@@ -41,19 +41,18 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
     def test_success(self) -> None:
         # arrange
-        tester = ImageCrawlerTest()
         images = ImageCollection()
         imagecrawler = Echo(image_uri='https://foo.bar')
         imagecrawler._crawl = lambda: images  # type: ignore
+        tester = ImageCrawlerTest(imagecrawler)
         # act
-        result = tester.probe(imagecrawler)
+        result = tester.probe()
         # assert
         self.assertEqual(images, result.images)
         self.assertListEqual([], result.errors)
 
     def test_fail(self) -> None:
         # arrange
-        tester = ImageCrawlerTest()
         error = Exception('Ooops')
 
         def crawl_fail() -> ImageCollection:
@@ -61,15 +60,15 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
         imagecrawler = Echo(image_uri='https://foo.bar')
         imagecrawler._crawl = crawl_fail  # type: ignore
+        tester = ImageCrawlerTest(imagecrawler)
         # act
-        result = tester.probe(imagecrawler, retries=0, retry_delay=0)
+        result = tester.probe(retries=0, retry_delay=0)
         # assert
         self.assertIsNone(result.images)
         self.assertListEqual([error], result.errors)
 
     def test_retry(self) -> None:
         # arrange
-        tester = ImageCrawlerTest()
         error = Exception('Ooops')
         retries = 3
         images = ImageCollection()
@@ -86,15 +85,15 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
         imagecrawler = Echo(image_uri='https://foo.bar')
         imagecrawler._crawl = crawl  # type: ignore
+        tester = ImageCrawlerTest(imagecrawler)
         # act
-        result = tester.probe(imagecrawler, retries=retries, retry_delay=0)
+        result = tester.probe(retries=retries, retry_delay=0)
         # assert
         self.assertEqual(images, result.images)
         self.assertListEqual([error] * retries, result.errors)
 
     def test_callback(self) -> None:
         # arrange
-        tester = ImageCrawlerTest()
         error = Exception('Ooops')
         retries = 3
         images = ImageCollection()
@@ -116,8 +115,9 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
         imagecrawler = Echo(image_uri='https://foo.bar')
         imagecrawler._crawl = crawl  # type: ignore
+        tester = ImageCrawlerTest(imagecrawler)
         # act
-        result = tester.probe(imagecrawler, retries=retries, retry_delay=0, retry_callback=retry_callback)
+        result = tester.probe(retries=retries, retry_delay=0, retry_callback=retry_callback)
         # assert
         self.assertEqual(images, result.images)
         self.assertListEqual([error] * retries, result.errors)
@@ -125,7 +125,6 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
     def test_callback_fail_fast(self) -> None:
         # arrange
-        tester = ImageCrawlerTest()
         error = Exception('Ooops')
         retries = 3
         retry_callback_args = []
@@ -139,8 +138,9 @@ class ImageCrawlerProbeTest(unittest.TestCase):
 
         imagecrawler = Echo(image_uri='https://foo.bar')
         imagecrawler._crawl = crawl_fail  # type: ignore
+        tester = ImageCrawlerTest(imagecrawler)
         # act
-        result = tester.probe(imagecrawler, retries=retries, retry_delay=0, retry_callback=retry_callback)
+        result = tester.probe(retries=retries, retry_delay=0, retry_callback=retry_callback)
         # assert
         self.assertEqual(None, result.images)
         self.assertListEqual([error], result.errors)

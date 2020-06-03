@@ -8,11 +8,13 @@ _FilePath = str
 
 class ConfigFileTest:
 
-    def check_file(self,  # pylint: disable=no-self-use
-                   file: _FilePath) -> None:  # pragma: no cover
+    def __init__(self, config_file: _FilePath) -> None:  # pragma: no cover
+        self.config_file = config_file
+
+    def check_file(self) -> None:  # pragma: no cover
         """Do all necessary tests a file might need.
         """
-        config = parse_yaml_file(file)
-        tester = ConfigTest()
-        tester.check_duplicates(config)
-        tester.probe(config)
+        config = parse_yaml_file(self.config_file)
+        tester = ConfigTest(config)
+        tester.check_duplicates()
+        tester.probe()

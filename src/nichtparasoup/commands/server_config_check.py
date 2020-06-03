@@ -43,7 +43,7 @@ def main(file: _FilePath, *,
 
 def check_config(config: Config) -> None:  # pragma: no cover
     try:
-        ConfigTest().check_duplicates(config)
+        ConfigTest(config).check_duplicates()
     except Exception as ex:
         raise ClickException(f'ValidateError: {ex}') from ex
 
@@ -91,8 +91,8 @@ def probe_config(config: Config, *,
                  verbose: bool = False) -> None:  # pragma: no cover
     # TODO implement a progress bar ?
     config_probe_start = time()
-    config_probe_results = ConfigTest().probe(
-        config, delay=delay, retries=retries,
+    config_probe_results = ConfigTest(config).probe(
+        delay=delay, retries=retries,
         callback=make_probe_status_callback(fail_fast=fail_fast, verbose=verbose))
     config_probe_end = time()
     if verbose:

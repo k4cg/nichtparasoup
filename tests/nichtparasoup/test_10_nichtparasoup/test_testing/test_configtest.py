@@ -5,28 +5,28 @@ from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException
-from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult
+from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
 
 class ConfigTestCheckDuplicatesTest(unittest.TestCase):
 
     def test_duplicates(self) -> None:
         # arrange
-        tester = ConfigTest()
+        tester = ConfigTest({})
         duplicates: List[BaseImageCrawler] = [Echo(image_uri='https://foo.bar.baz')]
-        tester.find_duplicates = lambda _: duplicates  # type: ignore
+        tester.find_duplicates = lambda: duplicates  # type: ignore
         # act & assert
         with self.assertRaises(DuplicateImagecrawlersException) as ar:
-            tester.check_duplicates({})
+            tester.check_duplicates()
         self.assertListEqual(duplicates, ar.exception.duplicates)
 
     def test_no_duplicates(self) -> None:
         # arrange
-        tester = ConfigTest()
+        tester = ConfigTest({})
         duplicates: List[BaseImageCrawler] = []
-        tester.find_duplicates = lambda _: duplicates  # type: ignore
+        tester.find_duplicates = lambda: duplicates  # type: ignore
         # act
-        tester.check_duplicates({})
+        tester.check_duplicates()
         # assert: no exception risen
 
 
@@ -54,9 +54,9 @@ class ConfigTestFindDuplicatesTest(unittest.TestCase):
                 )
             ),
         ])
-        tester = ConfigTest()
+        tester = ConfigTest(test_config)
         # act
-        duplicates = tester.find_duplicates(test_config)
+        duplicates = tester.find_duplicates()
         # assert
         self.assertListEqual([Echo(image_uri='https://foo.bar.baz')], duplicates)
 
@@ -82,12 +82,13 @@ class ConfigTestProbeTest(unittest.TestCase):
         echo_foo_bar = Echo(image_uri='https://foo.bar')
         echo_foo_baz = Echo(image_uri='https://foo.baz')
 
-        def probe_fake(ic: BaseImageCrawler, **kwargs: Any) -> ImagecrawlerProbeResult:
-            if ic == echo_foo_bar:
-                return ImagecrawlerProbeResult(None, [Exception()])
-            if ic == echo_foo_baz:
-                return ImagecrawlerProbeResult(ImageCollection(), [])
-            raise NotImplementedError()
+        class MockImageCrawlerTest(ImageCrawlerTest):
+            def probe(self, *args: Any, **kwargs: Any) -> ImagecrawlerProbeResult:
+                if self.imagecrawler == echo_foo_bar:
+                    return ImagecrawlerProbeResult(None, [Exception()])
+                if self.imagecrawler == echo_foo_baz:
+                    return ImagecrawlerProbeResult(ImageCollection(), [])
+                raise NotImplementedError()
 
         callback_args = []
 
@@ -95,10 +96,9 @@ class ConfigTestProbeTest(unittest.TestCase):
             callback_args.append((r, ic, ex))
             return None
 
-        tester = ConfigTest()
-        tester._ic_test.probe = probe_fake  # type: ignore
+        tester = ConfigTest(config)
         # act
-        tester.probe(config, delay=0, retries=0, callback=callback)
+        tester.probe(delay=0, retries=0, callback=callback, imagecrawler_test_class=MockImageCrawlerTest)
         # assert
         self.assertListEqual([
             (ConfigProbeCallbackReason.start, echo_foo_bar, None),
@@ -125,10 +125,11 @@ class ConfigTestProbeTest(unittest.TestCase):
         ])
         echo_foo_bar = Echo(image_uri='https://foo.bar')
 
-        def probe_fake(ic: BaseImageCrawler, **kwargs: Any) -> ImagecrawlerProbeResult:
-            if ic == echo_foo_bar:
-                return ImagecrawlerProbeResult(None, [Exception()])
-            raise NotImplementedError()
+        class MockImageCrawlerTest(ImageCrawlerTest):
+            def probe(self, *args: Any, **kwargs: Any) -> ImagecrawlerProbeResult:
+                if self.imagecrawler == echo_foo_bar:
+                    return ImagecrawlerProbeResult(None, [Exception()])
+                raise NotImplementedError()
 
         callback_args = []
 
@@ -136,10 +137,9 @@ class ConfigTestProbeTest(unittest.TestCase):
             callback_args.append((r, ic, ex))
             return False if r is ConfigProbeCallbackReason.failure and ic == echo_foo_bar else None
 
-        tester = ConfigTest()
-        tester._ic_test.probe = probe_fake  # type: ignore
+        tester = ConfigTest(config)
         # act
-        tester.probe(config, delay=0, retries=0, callback=callback)
+        tester.probe(delay=0, retries=0, callback=callback, imagecrawler_test_class=MockImageCrawlerTest)
         # assert
         self.assertListEqual([
             (ConfigProbeCallbackReason.start, echo_foo_bar, None),
@@ -151,7 +151,7 @@ class ConfigTestMakeProbeRetryCallbackTest(unittest.TestCase):
 
     def _test_i_x(self, issued: Optional[bool], expected: bool) -> None:
         # arrange
-        retry_callback = ConfigTest()._make_probe_retry_callback(lambda _, __, ___: issued)
+        retry_callback = ConfigTest._make_probe_retry_callback(lambda _, __, ___: issued)
         # act
         ret = retry_callback(Echo(image_uri='https://foo.bar'), BaseException())
         # assert
