@@ -1,10 +1,15 @@
 import unittest
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+import pytest  # type: ignore
 
 from nichtparasoup.core.image import ImageCollection
+from nichtparasoup.core.imagecrawler import ImageCrawlerConfig, ImageCrawlerInfo
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawlers.echo import Echo
-from nichtparasoup.testing.config import ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException
+from nichtparasoup.testing.config import (
+    ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException, _default_probe_callback,
+)
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
 
@@ -165,3 +170,35 @@ class ConfigTestMakeProbeRetryCallbackTest(unittest.TestCase):
 
     def test_false(self) -> None:
         self._test_i_x(False, False)
+
+
+class TestDefaultProbeCallback:
+    class _DummyImageCrawler(BaseImageCrawler):
+
+        @classmethod
+        def info(cls) -> ImageCrawlerInfo:
+            raise NotImplementedError()
+
+        @classmethod
+        def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+            return ImageCrawlerConfig()
+
+        def _reset(self) -> None:
+            raise NotImplementedError()
+
+        def _crawl(self) -> ImageCollection:
+            raise NotImplementedError()
+
+    @pytest.mark.parametrize(  # type: ignore
+        ('reason', 'expected'),
+        [
+            (ConfigProbeCallbackReason.start, None),
+            (ConfigProbeCallbackReason.finish, None),
+            (ConfigProbeCallbackReason.failure, True),
+            (ConfigProbeCallbackReason.retry, True)
+        ])
+    def test_(self, reason: ConfigProbeCallbackReason, expected: Optional[bool]) -> None:
+        # act
+        result = _default_probe_callback(reason, self._DummyImageCrawler(), None)
+        # assert
+        assert expected is result

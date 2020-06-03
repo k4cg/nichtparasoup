@@ -45,7 +45,7 @@ def _default_probe_callback(reason: ConfigProbeCallbackReason,
                             crawler: BaseImageCrawler,  # pylint: disable=unused-argument
                             error: Optional[BaseException]  # pylint: disable=unused-argument
                             ) -> Optional[bool]:
-    """default implementation of ``ConfigProbeCallback``
+    """Default implementation of ``ConfigProbeCallback``
 
     impact:
     * retry a crawler until success or limit reached
