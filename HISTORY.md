@@ -11,7 +11,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Requires `python>=3.6` -- was `python>=3.5`.
   * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
     * `python3 -m nichtparasoup` was moved to `python3 -m nichtparasoup.cli`.
-    * CLI is done via `click` now.
+    * CLI is done via [`click`](https://click.palletsprojects.com) now (was done via `argparse` before).
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
     * Proper subcommands are used now.  
       Also available via `python3 -m nichtparasoup.commands.*` - see in added feature section below.
@@ -24,6 +24,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`.
   * Class `nichtparasoup.testing.config.ConfigFileTest` was moved to `nichtparasoup.testing.configfile.ConfigFileTest`.
+    Also it behaves different now. Read the code and annotations for a deeper insight.
   * Some Class methods of `nichtparasoup.core.server.Server` got reworked return types:
     * `Server.get_image()` returns optional `nichtparasoup.core.server.ImageResponse` -- was optional `dict`.
     * `Server.refill()` returns `None` -- was `dict`.
@@ -93,11 +94,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * All internal imports were made relative (again).
     * Logging reviewed, uses %-strings as params, now.
     * `try`/`except` got some overhaul to cover needed parts, only.
-    * CLI is now powered by [`click`](https://click.palletsprojects.com).
-      Was made via `argparse` before.
   * Removed `ddt` from the testing dependencies. Closes [issue #233](https://github.com/k4cg/nichtparasoup/issues/233).
-  * Version-bumped some dependencies
+  * Version-bumped some dependencies, pinned dev dependencies via `pip-compile`.
   * Added some more tests.
+  * improved `venv` support when it comes to testing.
+  * Tests via `tox` were split.
+    Code style tests are done via own test named `toxstyle` now (was part of standard tests).
   
 
 
