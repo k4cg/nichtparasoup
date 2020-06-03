@@ -162,14 +162,28 @@ See :ref:``ImageCrawlerTest.probe``
 
 
 class ImagecrawlerProbeResult:
+    """ImagecrawlerProbe result
+
+    If ``images`` is None, this is obviously a failure.
+    Errors are not bound to the absence of ``images``.
+    There might have happened ``errors`` on the way to get ``images``.
+    """
+
     def __init__(self, images: Optional[ImageCollection], errors: List[BaseException]) -> None:  # pragma: no cover
         self.images = images
         self.errors = errors
 
     @property
     def is_failure(self) -> bool:
-        """Is this a failure?"""
+        """Is this a failure?
+        """
         return self.images is None
+
+    @property
+    def is_erroneous(self) -> bool:
+        """Had this any errors? Regardless of a final success.
+        """
+        return any(self.errors)
 
 
 class ImageCrawlerTest:
@@ -187,7 +201,7 @@ class ImageCrawlerTest:
         :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
         :return: images and errors
         """
-        images = None
+        images: Optional[ImageCollection] = None
         errors: List[BaseException] = []
         for retry in range(retries + 1):
             retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned

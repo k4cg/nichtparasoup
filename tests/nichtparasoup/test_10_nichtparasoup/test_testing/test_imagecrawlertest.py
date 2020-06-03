@@ -6,19 +6,35 @@ from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
 
-class Foo(unittest.TestCase):
+class TestImagecrawlerProbeResultIsFailure:
 
-    def test_failure(self) -> None:
+    def test_failure_no_errors(self) -> None:
         # arrange
         res = ImagecrawlerProbeResult(None, [])
         # act & assert
-        self.assertTrue(res.is_failure)
+        assert res.is_failure
+        assert not res.is_erroneous
 
-    def test_success(self) -> None:
+    def test_failure_with_error(self) -> None:
+        # arrange
+        res = ImagecrawlerProbeResult(None, [Exception()])
+        # act & assert
+        assert res.is_failure
+        assert res.is_erroneous
+
+    def test_success_no_errors(self) -> None:
         # arrange
         res = ImagecrawlerProbeResult(ImageCollection(), [])
         # act & assert
-        self.assertFalse(res.is_failure)
+        assert not res.is_failure
+        assert not res.is_erroneous
+
+    def test_success_with_errors(self) -> None:
+        # arrange
+        res = ImagecrawlerProbeResult(ImageCollection(), [Exception()])
+        # act & assert
+        assert not res.is_failure
+        assert res.is_erroneous
 
 
 class ImageCrawlerProbeTest(unittest.TestCase):

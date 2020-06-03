@@ -1,7 +1,11 @@
-from logging import Formatter
-from typing import Any, Dict, Optional
+__all__ = ['main', 'cli']
 
-from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, get_terminal_size, style
+from enum import Enum, unique
+from logging import Formatter
+from time import time
+from typing import Any, Dict, Optional, Union
+
+from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, get_terminal_size, style, unstyle
 from click.exceptions import ClickException
 
 from ..config import Config, parse_yaml_file
@@ -11,9 +15,6 @@ from ..testing.config import (
     ConfigTest,
 )
 from ._internals import _cli_option_debug
-
-__all__ = ['main', 'cli']
-
 
 _FilePath = str
 
@@ -58,16 +59,21 @@ class _ProbeStatusCallbackBehaviour:
         self.print_newline = print_newline
 
 
+_COLOR_SUCCESS = 'green'
+_COLOR_WARNING = 'yellow'
+_COLOR_FAILURE = 'red'
+
+
 def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False) -> ConfigProbeCallback:
     callback_behaviour: Dict[ConfigProbeCallbackReason, _ProbeStatusCallbackBehaviour] = {
         ConfigProbeCallbackReason.start:
             _ProbeStatusCallbackBehaviour(None, '{imagecrawler} ', False),
         ConfigProbeCallbackReason.retry:
-            _ProbeStatusCallbackBehaviour(True, style('r', fg='yellow'), False),
+            _ProbeStatusCallbackBehaviour(True, style('r', fg=_COLOR_WARNING), False),
         ConfigProbeCallbackReason.failure:
-            _ProbeStatusCallbackBehaviour(not fail_fast, style('x FAILED', fg='red'), True),
+            _ProbeStatusCallbackBehaviour(not fail_fast, style('x FAILED', fg=_COLOR_FAILURE), True),
         ConfigProbeCallbackReason.finish:
-            _ProbeStatusCallbackBehaviour(None, style('. PASSED', fg='green'), True),
+            _ProbeStatusCallbackBehaviour(None, style('. PASSED', fg=_COLOR_SUCCESS), True),
     }
 
     def callback(reason: ConfigProbeCallbackReason, imagecrawler: BaseImageCrawler,
@@ -83,29 +89,88 @@ def probe_config(config: Config, *,
                  retries: int, delay: float,
                  fail_fast: bool = False,
                  verbose: bool = False) -> None:  # pragma: no cover
+    # TODO implement a progress bar ?
+    config_probe_start = time()
     config_probe_results = ConfigTest().probe(
         config, delay=delay, retries=retries,
         callback=make_probe_status_callback(fail_fast=fail_fast, verbose=verbose))
+    config_probe_end = time()
     if verbose:
-        print_probe_errors(config_probe_results)
-    errors = [ic_res for ic_res in config_probe_results if ic_res.result.is_failure]  # pylint: disable=not-an-iterable
-    if any(errors):
+        print_probed_erroneous(config_probe_results)
+        print_probed_summary(config_probe_results, elapsed_seconds=config_probe_end - config_probe_start)
+    failures = [probed
+                for probed in config_probe_results  # pylint: disable=not-an-iterable
+                if probed.result.is_failure]
+    if failures:
         raise ClickException('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
-            str(error.imagecrawler) for error in errors))
+            str(failed.imagecrawler) for failed in failures))
 
 
-def print_probe_errors(probe_results: ConfigProbeResults) -> None:  # pragma: no cover
+def print_probed_erroneous(probe_results: ConfigProbeResults) -> None:  # pragma: no cover
     echo()
-    formatter = Formatter()
+    ex_formatter = Formatter()
     term_width = get_terminal_size()[0]
-    printed_errors = False
-    for ic_res in probe_results:
-        for error_num, error in enumerate(ic_res.result.errors):
-            echo(f' {ic_res.imagecrawler} '.center(term_width, '-' if error_num > 0 else '='), err=True)
-            echo(formatter.formatException((type(error), error, error.__traceback__)), err=True)
-            echo(style(str(error), fg='red'), err=True)
-            printed_errors = True
-    _print_if(printed_errors, '=' * term_width, err=True)
+    probe_erroneous = [probed for probed in probe_results if probed.result.is_erroneous]
+    for probed in probe_erroneous:
+        error_color = _COLOR_FAILURE if probed.result.is_failure else _COLOR_WARNING
+        result_type = 'ERROR' if probed.result.is_failure else 'WARNING'
+        for error_num, error in enumerate(probed.result.errors):
+            line_delimiter = '-' if error_num > 0 else '='
+            echo(style(f' {result_type}: {probed.imagecrawler} '.center(term_width, line_delimiter), fg=error_color),
+                 err=True)
+            echo(style(str(error), fg=error_color), err=True)
+            echo(ex_formatter.formatException((type(error), error, error.__traceback__)), err=True)
+
+
+@unique
+class _ProbedSummaryType(Enum):
+    failed = 'failed'
+    passed = 'passed'
+    warned = 'warned'
+
+
+class _ProbedSummaryCounter:
+    def __init__(self, color: str) -> None:  # pragma: no cover
+        self.value = 0
+        self.color = color
+
+
+def print_probed_summary(probe_results: ConfigProbeResults, *,
+                         elapsed_seconds: Optional[Union[int, float]]
+                         ) -> None:  # pragma: no cover
+    summary: Dict[_ProbedSummaryType, _ProbedSummaryCounter] = {
+        _ProbedSummaryType.failed: _ProbedSummaryCounter(_COLOR_FAILURE),
+        _ProbedSummaryType.passed: _ProbedSummaryCounter(_COLOR_SUCCESS),
+        _ProbedSummaryType.warned: _ProbedSummaryCounter(_COLOR_WARNING),
+    }
+    for probed in probe_results:
+        if probed.result.is_failure:
+            summary[_ProbedSummaryType.failed].value += 1
+        else:
+            summary[_ProbedSummaryType.passed].value += 1
+            if probed.result.is_erroneous:
+                summary[_ProbedSummaryType.warned].value += 1
+    overall_result = _ProbedSummaryType.failed \
+        if summary[_ProbedSummaryType.failed].value > 0 \
+        else _ProbedSummaryType.passed
+    summary_color = summary[overall_result].color
+    summary_string_spacer = ' '
+    summary_string = summary_string_spacer + ', '.join(
+        style(f'{counter.value} {type_.value}', fg=counter.color, bold=type_ == overall_result)
+        for type_, counter in summary.items()
+        if counter.value > 0
+    ) + summary_string_spacer
+    if elapsed_seconds is not None:
+        summary_string += style(f'in {elapsed_seconds:.2f}s', fg=summary_color) + summary_string_spacer
+    summary_width = len(unstyle(summary_string))
+    term_width = get_terminal_size()[0]
+    line_width = max(0, term_width - summary_width)
+    line_width_first_half = line_width // 2
+    echo(''.join([
+        style('=' * line_width_first_half, fg=summary_color) if line_width_first_half else '',
+        summary_string,
+        style('=' * (line_width - line_width_first_half), fg=summary_color) if line_width_first_half else '',
+    ]), err=True)
 
 
 cli = Command(
