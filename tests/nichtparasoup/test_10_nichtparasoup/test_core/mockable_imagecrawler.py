@@ -21,6 +21,9 @@ class MockableImageCrawler(BaseImageCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         return ImageCrawlerConfig(config)
 
+    def is_exhausted(self) -> bool:
+        return False
+
     def _reset(self) -> None:
         pass
 

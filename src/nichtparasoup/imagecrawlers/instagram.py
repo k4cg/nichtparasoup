@@ -10,9 +10,9 @@ from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
-if sys.version_info >= (3, 8):
+if sys.version_info >= (3, 8):  # pragma: no cover
     from typing import Literal  # pylint: disable=no-name-in-module,ungrouped-imports
-else:
+else:  # pragma: no cover
     from typing_extensions import Literal
 
 #
@@ -105,11 +105,16 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self._amount = 10
+        self._has_next_page: bool = True
         self._cursor: Optional[str] = None
         self._remote_fetcher = RemoteFetcher()
 
+    def is_exhausted(self) -> bool:
+        return not self._has_next_page
+
     def _reset(self) -> None:
         self._cursor = None
+        self._has_next_page = True
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
@@ -121,8 +126,9 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             )
             del edge
         page_info: Dict[str, Any] = response['page_info']
-        # don't care if this was the last page ... why not restarting at front when the end is reached?!
-        self._cursor = page_info['end_cursor'] if page_info['has_next_page'] else None
+        self._has_next_page = page_info['has_next_page']
+        if self._has_next_page:
+            self._cursor = str(page_info['end_cursor'])
         return images
 
     @classmethod

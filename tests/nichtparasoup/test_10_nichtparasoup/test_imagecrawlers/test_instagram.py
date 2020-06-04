@@ -217,13 +217,28 @@ class InstagramHashtagTest(unittest.TestCase):
         # assert
         self.assertEqual(queryhash, self.__class__._QUERY_HASH)
 
+    def test_exhausted_true(self) -> None:
+        # arrange
+        self.crawler._has_next_page = False
+        # act & assert
+        self.assertTrue(self.crawler.is_exhausted())
+
+    def test_exhausted_false(self) -> None:
+        # arrange
+        self.crawler._has_next_page = True
+        # act & assert
+        self.assertFalse(self.crawler.is_exhausted())
+
     def test_reset(self) -> None:
         # arrange
         self.crawler._cursor = 'foo'
+        self.crawler._has_next_page = False
+        self.assertTrue(self.crawler.is_exhausted())
         # act
         self.crawler._reset()
         # assert
         self.assertIsNone(self.crawler._cursor)
+        self.assertFalse(self.crawler.is_exhausted())
 
     def test__crawl(self) -> None:
         # arrange
@@ -301,6 +316,7 @@ class InstagramHashtagTest(unittest.TestCase):
         # act
         images = self.crawler._crawl()
         # assert
+        self.assertFalse(self.crawler.is_exhausted())
         self.assertEqual(self.crawler._cursor, expected_cursor)
         self.assertSetEqual(images, expected_images)
         for expected_image in expected_images:
@@ -459,6 +475,7 @@ class InstagramProfileTest(unittest.TestCase):
         # act
         images = self.crawler._crawl()
         # assert
+        self.assertFalse(self.crawler.is_exhausted())
         self.assertEqual(self.crawler._cursor, expected_cursor)
         self.assertSetEqual(images, expected_images)
         for expected_image in expected_images:
@@ -467,13 +484,28 @@ class InstagramProfileTest(unittest.TestCase):
                     # sources are irrelevant for equality, need to be checked manually
                     self.assertEqual(image.source, expected_image.source)
 
+    def test_exhausted_true(self) -> None:
+        # arrange
+        self.crawler._has_next_page = False
+        # act & assert
+        self.assertTrue(self.crawler.is_exhausted())
+
+    def test_exhausted_false(self) -> None:
+        # arrange
+        self.crawler._has_next_page = True
+        # act & assert
+        self.assertFalse(self.crawler.is_exhausted())
+
     def test_reset(self) -> None:
         # arrange
         self.crawler._cursor = 'foo'
+        self.crawler._has_next_page = False
+        self.assertTrue(self.crawler.is_exhausted())
         # act
         self.crawler._reset()
         # assert
         self.assertIsNone(self.crawler._cursor)
+        self.assertFalse(self.crawler.is_exhausted())
 
 
 class InstagramProfileDescriptionTest(unittest.TestCase):

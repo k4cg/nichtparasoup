@@ -40,6 +40,9 @@ class Picsum(BaseImageCrawler):
     def _get_image_uri(width: int, height: int) -> str:
         return f'https://picsum.photos/{width}/{height}'
 
+    def is_exhausted(self) -> bool:  # pragma: no cover
+        return False
+
     def _reset(self) -> None:  # pragma: no cover
         pass
 

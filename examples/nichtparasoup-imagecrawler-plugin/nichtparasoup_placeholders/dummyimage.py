@@ -40,6 +40,9 @@ class DummyImage(BaseImageCrawler):
             height=height,
         )
 
+    def is_exhausted(self) -> bool:  # pragma: no cover
+        return False
+
     @staticmethod
     def _get_image_uri(width: int, height: int) -> str:
         # trailing '?' is needed to prevent random technical issues with the generator

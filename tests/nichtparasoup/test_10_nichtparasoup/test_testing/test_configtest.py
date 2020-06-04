@@ -183,6 +183,9 @@ class TestDefaultProbeCallback:
         def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
             return ImageCrawlerConfig()
 
+        def is_exhausted(self) -> bool:
+            return False
+
         def _reset(self) -> None:
             raise NotImplementedError()
 
