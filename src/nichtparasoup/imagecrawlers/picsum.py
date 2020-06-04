@@ -1,8 +1,8 @@
+__all__ = ["Picsum"]
+
 from typing import Any, Dict
 
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
-
-__all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):

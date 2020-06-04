@@ -8,23 +8,21 @@ from pkg_resources import EntryPoint, iter_entry_points
 
 from .._internals import _log
 from ..core.imagecrawler import BaseImageCrawler
+from .echo import Echo
+from .instagram import InstagramHashtag, InstagramProfile
+from .picsum import Picsum
+from .pr0gramm import Pr0gramm
+from .reddit import Reddit
 
 _ImagecrawlerName = str
 _ImagecrawlerClass = Type[BaseImageCrawler]
-_Imagecrawler = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
+_ImagecrawlerItem = Tuple[_ImagecrawlerName, _ImagecrawlerClass]
 
 
 class KnownImageCrawlers:
 
     @staticmethod
     def _builtins() -> Dict[_ImagecrawlerName, _ImagecrawlerClass]:
-        # late import to prevent possible circular imports
-        # pylint: disable=import-outside-toplevel
-        from .echo import Echo
-        from .picsum import Picsum
-        from .reddit import Reddit
-        from .instagram import InstagramHashtag, InstagramProfile
-        from .pr0gramm import Pr0gramm
         return {
             'Echo': Echo,
             'Picsum': Picsum,
@@ -62,7 +60,7 @@ class KnownImageCrawlers:
     def classes(self) -> List[_ImagecrawlerClass]:
         return list(self._list.values())
 
-    def items(self) -> List[_Imagecrawler]:
+    def items(self) -> List[_ImagecrawlerItem]:
         return list(self._list.items())
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
