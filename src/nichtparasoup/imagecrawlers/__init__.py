@@ -66,16 +66,22 @@ class KnownImageCrawlers:
         return list(self._list.items())
 
     def get_name(self, imagecrawler_class: _ImagecrawlerClass) -> Optional[_ImagecrawlerName]:
-        for ic_name, ic_class in self._list.items():
-            if ic_class is imagecrawler_class:
-                return ic_name
-        return None
+        try:
+            return next(ic_name
+                        for ic_name, ic_class
+                        in self._list.items()
+                        if ic_class is imagecrawler_class)
+        except StopIteration:
+            return None
 
     def get_class(self, imagecrawler_name: _ImagecrawlerName) -> Optional[_ImagecrawlerClass]:
-        for ic_name, ic_class in self._list.items():
-            if ic_name == imagecrawler_name:
-                return ic_class
-        return None
+        try:
+            return next(ic_class
+                        for ic_name, ic_class
+                        in self._list.items()
+                        if ic_name == imagecrawler_name)
+        except StopIteration:
+            return None
 
     @staticmethod
     def _load(entry: EntryPoint) -> Any:

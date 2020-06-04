@@ -212,10 +212,10 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
     def _find_query_hash(self) -> Optional[str]:
         query_hashes = self._get_queryhashfinder().find_hashes()
-        for query_hash in query_hashes:
-            if self._check_query_hash(query_hash):
-                return query_hash
-        return None
+        try:
+            return next(filter(self._check_query_hash, query_hashes))
+        except StopIteration:
+            return None
 
     _QUERY_HASH_LOCK = Lock()  # global lock. may be overwritten in subclass
     _query_hash: Optional[str] = None

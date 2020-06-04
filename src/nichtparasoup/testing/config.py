@@ -64,8 +64,7 @@ class DuplicateImagecrawlersException(Exception):
         self.duplicates = duplicates
 
     def __str__(self) -> str:  # pragma: no cover
-        return 'Duplicate crawler(s) found in config:\n\t' + '\n\t'.join(
-            str(imagecrawler) for imagecrawler in self.duplicates)
+        return 'Duplicate crawler(s) found in config:\n\t' + '\n\t'.join(map(str, self.duplicates))
 
 
 class ConfigTest:

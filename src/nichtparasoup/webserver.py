@@ -151,11 +151,11 @@ class WebServer:
         names_icons_list: List[Tuple[str, str]] = [
             (_type_module_name_str(imagecrawler), icon)
             for imagecrawler, icon
-            in [
+            in (
                 (imagecrawler, imagecrawler.info().icon_url)
                 for imagecrawler
                 in imagecrawlers
-            ]
+            )
             if icon
         ]
         # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/

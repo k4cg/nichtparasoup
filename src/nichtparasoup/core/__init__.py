@@ -74,10 +74,9 @@ class Crawler:
         is_image_addable = self.get_is_image_addable()
         image_added = self.get_image_added()
         images_crawled = self.imagecrawler.crawl()
-        for image_crawled in images_crawled:
-            addable = is_image_addable(image_crawled) if is_image_addable else True  # pylint: disable=not-callable
-            if not addable:
-                continue  # for
+        for image_crawled in (
+            filter(is_image_addable, images_crawled) if is_image_addable else images_crawled
+        ):
             self.images.add(image_crawled)  # pylint: disable=no-member  # false positive
             if image_added:
                 image_added(image_crawled)  # pylint: disable=not-callable
@@ -113,8 +112,11 @@ class CrawlerCollection(List[Crawler]):
         crawlers = self.copy()  # pylint: disable=no-member
         if not crawlers:
             return None
-        weights = [crawler.weight for crawler in crawlers]
-        return choices(crawlers, weights=weights, k=1)[0]
+        return choices(
+            crawlers,
+            weights=[crawler.weight for crawler in crawlers],
+            k=1
+        )[0]
 
 
 class NPCore:
@@ -147,7 +149,7 @@ class NPCore:
 
     def fill_up_to(self, to: int, on_refill: Optional[_OnFill], timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
         fill_treads: List[Thread] = []
-        for crawler in self.crawlers:  # pylint: disable=not-an-iterable
+        for crawler in self.crawlers.copy():  # pylint: disable=no-member
             fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, timeout), daemon=True)
             fill_treads.append(fill_tread)
             fill_tread.start()

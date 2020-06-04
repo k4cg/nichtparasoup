@@ -206,7 +206,7 @@ class ImageCrawlerTest:
         """
         images: Optional[ImageCollection] = None
         errors: List[BaseException] = []
-        for retry in range(retries + 1):
+        for retry in range(1 + retries):
             retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned
             try:
                 images = self.imagecrawler._crawl()  # pylint: disable=protected-access

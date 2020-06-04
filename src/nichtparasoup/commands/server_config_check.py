@@ -98,20 +98,21 @@ def probe_config(config: Config, *,
     if verbose:
         print_probed_erroneous(config_probe_results)
         print_probed_summary(config_probe_results, elapsed_seconds=config_probe_end - config_probe_start)
-    failures = [probed
-                for probed in config_probe_results  # pylint: disable=not-an-iterable
-                if probed.result.is_failure]
-    if failures:
-        raise ClickException('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
-            str(failed.imagecrawler) for failed in failures))
+    failed_imagecrawlers = [
+        probed.imagecrawler
+        for probed
+        in config_probe_results  # pylint: disable=not-an-iterable
+        if probed.result.is_failure
+    ]
+    if failed_imagecrawlers:
+        raise ClickException('ProbeError(s) occurred for:\n\t' + '\n\t'.join(map(str, failed_imagecrawlers)))
 
 
 def print_probed_erroneous(probe_results: ConfigProbeResults) -> None:  # pragma: no cover
     echo()
     ex_formatter = Formatter()
     term_width = get_terminal_size()[0]
-    probe_erroneous = [probed for probed in probe_results if probed.result.is_erroneous]
-    for probed in probe_erroneous:
+    for probed in filter(lambda probed: probed.result.is_erroneous, probe_results):
         error_color = _COLOR_FAILURE if probed.result.is_failure else _COLOR_WARNING
         result_type = 'ERROR' if probed.result.is_failure else 'WARNING'
         for error_num, error in enumerate(probed.result.errors):
@@ -130,34 +131,37 @@ class _ProbedSummaryType(Enum):
 
 
 class _ProbedSummaryCounter:
-    def __init__(self, color: str) -> None:  # pragma: no cover
-        self.value = 0
+    def __init__(self, color: str, value: int = 0) -> None:  # pragma: no cover
         self.color = color
+        self.value = value
 
 
 def print_probed_summary(probe_results: ConfigProbeResults, *,
                          elapsed_seconds: Optional[Union[int, float]]
                          ) -> None:  # pragma: no cover
     summary: Dict[_ProbedSummaryType, _ProbedSummaryCounter] = {
-        _ProbedSummaryType.failed: _ProbedSummaryCounter(_COLOR_FAILURE),
-        _ProbedSummaryType.passed: _ProbedSummaryCounter(_COLOR_SUCCESS),
-        _ProbedSummaryType.warned: _ProbedSummaryCounter(_COLOR_WARNING),
+        _ProbedSummaryType.failed: _ProbedSummaryCounter(
+            _COLOR_FAILURE,
+            len([None for probed in probe_results if probed.result.is_failure])
+        ),
+        _ProbedSummaryType.passed: _ProbedSummaryCounter(
+            _COLOR_SUCCESS,
+            len([None for probed in probe_results if not probed.result.is_failure])
+        ),
+        _ProbedSummaryType.warned: _ProbedSummaryCounter(
+            _COLOR_WARNING,
+            len([None for probed in probe_results if not probed.result.is_failure and probed.result.is_erroneous])
+        ),
     }
-    for probed in probe_results:
-        if probed.result.is_failure:
-            summary[_ProbedSummaryType.failed].value += 1
-        else:
-            summary[_ProbedSummaryType.passed].value += 1
-            if probed.result.is_erroneous:
-                summary[_ProbedSummaryType.warned].value += 1
     overall_result = _ProbedSummaryType.failed \
         if summary[_ProbedSummaryType.failed].value > 0 \
         else _ProbedSummaryType.passed
     summary_color = summary[overall_result].color
     summary_string_spacer = ' '
     summary_string = summary_string_spacer + ', '.join(
-        style(f'{counter.value} {type_.value}', fg=counter.color, bold=type_ == overall_result)
-        for type_, counter in summary.items()
+        style(f'{counter.value} {counter_type.value}', fg=counter.color, bold=counter_type == overall_result)
+        for counter_type, counter
+        in summary.items()
         if counter.value > 0
     ) + summary_string_spacer
     if elapsed_seconds is not None:

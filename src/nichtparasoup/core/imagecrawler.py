@@ -94,10 +94,10 @@ class BaseImageCrawler(ABC):
         For internal access to the config using `self._config` is encouraged
         """
         return ImageCrawlerConfig({
-            k: v
-            for k, v
+            key: value
+            for key, value
             in self._config.items()
-            if not k.startswith('_')
+            if not key.startswith('_')
         })
 
     config = property(fget=get_config)
