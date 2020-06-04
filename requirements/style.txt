@@ -17,7 +17,7 @@ isort[pyproject]==4.3.21  # via flake8-isort, pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via flake8, pylint
 mypy-extensions==0.4.3    # via mypy
-mypy==0.770               # via -r requirements/style.in
+mypy==0.780               # via -r requirements/style.in
 pep8-naming==0.10.0       # via -r requirements/style.in
 pycodestyle==2.6.0        # via flake8
 pyflakes==2.2.0           # via flake8

@@ -25,7 +25,7 @@ lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via flake8, pylint
 more-itertools==8.3.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
-mypy==0.770               # via -r requirements/style.in
+mypy==0.780               # via -r requirements/style.in
 packaging==20.4           # via pytest, tox
 pep8-naming==0.10.0       # via -r requirements/style.in
 pip-tools==5.2.0          # via -r requirements/dev.in
@@ -35,7 +35,7 @@ pycodestyle==2.6.0        # via autopep8, flake8
 pyflakes==2.2.0           # via flake8
 pylint==2.5.2             # via -r requirements/style.in
 pyparsing==2.4.7          # via packaging
-pytest==5.4.2             # via -r requirements/tests.in
+pytest==5.4.3             # via -r requirements/tests.in
 six==1.15.0               # via astroid, packaging, pip-tools, tox, virtualenv
 testfixtures==6.14.1      # via flake8-isort
 toml==0.10.1              # via autopep8, isort, pylint, tox
@@ -43,7 +43,7 @@ tox==3.15.1               # via -r requirements/dev.in
 typed-ast==1.4.1          # via astroid, flake8-annotations, mypy
 typing-extensions==3.7.4.2  # via mypy
 virtualenv==20.0.21       # via tox
-wcwidth==0.2.2            # via pytest
+wcwidth==0.2.3            # via pytest
 wrapt==1.12.1             # via astroid
 zipp==3.1.0               # via importlib-metadata, importlib-resources
 
