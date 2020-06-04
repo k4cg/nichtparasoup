@@ -29,9 +29,9 @@ def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None
         echo()
     if imagecrawler_info.config:
         echo('CONFIG')
-        mlen = max(len(k) for k in imagecrawler_info.config.keys())
+        mlen = max(map(len, imagecrawler_info.config.keys()))
         echo('\n'.join(
-            bull + f'{key:{mlen}}: {desc}'
+            f'{bull} {key:{mlen}}: {desc}'
             for key, desc
             in imagecrawler_info.config.items()
         ))

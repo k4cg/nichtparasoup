@@ -1,13 +1,13 @@
-# Development
+# developing _nichtparasoup_'s web-ui
 
-_TODO_
+**TODO**
 
 This documentation is work in progress.   
 Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 
 ## Compiling the sources
 
-_TODO_
+**TODO**
 
 Sources are not available, yet.
 See [the issue on github](https://github.com/k4cg/nichtparasoup/issues/183). 

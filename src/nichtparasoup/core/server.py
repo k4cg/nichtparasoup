@@ -1,15 +1,19 @@
-__all__ = ["Server", "ServerStatistics", "ServerStatus", "ServerRefiller"]
+__all__ = ["Server", "ImageResponse", "ResetResponse",
+           "ServerStatistics",
+           "ServerStatus", "BlacklistStatus", "CrawlerStatus",
+           "ServerRefiller",
+           ]
 
 from copy import copy
 from sys import getsizeof
 from threading import Event, Lock, Thread
 from time import sleep, time
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Set, Union
 from weakref import ref as weak_ref
 
-from .. import __version__ as nichtparasoup_version
 from .._internals import _log, _type_module_name_str
 from . import Crawler, NPCore
+from .image import Image
 
 _Timestamp = int
 """Time in seconds since the Epoch
@@ -23,6 +27,18 @@ class ServerStatistics:
         self.count_reset: int = 0
         self.time_last_reset: Optional[_Timestamp] = None
         self.cum_blacklist_on_flush: int = 0
+
+
+class ImageResponse:
+    def __init__(self, image: Image, crawler: Crawler) -> None:
+        self.image = image
+        self.crawler = crawler
+
+
+class ResetResponse:
+    def __init__(self, requested: bool, timeout: int) -> None:
+        self.requested = requested
+        self.timeout = timeout
 
 
 class Server:
@@ -46,7 +62,7 @@ class Server:
         self._locks = _ServerLocks()
         self.__running = False
 
-    def get_image(self) -> Optional[Dict[str, Any]]:
+    def get_image(self) -> Optional[ImageResponse]:
         crawler = self.core.crawlers.get_random()
         if not crawler:
             return None
@@ -55,16 +71,7 @@ class Server:
             return None
         with self._locks.stats_get_image:
             self.stats.count_images_served += 1
-        return dict(
-            uri=image.uri,
-            is_generic=image.is_generic,
-            source=image.source,
-            more=image.more,
-            crawler=dict(
-                id=id(crawler),
-                type=_type_module_name_str(type(crawler.imagecrawler)),
-            ),
-        )
+        return ImageResponse(image, crawler)
 
     @staticmethod
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
@@ -72,10 +79,9 @@ class Server:
         if refilled > 0:
             _log('info', 'refilled by %d via %s', refilled, crawler.imagecrawler)
 
-    def refill(self) -> Dict[str, bool]:
+    def refill(self) -> None:
         with self._locks.refill:
             self.core.fill_up_to(self.keep, self._log_refill_crawler)
-            return dict(refilled=True)
 
     def _reset(self) -> None:
         with self._locks.reset:
@@ -83,7 +89,7 @@ class Server:
             self.stats.count_reset += 1
             self.stats.time_last_reset = int(time())
 
-    def request_reset(self) -> Dict[str, Any]:
+    def request_reset(self) -> ResetResponse:
         if not self.is_alive():
             request_valid = True
             timeout = 0
@@ -97,10 +103,7 @@ class Server:
             timeout = timeout_base if request_valid else (reset_after - now)
         if request_valid:
             self._reset()
-        return dict(
-            requested=request_valid,
-            timeout=timeout,
-        )
+        return ResetResponse(request_valid, timeout)
 
     def start(self) -> None:
         with self._locks.run:
@@ -129,57 +132,57 @@ class Server:
             self.__running = False
 
 
+class _CollectionStatus:
+    def __init__(self, collection: Union[List[Any], Set[Any]]) -> None:
+        self.len = len(collection)
+        self.size = getsizeof(collection)
+
+
 class ServerStatus:
-    """
-    This class intended to be a stable interface.
-    All public methods are like this: Callable[[Server], Union[List[SomeBaseType], Dict[str, SomeBaseType]]]
-    All public methods must be associated with stat(u)s!
-    """
+    class _Reset:
+        def __init__(self, count: int, since: int) -> None:
+            self.count = count
+            self.since = since
 
-    @staticmethod
-    def server(server: Server) -> Dict[str, Any]:
-        stats = server.stats
+    class _Images:
+        def __init__(self, served: int, crawled: int) -> None:
+            self.served = served
+            self.crawled = crawled
+
+    def __init__(self, server: Server) -> None:
         now = int(time())
-        uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
-        return dict(
-            version=nichtparasoup_version,
-            uptime=uptime,
-            reset=dict(
-                count=stats.count_reset,
-                since=(now - stats.time_last_reset) if stats.time_last_reset else uptime,
-            ),
-            images=dict(
-                served=stats.count_images_served,
-                crawled=stats.cum_blacklist_on_flush + len(server.core.blacklist),
-            ),
+        stats = server.stats
+        self.uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
+        self.reset = self._Reset(
+            stats.count_reset,
+            (now - stats.time_last_reset) if stats.time_last_reset else self.uptime
+        )
+        self.images = self._Images(
+            stats.count_images_served,
+            stats.cum_blacklist_on_flush + len(server.core.blacklist)
         )
 
-    @staticmethod
-    def blacklist(server: Server) -> Dict[str, Any]:
-        blacklist = server.core.blacklist.copy()
-        return dict(
-            len=len(blacklist),
-            size=getsizeof(blacklist),
-        )
 
-    @staticmethod
-    def crawlers(server: Server) -> Dict[int, Dict[str, Any]]:
-        status = dict()
-        for crawler in server.core.crawlers.copy():
-            crawler_id = id(crawler)
-            crawler = copy(crawler)
-            images = crawler.images.copy()
-            status[crawler_id] = dict(
-                name=crawler.imagecrawler.internal_name,
-                weight=crawler.weight,
-                type=_type_module_name_str(type(crawler.imagecrawler)),
-                config=crawler.imagecrawler.get_config(),  # just a dict
-                images=dict(
-                    len=len(images),
-                    size=getsizeof(images),
-                ),
-            )
-        return status
+class BlacklistStatus(_CollectionStatus):
+    def __init__(self, server: Server) -> None:
+        super().__init__(server.core.blacklist)
+
+
+class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler']):
+    class _Crawler:
+        def __init__(self, crawler: Crawler) -> None:
+            self.name = crawler.imagecrawler.internal_name
+            self.weight = crawler.weight
+            self.type = _type_module_name_str(type(crawler.imagecrawler))
+            self.config = crawler.imagecrawler.get_config()
+            self.images = _CollectionStatus(crawler.images)
+
+    def __init__(self, server: Server) -> None:
+        super().__init__(
+            (id(crawler), self._Crawler(crawler))
+            for crawler
+            in server.core.crawlers
+        )
 
 
 class ServerRefiller(Thread):

@@ -4,7 +4,15 @@
 #
 #    pip-compile examples/nichtparasoup-imagecrawler-plugin/requirements/style.in
 #
+astroid==2.4.1            # via pylint
+isort==4.3.21             # via pylint
+lazy-object-proxy==1.4.3  # via astroid
+mccabe==0.6.1             # via pylint
 mypy-extensions==0.4.3    # via mypy
-mypy==0.770               # via -r examples/nichtparasoup-imagecrawler-plugin/requirements/style.in
-typed-ast==1.4.1          # via mypy
+mypy==0.780               # via -r examples/nichtparasoup-imagecrawler-plugin/requirements/style.in
+pylint==2.5.2             # via -r examples/nichtparasoup-imagecrawler-plugin/requirements/style.in
+six==1.15.0               # via astroid
+toml==0.10.1              # via pylint
+typed-ast==1.4.1          # via astroid, mypy
 typing-extensions==3.7.4.2  # via mypy
+wrapt==1.12.1             # via astroid

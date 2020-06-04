@@ -1,6 +1,6 @@
 # requirements
 
-see [install docs](install.md) first.
+see [install docs](index.md) first.
 
 This package requires `Python>=3.6`!
 

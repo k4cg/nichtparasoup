@@ -22,9 +22,9 @@ class Reddit(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='A Crawler for an arbitrary SubReddit of https://www.reddit.com',
-            config=dict(
-                subreddit='the SubReddit to crawl',
-            ),
+            config={
+                'subreddit': 'the SubReddit to crawl',
+            },
             icon_url='https://www.redditstatic.com/desktop2x/img/favicon/apple-icon-120x120.png',
         )
 

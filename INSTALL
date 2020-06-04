@@ -1,5 +1,1 @@
-just run
-
-  python3 -m pip install .
-
-for more details, see docs/install.md
+see file: docs/install/index.md

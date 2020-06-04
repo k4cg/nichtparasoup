@@ -5,23 +5,41 @@
 ! upcoming version will be `3.0.0` of __nichtparasoup__ !
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+**TODO** write the latest changes
+
 * Breaking changes
-  * Requires `python>=3.6` (was `python>=3.5`) now.
-  * CommandLine Interface overhaul. See cli help via `nichtparasoup --help`.
-    * CLI is done via `click` now.
+  * Requires `python>=3.6` -- was `python>=3.5`.
+  * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
+    * `python3 -m nichtparasoup` was moved to `python3 -m nichtparasoup.cli`.
+    * CLI is done via [`click`](https://click.palletsprojects.com) now (was done via `argparse` before).
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
-    * Proper subcommands are used now.
-  * API: `Crawler.type` of to `status/crawlers` API is now a fill qualified class name.
-      See the [docs](docs/web_api/status_crawlers.md).  
+    * Proper subcommands are used now.  
+      Also available via `python3 -m nichtparasoup.commands.*` - see in added feature section below.
+  * Web-API: 
+    * `version` of `/status/server` was moved to `/status`.
+    * `Crawler.type` of `/status/crawlers` is now a full qualified class name.
+      See the [docs](docs/web_api/status/crawlers.md).  
       The old short-typed version is still available as the optional `Crawler.name` 
       (optional means: can be missing or `null`, if manually added).
   * Package `nichtparasoup.imagecrawler` was renamed to `nichtparasoup.imagecrawlers`.
     Everything needed to implement an imagecrawler was moved to a clean module `nichtparasoup.imagecrawler`.
   * Class `nichtparasoup.testing.config.ConfigFileTest` was moved to `nichtparasoup.testing.configfile.ConfigFileTest`.
+    Also it behaves different now. Read the code and annotations for a deeper insight.
+  * Some Class methods of `nichtparasoup.core.server.Server` got reworked return types:
+    * `Server.get_image()` returns optional `nichtparasoup.core.server.ImageResponse` -- was optional `dict`.
+    * `Server.refill()` returns `None` -- was `dict`.
+    * `Server.request_reset()` returns `nichtparasoup.core.server.ResetResponse` -- was `dict`.
+  * Class `nichtparasoup.core.server.Status` was removed.  
+    Its former static methods that returned dictionaries were reworked to be DataClasses:
+    * `nichtparasoup.core.server.ServerStatus`    -- replaces `.Status.server()`.
+    * `nichtparasoup.core.server.CrawlerStatus`   -- replaces `.Status.crawlers()`.
+    * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
 * Changes
+  * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
+  * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
-      `nichtparasoup.__version__` is no longer a module but a string.
+    `nichtparasoup.__version__` is no longer a module but a string.
   * Package `nichtparasoup.testing` got a huge overhaul. 
     * Classes do no longer implement `unittets.Testcase` anymore.
     * Functionality was split into chunks for easier use.
@@ -37,42 +55,51 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * `nichtparasoup.core.server.type_module_name_str()`
   * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
 * Added
-  * API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status_crawlers.md).
-  * Public CLI modules `nichtparasoup.commands.*` for use via `python3 -m`:
+  * Web-API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status/crawlers.md).
+  * Public CLI package `nichtparasoup.cli` for use via `python3 -m`.
+  * Public CLI command modules for use via `python3 -m`:
     * `nichtparasoup.commands.imagecrawler_desc`
     * `nichtparasoup.commands.imagecrawler_list`
     * `nichtparasoup.commands.server_config_check`
     * `nichtparasoup.commands.server_config_dump_defaults`
     * `nichtparasoup.commands.server_run`
-  * Public CLI module `nichtparasoup.cli.main` for use via `python3 -m`.
   * Class `nichtparasoup.webserver.WebServer` got an optional argument `developer_mode` (default: `False`)
     which enables an insecure web-developer mode and sets
     [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) to "*".
   * Class `nichtparasoup.testing.config.ConfigTest` was added.
   * Property `nichtparasoup.core.server.Server.stats` was made available to the public.
-  * Implementations of `nichtparasoup.core.imagecrawer.BaseImageCrawler`
-    * Function `get_internal_name()` to return the internal name.
+  * New classes in `nichtparasoup.core.server` were added to 
+    represent response types of `nichtparasoup.core.server.Server`'s methods:
+    * `.ResetResponse` represents response of `.Server.request_reset()`.
+    * `.ImageResponse` represents response of `.Server.get_image()`.
+  * New DataClasses were added to module `nichtparasoup.core.server`:
+    * `.ServerStatus`
+    * `.CrawlerStatus`
+    * `.BlacklistStatus`
+  * Implementations of `nichtparasoup.core.imagecrawer.BaseImageCrawler` got new features:
+    * Method `.get_internal_name()` to return the internal name.
       If instance was made via `nichtparasoup.config.get_imagecrawler()` the value is set
       to represent the "name" from the config.
-    * Property `internal_name` - read-only shortcut for `get_internal_name()`.
-    * Function `__str__()` .  
-      Returns `<NamedImagecrawler {INTERNAL_NAME} {CONFIG}>` if `internal_name` is set, 
+    * Property `.internal_name` - read-only shortcut for method `.get_internal_name()`.
+    * Method `.__str__()` .  
+      Returns `<NamedImagecrawler {INTERNAL_NAME} {CONFIG!r}>` if `internal_name` is set, 
       otherwise the behaviour falls back to `__repr__()`.
 * Misc
   * Build process is now isolated and conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
     *ATTENTION*: `pip install`'s `--editable` flag might requires the `--no-build-isolation` flag.
-  * Improved some [docs](docs).
+  * Improved some [docs](docs). Added an `index.md` to all folders. restructured some docs.
   * Internal
     * All internal imports were made relative (again).
     * Logging reviewed, uses %-strings as params, now.
     * `try`/`except` got some overhaul to cover needed parts, only.
-    * CLI is now powered by [`click`](https://click.palletsprojects.com).
-      Was made via `argparse` before.
   * Removed `ddt` from the testing dependencies. Closes [issue #233](https://github.com/k4cg/nichtparasoup/issues/233).
-  * Version-bumped some dependencies
+  * Version-bumped some dependencies, pinned dev dependencies via `pip-compile`.
   * Added some more tests.
+  * improved `venv` support when it comes to testing.
+  * Tests via `tox` were split.
+    Code style tests are done via own test named `toxstyle` now (was part of standard tests).
   
 
 

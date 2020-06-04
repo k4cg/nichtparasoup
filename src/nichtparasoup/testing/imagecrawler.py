@@ -9,7 +9,7 @@ from http.client import HTTPResponse
 from os.path import join as path_join
 from pathlib import Path
 from time import sleep
-from typing import Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 from unittest import TestCase
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
@@ -36,9 +36,10 @@ class FileFetcher(RemoteFetcher):
     """
 
     def __init__(self, known_files: Dict[_Uri, _FilePath], *,
-                 base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None
+                 base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None,
+                 **kwargs: Any
                  ) -> None:  # pragma: no cover
-        super().__init__()
+        super().__init__(**kwargs)
         self._known: Dict[UrlParseResult, _FilePath] = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
             for uri, file
@@ -161,39 +162,57 @@ See :ref:``ImageCrawlerTest.probe``
 
 
 class ImagecrawlerProbeResult:
-    def __init__(self, images: Optional[ImageCollection], errors: List[BaseException]) -> None:  # pragma: no cover
+    """ImagecrawlerProbe result
+
+    If ``images`` is None, this is obviously a failure.
+    Errors are not bound to the absence of ``images``.
+    There might have happened ``errors`` on the way to get ``images``.
+    """
+
+    def __init__(self,
+                 images: Optional[ImageCollection],
+                 errors: List[BaseException]
+                 ) -> None:  # pragma: no cover
         self.images = images
         self.errors = errors
 
     @property
     def is_failure(self) -> bool:
-        """Is this a failure?"""
+        """Is this a failure?
+        """
         return self.images is None
+
+    @property
+    def is_erroneous(self) -> bool:
+        """Had this any errors? Regardless of a final success.
+        """
+        return any(self.errors)
 
 
 class ImageCrawlerTest:
+    def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
+        self.imagecrawler = imagecrawler
 
-    def probe(self, imagecrawler: BaseImageCrawler, *,
+    def probe(self, *,
               retries: int = PROBE_RETRIES_DEFAULT,
               retry_delay: float = PROBE_DELAY_DEFAULT,
               retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
               ) -> ImagecrawlerProbeResult:
         """
-        :param imagecrawler:
         :param retries: number of retries if probing failed
         :param retry_delay: delay between retries
         :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
         :return: images and errors
         """
-        images = None
+        images: Optional[ImageCollection] = None
         errors: List[BaseException] = []
-        for retry in range(retries + 1):
-            retry > 0 and sleep(retry_delay)  # type: ignore
+        for retry in range(1 + retries):
+            retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned
             try:
-                images = imagecrawler._crawl()
-            except BaseException as ex:
+                images = self.imagecrawler._crawl()  # pylint: disable=protected-access
+            except BaseException as ex:  # pylint: disable=broad-except
                 errors.append(ex)
-                if retry_callback and not retry_callback(imagecrawler, ex):
+                if retry_callback and not retry_callback(self.imagecrawler, ex):
                     break  # for .. in ..
             else:
                 break  # for .. in ..

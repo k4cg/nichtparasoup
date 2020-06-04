@@ -6,7 +6,7 @@ import pytest  # type: ignore
 from nichtparasoup.testing.configfile import ConfigFileTest
 
 
-class TestShippedExampleConfigFile(ConfigFileTest):
+class TestShippedExampleConfigFile:
     __EXAMPLE_DIR = join(dirname(__file__), '..', '..', 'examples')
     __EXAMPLE_FILES = [basename(f) for f in glob(join(__EXAMPLE_DIR, '*.*'), recursive=False)]
 
@@ -18,4 +18,4 @@ class TestShippedExampleConfigFile(ConfigFileTest):
     @pytest.mark.parametrize('filename', __EXAMPLE_FILES)  # type: ignore
     def test_example(self, filename: str) -> None:
         file = join(self.__EXAMPLE_DIR, filename)
-        self.check_file(file)
+        ConfigFileTest(file).check_file()

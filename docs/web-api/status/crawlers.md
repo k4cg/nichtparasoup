@@ -35,7 +35,7 @@ example response:
 ```
 
 
-## `<id>`
+## key: `<id>`
 
 - a crawlers id 
 
@@ -76,5 +76,5 @@ example response:
 
 ### `size`
 
-- mow many bytes takes the image list?
+- how many bytes takes the image list?
 - type: integer

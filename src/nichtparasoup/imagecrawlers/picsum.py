@@ -1,8 +1,8 @@
+__all__ = ["Picsum"]
+
 from typing import Any, Dict
 
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
-
-__all__ = ["Picsum"]
 
 
 class Picsum(BaseImageCrawler):
@@ -12,10 +12,10 @@ class Picsum(BaseImageCrawler):
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
             description='Find images from https://picsum.photos',
-            config=dict(
-                width='how many pixels of the image to find should be wide',
-                height='how many pixels of the image to find should be high',
-            ),
+            config={
+                'width': 'how many pixels of the image to find should be wide',
+                'height': 'how many pixels of the image to find should be high',
+            },
             icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png',
         )
 
@@ -45,9 +45,8 @@ class Picsum(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        config = self.get_config()
+        image_uri = self._get_image_uri(**self.get_config())  # pylint: disable=not-a-mapping  # false-positive
         for _ in range(0, self._bunch):
-            image_uri = self._get_image_uri(**config)  # pylint: disable=not-a-mapping  # false-positive
             images.add(  # pylint: disable=no-member # false-positive
                 Image(
                     uri=image_uri,

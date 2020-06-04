@@ -48,7 +48,7 @@ class Crawler:
             self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
         else:
             raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
-        # TODO: add function and other types - and write proper tests for it
+        # TODO: add function/lambda support - and write proper tests for it
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
         return self._is_image_addable_wr() if self._is_image_addable_wr else None
@@ -61,7 +61,7 @@ class Crawler:
             self._image_added_wr = WeakMethod(image_added)  # type: ignore
         else:
             raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
-        # TODO: add function and other types - and write proper tests for it
+        # TODO: add function/lambda support - and write proper tests for it
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
         return self._image_added_wr() if self._image_added_wr else None
@@ -74,10 +74,9 @@ class Crawler:
         is_image_addable = self.get_is_image_addable()
         image_added = self.get_image_added()
         images_crawled = self.imagecrawler.crawl()
-        for image_crawled in images_crawled:
-            addable = is_image_addable(image_crawled) if is_image_addable else True  # pylint: disable=not-callable
-            if not addable:
-                continue  # for
+        for image_crawled in (
+            filter(is_image_addable, images_crawled) if is_image_addable else images_crawled
+        ):
             self.images.add(image_crawled)  # pylint: disable=no-member  # false positive
             if image_added:
                 image_added(image_crawled)  # pylint: disable=not-callable
@@ -110,11 +109,14 @@ class Crawler:
 class CrawlerCollection(List[Crawler]):
 
     def get_random(self) -> Optional[Crawler]:
-        crawlers = self.copy()
+        crawlers = self.copy()  # pylint: disable=no-member
         if not crawlers:
             return None
-        weights = [crawler.weight for crawler in crawlers]
-        return choices(crawlers, weights=weights, k=1)[0]
+        return choices(
+            crawlers,
+            weights=[crawler.weight for crawler in crawlers],
+            k=1
+        )[0]
 
 
 class NPCore:
@@ -147,7 +149,7 @@ class NPCore:
 
     def fill_up_to(self, to: int, on_refill: Optional[_OnFill], timeout: float = _FILLUP_TIMEOUT_DEFAULT) -> None:
         fill_treads: List[Thread] = []
-        for crawler in self.crawlers:  # pylint: disable=not-an-iterable
+        for crawler in self.crawlers.copy():  # pylint: disable=no-member
             fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, timeout), daemon=True)
             fill_treads.append(fill_tread)
             fill_tread.start()

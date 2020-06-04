@@ -16,9 +16,9 @@ class Echo(BaseImageCrawler):
                 Not an actual crawler.
                 More like an Parrot that is trained to repeat what you tell it to say.
                 ''').strip(),
-            config=dict(
-                image_uri='the URI of the image to "find"',
-            ),
+            config={
+                'image_uri': 'the URI of the image to "find"',
+            },
             # does not have an icon
         )
 

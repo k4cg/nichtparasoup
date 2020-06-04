@@ -94,10 +94,10 @@ class BaseImageCrawler(ABC):
         For internal access to the config using `self._config` is encouraged
         """
         return ImageCrawlerConfig({
-            k: v
-            for k, v
+            key: value
+            for key, value
             in self._config.items()
-            if not k.startswith('_')
+            if not key.startswith('_')
         })
 
     config = property(fget=get_config)
@@ -116,7 +116,7 @@ class BaseImageCrawler(ABC):
             try:
                 crawled = self._crawl()
             except Exception as ex:  # pylint: disable=broad-except
-                _log('debug', 'Error during crawling %r: %s', self, ex, exc_inf=ex)
+                _log('debug', 'Error during crawling %r: %s', self, ex, exc_info=ex)
                 _log('error', 'Handled an error during crawling %s', self)
                 return ImageCollection()
             else:
@@ -135,12 +135,12 @@ class BaseImageCrawler(ABC):
                 You may want write a long description of the ImageCrawler. Feel free to do so.
                 This is the place where you can do this.
                 ''').strip(),
-                config=dict(
+                config={
                     # leave the dict empty, if there is nothing to configure. or just don't pass a config at all.
-                    param1='purpose & meaning of param1',
+                    'param1': 'purpose & meaning of param1',
                     # ...
-                    paramN='purpose & meaning of paramN',
-                ),
+                    'paramN': 'purpose & meaning of paramN',
+                },
                 icon_url='https://my.imagesource.net/favicon.png'
             )
         """
@@ -184,7 +184,10 @@ class RemoteFetcher:
         'User-Agent': 'NichtParasoup',
     }
 
-    def __init__(self, timeout: float = 10.0, headers: Optional[Dict[str, str]] = None) -> None:  # pragma: no cover
+    def __init__(self, *,
+                 timeout: float = 10.0,
+                 headers: Optional[Dict[str, str]] = None
+                 ) -> None:  # pragma: no cover
         self._timeout = timeout
         self._headers = self._HEADERS_DEFAULT.copy()
         if headers:
@@ -229,7 +232,7 @@ class RemoteFetchError(Exception):
 
 
 class ImageRecognizer:
-    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg'}
+    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg', '.webp'}
 
     def path_is_image(self, uri: _Uri) -> bool:
         return PurePath(

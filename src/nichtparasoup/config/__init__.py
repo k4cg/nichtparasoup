@@ -40,10 +40,10 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     imagecrawler_config = config_crawler['config']
     try:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
-    except Exception as e:
-        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from e
+    except Exception as ex:
+        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from ex
     else:
-        imagecrawler._np_name = imagecrawler_name
+        imagecrawler._np_name = imagecrawler_name  # pylint: disable=protected-access
         return imagecrawler
 
 
@@ -52,11 +52,11 @@ def parse_yaml_file(file_path: _FilePath) -> Config:
     _schema = make_schema(SCHEMA_FILE, parser='ruamel')
     yamale_validate(_schema, _data, strict=True)
     config: Config = _data[0][0]
-    config.setdefault('logging', dict())
+    config.setdefault('logging', {})
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
         config_crawler.setdefault("weight", 1)
-        config_crawler.setdefault('config', dict())
+        config_crawler.setdefault('config', {})
     return config
 
 

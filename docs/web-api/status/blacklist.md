@@ -26,5 +26,5 @@ example response:
 
 ## `size`
 
-- how many bythes is the blacklist large?
+- how many bytes is the blacklist large?
 - type: integer

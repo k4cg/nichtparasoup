@@ -1,6 +1,6 @@
 __all__ = ["WebServer"]
 
-from json import dumps as json_encode
+from json import JSONEncoder
 from os.path import dirname, join as path_join
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Type, Union
 
@@ -12,22 +12,32 @@ from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Request, Response
 
+from . import __version__ as nichtparasoup_version
 from ._internals import _log, _type_module_name_str
 from .core.imagecrawler import BaseImageCrawler
-from .core.server import Server, ServerStatus
+from .core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus
 
 
-class JsonResponse(Response):
+class _SimpleJsonEncoder(JSONEncoder):
+    def default(self, o: Any) -> Any:
+        if hasattr(o, '__dict__'):
+            return o.__dict__
+        return super().default(o)
+
+
+class _SimpleJsonResponse(Response):  # pylint: disable=too-many-ancestors
+    _json_encoder = _SimpleJsonEncoder()
+
     def __init__(self,
-                 response: Optional[Any] = None,
+                 response: Any,
                  status: Optional[Union[str, int]] = None,
                  headers: Optional[Union[Headers, Mapping[str, str], Sequence[Tuple[str, str]]]] = None,
                  mimetype: Optional[str] = 'application/json',
                  content_type: Optional[str] = 'application/json',
                  direct_passthrough: bool = False
-                 ) -> None:
+                 ) -> None:  # pragma: no cover
         super().__init__(
-            response=json_encode(response),
+            response=self._json_encoder.encode(response),
             status=status,
             headers=headers,
             mimetype=mimetype,
@@ -97,30 +107,40 @@ class WebServer:
         forward.autocorrect_location_header = False
         return forward
 
-    def on_get(self, _: Request) -> Response:
-        image = self.imageserver.get_image()
-        return JsonResponse(image)
+    def on_get(self, _: Request) -> Union[_SimpleJsonResponse, NotFound]:
+        response = self.imageserver.get_image()
+        return _SimpleJsonResponse({
+            'uri': response.image.uri,
+            'is_generic': response.image.is_generic,
+            'source': response.image.source,
+            'more': response.image.more,
+            'crawler': {
+                'id': id(response.crawler),
+                'type': _type_module_name_str(type(response.crawler.imagecrawler)),
+            },
+        }) if response else NotFound()
 
-    _STATUS_WHATS = dict(
-        server=ServerStatus.server,
-        blacklist=ServerStatus.blacklist,
-        crawlers=ServerStatus.crawlers,
-    )
+    _STATUS_WHATS = {
+        'server': ServerStatus,
+        'blacklist': BlacklistStatus,
+        'crawlers': CrawlerStatus,
+    }
 
-    def on_status(self, _: Request) -> Response:
-        status = {what: getter(self.imageserver) for what, getter in self._STATUS_WHATS.items()}
-        return JsonResponse(status)
+    def on_status(self, _: Request) -> _SimpleJsonResponse:
+        response = {what: status_type(self.imageserver) for what, status_type in self._STATUS_WHATS.items()}
+        response['version'] = nichtparasoup_version
+        return _SimpleJsonResponse(response)
 
-    def on_status_what(self, _: Request, what: str) -> Response:
-        status_what = self._STATUS_WHATS.get(what)
-        if not status_what:
-            raise NotFound()
-        status = status_what(self.imageserver)
-        return JsonResponse(status)
+    def on_status_what(self, _: Request, what: str) -> Union[NotFound, _SimpleJsonResponse]:
+        status_type = self._STATUS_WHATS.get(what)
+        return _SimpleJsonResponse(status_type(self.imageserver)) if status_type else NotFound()
 
-    def on_reset(self, _: Request) -> Response:
+    def on_reset(self, _: Request) -> _SimpleJsonResponse:
         reset = self.imageserver.request_reset()
-        return JsonResponse(reset)
+        return _SimpleJsonResponse({
+            'requested': reset.requested,
+            'timeout': reset.timeout,
+        })
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers: Set[Type[BaseImageCrawler]] = {
@@ -131,11 +151,11 @@ class WebServer:
         names_icons_list: List[Tuple[str, str]] = [
             (_type_module_name_str(imagecrawler), icon)
             for imagecrawler, icon
-            in [
+            in (
                 (imagecrawler, imagecrawler.info().icon_url)
                 for imagecrawler
                 in imagecrawlers
-            ]
+            )
             if icon
         ]
         # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
