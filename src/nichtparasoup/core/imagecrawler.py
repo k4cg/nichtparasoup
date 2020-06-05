@@ -60,7 +60,7 @@ class BaseImageCrawler(ABC):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)  # intended to be immutable from now on
-        self._reset_before_next_crawl = True
+        self._reset_before_next_crawl: bool = False
         self._crawl_lock = Lock()
         _log('debug', 'crawler initialized: %r', self)
 

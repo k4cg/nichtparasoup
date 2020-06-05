@@ -37,6 +37,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 * Changes
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
   * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
+  * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
     `nichtparasoup.__version__` is no longer a module but a string.
