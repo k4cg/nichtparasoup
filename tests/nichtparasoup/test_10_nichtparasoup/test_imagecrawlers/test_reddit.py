@@ -146,6 +146,7 @@ class RedditCrawlTest(unittest.TestCase):
     def test_crawl(self) -> None:
         # arrange
         crawler = Reddit(subreddit='aww')
+        self.assertFalse(crawler.is_exhausted())
         crawler._remote_fetcher = _FILE_FETCHER
         expected_after = 't3_dqx42l'
         expected_images = ImageCollection()
@@ -191,6 +192,7 @@ class RedditCrawlTest(unittest.TestCase):
         # arrange
         crawler = Reddit(subreddit='awwwwwwww')
         crawler._remote_fetcher = _FILE_FETCHER
+        self.assertFalse(crawler.is_exhausted())
         # act
         crawler._crawl()
         # assert

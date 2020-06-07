@@ -176,6 +176,7 @@ class TestPr0grammCrawl:
         # arrange
         crawler = Pr0gramm(promoted=True, tags='!s:15000')
         crawler._remote_fetcher = _FILE_FETCHER
+        assert crawler.is_exhausted() is False
         # act
         crawler.crawl()
         # assert
@@ -185,6 +186,7 @@ class TestPr0grammCrawl:
         # arrange
         crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
         crawler._remote_fetcher = _FILE_FETCHER
+        assert crawler.is_exhausted() is False
         # act
         crawler.crawl()
         # assert
@@ -217,6 +219,7 @@ class TestPr0grammCrawl:
         # act
         images = crawler._crawl()
         # assert
+        assert crawler.is_exhausted()
         assert images == expected_images
         for expected_image in expected_images:
             for image in images:

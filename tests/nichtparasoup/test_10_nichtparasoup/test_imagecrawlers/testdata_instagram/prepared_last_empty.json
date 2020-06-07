@@ -1,0 +1,31 @@
+{
+  "@INFO": [
+    "this file was crafted for the following purpose:",
+    "* be valid vor every api response parser of instagram - hastag & profile",
+    "* have an empty 'edges' set",
+    "* be the last page of this response set paging"
+  ],
+  "status": "ok",
+  "data": {
+    "hashtag": {
+      "edge_hashtag_to_media": {
+        "count": 0,
+        "edges": [],
+        "page_info": {
+          "has_next_page": false,
+          "end_cursor": "faked_end"
+        }
+      }
+    },
+    "user": {
+      "edge_owner_to_timeline_media": {
+        "count": 0,
+        "edges": [],
+        "page_info": {
+          "has_next_page": false,
+          "end_cursor": "faked_end"
+        }
+      }
+    }
+  }
+}
