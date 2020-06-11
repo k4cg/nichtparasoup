@@ -27,7 +27,7 @@ jobs:
           python -m pip install --upgrade wheel
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade pip
-          python -m pip install --upgrade 'tox>=3.14'
+          python -m pip install --upgrade -r requirements/tox.txt
       - name: Test nichtparasoup
         run: python -m tox -r -e py38 -e style,py38
       - name: 'Test examples::nichtparasoup-imagecrawler-plugin'
@@ -52,7 +52,7 @@ jobs:
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade pip
           python -m pip install --upgrade pep517
-      - name: Build and publish
+      - name: Build package
         run: |
           rm -rf build dist
           python -m pep517.build --source --binary --out-dir dist .
