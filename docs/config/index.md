@@ -21,6 +21,7 @@ imageserver:
 crawlers:
   - name: "Reddit"
     weight: 3
+    restart_at_front_when_exhausted: True
     config:
       subreddit: 'EarthPorn'
   - name: "Picsum"
@@ -80,7 +81,14 @@ logging:
 - type: integer or float
 - constraint: > 0
 - optional
-- default: 1
+- default: 1.0
+
+### `restart_at_front_when_exhausted`
+
+- force the crawler to start at front, when the end of the source was reached.
+- type: bool
+- optional
+- default: False
 
 ### `config`
 

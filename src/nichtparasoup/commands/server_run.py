@@ -22,7 +22,10 @@ def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     for crawler_config in config['crawlers']:
         imagecrawler = get_imagecrawler(crawler_config)
         if not imageserver.core.has_imagecrawler(imagecrawler):
-            imageserver.core.add_imagecrawler(imagecrawler, crawler_config['weight'])
+            imageserver.core.add_imagecrawler(
+                imagecrawler,
+                weight=crawler_config['weight'],
+                restart_at_front_when_exhausted=crawler_config['restart_at_front_when_exhausted'])
     WebServer(
         imageserver,
         config['webserver']['hostname'], config['webserver']['port'],

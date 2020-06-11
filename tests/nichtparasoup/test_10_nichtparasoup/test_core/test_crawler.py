@@ -1,6 +1,9 @@
 import unittest
+from typing import List
 from unittest.mock import MagicMock
 from weakref import ref as weak_ref
+
+import pytest  # type: ignore
 
 from nichtparasoup.core import Crawler
 from nichtparasoup.core.image import Image, ImageCollection
@@ -30,7 +33,7 @@ class CrawlerIsImageAddableTestCase(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.crawler = Crawler(MockableImageCrawler(), 1)
+        self.crawler = Crawler(MockableImageCrawler())
 
     def tearDown(self) -> None:
         del self.crawler
@@ -91,7 +94,7 @@ class CrawlerImageAddedTestCase(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.crawler = Crawler(MockableImageCrawler(), 1)
+        self.crawler = Crawler(MockableImageCrawler())
 
     def tearDown(self) -> None:
         del self.crawler
@@ -153,7 +156,7 @@ class CrawlerCrawlCase(unittest.TestCase):
         self.images = ImageCollection({Image(uri='1', source='test'), Image(uri='2', source='test')})
         self.imagecrawler = MockableImageCrawler()
         self.imagecrawler.crawl = MagicMock(return_value=self.images)  # type: ignore
-        self.crawler = Crawler(self.imagecrawler, 1)
+        self.crawler = Crawler(self.imagecrawler)
 
     def tearDown(self) -> None:
         del self.images
@@ -210,6 +213,47 @@ class CrawlerCrawlCase(unittest.TestCase):
         # assert
         self.assertSetEqual(self.images, called_image_added_with)
         self.assertEqual(len(self.images), crawled)
+
+
+class TestCrawlerExhaustedCrawling:
+
+    @pytest.mark.parametrize(  # type: ignore
+        ('restart', 'exhausted', 'expected_did_call_reset', 'expected_did_call_crawl'),
+        [
+            (False, False, [], [True]),
+            (False, True, [], []),
+            (True, False, [], [True]),
+            (True, True, [True], [True]),
+        ]
+    )
+    def test_crawl_exhausted_reset(self, restart: bool, exhausted: bool,
+                                   expected_did_call_reset: List[bool],
+                                   expected_did_call_crawl: List[bool]
+                                   ) -> None:
+        # arrange
+        crawler = Crawler(MockableImageCrawler())
+        did_call_reset = []
+        did_call_crawl = []
+
+        def fake_exhausted() -> bool:
+            return exhausted
+
+        def fake_reset() -> None:
+            did_call_reset.append(True)
+
+        def fake_crawl() -> ImageCollection:
+            did_call_crawl.append(True)
+            return ImageCollection()
+
+        crawler.restart_at_front_when_exhausted = restart
+        crawler.imagecrawler.is_exhausted = fake_exhausted  # type: ignore[assignment]
+        crawler.imagecrawler.reset = fake_reset  # type: ignore[assignment]
+        crawler.imagecrawler.crawl = fake_crawl  # type: ignore[assignment]
+        # act
+        crawler.crawl()
+        # assert
+        assert expected_did_call_reset == did_call_reset
+        assert expected_did_call_crawl == did_call_crawl
 
 
 class ServerRefillTest(unittest.TestCase):

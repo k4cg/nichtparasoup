@@ -55,7 +55,8 @@ def parse_yaml_file(file_path: _FilePath) -> Config:
     config.setdefault('logging', {})
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:
-        config_crawler.setdefault("weight", 1)
+        config_crawler.setdefault("weight", 1.0)
+        config_crawler.setdefault('restart_at_front_when_exhausted', False)
         config_crawler.setdefault('config', {})
     return config
 

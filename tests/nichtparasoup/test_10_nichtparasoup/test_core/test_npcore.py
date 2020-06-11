@@ -37,8 +37,8 @@ class NPCoreTest(unittest.TestCase):
         imagecrawler2 = MockableImageCrawler(bar='bazz')
         imagecrawler3 = MockableImageCrawler(bar='bazz')
         # act
-        core.add_imagecrawler(imagecrawler1, 1)
-        core.add_imagecrawler(imagecrawler2, 1)
+        core.add_imagecrawler(imagecrawler1)
+        core.add_imagecrawler(imagecrawler2)
         # assert
         self.assertEqual(2, len(core.crawlers))
         self.assertListEqual(

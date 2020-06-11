@@ -16,12 +16,13 @@ def imagecrawlers_and_server() -> _ImagecrawlersAndServer:
     core = NPCore()
     imagecrawlers = ((MockableImageCrawler(t=1), 1), (MockableImageCrawler(t=2), 1))
     for (imagecrawler, weight) in imagecrawlers:
-        core.add_imagecrawler(imagecrawler, weight)
+        core.add_imagecrawler(imagecrawler, weight=weight)
     server = Server(core)
     # issue test
     return imagecrawlers, server
 
 
+@pytest.mark.skip(reason='test not written')  # type: ignore
 def test_server(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
@@ -31,6 +32,7 @@ def test_server(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     assert status  # TODO write the tests
 
 
+@pytest.mark.skip(reason='test not written')  # type: ignore
 def test_blacklist(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
@@ -40,6 +42,7 @@ def test_blacklist(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     assert status  # TODO write the tests
 
 
+@pytest.mark.skip(reason='test not written')  # type: ignore
 def test_crawlers(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
