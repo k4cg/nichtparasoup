@@ -36,7 +36,8 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
 * Changes
   * Defaulting arguments of `nichtparasoup.core.Crawler` became kwargs.
-  * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values. 
+  * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values.
+  * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
   * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
   * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
@@ -56,6 +57,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * False-positives in `nichtparasoup.core.imagecrawler.ImageRecognizer.path_is_image()`.
   * Server's imagecrawler can get exhausted when the crawling source's end is reached.
     Resolves [issue #152](https://github.com/k4cg/nichtparasoup/issues/152).
+  * Fixed a possible endless loop of `nichtparasoup.code.Crawler.fill_up_to()`.
 * Removed:
   * `nichtparasoup.core.server.type_module_name_str()`
   * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
