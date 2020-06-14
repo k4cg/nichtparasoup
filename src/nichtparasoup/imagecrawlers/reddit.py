@@ -10,11 +10,13 @@ from ..imagecrawler import (
 
 
 class Reddit(BaseImageCrawler):
+    # see https://github.com/reddit-archive/reddit/wiki/JSON
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self._uri_base = f'https://www.reddit.com/r/{url_quote(self._config["subreddit"])}.json?after='
         self._after: Optional[str] = None
+        self._at_end: bool = False
         self._remote_fetcher = RemoteFetcher()
         self._image_recognizer = ImageRecognizer()
 
@@ -39,8 +41,12 @@ class Reddit(BaseImageCrawler):
             subreddit=subreddit,
         )
 
+    def is_exhausted(self) -> bool:
+        return self._at_end
+
     def _reset(self) -> None:
         self._after = None
+        self._at_end = False
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
@@ -56,8 +62,10 @@ class Reddit(BaseImageCrawler):
                         source=urljoin(uri, child['data']['permalink']),
                     )
                 )
-        # don't care if `after` is `None` after the crawl ... why not restarting at front when the end is reached?!
-        self._after = listing['data']['after']
+        after: Optional[str] = listing['data']['after']
+        self._at_end = after is None
+        if not self._at_end:
+            self._after = after
         return images
 
     def _get_uri(self, after: Optional[str]) -> str:

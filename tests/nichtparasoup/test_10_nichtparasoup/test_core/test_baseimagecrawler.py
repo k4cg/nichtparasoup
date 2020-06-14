@@ -1,9 +1,11 @@
-import unittest
+from typing import List
+
+import pytest  # type: ignore
 
 from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 
 
-class BaseImageCrawlerEqualTest(unittest.TestCase):
+class TestBaseImageCrawlerEqual:
 
     def test_equal(self) -> None:
         # arrange
@@ -12,12 +14,12 @@ class BaseImageCrawlerEqualTest(unittest.TestCase):
         c11 = MockableImageCrawler(foo='bar', baz=1)
         c12 = MockableImageCrawler(foo='bar', baz=1)
         # assert
-        self.assertEqual(c01, c01)
-        self.assertEqual(c02, c02)
-        self.assertEqual(c01, c02)
-        self.assertEqual(c11, c11)
-        self.assertEqual(c12, c12)
-        self.assertEqual(c11, c12)
+        assert c01 == c01
+        assert c02 == c02
+        assert c01 == c02
+        assert c11 == c11
+        assert c12 == c12
+        assert c11 == c12
 
     def test_unequal(self) -> None:
         # arrange
@@ -27,19 +29,19 @@ class BaseImageCrawlerEqualTest(unittest.TestCase):
         c4 = YetAnotherImageCrawler(foo='b4r', baz=1)
         c5 = MockableImageCrawler(baz=1)
         # assert
-        self.assertNotEqual(c1, c2)
-        self.assertNotEqual(c1, c3)
-        self.assertNotEqual(c1, c4)
-        self.assertNotEqual(c1, c5)
-        self.assertNotEqual(c2, c3)
-        self.assertNotEqual(c2, c4)
-        self.assertNotEqual(c2, c5)
-        self.assertNotEqual(c3, c4)
-        self.assertNotEqual(c3, c5)
-        self.assertNotEqual(c4, c5)
+        assert c1 != c2
+        assert c1 != c3
+        assert c1 != c4
+        assert c1 != c5
+        assert c2 != c3
+        assert c2 != c4
+        assert c2 != c5
+        assert c3 != c4
+        assert c3 != c5
+        assert c4 != c5
 
 
-class BaseImageCrawlerResetTest(unittest.TestCase):
+class TestBaseImageCrawlerReset:
 
     def test_reset_set(self) -> None:
         # arrange
@@ -48,7 +50,7 @@ class BaseImageCrawlerResetTest(unittest.TestCase):
         # act
         c.reset()
         # assert
-        self.assertTrue(c._reset_before_next_crawl)
+        assert True is c._reset_before_next_crawl
 
     def test_reset_released(self) -> None:
         # arrange
@@ -57,10 +59,10 @@ class BaseImageCrawlerResetTest(unittest.TestCase):
         # act
         c.crawl()
         # assert
-        self.assertFalse(c._reset_before_next_crawl)
+        assert False is c._reset_before_next_crawl
 
 
-class BaseImageCrawlerGetConfigTest(unittest.TestCase):
+class TestBaseImageCrawlerGetConfig:
 
     def test_public(self) -> None:
         # arrange
@@ -68,7 +70,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(dict(foo='bar'), config)
+        assert {'foo': 'bar'} == config
 
     def test_empty_key(self) -> None:
         # arrange
@@ -76,7 +78,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual({'': 'bar'}, config)
+        assert {'': 'bar'} == config
 
     def test_protected(self) -> None:
         # arrange
@@ -84,7 +86,7 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(dict(), config)
+        assert {} == config
 
     def test_private(self) -> None:
         # arrange
@@ -92,4 +94,33 @@ class BaseImageCrawlerGetConfigTest(unittest.TestCase):
         # act
         config = c.get_config()
         # assert
-        self.assertDictEqual(dict(), config)
+        assert {} == config
+
+
+class TestExhaustedCrawling:
+
+    @pytest.mark.parametrize(  # type: ignore
+        ('is_exhausted', 'expected_call_craw'),
+        [
+            (False, [True]),
+            (True, []),
+        ]
+    )
+    def test_exhausted(self, is_exhausted: bool, expected_call_craw: List[bool]) -> None:
+        # arrange
+        c = MockableImageCrawler()
+        did_call_craw = []
+
+        def fake_exhausted() -> bool:
+            return is_exhausted
+
+        def fake_crawl() -> None:
+            did_call_craw.append(True)
+            raise NotImplementedError()
+
+        c.is_exhausted = fake_exhausted  # type: ignore[assignment]
+        c._crawl = fake_crawl  # type: ignore[assignment]
+        # act
+        c.crawl()
+        # assert
+        assert expected_call_craw == did_call_craw

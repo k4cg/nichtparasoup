@@ -22,6 +22,9 @@ class LoadableImageCrawlerA(BaseImageCrawler):
     def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
         pass
 
+    def is_exhausted(self) -> bool:
+        return False
+
     def _reset(self) -> None:
         pass
 

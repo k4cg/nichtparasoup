@@ -33,6 +33,9 @@ class Echo(BaseImageCrawler):
             image_uri=image_uri,
         )
 
+    def is_exhausted(self) -> bool:  # pragma: no cover
+        return False
+
     def _reset(self) -> None:  # pragma: no cover
         pass
 

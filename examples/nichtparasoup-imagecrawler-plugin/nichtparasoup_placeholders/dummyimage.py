@@ -40,12 +40,15 @@ class DummyImage(BaseImageCrawler):
             height=height,
         )
 
+    def is_exhausted(self) -> bool:  # pragma: no cover
+        return False
+
     @staticmethod
     def _get_image_uri(width: int, height: int) -> str:
         # trailing '?' is needed to prevent random technical issues with the generator
         return f'https://dummyimage.com/{width}x{height}/567/fed/?'
 
-    def _reset(self) -> None:
+    def _reset(self) -> None:  # pragma: no cover
         # nothing to reset since this is a generic crawler
         pass
 

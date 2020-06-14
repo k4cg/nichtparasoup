@@ -5,7 +5,7 @@
 ! upcoming version will be `3.0.0` of __nichtparasoup__ !
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
-**TODO** write the latest changes
+**TODO** write the latest changes, review what are actual breaking chages and what are just normal changes.
 
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
@@ -35,8 +35,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.core.server.CrawlerStatus`   -- replaces `.Status.crawlers()`.
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
 * Changes
+  * Defaulting arguments of `nichtparasoup.core.Crawler` became kwargs.
+  * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values.
+  * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
   * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
+  * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
     `nichtparasoup.__version__` is no longer a module but a string.
@@ -51,6 +55,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * [tests requirements](requirements/tests.txt)
 * Fixed
   * False-positives in `nichtparasoup.core.imagecrawler.ImageRecognizer.path_is_image()`.
+  * Server's imagecrawler can get exhausted when the crawling source's end is reached.
+    Resolves [issue #152](https://github.com/k4cg/nichtparasoup/issues/152).
+  * Fixed a possible endless loop of `nichtparasoup.code.Crawler.fill_up_to()`.
 * Removed:
   * `nichtparasoup.core.server.type_module_name_str()`
   * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
@@ -76,6 +83,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `.ServerStatus`
     * `.CrawlerStatus`
     * `.BlacklistStatus`
+  * `nichtparasoup.core.Crawler` got a new kwarg `restart_at_front_when_exhausted`.  
+    `nichtparasoup.core.NPCore.add_imagecrawler()` got a new kwarg `restart_at_front_when_exhausted`.  
+    See the [docs](docs/config/index.md)
   * Implementations of `nichtparasoup.core.imagecrawer.BaseImageCrawler` got new features:
     * Method `.get_internal_name()` to return the internal name.
       If instance was made via `nichtparasoup.config.get_imagecrawler()` the value is set

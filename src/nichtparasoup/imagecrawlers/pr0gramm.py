@@ -11,6 +11,7 @@ class Pr0gramm(BaseImageCrawler):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
+        self._at_end: bool = False
         self._older: Optional[int] = None
         self._remote_fetcher = RemoteFetcher()
 
@@ -33,7 +34,7 @@ class Pr0gramm(BaseImageCrawler):
             raise TypeError(f'tags {tags!r} is not str')
         tags = tags.strip()
         if not tags.startswith('!'):
-            raise ValueError(f'tags {tags!r} must start with "!"')
+            raise ValueError(f'tags {tags!r} must start with "!"\nsee https://pr0gramm.com/new/2782197')
         if not len(tags) > 1:
             raise ValueError(f'tags {tags!r} is empty')
         return tags
@@ -72,8 +73,12 @@ class Pr0gramm(BaseImageCrawler):
             params['older'] = str(older)
         return cls.__API_GET_URL + '?' + urlencode(params)
 
+    def is_exhausted(self) -> bool:
+        return self._at_end
+
     def _reset(self) -> None:
         self._older = None
+        self._at_end = False
 
     __IMG_BASE_URL = 'https://img.pr0gramm.com/'
     __POST_BASE_URL = 'https://pr0gramm.com/new/'
@@ -97,8 +102,7 @@ class Pr0gramm(BaseImageCrawler):
                     height=item.get('height'),
                 )
             )
-        if response['atEnd']:
-            self.reset()
-        else:
-            self._older = response['items'][-1]['promoted' if promoted else 'id'] or None
+        self._at_end = response['atEnd']
+        if not self._at_end:
+            self._older = response['items'][-1]['promoted' if promoted else 'id']
         return images

@@ -133,6 +133,33 @@ class TestPr0grammReset:
         assert crawler._older is None
 
 
+class TestPr0grammExhausted:
+
+    @pytest.mark.parametrize(   # type: ignore
+        ('at_end', 'expected'),
+        [
+            (True, True),
+            (False, False),
+        ]
+    )
+    def test_exhausted(self, at_end: bool, expected: bool) -> None:
+        # arrange
+        crawler = Pr0gramm()
+        crawler._at_end = at_end
+        # act & assert
+        assert crawler.is_exhausted() is expected
+
+    def test_reset_done(self) -> None:
+        # arrange
+        crawler = Pr0gramm()
+        crawler._at_end = True
+        assert crawler.is_exhausted()
+        # act
+        crawler._reset()
+        # assert
+        assert not crawler.is_exhausted()
+
+
 _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
     '/api/items/get?flags=1&promoted=1&tags=%21%28s%3A15000%29+-%22video%22':
         'get-flags_1-promoted_1-tags_s15000-video.json',
@@ -145,25 +172,25 @@ _FILE_FETCHER = FileFetcher({  # relative to "./testdata_pr0gramm"
 
 class TestPr0grammCrawl:
 
-    def test_reset_at_end(self) -> None:
+    def test_exhausted_at_end(self) -> None:
         # arrange
         crawler = Pr0gramm(promoted=True, tags='!s:15000')
         crawler._remote_fetcher = _FILE_FETCHER
-        crawler._reset_before_next_crawl = False
+        assert crawler.is_exhausted() is False
         # act
         crawler.crawl()
         # assert
-        assert crawler._reset_before_next_crawl is True
+        assert crawler.is_exhausted() is True
 
-    def test_no_reset_before_end(self) -> None:
+    def test_not_exhausted_before_end(self) -> None:
         # arrange
         crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
         crawler._remote_fetcher = _FILE_FETCHER
-        crawler._reset_before_next_crawl = False
+        assert crawler.is_exhausted() is False
         # act
         crawler.crawl()
         # assert
-        assert crawler._reset_before_next_crawl is False
+        assert crawler.is_exhausted() is False
 
     @pytest.mark.parametrize(('promoted', 'expected_cursor'), [(True, 503528), (False, 3652675)])  # type: ignore
     def test_crawl_cursor(self, promoted: bool, expected_cursor: Optional[int]) -> None:
@@ -192,6 +219,7 @@ class TestPr0grammCrawl:
         # act
         images = crawler._crawl()
         # assert
+        assert crawler.is_exhausted()
         assert images == expected_images
         for expected_image in expected_images:
             for image in images:

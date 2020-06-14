@@ -2,8 +2,8 @@ import unittest
 from collections import OrderedDict
 from json import dumps as json_dumps, loads as json_loads
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Type
-from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode
+from typing import Any, Dict, Tuple, Type
+from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urlparse
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawlers.instagram import (
@@ -11,8 +11,24 @@ from nichtparasoup.imagecrawlers.instagram import (
 )
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
+_Uri = str
+_FilePath = str
+
 
 class _InstagramFileFetcher(FileFetcher):
+    TESTDATA_PATH: _FilePath = path_join(dirname(__file__), 'testdata_instagram')
+
+    CURSOR_FAKED_LAST = 'faked_last_empty'
+    __BUILD_FILE_ARGS__FAKED_LAST = ('prepared_last_empty.json', TESTDATA_PATH)
+
+    def __is_cursor_faked_last(self, url: _Uri) -> bool:
+        cursor = str(json_loads(parse_qs(urlparse(url).query).get('variables', ['{}'])[0]).get('after', ''))
+        return cursor == self.CURSOR_FAKED_LAST
+
+    def _get_file_uri(self, uri: _Uri) -> Tuple[_FilePath, _Uri]:
+        if self.__is_cursor_faked_last(uri):
+            return self._build_file(*self.__BUILD_FILE_ARGS__FAKED_LAST), uri
+        return super()._get_file_uri(uri)
 
     @classmethod
     def _uri_sort_query(cls, uri_parsed: UrlParseResult) -> UrlParseResult:
@@ -68,7 +84,7 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
         'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-5,after,id-787132}',
-}, base_url='https://www.instagram.com/', base_dir=path_join(dirname(__file__), 'testdata_instagram'))
+}, base_url='https://www.instagram.com/', base_dir=_InstagramFileFetcher.TESTDATA_PATH)
 
 _QUERYHASHES_EXPECTED_TAG = {'f0986789a5c5d17c2400faebf16efd0d',
                              'ff260833edf142911047af6024eb634a',
@@ -217,13 +233,28 @@ class InstagramHashtagTest(unittest.TestCase):
         # assert
         self.assertEqual(queryhash, self.__class__._QUERY_HASH)
 
+    def test_exhausted_true(self) -> None:
+        # arrange
+        self.crawler._has_next_page = False
+        # act & assert
+        self.assertTrue(self.crawler.is_exhausted())
+
+    def test_exhausted_false(self) -> None:
+        # arrange
+        self.crawler._has_next_page = True
+        # act & assert
+        self.assertFalse(self.crawler.is_exhausted())
+
     def test_reset(self) -> None:
         # arrange
         self.crawler._cursor = 'foo'
+        self.crawler._has_next_page = False
+        self.assertTrue(self.crawler.is_exhausted())
         # act
         self.crawler._reset()
         # assert
         self.assertIsNone(self.crawler._cursor)
+        self.assertFalse(self.crawler.is_exhausted())
 
     def test__crawl(self) -> None:
         # arrange
@@ -298,9 +329,11 @@ class InstagramHashtagTest(unittest.TestCase):
                 '2913574931708576695_n.jpg?_nc_ht=scontent-frx5-1.cdninstagram.com&_nc_cat=110'
                 '&oh=18800daa9416377ed6b870acc0502e2a&oe=5E6E8495'
         ))
+        self.assertFalse(self.crawler.is_exhausted())
         # act
         images = self.crawler._crawl()
         # assert
+        self.assertFalse(self.crawler.is_exhausted())
         self.assertEqual(self.crawler._cursor, expected_cursor)
         self.assertSetEqual(images, expected_images)
         for expected_image in expected_images:
@@ -308,6 +341,15 @@ class InstagramHashtagTest(unittest.TestCase):
                 if image == expected_image:
                     # sources are irrelevant for equality, need to be checked manually
                     self.assertEqual(image.source, expected_image.source)
+
+    def test__crawl_no_next_page(self) -> None:
+        # arrange
+        self.crawler._cursor = _InstagramFileFetcher.CURSOR_FAKED_LAST
+        self.assertFalse(self.crawler.is_exhausted())
+        # act
+        self.crawler.crawl()
+        # assert
+        self.assertTrue(self.crawler.is_exhausted())
 
 
 class InstagramHashtagDescriptionTest(unittest.TestCase):
@@ -455,10 +497,11 @@ class InstagramProfileTest(unittest.TestCase):
                 'oh=84732a7538ab59d3bd1458d400e181fa&oe=5E86FC97',
             source='https://www.instagram.com/p/B5FEWeHAT-M/'
         ))
-
+        self.assertFalse(self.crawler.is_exhausted())
         # act
         images = self.crawler._crawl()
         # assert
+        self.assertFalse(self.crawler.is_exhausted())
         self.assertEqual(self.crawler._cursor, expected_cursor)
         self.assertSetEqual(images, expected_images)
         for expected_image in expected_images:
@@ -467,13 +510,37 @@ class InstagramProfileTest(unittest.TestCase):
                     # sources are irrelevant for equality, need to be checked manually
                     self.assertEqual(image.source, expected_image.source)
 
+    def test__crawl_no_next_page(self) -> None:
+        # arrange
+        self.crawler._cursor = _InstagramFileFetcher.CURSOR_FAKED_LAST
+        self.assertFalse(self.crawler.is_exhausted())
+        # act
+        self.crawler.crawl()
+        # assert
+        self.assertTrue(self.crawler.is_exhausted())
+
+    def test_exhausted_true(self) -> None:
+        # arrange
+        self.crawler._has_next_page = False
+        # act & assert
+        self.assertTrue(self.crawler.is_exhausted())
+
+    def test_exhausted_false(self) -> None:
+        # arrange
+        self.crawler._has_next_page = True
+        # act & assert
+        self.assertFalse(self.crawler.is_exhausted())
+
     def test_reset(self) -> None:
         # arrange
         self.crawler._cursor = 'foo'
+        self.crawler._has_next_page = False
+        self.assertTrue(self.crawler.is_exhausted())
         # act
         self.crawler._reset()
         # assert
         self.assertIsNone(self.crawler._cursor)
+        self.assertFalse(self.crawler.is_exhausted())
 
 
 class InstagramProfileDescriptionTest(unittest.TestCase):

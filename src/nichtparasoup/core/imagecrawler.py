@@ -60,7 +60,7 @@ class BaseImageCrawler(ABC):
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         self._config = self.check_config(config)  # intended to be immutable from now on
-        self._reset_before_next_crawl = True
+        self._reset_before_next_crawl: bool = False
         self._crawl_lock = Lock()
         _log('debug', 'crawler initialized: %r', self)
 
@@ -112,6 +112,9 @@ class BaseImageCrawler(ABC):
                 _log('debug', 'Crawler resetting %r', self)
                 self._reset()
                 self._reset_before_next_crawl = False
+            if self.is_exhausted():
+                _log('debug', 'Prevented exhausted crawling %s', self)
+                return ImageCollection()
             _log('debug', 'Crawling started %r', self)
             try:
                 crawled = self._crawl()
@@ -166,8 +169,15 @@ class BaseImageCrawler(ABC):
         raise NotImplementedError()
 
     @abstractmethod
+    def is_exhausted(self) -> bool:  # pragma: no cover
+        """This function is intended to tell whether this crawler reached the end of its source.
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
     def _reset(self) -> None:  # pragma: no cover
-        """This function is intended to reset the crawler to restart at front
+        """This function is intended to reset the crawler to restart at front.
+        It is also expected to reset the :ref:``is_exhausted()`` state.
         """
         raise NotImplementedError()
 

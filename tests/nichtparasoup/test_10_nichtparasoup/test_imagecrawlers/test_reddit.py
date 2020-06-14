@@ -2,6 +2,8 @@ import unittest
 from os.path import dirname, join as path_join
 from typing import Type
 
+import pytest  # type: ignore
+
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawlers.reddit import Reddit
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
@@ -106,22 +108,46 @@ class RedditResetTest(unittest.TestCase):
         self.assertIsNone(crawler._after)
 
 
+class TestRedditExhausted:
+
+    @pytest.mark.parametrize(   # type: ignore
+        ('at_end', 'expected'),
+        [
+            (True, True),
+            (False, False),
+        ]
+    )
+    def test_exhausted(self, at_end: bool, expected: bool) -> None:
+        # arrange
+        crawler = Reddit(subreddit='test')
+        crawler._at_end = at_end
+        # act & assert
+        assert crawler.is_exhausted() is expected
+
+    def test_reset_done(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='test')
+        crawler._at_end = True
+        assert crawler.is_exhausted()
+        # act
+        crawler._reset()
+        # assert
+        assert not crawler.is_exhausted()
+
+
 _FILE_FETCHER = FileFetcher({  # relative to "./testdata_instagram"
     '/r/aww.json?after=': 'aww.json',
+    '/r/awwwwwwww.json?after=': 'awwwwwwww.json',
 }, base_url='https://www.reddit.com', base_dir=path_join(dirname(__file__), 'testdata_reddit'))
 
 
 class RedditCrawlTest(unittest.TestCase):
 
-    def setUp(self) -> None:
-        self.crawler = Reddit(subreddit='aww')
-        self.crawler._remote_fetcher = _FILE_FETCHER
-
-    def tearDown(self) -> None:
-        del self.crawler
-
     def test_crawl(self) -> None:
         # arrange
+        crawler = Reddit(subreddit='aww')
+        self.assertFalse(crawler.is_exhausted())
+        crawler._remote_fetcher = _FILE_FETCHER
         expected_after = 't3_dqx42l'
         expected_images = ImageCollection()
         expected_images.add(Image(
@@ -151,15 +177,26 @@ class RedditCrawlTest(unittest.TestCase):
             source='https://www.reddit.com/r/aww/comments/dqtdo7/im_one_of_a_kind/',
         ))
         # act
-        images = self.crawler._crawl()
+        images = crawler._crawl()
         # assert
-        self.assertEqual(self.crawler._after, expected_after)
+        self.assertFalse(crawler.is_exhausted())
+        self.assertEqual(crawler._after, expected_after)
         self.assertSetEqual(images, expected_images)
         for expected_image in expected_images:
             for image in images:
                 if image == expected_image:
                     # sources are irrelevant for equality, need to be checked manually
                     self.assertEqual(image.source, expected_image.source)
+
+    def test_crawl_last_page(self) -> None:
+        # arrange
+        crawler = Reddit(subreddit='awwwwwwww')
+        crawler._remote_fetcher = _FILE_FETCHER
+        self.assertFalse(crawler.is_exhausted())
+        # act
+        crawler._crawl()
+        # assert
+        self.assertTrue(crawler.is_exhausted())
 
 
 class RedditDescriptionTest(unittest.TestCase):

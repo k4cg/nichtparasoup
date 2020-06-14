@@ -27,13 +27,17 @@ _FILLUP_TIMEOUT_DEFAULT: float = 1.0
 
 class Crawler:
 
-    def __init__(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight,
+    def __init__(self, imagecrawler: BaseImageCrawler, *,
+                 weight: _CrawlerWeight = 1.0,
+                 restart_at_front_when_exhausted: bool = False,
                  is_image_addable: Optional[_IsImageAddable] = None,
-                 on_image_added: Optional[_OnImageAdded] = None) -> None:  # pragma: no cover
+                 on_image_added: Optional[_OnImageAdded] = None
+                 ) -> None:  # pragma: no cover
         if weight <= 0:
             raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
         self.weight = weight
+        self.restart_at_front_when_exhausted = restart_at_front_when_exhausted
         self.images = ImageCollection()
         self._is_image_addable_wr: Optional[ReferenceType[_IsImageAddable]] = None
         self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
@@ -66,21 +70,34 @@ class Crawler:
     def get_image_added(self) -> Optional[_OnImageAdded]:
         return self._image_added_wr() if self._image_added_wr else None
 
-    def reset(self) -> None:
+    def reset(self) -> None:  # pragma: no cover
         self.images.clear()  # pylint: disable=no-member  # false positive
         self.imagecrawler.reset()
 
     def crawl(self) -> int:
+        """Crawl for new images.
+        :return: Number of newly added images.
+        """
+        if self.imagecrawler.is_exhausted():
+            if not self.restart_at_front_when_exhausted:
+                return 0
+            self.imagecrawler.reset()
+        images = self.imagecrawler.crawl()
+        return self._add_images(images) if images else 0
+
+    def _add_images(self, images: ImageCollection) -> int:
+        """Add images, if allowed.
+        :return: Number of newly added images.
+        """
         is_image_addable = self.get_is_image_addable()
         image_added = self.get_image_added()
-        images_crawled = self.imagecrawler.crawl()
-        for image_crawled in (
-            filter(is_image_addable, images_crawled) if is_image_addable else images_crawled
-        ):
-            self.images.add(image_crawled)  # pylint: disable=no-member  # false positive
+        if is_image_addable:
+            images = ImageCollection(filter(is_image_addable, images))
+        for image in images:
+            self.images.add(image)  # pylint: disable=no-member  # false positive
             if image_added:
-                image_added(image_crawled)  # pylint: disable=not-callable
-        return len(images_crawled)
+                image_added(image)  # pylint: disable=not-callable
+        return len(images)
 
     def fill_up_to(self, to: int,
                    filled_by: Optional[_OnFill] = None,
@@ -92,7 +109,7 @@ class Crawler:
             if refilled == 0:
                 break  # while
             if len(self.images) < to and timeout > 0:
-                # be nice, give the site some rest after crawling
+                # be nice, give the source some rest after crawling
                 sleep(timeout)
 
     def get_random_image(self) -> Optional[Image]:
@@ -139,11 +156,17 @@ class NPCore:
             crawler.imagecrawler for crawler in self.crawlers  # pylint: disable=not-an-iterable
         )
 
-    def add_imagecrawler(self, imagecrawler: BaseImageCrawler, weight: _CrawlerWeight) -> None:
+    def add_imagecrawler(self, imagecrawler: BaseImageCrawler, *,
+                         weight: _CrawlerWeight = 1.0,
+                         restart_at_front_when_exhausted: bool = False
+                         ) -> None:
         self.crawlers.append(  # pylint: disable=no-member
             Crawler(
-                imagecrawler, weight,
-                self._is_image_not_in_blacklist, self._add_image_to_blacklist
+                imagecrawler,
+                weight=weight,
+                restart_at_front_when_exhausted=restart_at_front_when_exhausted,
+                is_image_addable=self._is_image_not_in_blacklist,
+                on_image_added=self._add_image_to_blacklist
             )
         )
 
@@ -157,6 +180,9 @@ class NPCore:
             fill_tread.join()
 
     def reset(self) -> int:
+        """
+        :return: Length of blacklist before a reset.
+        """
         reset_treads: List[Thread] = []
         for crawler in self.crawlers.copy():  # pylint: disable=no-member
             reset_tread = Thread(target=crawler.reset, daemon=True)
