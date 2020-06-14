@@ -1,7 +1,7 @@
 import unittest
 from typing import Any, Dict, List, Optional
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import ImageCrawlerConfig, ImageCrawlerInfo

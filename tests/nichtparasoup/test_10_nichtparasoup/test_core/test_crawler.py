@@ -1,7 +1,7 @@
 from typing import List
 from weakref import ref as weak_ref
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.core import Crawler
 from nichtparasoup.core.image import Image, ImageCollection

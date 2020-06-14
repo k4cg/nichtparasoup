@@ -3,7 +3,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 from urllib.response import addinfourl
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.testing.imagecrawler import FileFetcher
 

@@ -1,4 +1,4 @@
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.core.imagecrawler import ImageRecognizer
 

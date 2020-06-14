@@ -1,7 +1,7 @@
 from json import JSONEncoder
 from typing import Any
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.webserver import _SimpleJsonEncoder
 

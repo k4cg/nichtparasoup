@@ -1,6 +1,6 @@
 from typing import List
 
-import pytest  # type: ignore
+import pytest
 
 from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 

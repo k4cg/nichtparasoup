@@ -2,7 +2,7 @@ from os.path import dirname, join as path_join
 from typing import Any, Dict, Optional, Sequence, Type
 from urllib.parse import parse_qs, urlsplit
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawlers.pr0gramm import Pr0gramm

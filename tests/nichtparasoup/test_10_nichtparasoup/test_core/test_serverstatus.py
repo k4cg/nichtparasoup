@@ -1,6 +1,6 @@
 from typing import Iterable, Tuple
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus

@@ -2,7 +2,7 @@ import unittest
 from os.path import dirname, join as path_join
 from typing import Type
 
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
 from nichtparasoup.imagecrawlers.reddit import Reddit
