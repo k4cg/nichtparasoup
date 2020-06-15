@@ -13,9 +13,9 @@ class TestShippedExampleConfigFile:
     def test_has_examples(self) -> None:
         assert len(self.__EXAMPLE_FILES) > 0
 
-    @pytest.mark.online  # type: ignore  # probing goes over the internet
-    @pytest.mark.slow  # type: ignore  # probing might be slow
-    @pytest.mark.parametrize('filename', __EXAMPLE_FILES)  # type: ignore
+    @pytest.mark.online  # probing goes over the internet
+    @pytest.mark.slow  # probing might be slow
+    @pytest.mark.parametrize('filename', __EXAMPLE_FILES)
     def test_example(self, filename: str) -> None:
         file = join(self.__EXAMPLE_DIR, filename)
         ConfigFileTest(file).check_file()

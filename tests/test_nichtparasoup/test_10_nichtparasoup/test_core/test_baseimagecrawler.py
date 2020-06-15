@@ -99,7 +99,7 @@ class TestBaseImageCrawlerGetConfig:
 
 class TestExhaustedCrawling:
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         ('is_exhausted', 'expected_call_craw'),
         [
             (False, [True]),

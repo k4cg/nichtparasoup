@@ -224,7 +224,7 @@ class TestCrawlerAddImages:
 
 class TestCrawlerExhaustedCrawling:
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         ('restart', 'exhausted', 'expected_did_call_reset', 'expected_did_call_crawl'),
         [
             (False, False, [], [True]),
@@ -265,10 +265,10 @@ class TestCrawlerExhaustedCrawling:
 
 class TestServerRefill:
 
-    @pytest.mark.skip(reason="TODO: write the test - use Random3Crawler")  # type: ignore
+    @pytest.mark.skip(reason="TODO: write the test - use Random3Crawler")
     def test_fill_up_to(self) -> None:
         raise NotImplementedError()
 
-    @pytest.mark.skip(reason="TODO: write the test - use NullCrawler")  # type: ignore
+    @pytest.mark.skip(reason="TODO: write the test - use NullCrawler")
     def test_refill_null_crawler(self) -> None:
         raise NotImplementedError()

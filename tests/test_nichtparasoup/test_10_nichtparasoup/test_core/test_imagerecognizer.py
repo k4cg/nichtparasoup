@@ -7,7 +7,7 @@ class TestBaseImageCrawlerPathIsImage:
 
     _IMAGE_EXT = ['jpg', 'jpeg', 'gif', 'png', 'svg']
 
-    @pytest.mark.parametrize('image_file_extension', _IMAGE_EXT)  # type: ignore
+    @pytest.mark.parametrize('image_file_extension', _IMAGE_EXT)
     def test_path_is_image(self, image_file_extension: str) -> None:
         # arrange
         recognizer = ImageRecognizer()
@@ -23,7 +23,7 @@ class TestBaseImageCrawlerPathIsImage:
         assert True is recognizer.path_is_image(f'{image_file_path}?foo#file_{image_file_path}')
         assert True is recognizer.path_is_image(f'{image_file_path}?foo={image_file_path}#file_{image_file_path}')
 
-    @pytest.mark.parametrize('image_file_extension', _IMAGE_EXT)  # type: ignore
+    @pytest.mark.parametrize('image_file_extension', _IMAGE_EXT)
     def test_path_is_not_false_positive_image(self, image_file_extension: str) -> None:
         # arrange
         recognizer = ImageRecognizer()
@@ -39,7 +39,7 @@ class TestBaseImageCrawlerPathIsImage:
         assert False is recognizer.path_is_image(f'_?foo#file_{image_file_path}')
         assert False is recognizer.path_is_image(f'_?foo={image_file_path}#file_{image_file_path}')
 
-    @pytest.mark.parametrize('not_image_file_extension', ['', '/', '.', '..', '.html', '.js', '.css'])  # type: ignore
+    @pytest.mark.parametrize('not_image_file_extension', ['', '/', '.', '..', '.html', '.js', '.css'])
     def test_path_is_not_image(self, not_image_file_extension: str) -> None:
         # arrange
         recognizer = ImageRecognizer()

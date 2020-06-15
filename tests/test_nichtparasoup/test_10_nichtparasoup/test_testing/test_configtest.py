@@ -192,7 +192,7 @@ class TestDefaultProbeCallback:
         def _crawl(self) -> ImageCollection:
             raise NotImplementedError()
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         ('reason', 'expected'),
         [
             (ConfigProbeCallbackReason.start, None),

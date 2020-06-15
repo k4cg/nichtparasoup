@@ -11,7 +11,7 @@ from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTe
 
 class TestPr0grammConfigPromoted:
 
-    @pytest.mark.parametrize('promoted', [True, False])  # type: ignore
+    @pytest.mark.parametrize('promoted', [True, False])
     def test_check_value(self, promoted: bool) -> None:
         # arrange
         config_in = dict(promoted=promoted)
@@ -28,7 +28,7 @@ class TestPr0grammConfigPromoted:
         # assert
         assert config_out['promoted'] is True
 
-    @pytest.mark.parametrize('wrong_type', [str, int, float, list, tuple, dict, set, object])  # type: ignore
+    @pytest.mark.parametrize('wrong_type', [str, int, float, list, tuple, dict, set, object])
     def test_check_wrong_type(self, wrong_type: type) -> None:
         with pytest.raises(TypeError):
             Pr0gramm.check_config(dict(promoted=wrong_type()))
@@ -44,7 +44,7 @@ class TestPr0grammConfigTags:
         # assert
         assert config_out['tags'] is None
 
-    @pytest.mark.parametrize('tags', ['!"test"'])  # type: ignore
+    @pytest.mark.parametrize('tags', ['!"test"'])
     def test_check_value(self, tags: str) -> None:
         # arrange
         config_in = dict(tags=tags)
@@ -53,12 +53,12 @@ class TestPr0grammConfigTags:
         # assert
         assert tags == config_out['tags']
 
-    @pytest.mark.parametrize('wrong_value', ['', ' \n\t', ' !', '! \n\t'])  # type: ignore
+    @pytest.mark.parametrize('wrong_value', ['', ' \n\t', ' !', '! \n\t'])
     def test_check_wrong_tag_value(self, wrong_value: str) -> None:
         with pytest.raises(ValueError):
             Pr0gramm.check_config(dict(tags=wrong_value))
 
-    @pytest.mark.parametrize('wrong_type', [bool, int, float, list, tuple, dict, set, object])  # type: ignore
+    @pytest.mark.parametrize('wrong_type', [bool, int, float, list, tuple, dict, set, object])
     def test_check_wrong_type(self, wrong_type: type) -> None:
         with pytest.raises(TypeError):
             Pr0gramm.check_config(dict(tags=wrong_type()))
@@ -75,7 +75,7 @@ class TestPr0grammUrlBuilder:
         assert 'pr0gramm.com' == split.netloc
         assert '/api/items/get' == split.path
 
-    @pytest.mark.parametrize(('flags', 'flags_exp'), [(i, str(i)) for i in range(1, 16, 1)])  # type: ignore
+    @pytest.mark.parametrize(('flags', 'flags_exp'), [(i, str(i)) for i in range(1, 16, 1)])
     def test_flags(self, flags: int, flags_exp: str) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=flags, promoted=False)
@@ -85,7 +85,7 @@ class TestPr0grammUrlBuilder:
         assert isinstance(flags_res, list)
         assert flags_res == [flags_exp]
 
-    @pytest.mark.parametrize(('promoted', 'promoted_exp'), [(True, '1'), (False, '0')])  # type: ignore
+    @pytest.mark.parametrize(('promoted', 'promoted_exp'), [(True, '1'), (False, '0')])
     def test_promoted(self, promoted: bool, promoted_exp: str) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=promoted)
@@ -95,7 +95,7 @@ class TestPr0grammUrlBuilder:
         assert isinstance(promoted_res, list)
         assert promoted_res == [promoted_exp]
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         ('tags', 'tags_exp'), [
             (None, '! -"video"'),
             ('', '! -"video"'),
@@ -110,7 +110,7 @@ class TestPr0grammUrlBuilder:
         assert isinstance(tags_res, list)
         assert tags_res == [tags_exp]
 
-    @pytest.mark.parametrize(('older', 'older_exp'), [(None, None), (23, '23')])  # type: ignore
+    @pytest.mark.parametrize(('older', 'older_exp'), [(None, None), (23, '23')])
     def test_older(self, older: Optional[int], older_exp: Optional[str]) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=False, older=older)
@@ -135,7 +135,7 @@ class TestPr0grammReset:
 
 class TestPr0grammExhausted:
 
-    @pytest.mark.parametrize(   # type: ignore
+    @pytest.mark.parametrize(
         ('at_end', 'expected'),
         [
             (True, True),
@@ -192,7 +192,7 @@ class TestPr0grammCrawl:
         # assert
         assert crawler.is_exhausted() is False
 
-    @pytest.mark.parametrize(('promoted', 'expected_cursor'), [(True, 503528), (False, 3652675)])  # type: ignore
+    @pytest.mark.parametrize(('promoted', 'expected_cursor'), [(True, 503528), (False, 3652675)])
     def test_crawl_cursor(self, promoted: bool, expected_cursor: Optional[int]) -> None:
         # arrange
         crawler = Pr0gramm(flags=1, promoted=promoted, tags='!s:1000')

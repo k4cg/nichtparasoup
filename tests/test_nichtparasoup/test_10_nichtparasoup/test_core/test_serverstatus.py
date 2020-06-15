@@ -10,7 +10,7 @@ from .mockable_imagecrawler import MockableImageCrawler
 _ImagecrawlersAndServer = Tuple[Iterable[Tuple[MockableImageCrawler, int]], Server]
 
 
-@pytest.fixture(scope='module')  # type: ignore
+@pytest.fixture(scope='module')
 def imagecrawlers_and_server() -> _ImagecrawlersAndServer:
     # set up
     core = NPCore()
@@ -22,7 +22,7 @@ def imagecrawlers_and_server() -> _ImagecrawlersAndServer:
     return imagecrawlers, server
 
 
-@pytest.mark.skip(reason='test not written')  # type: ignore
+@pytest.mark.skip(reason='test not written')
 def test_server(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
@@ -32,7 +32,7 @@ def test_server(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     assert status  # TODO write the tests
 
 
-@pytest.mark.skip(reason='test not written')  # type: ignore
+@pytest.mark.skip(reason='test not written')
 def test_blacklist(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
@@ -42,7 +42,7 @@ def test_blacklist(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     assert status  # TODO write the tests
 
 
-@pytest.mark.skip(reason='test not written')  # type: ignore
+@pytest.mark.skip(reason='test not written')
 def test_crawlers(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server

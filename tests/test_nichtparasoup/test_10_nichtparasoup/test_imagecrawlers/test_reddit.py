@@ -110,7 +110,7 @@ class RedditResetTest(unittest.TestCase):
 
 class TestRedditExhausted:
 
-    @pytest.mark.parametrize(   # type: ignore
+    @pytest.mark.parametrize(
         ('at_end', 'expected'),
         [
             (True, True),

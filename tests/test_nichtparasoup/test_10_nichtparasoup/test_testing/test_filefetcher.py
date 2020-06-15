@@ -11,8 +11,9 @@ from nichtparasoup.testing.imagecrawler import FileFetcher
 class TestFileFetcher:
     _TESTDATA_DIR = path.join(path.dirname(__file__), 'testdata_filefetcher')
 
-    @pytest.mark.parametrize(  # type: ignore
-        'uri', [
+    @pytest.mark.parametrize(
+        'uri',
+        [
             'https://asdf',  # netloc
             'https://as/df',  # path
             'https://asdf#foo',  # fragment
@@ -24,8 +25,9 @@ class TestFileFetcher:
         # assert
         assert uri_parsed == FileFetcher._uri_sort_query(uri_parsed)
 
-    @pytest.mark.parametrize(  # type: ignore
-        ('uri', 'exp'), [
+    @pytest.mark.parametrize(
+        ('uri', 'exp'),
+        [
             ('file:///foo_bar', True),
             ('file://foo_bar/baz', True),
             ('http://foo.bar/baz', False),
@@ -34,8 +36,9 @@ class TestFileFetcher:
     def test__valid_url(self, uri: str, exp: bool) -> None:
         assert FileFetcher._valid_uri(uri) is exp
 
-    @pytest.mark.parametrize(  # type: ignore
-        'uri', [
+    @pytest.mark.parametrize(
+        'uri',
+        [
             'https://asdf?foo=',
             'https://asdf?foo=1',
             'https://asdf?bar=1&foo=2',
@@ -47,8 +50,9 @@ class TestFileFetcher:
         # assert
         assert uri_parsed == FileFetcher._uri_sort_query(uri_parsed)
 
-    @pytest.mark.parametrize(  # type: ignore
-        ('uri', 'uri_expected'), [
+    @pytest.mark.parametrize(
+        ('uri', 'uri_expected'),
+        [
             ('https://asdf?foo=1&bar=2', 'https://asdf?bar=2&foo=1'),
             ('https://asdf?foo=1&bar=2&foo=2', 'https://asdf?bar=2&foo=1&foo=2'),
         ])

@@ -8,7 +8,7 @@ from nichtparasoup.webserver import _SimpleJsonEncoder
 
 class TestSimpleJsonEncoder:
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         'data',
         [
             None,
@@ -24,7 +24,7 @@ class TestSimpleJsonEncoder:
         # assert
         assert json_o == json_c
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         'data_o',
         [
             1, -0.2, 'foo',
