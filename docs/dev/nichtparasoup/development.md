@@ -8,6 +8,9 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 
 ## Backend
 
+It is encouraged to use a [virtual python environment](https://docs.python.org/3/library/venv.html)
+via `python -m venv .venv` and activate it afterwards.
+
 Install the development requirements from [requirements/dev.txt](../../../requirements/dev.txt) via `pip`.
 
 You might also want to install _nichtparasoup_ in developer mode.  
