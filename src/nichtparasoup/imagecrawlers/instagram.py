@@ -1,6 +1,8 @@
 __all__ = [
+    # ready-to-use instagram crawlers:
     "InstagramHashtag", "InstagramProfile",
-    "BaseInstagramCrawler",
+    # stuff to implement an own instagram crawler:
+    "BaseInstagramCrawler", "InstagramQueryHashFinder", "INSTAGRAM_URL_ROOT", "INSTAGRAM_ICON_URL",
 ]
 
 import sys
@@ -69,6 +71,7 @@ _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
 
 class InstagramQueryHashFinder:
+
     __CONTAINER_PATH_RE = {
         'tag': r'/static/bundles/metro/TagPageContainer\.js/.+?\.js',
         'profile': r'/static/bundles/metro/ProfilePageContainer\.js/.+?\.js',
@@ -104,6 +107,21 @@ class InstagramQueryHashFinder:
 
 
 class BaseInstagramCrawler(BaseImageCrawler, ABC):
+
+    _QUERY_HASH_LOCK: Lock
+    """Class Lock for :ref:``_query_hash``.
+    see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
+    """
+
+    _query_hash: Optional[str]
+    """Class based query hash.
+    see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
+    """
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:  # pragma: no cover
+        super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
+        cls._QUERY_HASH_LOCK = Lock()
+        cls._query_hash = None
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
@@ -226,21 +244,6 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         except StopIteration:
             return None
 
-    _QUERY_HASH_LOCK: Lock
-    """Lock for :ref:``_query_hash``.
-    see :ref:``__init_subclass__()`` and :ref:``_get_query_hash()``.
-    """
-
-    _query_hash: Optional[str]
-    """Class based query hash.
-    see :ref:``_get_query_hash()``.
-    """
-
-    def __init_subclass__(cls, **kwargs: Any) -> None:
-        super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
-        cls._QUERY_HASH_LOCK = Lock()
-        cls._query_hash = None
-
     def _get_query_hash(self) -> str:
         cls = self.__class__
         # same class => same query_hash ... so lock and search ... others may use the same hash later
@@ -303,7 +306,7 @@ class InstagramProfile(BaseInstagramCrawler):
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
         self.__profile_id: Optional[str] = None
-        self.__profile_id_lock = Lock()
+        self.__PROFILE_ID_LOCK = Lock()
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
@@ -353,7 +356,7 @@ class InstagramProfile(BaseInstagramCrawler):
             return user_id
 
     def _get_profile_id(self) -> str:
-        with self.__profile_id_lock:
+        with self.__PROFILE_ID_LOCK:
             if self.__profile_id is None:
                 self.__profile_id = self._fetch_profile_id()
         return self.__profile_id

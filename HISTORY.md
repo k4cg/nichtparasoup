@@ -94,6 +94,10 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * Method `.__str__()` .  
       Returns `<NamedImagecrawler {INTERNAL_NAME} {CONFIG!r}>` if `internal_name` is set, 
       otherwise the behaviour falls back to `__repr__()`.
+  * Public stuff in module `nichtparasoup.imagecrawers.instagram` (was nonpublic before):
+    * Class `.BaseInstagramCrawler` became public. (since it does `Lock()` allocation automatically, now.)
+    * Class `.InstagramQueryHashFinder` became public for extending `.BaseInstagramCrawler`.
+    * Constants `.INSTAGRAM_URL_ROOT` and `.INSTAGRAM_ICON_URL` became public for extending `.BaseInstagramCrawler`.
 * Misc
   * Build process is now isolated and conform to
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
