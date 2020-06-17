@@ -1,7 +1,8 @@
 __all__ = [
-    "get_imagecrawlers",
+    "get_imagecrawlers", "clear_imagecrawlers",
 ]
 
+from functools import lru_cache
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
@@ -116,16 +117,18 @@ class KnownImageCrawlers:
 
 __ENTRY_POINT_NAME = 'nichtparasoup_imagecrawler'
 
-__imagecrawlers: Optional[KnownImageCrawlers] = None
 
-
+@lru_cache(maxsize=1)
 def get_imagecrawlers() -> KnownImageCrawlers:  # pragma: no cover
-    global __imagecrawlers
-    if __imagecrawlers is None:
-        __imagecrawlers = KnownImageCrawlers(iter_entry_points(__ENTRY_POINT_NAME))
-    return __imagecrawlers
+    """Get :ref:``KnownImageCrawlers``.
+
+    Uses caching.
+    To clear the cache use :ref:``clear_imagecrawlers()``.
+    """
+    return KnownImageCrawlers(iter_entry_points(__ENTRY_POINT_NAME))
 
 
 def clear_imagecrawlers() -> None:  # pragma: no cover
-    global __imagecrawlers
-    __imagecrawlers = None
+    """Clear the cache of :ref:``get_imagecrawlers``
+    """
+    get_imagecrawlers.cache_clear()
