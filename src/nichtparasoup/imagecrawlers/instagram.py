@@ -1,4 +1,7 @@
-__all__ = ["InstagramHashtag", "InstagramProfile"]
+__all__ = [
+    "InstagramHashtag", "InstagramProfile",
+    "BaseInstagramCrawler",
+]
 
 import sys
 from abc import ABC, abstractmethod
@@ -223,19 +226,31 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         except StopIteration:
             return None
 
-    _QUERY_HASH_LOCK = Lock()  # global lock. may be overwritten in subclass
-    _query_hash: Optional[str] = None
+    _QUERY_HASH_LOCK: Lock
+    """Lock for :ref:``_query_hash``.
+    see :ref:``__init_subclass__()`` and :ref:``_get_query_hash()``.
+    """
+
+    _query_hash: Optional[str]
+    """Class based query hash.
+    see :ref:``_get_query_hash()``.
+    """
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
+        cls._QUERY_HASH_LOCK = Lock()
+        cls._query_hash = None
 
     def _get_query_hash(self) -> str:
         cls = self.__class__
-        # same class = same query_hash ... so lock and search ... others may use the same hash later
-        with cls._QUERY_HASH_LOCK:
-            if not cls._query_hash:
+        # same class => same query_hash ... so lock and search ... others may use the same hash later
+        with cls._QUERY_HASH_LOCK:  # pylint: disable=protected-access
+            if not cls._query_hash:  # pylint: disable=protected-access
                 query_hash = self._find_query_hash()
                 if not query_hash:
-                    raise InstagramError('did not find query hash')
-                cls._query_hash = query_hash
-        return cls._query_hash
+                    raise InstagramError('Did not find query hash')
+                cls._query_hash = query_hash  # pylint: disable=protected-access
+        return cls._query_hash  # pylint: disable=protected-access
 
     @abstractmethod
     def _get_query_variables(self) -> Dict[str, Any]:  # pragma: no cover
@@ -249,7 +264,6 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
 
 class InstagramHashtag(BaseInstagramCrawler):
-    _QUERY_HASH_LOCK = Lock()  # all instances of HashtagCrawler share the same query_hash - and this lock
 
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
@@ -285,7 +299,6 @@ class InstagramHashtag(BaseInstagramCrawler):
 
 
 class InstagramProfile(BaseInstagramCrawler):
-    _QUERY_HASH_LOCK = Lock()  # all instances of ProfileCrawler share the same query_hash - and this lock
 
     def __init__(self, **config: Any) -> None:  # pragma: no cover
         super().__init__(**config)
