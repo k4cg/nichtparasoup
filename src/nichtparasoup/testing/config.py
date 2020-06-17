@@ -124,9 +124,7 @@ class ConfigTest:
             result.append(  # pylint: disable=no-member # false-positive
                 ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
             probe_continue = callback_(
-                ConfigProbeCallbackReason.failure
-                if ic_probe_result.is_failure
-                else ConfigProbeCallbackReason.finish,
+                ConfigProbeCallbackReason.failure if ic_probe_result.is_failure else ConfigProbeCallbackReason.finish,
                 imagecrawler,
                 None
             )

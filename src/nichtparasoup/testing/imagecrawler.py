@@ -176,6 +176,21 @@ class ImagecrawlerProbeResult:
         self.images = images
         self.errors = errors
 
+    def __add__(self, other: Any) -> 'ImagecrawlerProbeResult':
+        if isinstance(other, ImagecrawlerProbeResult):
+            images: Optional[ImageCollection] = None
+            if self.images is not None and other.images is not None:
+                images = ImageCollection(self.images | other.images)
+            elif self.images is not None:
+                images = ImageCollection(self.images)
+            elif other.images is not None:
+                images = ImageCollection(other.images)
+            return ImagecrawlerProbeResult(
+                images,
+                self.errors + other.errors
+            )
+        return NotImplemented
+
     @property
     def is_failure(self) -> bool:
         """Is this a failure?
@@ -190,6 +205,7 @@ class ImagecrawlerProbeResult:
 
 
 class ImageCrawlerTest:
+
     def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
         self.imagecrawler = imagecrawler
 
@@ -198,22 +214,40 @@ class ImageCrawlerTest:
               retry_delay: float = PROBE_DELAY_DEFAULT,
               retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
               ) -> ImagecrawlerProbeResult:
+        return self.probe_until_success(
+            retries=retries,
+            retry_delay=retry_delay,
+            retry_callback=retry_callback
+        ) if retries > 0 else self.probe_once()
+
+    def probe_until_success(self, *,
+                            retries: int = PROBE_RETRIES_DEFAULT,
+                            retry_delay: float = PROBE_DELAY_DEFAULT,
+                            retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
+                            ) -> ImagecrawlerProbeResult:
         """
-        :param retries: number of retries if probing failed
-        :param retry_delay: delay between retries
-        :param retry_callback: is called when a retry is triggered. retry will be omitted if callable returns ``False``
-        :return: images and errors
+        :param retries: Number of retries if probing failed.
+        :param retry_delay: Delay between retries.
+        :param retry_callback: Is called when a retry is triggered. Retry will be omitted if callable returns ``False``.
+        :return: crawled images and crawler errors.
         """
-        images: Optional[ImageCollection] = None
-        errors: List[BaseException] = []
-        for retry in range(1 + retries):
-            retry > 0 and sleep(retry_delay)  # type: ignore # pylint: disable=expression-not-assigned
-            try:
-                images = self.imagecrawler._crawl()  # pylint: disable=protected-access
-            except BaseException as ex:  # pylint: disable=broad-except
-                errors.append(ex)
-                if retry_callback and not retry_callback(self.imagecrawler, ex):
-                    break  # for .. in ..
-            else:
-                break  # for .. in ..
-        return ImagecrawlerProbeResult(images, errors)
+        result = self.probe_once()
+        for _ in range(retries):
+            if not result.is_failure:
+                break
+            if retry_callback and not retry_callback(self.imagecrawler, result.errors[-1]):
+                break
+            sleep(retry_delay)
+            result += self.probe_once()
+        return result
+
+    def probe_once(self) -> ImagecrawlerProbeResult:
+        """
+        :return: tuple(crawled images, crawl error, whether to retry)
+        """
+        try:
+            images = self.imagecrawler._crawl()  # pylint: disable=protected-access
+        except BaseException as ex:  # pylint: disable=broad-except
+            return ImagecrawlerProbeResult(None, [ex])
+        else:
+            return ImagecrawlerProbeResult(images, [])

@@ -102,7 +102,7 @@ class KnownImageCrawlers:
     def _test_abstract(some_type: Type[object]) -> None:
         """Test if ABS is resolved.
         """
-        if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore
+        if hasattr(some_type, '__abstractmethods__') and some_type.__abstractmethods__:  # type: ignore[attr-defined]
             raise TypeError(f'{some_type!r} is abstract')
 
     def _test_duplicate_name(self, imagecrawler_name: _ImagecrawlerName) -> None:

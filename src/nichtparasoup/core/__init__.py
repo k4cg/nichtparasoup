@@ -49,7 +49,7 @@ class Crawler:
         if None is is_image_addable:
             self._is_image_addable_wr = None
         elif MethodType is t_is_image_addable:
-            self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore
+            self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore[assignment,arg-type]
         else:
             raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
         # TODO: add function/lambda support - and write proper tests for it
@@ -62,7 +62,7 @@ class Crawler:
         if None is image_added:
             self._image_added_wr = None
         elif MethodType is t_image_added:
-            self._image_added_wr = WeakMethod(image_added)  # type: ignore
+            self._image_added_wr = WeakMethod(image_added)  # type: ignore[assignment,arg-type]
         else:
             raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
         # TODO: add function/lambda support - and write proper tests for it
