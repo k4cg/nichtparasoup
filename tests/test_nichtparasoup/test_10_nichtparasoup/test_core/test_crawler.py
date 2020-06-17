@@ -172,7 +172,7 @@ class TestCrawlerAddImages:
 
         images = ImageCollection({Image(uri='1', source='test1'), Image(uri='2', source='test2')})
         crawler = Crawler(MockableImageCrawler())
-        crawler.get_is_image_addable = lambda: on_is_addable_true  # type: ignore
+        crawler.get_is_image_addable = lambda: on_is_addable_true  # type: ignore[assignment]
         # act
         crawled = crawler._add_images(images)
         # assert
@@ -188,7 +188,7 @@ class TestCrawlerAddImages:
 
         images = ImageCollection({Image(uri='1', source='test1'), Image(uri='2', source='test2')})
         crawler = Crawler(MockableImageCrawler())
-        crawler.get_image_added = lambda: on_get_image_added  # type: ignore
+        crawler.get_image_added = lambda: on_get_image_added  # type: ignore[assignment]
         # act
         crawled = crawler._add_images(images)
         # assert
@@ -212,8 +212,8 @@ class TestCrawlerAddImages:
             called_image_added_with.add(image)
 
         crawler = Crawler(MockableImageCrawler())
-        crawler.get_is_image_addable = lambda: on_is_addable_fake  # type: ignore
-        crawler.get_image_added = lambda: on_get_image_added  # type: ignore
+        crawler.get_is_image_addable = lambda: on_is_addable_fake  # type: ignore[assignment]
+        crawler.get_image_added = lambda: on_get_image_added  # type: ignore[assignment]
         # act
         crawled = crawler._add_images(images)
         # assert

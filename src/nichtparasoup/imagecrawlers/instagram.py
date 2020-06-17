@@ -280,7 +280,8 @@ class InstagramHashtag(BaseInstagramCrawler):
 
     @classmethod
     def _get_media_from_query_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:
-        return response['data']['hashtag']['edge_hashtag_to_media']  # type: ignore
+        media: Dict[str, Any] = response['data']['hashtag']['edge_hashtag_to_media']
+        return media
 
 
 class InstagramProfile(BaseInstagramCrawler):
@@ -317,7 +318,8 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def _get_media_from_query_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:
-        return response['data']['user']['edge_owner_to_timeline_media']  # type: ignore
+        media: Dict[str, Any] = response['data']['user']['edge_owner_to_timeline_media']
+        return media
 
     def _get_query_variables(self) -> Dict[str, Any]:
         return {'id': self._get_profile_id()}
@@ -325,14 +327,17 @@ class InstagramProfile(BaseInstagramCrawler):
     def _fetch_profile(self) -> Dict[str, Any]:
         # this is much easier than parsing `window._sharedData` from the website - let's hope it is stable again
         profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url() + '?__a=1')
-        return json_loads(profile_string)  # type: ignore
+        profile: Dict[str, Any] = json_loads(profile_string)
+        return profile
 
     def _fetch_profile_id(self) -> str:
         profile = self._fetch_profile()
         try:
-            return profile['graphql']['user']['id']  # type: ignore
+            user_id: str = profile['graphql']['user']['id']
         except KeyError as ex:
             raise InstagramError('profile_id not found') from ex
+        else:
+            return user_id
 
     def _get_profile_id(self) -> str:
         with self.__profile_id_lock:

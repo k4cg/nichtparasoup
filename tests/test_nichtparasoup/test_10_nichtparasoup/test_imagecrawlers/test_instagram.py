@@ -216,7 +216,7 @@ class InstagramHashtagTest(unittest.TestCase):
         self.crawler = InstagramHashtag(tag_name='foo')
         self.crawler._remote_fetcher = _FILE_FETCHER
         self.crawler._amount = 5
-        self.crawler._get_queryhashfinder = self._get_queryhashfinder  # type: ignore
+        self.crawler._get_queryhashfinder = self._get_queryhashfinder  # type: ignore[assignment]
 
     def tearDown(self) -> None:
         del self.crawler
@@ -224,7 +224,7 @@ class InstagramHashtagTest(unittest.TestCase):
 
     def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
         finder = InstagramQueryHashFinder('tag')
-        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_TAG  # type: ignore
+        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_TAG  # type: ignore[assignment]
         return finder
 
     def test__get_query_hash(self) -> None:
@@ -258,7 +258,7 @@ class InstagramHashtagTest(unittest.TestCase):
 
     def test__crawl(self) -> None:
         # arrange
-        self.crawler._get_query_hash = lambda: self.__class__._QUERY_HASH  # type: ignore
+        self.crawler._get_query_hash = lambda: self.__class__._QUERY_HASH  # type: ignore[assignment]
         expected_images = ImageCollection()
         expected_cursor = 'QVFDdV9PUXYxc0hjcU9TYUI5dWZZWmNsOGdSaUsxcU9oUHg5endkc2hiUnV' \
                           'CZVVDZWFUM2QzdlVvSnN0Z053Q2ItQkxvSGRObm1hdlR5X3dDZ1JKMWduRg=='
@@ -384,7 +384,7 @@ class InstagramProfileTest(unittest.TestCase):
         self.crawler = InstagramProfile(user_name='natgeo')
         self.crawler._remote_fetcher = _FILE_FETCHER
         self.crawler._amount = 5
-        self.crawler._get_queryhashfinder = self._get_queryhashfinder  # type: ignore
+        self.crawler._get_queryhashfinder = self._get_queryhashfinder  # type: ignore[assignment]
 
     def tearDown(self) -> None:
         del self.crawler
@@ -392,7 +392,7 @@ class InstagramProfileTest(unittest.TestCase):
 
     def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
         finder = InstagramQueryHashFinder('profile')
-        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_PROFILE  # type: ignore
+        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_PROFILE  # type: ignore[assignment]
         return finder
 
     def _get_profile_id(self) -> str:
@@ -406,7 +406,7 @@ class InstagramProfileTest(unittest.TestCase):
 
     def test__get_query_hash(self) -> None:
         # arrange
-        self.crawler._get_profile_id = self._get_profile_id  # type: ignore
+        self.crawler._get_profile_id = self._get_profile_id  # type: ignore[assignment]
         # act
         queryhash = self.crawler._get_query_hash()
         # assert
@@ -414,8 +414,8 @@ class InstagramProfileTest(unittest.TestCase):
 
     def test__crawl(self) -> None:
         # arrange
-        self.crawler._get_query_hash = lambda: self.__class__._QUERY_HASH  # type: ignore
-        self.crawler._get_profile_id = self._get_profile_id  # type: ignore
+        self.crawler._get_query_hash = lambda: self.__class__._QUERY_HASH  # type: ignore[assignment]
+        self.crawler._get_profile_id = self._get_profile_id  # type: ignore[assignment]
         expected_images = ImageCollection()
         expected_cursor = 'QVFBbjdTc0dOQ2JQTW1vb1JzMTQxeGpkMEFnTzhYWmh5dFRfMXRWT1VwX28' \
                           'wMUxkSExpZ2s5SVZfWmM5VWtjYUJrTS0wTW5Va2JqSEpTSUpPcENnN1g1OQ=='

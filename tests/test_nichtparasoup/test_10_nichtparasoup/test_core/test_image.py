@@ -1,4 +1,5 @@
 import unittest
+from typing import Any, List
 
 from nichtparasoup.core.image import Image, ImageCollection
 
@@ -23,7 +24,7 @@ class ImageTest(unittest.TestCase):
     def test_unequal_other_types(self) -> None:
         # arrange
         image = Image(uri="testA", source='test')
-        other_types = [None, True, 23, 4.2, "", [], (), {}, self]  # type: ignore
+        other_types: List[Any] = [None, True, 23, 4.2, "", [], (), {}, self]
         # assert
         for other_type in other_types:
             self.assertNotEqual(image, other_type)

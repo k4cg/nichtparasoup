@@ -35,7 +35,7 @@ class ServerGetImageTest(unittest.TestCase):
         # arrange
         image_crawled = Image(uri='testURI', is_generic=True, source='testSource', bla=1, foo="bar")
         imagecrawler = MockableImageCrawler()
-        imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore
+        imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore[assignment]
         self.server.core.add_imagecrawler(imagecrawler)
         crawler = self.server.core.crawlers[0]
         # act
@@ -52,7 +52,7 @@ class ServerResetTest(unittest.TestCase):
     def setUp(self) -> None:
         self.server = Server(NPCore(), reset_timeout=7357)
         self.reset_called = False
-        self.server._reset = self.mock__reset  # type: ignore
+        self.server._reset = self.mock__reset  # type: ignore[assignment]
 
     def mock__reset(self) -> None:
         self.reset_called = True
@@ -71,7 +71,7 @@ class ServerResetTest(unittest.TestCase):
 
     def test_running_under_timeout(self) -> None:
         # arrange
-        self.server.is_alive = lambda: True  # type: ignore
+        self.server.is_alive = lambda: True  # type: ignore[assignment]
         self.server.stats.time_started = int(time())
         # act
         res = self.server.request_reset()
@@ -82,7 +82,7 @@ class ServerResetTest(unittest.TestCase):
 
     def test_running_over_timeout(self) -> None:
         # arrange
-        self.server.is_alive = lambda: True  # type: ignore
+        self.server.is_alive = lambda: True  # type: ignore[assignment]
         self.server.stats.time_started = int(time()) - 2 * self.server.reset_timeout
         # act
         res = self.server.request_reset()

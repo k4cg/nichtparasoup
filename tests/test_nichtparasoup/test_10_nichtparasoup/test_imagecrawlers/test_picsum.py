@@ -1,5 +1,5 @@
 import unittest
-from typing import Type
+from typing import Any, List, Type
 
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawlers.picsum import Picsum
@@ -34,11 +34,11 @@ class PicsumConfigWidthTest(unittest.TestCase):
             Picsum.check_config(self._picsum_right_config_wo_width)
 
     def test__check_config_wrong_type(self) -> None:
-        wrong_types = [None, True, "", [], (), {}, self]  # type: ignore
+        wrong_types: List[Any] = [None, True, "", [], (), {}, self]
         for wrong_type in wrong_types:
             # arrange
             config_in = self._picsum_right_config_wo_width
-            config_in["width"] = wrong_type  # type: ignore
+            config_in["width"] = wrong_type
             # assert
             with self.assertRaises(TypeError, msg=repr(config_in)):
                 Picsum.check_config(config_in)
@@ -69,11 +69,11 @@ class PicsumConfigHeightTest(unittest.TestCase):
             Picsum.check_config(self._picsum_right_config_wo_height)
 
     def test__check_config_wrong_type(self) -> None:
-        wrong_types = [None, True, "", [], (), {}, self]  # type: ignore
+        wrong_types: List[Any] = [None, True, "", [], (), {}, self]
         for wrong_type in wrong_types:
             # arrange
             config_in = self._picsum_right_config_wo_height
-            config_in["height"] = wrong_type  # type: ignore
+            config_in["height"] = wrong_type
             # assert
             with self.assertRaises(TypeError, msg=repr(config_in)):
                 Picsum.check_config(config_in)

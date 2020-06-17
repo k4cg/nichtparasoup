@@ -35,8 +35,8 @@ class TestSimpleJsonEncoder:
         # arrange
         type_o = type(data_o)
 
-        class Inherited(type_o):  # type: ignore
-            ...
+        class Inherited(type_o):  # type: ignore[valid-type,misc]
+            pass
 
         data_i = Inherited(data_o)
         # act

@@ -89,7 +89,8 @@ class WebServer:
         except HTTPException as ex:
             return ex
         if self.developer_mode:
-            response.access_control_allow_origin = '*'  # type: ignore # via `werkzeug.wrappers.CORSResponseMixin`
+            # via `werkzeug.wrappers.CORSResponseMixin`
+            response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
         return response
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:

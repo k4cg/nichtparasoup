@@ -1,5 +1,5 @@
 import unittest
-from typing import Type
+from typing import Any, List, Type
 
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawlers.echo import Echo
@@ -22,7 +22,7 @@ class EchoConfigImageUriTest(unittest.TestCase):
             Echo.check_config(dict())
 
     def test__check_config_wrong_type(self) -> None:
-        wrong_types = [None, True, 23, 4.2, [], (), {}, self]  # type: ignore
+        wrong_types: List[Any] = [None, True, 23, 4.2, [], (), {}, self]
         for wrong_type in wrong_types:
             # assert
             with self.assertRaises(TypeError, msg=repr(wrong_type)):

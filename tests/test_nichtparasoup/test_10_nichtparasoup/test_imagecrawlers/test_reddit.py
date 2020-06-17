@@ -1,6 +1,6 @@
 import unittest
 from os.path import dirname, join as path_join
-from typing import Type
+from typing import Any, List, Type
 
 import pytest
 
@@ -37,11 +37,11 @@ class RedditConfigSubredditTest(unittest.TestCase):
             Reddit.check_config(self._reddit_right_config_wo_subreddit)
 
     def test_check_config_wrong_type(self) -> None:
-        wrong_types = [None, True, 1, 0.1, [], (), {}, self]  # type: ignore
+        wrong_types: List[Any] = [None, True, 1, 0.1, [], (), {}, self]
         for wrong_type in wrong_types:
             # arrange
             config_in = self._reddit_right_config_wo_subreddit
-            config_in["subreddit"] = wrong_type  # type: ignore
+            config_in["subreddit"] = wrong_type
             # assert
             with self.assertRaises(TypeError, msg=repr(config_in)):
                 Reddit.check_config(config_in)

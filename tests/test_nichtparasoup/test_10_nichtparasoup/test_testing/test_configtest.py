@@ -12,6 +12,8 @@ from nichtparasoup.testing.config import (
 )
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
+from . import PROBE_DELAY_IN_TESTS
+
 
 class ConfigTestCheckDuplicatesTest(unittest.TestCase):
 
@@ -19,7 +21,7 @@ class ConfigTestCheckDuplicatesTest(unittest.TestCase):
         # arrange
         tester = ConfigTest({})
         duplicates: List[BaseImageCrawler] = [Echo(image_uri='https://foo.bar.baz')]
-        tester.find_duplicates = lambda: duplicates  # type: ignore
+        tester.find_duplicates = lambda: duplicates  # type: ignore[assignment]
         # act & assert
         with self.assertRaises(DuplicateImagecrawlersException) as ar:
             tester.check_duplicates()
@@ -29,7 +31,7 @@ class ConfigTestCheckDuplicatesTest(unittest.TestCase):
         # arrange
         tester = ConfigTest({})
         duplicates: List[BaseImageCrawler] = []
-        tester.find_duplicates = lambda: duplicates  # type: ignore
+        tester.find_duplicates = lambda: duplicates  # type: ignore[assignment]
         # act
         tester.check_duplicates()
         # assert: no exception risen
@@ -103,7 +105,8 @@ class ConfigTestProbeTest(unittest.TestCase):
 
         tester = ConfigTest(config)
         # act
-        tester.probe(delay=0, retries=0, callback=callback, imagecrawler_test_class=MockImageCrawlerTest)
+        tester.probe(delay=PROBE_DELAY_IN_TESTS, retries=0, callback=callback,
+                     imagecrawler_test_class=MockImageCrawlerTest)
         # assert
         self.assertListEqual([
             (ConfigProbeCallbackReason.start, echo_foo_bar, None),
@@ -144,7 +147,8 @@ class ConfigTestProbeTest(unittest.TestCase):
 
         tester = ConfigTest(config)
         # act
-        tester.probe(delay=0, retries=0, callback=callback, imagecrawler_test_class=MockImageCrawlerTest)
+        tester.probe(delay=PROBE_DELAY_IN_TESTS, retries=0, callback=callback,
+                     imagecrawler_test_class=MockImageCrawlerTest)
         # assert
         self.assertListEqual([
             (ConfigProbeCallbackReason.start, echo_foo_bar, None),
