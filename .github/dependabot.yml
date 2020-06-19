@@ -16,7 +16,8 @@ updates:
       - "pip"
       - "nichtparasoup"
     commit-message:
-      prefix: "dependencies nichtparasoup:"
+      ## prefix maximum string length of 15
+      # prefix: "nichtparasoup:"
       include: "scope"
     open-pull-requests-limit: 999
   -
@@ -33,7 +34,8 @@ updates:
       - "pip"
       - "examples/nichtparasoup-imagecrawler-plugin:"
     commit-message:
-      prefix: "dependencies examples/nichtparasoup-imagecrawler-plugin"
+      ## prefix maximum string length of 15
+      # prefix: "examples:"
       include: "scope"
     open-pull-requests-limit: 999
   -
@@ -46,6 +48,7 @@ updates:
       - "dependencies"
       - "github-actions"
     commit-message:
-      prefix: "dependencies github-actions:"
+      ## prefix maximum string length of 15
+      # prefix: "github-actions:"
       include: "scope"
     open-pull-requests-limit: 999
