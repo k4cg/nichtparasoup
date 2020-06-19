@@ -7,45 +7,42 @@
 appdirs==1.4.4            # via virtualenv
 astroid==2.4.2            # via pylint
 attrs==19.3.0             # via flake8-bugbear, pytest
-autopep8==1.5.3           # via -r dev.in
+autopep8==1.5.3           # via -r requirements/dev.in
 click==7.1.2              # via pip-tools
-coverage==5.1             # via -r tests.in
+coverage==5.1             # via -r requirements/tests.in
 distlib==0.3.0            # via virtualenv
 filelock==3.0.12          # via tox, virtualenv
-flake8-annotations==2.1.0  # via -r style.in
-flake8-bugbear==20.1.4    # via -r style.in
-flake8-isort==3.0.0       # via -r style.in
-flake8-pep3101==1.3.0     # via -r style.in
+flake8-annotations==2.1.0  # via -r requirements/style.in
+flake8-bugbear==20.1.4    # via -r requirements/style.in
+flake8-isort==3.0.0       # via -r requirements/style.in
+flake8-pep3101==1.3.0     # via -r requirements/style.in
 flake8-polyfill==1.0.2    # via pep8-naming
-flake8==3.8.3             # via -r style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-pep3101, flake8-polyfill
-importlib-metadata==1.6.1  # via flake8, importlib-resources, pluggy, pytest, tox, virtualenv
-importlib-resources==1.5.0  # via virtualenv
-isort[pyproject]==4.3.21  # via -r dev.in, flake8-isort, pylint
+flake8==3.8.3             # via -r requirements/style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-pep3101, flake8-polyfill
+isort[pyproject]==4.3.21  # via -r requirements/dev.in, flake8-isort, pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via flake8, pylint
 more-itertools==8.3.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
-mypy==0.780               # via -r style.in
+mypy==0.780               # via -r requirements/style.in
 packaging==20.4           # via pytest, tox
-pep8-naming==0.10.0       # via -r style.in
-pip-tools==5.2.1          # via -r dev.in
+pep8-naming==0.11.1       # via -r requirements/style.in
+pip-tools==5.2.1          # via -r requirements/dev.in
 pluggy==0.13.1            # via pytest, tox
 py==1.8.1                 # via pytest, tox
 pycodestyle==2.6.0        # via autopep8, flake8
 pyflakes==2.2.0           # via flake8
-pylint==2.5.3             # via -r style.in
+pylint==2.5.3             # via -r requirements/style.in
 pyparsing==2.4.7          # via packaging
-pytest==5.4.3             # via -r tests.in
+pytest==5.4.3             # via -r requirements/tests.in
 six==1.15.0               # via astroid, packaging, pip-tools, tox, virtualenv
 testfixtures==6.14.1      # via flake8-isort
 toml==0.10.1              # via autopep8, isort, pylint, tox
-tox==3.15.2               # via -r tox.in
-typed-ast==1.4.1          # via astroid, flake8-annotations, mypy
+tox==3.15.2               # via -r requirements/tox.in
+typed-ast==1.4.1          # via mypy
 typing-extensions==3.7.4.2  # via mypy
 virtualenv==20.0.21       # via tox
 wcwidth==0.2.4            # via pytest
 wrapt==1.12.1             # via astroid
-zipp==3.1.0               # via importlib-metadata, importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
