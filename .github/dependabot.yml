@@ -17,7 +17,7 @@ updates:
       - "nichtparasoup"
     commit-message:
       ## prefix maximum string length of 15
-      # prefix: "nichtparasoup:"
+      prefix: "nichtparasoup"
       include: "scope"
     open-pull-requests-limit: 999
   -
@@ -35,7 +35,7 @@ updates:
       - "examples/nichtparasoup-imagecrawler-plugin:"
     commit-message:
       ## prefix maximum string length of 15
-      # prefix: "examples:"
+      prefix: "examples"
       include: "scope"
     open-pull-requests-limit: 999
   -
@@ -49,6 +49,6 @@ updates:
       - "github-actions"
     commit-message:
       ## prefix maximum string length of 15
-      # prefix: "github-actions:"
+      prefix: "gh-actions"
       include: "scope"
     open-pull-requests-limit: 999
