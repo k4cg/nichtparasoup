@@ -11,9 +11,41 @@ updates:
     allow:
       - dependency-type: "all"
     versioning-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "pip"
+      - "nichtparasoup"
+    commit-message:
+      prefix: "dependencies nichtparasoup:"
+      include: "scope"
+    open-pull-requests-limit: 999
+  -
+    package-ecosystem: "pip"
+    directory: "/examples/nichtparasoup-imagecrawler-plugin/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    allow:
+      - dependency-type: "all"
+    versioning-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "pip"
+      - "examples/nichtparasoup-imagecrawler-plugin:"
+    commit-message:
+      prefix: "dependencies examples/nichtparasoup-imagecrawler-plugin"
+      include: "scope"
+    open-pull-requests-limit: 999
   -
     package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "sunday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "dependencies github-actions:"
+      include: "scope"
+    open-pull-requests-limit: 999
