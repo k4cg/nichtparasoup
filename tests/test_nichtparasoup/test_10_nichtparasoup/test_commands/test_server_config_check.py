@@ -5,8 +5,8 @@ from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason
 
 
-@pytest.mark.parametrize('verbose', [True, False])
-@pytest.mark.parametrize('fail_fast', [True, False])
+@pytest.mark.parametrize('verbose', [True, False], ids=['verbose', 'compact'])
+@pytest.mark.parametrize('fail_fast', [True, False], ids=['FailFast', 'FailSlow'])
 class TestMakeProbeStatusCallback:
 
     def test_start(self, fail_fast: bool, verbose: bool) -> None:

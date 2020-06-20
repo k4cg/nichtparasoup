@@ -231,6 +231,12 @@ class TestCrawlerExhaustedCrawling:
             (False, True, [], []),
             (True, False, [], [True]),
             (True, True, [True], [True]),
+        ],
+        ids=[
+            'not-restart, not-exhausted',
+            'not-restart, exhausted',
+            'restart, not-exhausted',
+            'restart, exhausted',
         ]
     )
     def test_crawl_exhausted_reset(self, restart: bool, exhausted: bool,

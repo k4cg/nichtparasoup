@@ -16,7 +16,9 @@ class TestSimpleJsonEncoder:
             1, -0.2, 'foo',
             [1, 2], (1, 2),
             {'a': 1, 2: 3},
-        ])
+        ],
+        ids=type
+    )
     def test_base_type(self, data: Any) -> None:
         # act
         json_o = JSONEncoder().encode(data)
@@ -30,7 +32,9 @@ class TestSimpleJsonEncoder:
             1, -0.2, 'foo',
             [1, 2], (1, 2),
             {'a': 1, 2: 3},
-        ])
+        ],
+        ids=type
+    )
     def test_inherited_base_type(self, data_o: Any) -> None:
         # arrange
         type_o = type(data_o)
