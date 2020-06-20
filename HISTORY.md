@@ -29,13 +29,17 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `Server.get_image()` returns optional `nichtparasoup.core.server.ImageResponse` -- was optional `dict`.
     * `Server.refill()` returns `None` -- was `dict`.
     * `Server.request_reset()` returns `nichtparasoup.core.server.ResetResponse` -- was `dict`.
+  * Changes to `nichtparasoup.core.ServerRefiller.__init__()`: 
+    * Parameter `sleep` was renamed to `delay` and is nof `loat` (was `int` or `float`). 
   * Class `nichtparasoup.core.server.Status` was removed.  
     Its former static methods that returned dictionaries were reworked to be DataClasses:
     * `nichtparasoup.core.server.ServerStatus`    -- replaces `.Status.server()`.
     * `nichtparasoup.core.server.CrawlerStatus`   -- replaces `.Status.crawlers()`.
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
 * Changes
-  * Defaulting arguments of `nichtparasoup.core.Crawler` became kwargs.
+  * Defaulting arguments of `nichtparasoup.core.Crawler.__init__()` became kwargs.
+  * Parameters of `nichtparasoup.core.Crawler.fill_up_to()` changed name from `timeout` to `delay`.
+  * Parameters of `nichtparasoup.core.NPCore.fill_up_to()` changed name from `timeout` to `delay`.
   * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values.
   * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.

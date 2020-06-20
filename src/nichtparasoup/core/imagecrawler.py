@@ -190,6 +190,7 @@ class BaseImageCrawler(ABC):
 
 
 class RemoteFetcher:
+
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }
