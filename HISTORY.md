@@ -114,8 +114,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * improved `venv` support when it comes to testing.
   * Tests via `tox` were split.
     Code style tests are done via own test named `toxstyle` now (was part of standard tests).
-  
 
+
+## 2.4.2
+
+* Fixed
+  * config yaml parser when `yamale>=2.1` is installed.
 
 ## 2.4.1
 
