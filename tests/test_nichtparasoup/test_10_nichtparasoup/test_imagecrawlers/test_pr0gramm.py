@@ -11,7 +11,7 @@ from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTe
 
 class TestPr0grammConfigPromoted:
 
-    @pytest.mark.parametrize('promoted', [True, False])
+    @pytest.mark.parametrize('promoted', [True, False], ids=['promoted', 'not-promoted'])
     def test_check_value(self, promoted: bool) -> None:
         # arrange
         config_in = dict(promoted=promoted)
@@ -75,7 +75,12 @@ class TestPr0grammUrlBuilder:
         assert 'pr0gramm.com' == split.netloc
         assert '/api/items/get' == split.path
 
-    @pytest.mark.parametrize(('flags', 'flags_exp'), [(i, str(i)) for i in range(1, 16, 1)])
+    VALID_FLAGS = list(range(1, 16, 1))
+
+    @pytest.mark.parametrize(('flags', 'flags_exp'),
+                             [(flags, str(flags)) for flags in VALID_FLAGS],
+                             ids=VALID_FLAGS
+                             )
     def test_flags(self, flags: int, flags_exp: str) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=flags, promoted=False)
@@ -85,7 +90,9 @@ class TestPr0grammUrlBuilder:
         assert isinstance(flags_res, list)
         assert flags_res == [flags_exp]
 
-    @pytest.mark.parametrize(('promoted', 'promoted_exp'), [(True, '1'), (False, '0')])
+    @pytest.mark.parametrize(('promoted', 'promoted_exp'),
+                             [(True, '1'), (False, '0')],
+                             ids=['promoted', 'not-promoted'])
     def test_promoted(self, promoted: bool, promoted_exp: str) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=promoted)
@@ -96,11 +103,14 @@ class TestPr0grammUrlBuilder:
         assert promoted_res == [promoted_exp]
 
     @pytest.mark.parametrize(
-        ('tags', 'tags_exp'), [
+        ('tags', 'tags_exp'),
+        [
             (None, '! -"video"'),
             ('', '! -"video"'),
             ('!"test"', '!("test") -"video"')
-        ])
+        ],
+        ids=['None', 'EmptyString', '!"test"']
+    )
     def test_tags(self, tags: Optional[str], tags_exp: str) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=False, tags=tags)
@@ -110,7 +120,7 @@ class TestPr0grammUrlBuilder:
         assert isinstance(tags_res, list)
         assert tags_res == [tags_exp]
 
-    @pytest.mark.parametrize(('older', 'older_exp'), [(None, None), (23, '23')])
+    @pytest.mark.parametrize(('older', 'older_exp'), [(None, None), (23, '23')], ids=['None', '23'])
     def test_older(self, older: Optional[int], older_exp: Optional[str]) -> None:
         # act
         api_uri = Pr0gramm._get_api_uri(flags=0, promoted=False, older=older)
@@ -140,6 +150,10 @@ class TestPr0grammExhausted:
         [
             (True, True),
             (False, False),
+        ],
+        ids=[
+            'at_end',
+            'not at_end',
         ]
     )
     def test_exhausted(self, at_end: bool, expected: bool) -> None:
@@ -192,7 +206,9 @@ class TestPr0grammCrawl:
         # assert
         assert crawler.is_exhausted() is False
 
-    @pytest.mark.parametrize(('promoted', 'expected_cursor'), [(True, 503528), (False, 3652675)])
+    @pytest.mark.parametrize(('promoted', 'expected_cursor'),
+                             [(True, 503528), (False, 3652675)],
+                             ids=['promoted', 'not-promoted'])
     def test_crawl_cursor(self, promoted: bool, expected_cursor: Optional[int]) -> None:
         # arrange
         crawler = Pr0gramm(flags=1, promoted=promoted, tags='!s:1000')

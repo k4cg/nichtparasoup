@@ -115,7 +115,11 @@ class TestRedditExhausted:
         [
             (True, True),
             (False, False),
-        ]
+        ],
+        ids=[
+            'at_end',
+            'not at_end'
+        ],
     )
     def test_exhausted(self, at_end: bool, expected: bool) -> None:
         # arrange

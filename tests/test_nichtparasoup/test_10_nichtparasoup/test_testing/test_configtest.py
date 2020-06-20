@@ -203,7 +203,14 @@ class TestDefaultProbeCallback:
             (ConfigProbeCallbackReason.finish, None),
             (ConfigProbeCallbackReason.failure, True),
             (ConfigProbeCallbackReason.retry, True)
-        ])
+        ],
+        ids=[
+            'start',
+            'finished',
+            'failure',
+            'retry',
+        ]
+    )
     def test_(self, reason: ConfigProbeCallbackReason, expected: Optional[bool]) -> None:
         # act
         result = _default_probe_callback(reason, self._DummyImageCrawler(), None)

@@ -14,11 +14,18 @@ class TestFileFetcher:
     @pytest.mark.parametrize(
         'uri',
         [
-            'https://asdf',  # netloc
-            'https://as/df',  # path
-            'https://asdf#foo',  # fragment
-            'https://asdf?',  # no_query
-        ])
+            'https://asdf',
+            'https://as/df',
+            'https://asdf#foo',
+            'https://asdf?',
+        ],
+        ids=[
+            'netloc',
+            'path',
+            'fragment',
+            'no_query',
+        ]
+    )
     def test__uri_sort_query__untouched(self, uri: str) -> None:
         # arrange
         uri_parsed = urlparse(uri)
@@ -31,8 +38,15 @@ class TestFileFetcher:
             ('file:///foo_bar', True),
             ('file://foo_bar/baz', True),
             ('http://foo.bar/baz', False),
-            ('https://foo.bar/baz', False)
-        ])
+            ('https://foo.bar/baz', False),
+        ],
+        ids=[
+            'file:///foo_bar',
+            'file://foo_bar/baz',
+            'http://foo.bar/baz',
+            'https://foo.bar/baz',
+        ]
+    )
     def test__valid_url(self, uri: str, exp: bool) -> None:
         assert FileFetcher._valid_uri(uri) is exp
 
@@ -43,7 +57,8 @@ class TestFileFetcher:
             'https://asdf?foo=1',
             'https://asdf?bar=1&foo=2',
             'https://asdf?',
-        ])
+        ]
+    )
     def test__uri_sort_query__untouched_qs(self, uri: str) -> None:
         # arrange
         uri_parsed = urlparse(uri)
@@ -53,9 +68,16 @@ class TestFileFetcher:
     @pytest.mark.parametrize(
         ('uri', 'uri_expected'),
         [
+            ('https://asdf?bar=2&foo=1', 'https://asdf?bar=2&foo=1'),
             ('https://asdf?foo=1&bar=2', 'https://asdf?bar=2&foo=1'),
             ('https://asdf?foo=1&bar=2&foo=2', 'https://asdf?bar=2&foo=1&foo=2'),
-        ])
+        ],
+        ids=[
+            'presorted',
+            'unsorted',
+            'unsorted with equal-duplications'
+        ]
+    )
     def test__uri_sort_query__unsorted(self, uri: str, uri_expected: str) -> None:
         # arrange
         uri_parsed = urlparse(uri)

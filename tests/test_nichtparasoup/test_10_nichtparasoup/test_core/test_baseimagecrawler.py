@@ -104,6 +104,10 @@ class TestExhaustedCrawling:
         [
             (False, [True]),
             (True, []),
+        ],
+        ids=[
+            'exhausted',
+            'not-exhausted',
         ]
     )
     def test_exhausted(self, is_exhausted: bool, expected_call_craw: List[bool]) -> None:
