@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional, Union
 from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, get_terminal_size, style, unstyle
 from click.exceptions import ClickException
 
+from .._internals import _log
 from ..config import Config, parse_yaml_file
 from ..imagecrawler import BaseImageCrawler
 from ..testing.config import (
@@ -33,7 +34,8 @@ def main(file: _FilePath, *,
     try:
         config = parse_yaml_file(file)
     except Exception as ex:
-        raise ClickException(f'ValidateError: {ex}') from ex
+        _log('debug', 'Error during config parse.', exc_info=ex)
+        raise ClickException(f'ValidationError: {ex}') from ex
     _print_if(verbose, f'Config: {config!r}')
     check_config(config)
     if probe:
@@ -45,7 +47,8 @@ def check_config(config: Config) -> None:  # pragma: no cover
     try:
         ConfigTest(config).check_duplicates()
     except Exception as ex:
-        raise ClickException(f'ValidateError: {ex}') from ex
+        _log('debug', 'Error during config check.', exc_info=ex)
+        raise ClickException(f'ValidationError: {ex}') from ex
 
 
 class _ProbeStatusCallbackBehaviour:

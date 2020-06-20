@@ -8,6 +8,9 @@ from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection,
 
 class DummyImage(BaseImageCrawler):
 
+    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+        super().__init__(width=width, height=height)
+
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
@@ -24,7 +27,7 @@ class DummyImage(BaseImageCrawler):
         )
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         width = config['width']
         height = config['height']
         if type(width) is not int:  # pylint: disable=unidiomatic-typecheck

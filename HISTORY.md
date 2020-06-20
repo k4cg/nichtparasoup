@@ -48,6 +48,9 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
   * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
+  * Method  `nichtparasoup.core.imagecrawler.BaseImageCrawler.__init__()` became abstract 
+    in favour of proper argument definition and typing.
+  * All builtin imagecrawlers' `__init__()` got proper argument definition and typing. 
   * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
   * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore

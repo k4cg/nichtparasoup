@@ -179,12 +179,15 @@ class ConfigTestMakeProbeRetryCallbackTest(unittest.TestCase):
 class TestDefaultProbeCallback:
     class _DummyImageCrawler(BaseImageCrawler):
 
+        def __init__(self, **config: Any) -> None:
+            super().__init__(**config)
+
         @classmethod
         def info(cls) -> ImageCrawlerInfo:
             raise NotImplementedError()
 
         @classmethod
-        def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+        def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
             return ImageCrawlerConfig()
 
         def is_exhausted(self) -> bool:

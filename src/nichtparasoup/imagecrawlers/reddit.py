@@ -12,8 +12,8 @@ from ..imagecrawler import (
 class Reddit(BaseImageCrawler):
     # see https://github.com/reddit-archive/reddit/wiki/JSON
 
-    def __init__(self, **config: Any) -> None:  # pragma: no cover
-        super().__init__(**config)
+    def __init__(self, *, subreddit: str) -> None:  # pragma: no cover
+        super().__init__(subreddit=subreddit)
         self._uri_base = f'https://www.reddit.com/r/{url_quote(self._config["subreddit"])}.json?after='
         self._after: Optional[str] = None
         self._at_end: bool = False
@@ -31,8 +31,8 @@ class Reddit(BaseImageCrawler):
         )
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        subreddit = config["subreddit"]
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
+        subreddit = config['subreddit']
         if type(subreddit) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError(f'subreddit {subreddit!r} is not str')
         if len(subreddit) == 0:

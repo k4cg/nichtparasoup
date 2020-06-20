@@ -9,8 +9,8 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 
 class Pr0gramm(BaseImageCrawler):
 
-    def __init__(self, **config: Any) -> None:  # pragma: no cover
-        super().__init__(**config)
+    def __init__(self, *, promoted: bool = True, tags: Optional[str] = None) -> None:  # pragma: no cover
+        super().__init__(promoted=promoted, tags=tags)
         self._at_end: bool = False
         self._older: Optional[int] = None
         self._remote_fetcher = RemoteFetcher()
@@ -40,12 +40,11 @@ class Pr0gramm(BaseImageCrawler):
         return tags
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         promoted: bool = config.get('promoted', True)
         if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
             raise TypeError(f'promoted {promoted!r} is not bool')
-        tags = config.get('tags', None)
-        tags = cls.__check_config_tags(tags)
+        tags = cls.__check_config_tags(config.get('tags', None))
         return ImageCrawlerConfig(
             promoted=promoted,
             tags=tags,

@@ -8,6 +8,9 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 
 class Echo(BaseImageCrawler):
 
+    def __init__(self, *, image_uri: str) -> None:  # pragma: no cover
+        super().__init__(image_uri=image_uri)
+
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
@@ -23,8 +26,8 @@ class Echo(BaseImageCrawler):
         )
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        image_uri = config["image_uri"]
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
+        image_uri = config['image_uri']
         if type(image_uri) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError(f'image_uri {image_uri!r} is not str')
         if len(image_uri) == 0:

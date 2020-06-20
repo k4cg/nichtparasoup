@@ -8,6 +8,9 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 class Picsum(BaseImageCrawler):
     _bunch = 10
 
+    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+        super().__init__(width=width, height=height)
+
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
@@ -20,9 +23,9 @@ class Picsum(BaseImageCrawler):
         )
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
-        width = config["width"]
-        height = config["height"]
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
+        width = config['width']
+        height = config['height']
         if type(width) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
             raise TypeError(f'width {width!r} is not int')
         if type(height) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive

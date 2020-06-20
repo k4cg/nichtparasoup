@@ -14,12 +14,16 @@ class BaseLoadableImageCrawlerA(BaseImageCrawler, ABC):
 
 
 class LoadableImageCrawlerA(BaseImageCrawler):
+
+    def __init__(self, **config: Any) -> None:
+        super().__init__(**config)
+
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         pass
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         pass
 
     def is_exhausted(self) -> bool:

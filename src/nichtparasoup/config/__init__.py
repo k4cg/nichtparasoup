@@ -22,14 +22,20 @@ SCHEMA_FILE: _FilePath = join(dirname(realpath(__file__)), "schema.yaml")
 
 class ImageCrawlerSetupError(Exception):
 
-    def __init__(self, ic_name: str, ic_class: type, ic_config: Dict[Any, Any]) -> None:  # pragma: no cover
+    def __init__(self,
+                 ic_name: str, ic_class: type, ic_config: Dict[Any, Any],
+                 message: Optional[str] = None) -> None:  # pragma: no cover
         super().__init__()
         self._name = ic_name
         self._class = ic_class
         self._config = ic_config
+        self._message = message
 
     def __str__(self) -> str:  # pragma: no cover
-        return f'Failed setup crawler {self._name!r} of type {self._class!r} with config {self._config!r}'
+        string = f'Failed setup crawler {self._name!r} of type {self._class!r} with config {self._config!r}.'
+        if self._message:
+            string += f'\n\t{self._message}'
+        return string
 
 
 def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
@@ -41,7 +47,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     try:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
     except Exception as ex:
-        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config) from ex
+        raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config, str(ex)) from ex
     else:
         imagecrawler._np_name = imagecrawler_name  # pylint: disable=protected-access
         return imagecrawler

@@ -10,6 +10,9 @@ class MockableImageCrawler(BaseImageCrawler):
     """An imagecrawler that does nothing. use it for mocking ...
     """
 
+    def __init__(self, **config: Any) -> None:
+        super().__init__(**config)
+
     @classmethod
     def info(cls) -> ImageCrawlerInfo:
         return ImageCrawlerInfo(
@@ -18,7 +21,7 @@ class MockableImageCrawler(BaseImageCrawler):
         )
 
     @classmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         return ImageCrawlerConfig(config)
 
     def is_exhausted(self) -> bool:
