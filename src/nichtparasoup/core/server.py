@@ -113,7 +113,7 @@ class Server:
             _log('info', ' * fill all crawlers up to %d', self.keep)
             self.refill()  # initial fill
             if not self._refiller:
-                self._refiller = ServerRefiller(self, 1)
+                self._refiller = ServerRefiller(self, 1.0)
                 self._refiller.start()  # start threaded periodical refill
             self.stats.time_started = int(time())
             self.__running = True
@@ -186,10 +186,11 @@ class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler']):
 
 
 class ServerRefiller(Thread):
-    def __init__(self, server: Server, sleep_: Union[int, float]) -> None:  # pragma: no cover
+
+    def __init__(self, server: Server, delay: float) -> None:  # pragma: no cover
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
-        self._sleep = sleep_
+        self._delay = delay
         self._stop_event = Event()
         self._run_lock = Lock()
 
@@ -202,7 +203,7 @@ class ServerRefiller(Thread):
                 _log('info', ' * server gone. stopping %s', type(self).__name__)
                 self._stop_event.set()
             if not self._stop_event.is_set():
-                sleep(self._sleep)
+                sleep(self._delay)
 
     def start(self) -> None:
         with self._run_lock:
