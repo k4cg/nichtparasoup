@@ -81,7 +81,7 @@ class Server:
 
     def refill(self) -> None:
         with self._locks.refill:
-            self.core.fill_up_to(self.keep, self._log_refill_crawler)
+            self.core.fill_up_to(self.keep, on_refill=self._log_refill_crawler)
 
     def _reset(self) -> None:
         with self._locks.reset:

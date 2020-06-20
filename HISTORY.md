@@ -38,8 +38,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
 * Changes
   * Defaulting arguments of `nichtparasoup.core.Crawler.__init__()` became kwargs.
-  * Parameters of `nichtparasoup.core.Crawler.fill_up_to()` changed name from `timeout` to `delay`.
-  * Parameters of `nichtparasoup.core.NPCore.fill_up_to()` changed name from `timeout` to `delay`.
+  * Parameters of `nichtparasoup.core.Crawler.fill_up_to()` changed:
+    * `filled_by` became a kwarg.
+    * `timeout` became a kwarg and was renamed to `delay`.
+  * Parameters of `nichtparasoup.core.NPCore.fill_up_to()` changed:
+    * `on_refill` became a kwarg.
+    * `timeout` became a kwarg and was renamed to `delay`.
   * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values.
   * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.

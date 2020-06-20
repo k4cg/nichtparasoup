@@ -99,7 +99,7 @@ class Crawler:
                 image_added(image)  # pylint: disable=not-callable
         return len(images)
 
-    def fill_up_to(self, to: int,
+    def fill_up_to(self, to: int, *,
                    filled_by: Optional[_OnFill] = None,
                    delay: float = _FILLUP_DELAY_DEFAULT) -> None:
         while len(self.images) < to:
@@ -170,12 +170,15 @@ class NPCore:
             )
         )
 
-    def fill_up_to(self, to: int,
+    def fill_up_to(self, to: int, *,
                    on_refill: Optional[_OnFill],
                    delay: float = _FILLUP_DELAY_DEFAULT) -> None:
         fill_treads: List[Thread] = []
         for crawler in self.crawlers.copy():  # pylint: disable=no-member
-            fill_tread = Thread(target=crawler.fill_up_to, args=(to, on_refill, delay), daemon=True)
+            fill_tread = Thread(target=crawler.fill_up_to,
+                                args=(to,),
+                                kwargs={'filled_by': on_refill, 'delay': delay},
+                                daemon=True)
             fill_treads.append(fill_tread)
             fill_tread.start()
         for fill_tread in fill_treads:
