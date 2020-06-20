@@ -43,7 +43,8 @@ def parse_yaml_file(file_path: str) -> Dict[str, Any]:
     if not _schema:
         _schema = yamale.make_schema(_SCHEMA_FILE, parser='ruamel')
     _data = yamale.make_data(file_path, parser='ruamel')
-    config = yamale.validate(_schema, _data, strict=True)[0][0]  # type: Dict[str, Any]
+    yamale.validate(_schema, _data, strict=True)
+    config = _data[0][0]  # type: Dict[str, Any]
     config.setdefault('logging', dict())
     config['logging'].setdefault('level', 'INFO')
     for config_crawler in config['crawlers']:

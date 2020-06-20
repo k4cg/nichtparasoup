@@ -4,6 +4,11 @@
 
 add upcoming unreleased modiications here
 
+## 2.4.2
+
+* Fixed
+  * config yaml parser when `yamale>=2.1` is installed.
+
 ## 2.4.1
 
 * Fixed

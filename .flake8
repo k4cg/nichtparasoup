@@ -6,7 +6,7 @@ ignore =
     # ignore `self`, `cls` markers of flake8-annotations>=2.0
     ANN101,ANN102
 
-exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs
+exclude = .git,__pycache__,_OLD,_TEST,build,dist,.tox,*_cache,.eggs,.venv,venv
     setup.py
     docs
     examples
