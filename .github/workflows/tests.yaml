@@ -72,7 +72,7 @@ jobs:
       - name: Upload coverage to Codecov
         if: contains(matrix.tox, '-coverageXML')
         # see https://github.com/codecov/codecov-action
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v1.0.7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
