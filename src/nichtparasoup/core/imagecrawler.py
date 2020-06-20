@@ -52,13 +52,21 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
+
     _np_name: Optional[str] = None
     """Internal name used in nichtparasoup configs.
     Value is assigned automatically.
     see :ref:``internal_name``
     """
 
+    @abstractmethod
     def __init__(self, **config: Any) -> None:  # pragma: no cover
+        """Basic init.
+
+        example implementation:
+            def __init__(self, *, height: int) -> None:
+                super().__init__(height=height)
+        """
         self._config = self.check_config(config)  # intended to be immutable from now on
         self._reset_before_next_crawl: bool = False
         self._crawl_lock = Lock()
@@ -151,7 +159,7 @@ class BaseImageCrawler(ABC):
 
     @classmethod
     @abstractmethod
-    def check_config(cls, config: Dict[Any, Any]) -> ImageCrawlerConfig:  # pragma: no cover
+    def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:  # pragma: no cover
         """This function is intended to check if a config is valid and to strip unused config.
 
         When implementing:

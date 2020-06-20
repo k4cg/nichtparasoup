@@ -198,7 +198,7 @@ class TestPr0grammCrawl:
 
     def test_not_exhausted_before_end(self) -> None:
         # arrange
-        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:1000')
+        crawler = Pr0gramm(promoted=True, tags='!s:1000')
         crawler._remote_fetcher = _FILE_FETCHER
         assert crawler.is_exhausted() is False
         # act
@@ -211,7 +211,7 @@ class TestPr0grammCrawl:
                              ids=['promoted', 'not-promoted'])
     def test_crawl_cursor(self, promoted: bool, expected_cursor: Optional[int]) -> None:
         # arrange
-        crawler = Pr0gramm(flags=1, promoted=promoted, tags='!s:1000')
+        crawler = Pr0gramm(promoted=promoted, tags='!s:1000')
         crawler._remote_fetcher = _FILE_FETCHER
         crawler._older = None
         # act
@@ -221,7 +221,7 @@ class TestPr0grammCrawl:
 
     def test_crawl_images(self) -> None:
         # arrange
-        crawler = Pr0gramm(flags=1, promoted=True, tags='!s:15000')
+        crawler = Pr0gramm(promoted=True, tags='!s:15000')
         crawler._remote_fetcher = _FILE_FETCHER
         expected_images = ImageCollection()
         expected_images.add(Image(
