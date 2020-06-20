@@ -32,7 +32,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade 'setuptools>=40' 'tox>=3.14'
       - name: Test nichtparasoup
-        run: python -m tox -r -e py3-coverageXML
+        # since the version got retired, we dont need online tests
+        run: python -m tox -r -e py3-coverageXML -- -m "not online"
       - name: "Test examples::nichtparasoup-imagecrawler-plugin"
         run: python -m tox -r -e py3 -c examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
