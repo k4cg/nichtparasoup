@@ -7,7 +7,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "sunday"
+      day: "saturday"
     allow:
       - dependency-type: "all"
     versioning-strategy: "auto"
@@ -25,7 +25,7 @@ updates:
     directory: "/examples/nichtparasoup-imagecrawler-plugin/"
     schedule:
       interval: "weekly"
-      day: "sunday"
+      day: "saturday"
     allow:
       - dependency-type: "all"
     versioning-strategy: "auto"
@@ -43,7 +43,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "sunday"
+      day: "saturday"
     labels:
       - "dependencies"
       - "github-actions"
