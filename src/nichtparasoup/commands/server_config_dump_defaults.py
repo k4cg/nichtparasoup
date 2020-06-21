@@ -51,4 +51,8 @@ cli = Command(
 )
 
 if __name__ == '__main__':
-    cli.main()
+    try:
+        prog_name: Optional[str] = __spec__.name  # type: ignore[name-defined]
+    except NameError:
+        prog_name = None
+    cli.main(prog_name=prog_name)

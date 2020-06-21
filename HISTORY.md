@@ -10,7 +10,6 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
   * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
-    * `python3 -m nichtparasoup` was moved to `python3 -m nichtparasoup.cli`.
     * CLI is done via [`click`](https://click.palletsprojects.com) now (was done via `argparse` before).
     * Shell completion was removed temporary. See the [issue](https://github.com/k4cg/nichtparasoup/issues/226).
     * Proper subcommands are used now.  

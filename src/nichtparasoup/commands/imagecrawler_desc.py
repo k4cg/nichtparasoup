@@ -1,6 +1,6 @@
 __all__ = ['main', 'cli']
 
-from typing import Type
+from typing import Optional, Type
 
 from click import Argument, BadParameter, Command, echo
 
@@ -52,4 +52,8 @@ cli = Command(
 )
 
 if __name__ == '__main__':
-    cli.main()
+    try:
+        prog_name: Optional[str] = __spec__.name  # type: ignore[name-defined]
+    except NameError:
+        prog_name = None
+    cli.main(prog_name=prog_name)
