@@ -9,10 +9,10 @@ isort==4.3.21             # via pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
 mypy-extensions==0.4.3    # via mypy
-mypy==0.780               # via -r requirements/style.in
+mypy==0.781               # via -r requirements/style.in
 pylint==2.5.3             # via -r requirements/style.in
 six==1.15.0               # via astroid
 toml==0.10.1              # via pylint
-typed-ast==1.4.1          # via astroid, mypy
+typed-ast==1.4.1          # via mypy
 typing-extensions==3.7.4.2  # via mypy
 wrapt==1.12.1             # via astroid
