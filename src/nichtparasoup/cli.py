@@ -1,26 +1,24 @@
 __all__ = ['cli']
 
-from os.path import dirname, join
+from os.path import dirname
 from sys import version_info
 from typing import Any
 
 from click import Context, Group, Option, echo
 
-from .. import __version__ as nichtparasoup_version
-from ..commands.imagecrawler_desc import cli as imagecrawler_desc
-from ..commands.imagecrawler_list import cli as imagecrawler_list
-from ..commands.server_config_check import cli as server_config_check
-from ..commands.server_config_dump_defaults import cli as server_config_dump_defaults
-from ..commands.server_run import cli as server_run
-
-# from .completion import cli as completion  # @FIXME removed until fixed -- see module itself
+from . import __version__ as __version
+from .commands.imagecrawler_desc import cli as imagecrawler_desc
+from .commands.imagecrawler_list import cli as imagecrawler_list
+from .commands.server_config_check import cli as server_config_check
+from .commands.server_config_dump_defaults import cli as server_config_dump_defaults
+from .commands.server_run import cli as server_run
 
 
 def _cli_print_version(ctx: Context, _: Any, value: Any) -> None:  # pragma: no cover
     if not value or ctx.resilient_parsing:
         return
-    location = join(dirname(__file__), '..')
-    echo(f'{nichtparasoup_version} from {location} (python {version_info.major}.{version_info.minor})')
+    location = dirname(__file__)
+    echo(f'{__version} from {location} (python {version_info.major}.{version_info.minor})')
     ctx.exit()
 
 
@@ -57,6 +55,7 @@ cli = Group(
                 'desc': imagecrawler_desc,
             }
         ),
-        # 'completion': completion,  # @FIXME removed until fixed -- see module itself
+        # @TODO add completion if run via alias, not via `python -m` ... if possible
+        # 'completion': completion,  # @TODO removed until https://github.com/k4cg/nichtparasoup/issues/226
     }
 )

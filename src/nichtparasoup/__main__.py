@@ -1,3 +1,3 @@
-from .cli.main import cli
+from .cli import cli
 
-cli(prog_name=__package__)
+cli.main(prog_name=__package__)
