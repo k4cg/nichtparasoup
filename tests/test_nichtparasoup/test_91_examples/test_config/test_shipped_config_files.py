@@ -6,6 +6,7 @@ import pytest
 from nichtparasoup.testing.configfile import ConfigFileTest
 
 
+@pytest.mark.no_cover
 class TestShippedExampleConfigFile:
     __EXAMPLE_DIR = join(dirname(__file__), '..', '..', '..', '..', 'examples', 'config')
     __EXAMPLE_FILES = glob(join(__EXAMPLE_DIR, '*.*'), recursive=False)
