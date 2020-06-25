@@ -9,7 +9,7 @@ isort==4.3.21             # via pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
 mypy-extensions==0.4.3    # via mypy
-mypy==0.780               # via -r requirements/style.in
+mypy==0.782               # via -r requirements/style.in
 pylint==2.5.3             # via -r requirements/style.in
 six==1.15.0               # via astroid
 toml==0.10.1              # via pylint
