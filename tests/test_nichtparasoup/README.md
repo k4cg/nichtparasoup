@@ -12,7 +12,7 @@ add additional needed requirements to the respective [requirements file](../../r
 
 ```shell script
 # run from project root:
-python -m pip install --upgrade tox
+python -m pip install --upgrade -r requirements/tox.txt
 python -m tox
 ```
 
@@ -23,8 +23,8 @@ docker run \
   -v "$PWD":/usr/src/nichtparasoup \
   -w /usr/src/nichtparasoup \
   --rm \
-  python:3.6 bash -c \
-  "python -m pip install tox; python -m tox; rm -rf .tox;"
+  python:3.8 bash -c \
+  "python -m pip install -r requirements/tox.txt && python -m tox; rm -rf .tox;"
 ```
 
 ## contribution 
