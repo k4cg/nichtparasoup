@@ -1,48 +1,37 @@
 # .coveragerc to control coverage.py
 
 [run]
-
 data_file = .coverage
-relative_files = True
-
+# needed for running in tox
+relative_files = False
 branch = True
-
 source =
     # go with packages instead of directories, so we can run in tox correctly
     nichtparasoup
-
 omit =
     # Don't complain if non-runnable code isn't run:
     */__main__.py
 
-
 [paths]
-
 source =
-    ./src/nichtparasoup
-    .tox/*/lib/python*/site-packages/nichtparasoup
-    .tox/pypy/site-packages/nichtparasoup
-
+    src/nichtparasoup/
+    **/site-packages/nichtparasoup/
 
 [report]
-
 # TODO set proper value
 fail_under = 0
-
 exclude_lines =
     # Have to re-enable the standard pragma
     \#\s*pragma: no cover
-
     # Don't complain if non-runnable code isn't run:
     ^if __name__ == ['"]__main__['"]:$
     ^\s*if False:
-
+# partial_branches =
+ignore_errors = True
+show_missing = True
 
 [html]
-
 directory = htmlcov
 
-
 [xml]
-
 output = coverage.xml

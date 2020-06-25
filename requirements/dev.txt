@@ -9,7 +9,7 @@ astroid==2.4.2            # via pylint
 attrs==19.3.0             # via flake8-bugbear, pytest
 autopep8==1.5.3           # via -r requirements/dev.in
 click==7.1.2              # via pip-tools
-coverage==5.1             # via -r requirements/tests.in
+coverage==5.1             # via -r requirements/tests.in, pytest-cov
 distlib==0.3.0            # via virtualenv
 filelock==3.0.12          # via tox, virtualenv
 flake8-annotations==2.1.0  # via -r requirements/style.in
@@ -35,7 +35,8 @@ pycodestyle==2.6.0        # via autopep8, flake8
 pyflakes==2.2.0           # via flake8
 pylint==2.5.3             # via -r requirements/style.in
 pyparsing==2.4.7          # via packaging
-pytest==5.4.3             # via -r requirements/tests.in
+pytest-cov==2.10.0        # via -r requirements/tests.in
+pytest==5.4.3             # via -r requirements/tests.in, pytest-cov
 six==1.15.0               # via astroid, packaging, pip-tools, tox, virtualenv
 testfixtures==6.14.1      # via flake8-isort
 toml==0.10.1              # via autopep8, isort, pylint, tox
