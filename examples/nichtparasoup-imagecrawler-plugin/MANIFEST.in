@@ -13,7 +13,7 @@ include README.md
 include requirements/*.txt
 include pyproject.toml
 include setup.cfg setup.py
-graft nichtparasoup_placeholders
+graft src
 
 
 # additional files and folders

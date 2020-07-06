@@ -1,7 +1,7 @@
 import unittest
 from typing import Any, List, Type
 
-from nichtparasoup_placeholders import DummyImage
+from nichtparasoup_imagecrawler_dummyimage import DummyImage
 
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest

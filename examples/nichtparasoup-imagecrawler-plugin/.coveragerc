@@ -5,16 +5,16 @@
 data_file = .coverage
 branch = True
 source =
-    # go with packages instead of directories, so we can run in tox correctly
-    nichtparasoup_placeholders
+    # go with module names instead of files, so we can run in tox correctly
+    nichtparasoup_imagecrawler_dummyimage
 omit =
     # Don't complain if non-runnable code isn't run:
     */__main__.py
 
 [paths]
 source =
-    nichtparasoup_placeholders/
-    */site-packages/nichtparasoup_placeholders/
+    src/
+    */site-packages/
 
 [report]
 # TODO set proper value
