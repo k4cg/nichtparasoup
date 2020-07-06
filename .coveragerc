@@ -1,9 +1,8 @@
-# .coveragerc to control coverage.py
+## .coveragerc to control coverage.py
+## see https://coverage.readthedocs.io/en/stable/config.html
 
 [run]
 data_file = .coverage
-# needed for running in tox
-relative_files = False
 branch = True
 source =
     # go with packages instead of directories, so we can run in tox correctly
@@ -13,9 +12,9 @@ omit =
     */__main__.py
 
 [paths]
-source =
+nichtparasoup =
     src/nichtparasoup/
-    **/site-packages/nichtparasoup/
+    */site-packages/nichtparasoup/
 
 [report]
 # TODO set proper value
