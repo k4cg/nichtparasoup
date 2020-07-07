@@ -1,7 +1,8 @@
 import unittest
-from typing import Any, List, Type
+from typing import Any, List
 
-from nichtparasoup.imagecrawler import BaseImageCrawler
+import pytest
+
 from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
@@ -62,15 +63,6 @@ class EchoDescriptionTest(unittest.TestCase):
         self.assertIn('image_uri', description.config)
 
 
-class EchoLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'Echo'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return Echo
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_loader() -> None:
+    ImageCrawlerLoaderTest().check('Echo', Echo)

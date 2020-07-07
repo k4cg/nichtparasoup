@@ -1,10 +1,10 @@
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Optional, Sequence, Type
+from typing import Any, Dict, Optional, Sequence
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
+from nichtparasoup.imagecrawler import Image, ImageCollection
 from nichtparasoup.imagecrawlers.pr0gramm import Pr0gramm
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
@@ -255,15 +255,6 @@ class TestPr0grammDescription:
         assert 'tags' in description.config
 
 
-class TestPr0grammLoader(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'Pr0gramm'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return Pr0gramm
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_loader() -> None:
+    assert ImageCrawlerLoaderTest().check('Pr0gramm', Pr0gramm)

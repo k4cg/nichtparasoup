@@ -35,6 +35,7 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.core.server.ServerStatus`    -- replaces `.Status.server()`.
     * `nichtparasoup.core.server.CrawlerStatus`   -- replaces `.Status.crawlers()`.
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
+  * Removed the install-extras `development` and `testing`.
 * Changes
   * Defaulting arguments of `nichtparasoup.core.Crawler.__init__()` became kwargs.
   * Parameters of `nichtparasoup.core.Crawler.fill_up_to()` changed:
@@ -55,12 +56,12 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
     `nichtparasoup.__version__` is no longer a module but a string.
   * Package `nichtparasoup.testing` got a huge overhaul. 
-    * Classes do no longer implement `unittets.Testcase` anymore.
+    * Classes do no longer implement `unittets.TestCase` anymore.
     * Functionality was split into chunks for easier use.
     * Class `.configfile.ConfigFileTest` (previously named `.config.ConfigFileTest`) was reworked.
     * Class `.imagecrawler.FileFetcher` supports fully qualified urls now, including schema and netloc.
       Therefore an optional parameter `base_url` was added.
-  * install extras `development` and `testing` were changed to be separate (`pip-compile`d pinned) files:
+  * Install-extras `development` and `testing` were changed to be separate (`pip-compile`d pinned) files:
     * [dev requirements](requirements/dev.txt)
     * [tests requirements](requirements/tests.txt)
 * Fixed

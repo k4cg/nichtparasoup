@@ -1,5 +1,6 @@
 __all__ = [
     "get_imagecrawlers", "clear_imagecrawlers",
+    "KnownImageCrawlers",
 ]
 
 from functools import lru_cache

@@ -3,29 +3,26 @@ __all__ = ["FileFetcher", "ImageCrawlerLoaderTest",
            'ImagecrawlerProbeRetryCallback'
            ]
 
-from abc import ABC, abstractmethod
 from collections import OrderedDict
 from http.client import HTTPResponse
 from os.path import join as path_join
 from pathlib import Path
 from time import sleep
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
-from unittest import TestCase
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
 
 from ..core.image import ImageCollection
 from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
-from ..imagecrawlers import get_imagecrawlers
+from ..imagecrawlers import KnownImageCrawlers, get_imagecrawlers
 
 _Uri = str
 _FilePath = str
-_DirPath = str  # @TODO make pathlike
+_DirPath = str
 
 
 class FileFetcher(RemoteFetcher):
-    r"""
-    A file fetcher that can be used for testing with local files.
+    r"""A file fetcher that can be used for testing with local files.
 
     URI are modified so query params are sorted - which makes same URL unique.
 
@@ -101,52 +98,54 @@ class FileFetcher(RemoteFetcher):
         return response, actual_uri
 
 
-class ImageCrawlerLoaderTest(TestCase, ABC):
-    """
-    Helper fo testing if the loader finds the ImageCrawler plugin properly.
-
-    Just implement the abstract properties ``ic_name`` and ``ic_class``
-    and call the ``check`` method in a test.
+class ImageCrawlerLoaderTest:
+    """Helper for testing if the loader finds the ImageCrawler plugin properly.
     """
 
-    @property
-    @abstractmethod
-    def ic_name(self) -> str:  # pragma: no cover
+    def _get_imagecrawlers(self) -> KnownImageCrawlers:  # pragma: no cover
+        return get_imagecrawlers()
+
+    def check(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
         """
-        Return the intended ImageCrawler's name.
-        That's basically the name you chose in the EntryPoint.
-
-        Example implementation:
-            return "MyImageCrawler"
+        :param ic_name: ImageCrawler name
+        :param ic_class: ImageCrawler class
+        :return:
+        :raises ValueError: on error
         """
-        raise NotImplementedError()
+        return all([
+            self.check_get_imagecrawler_class(ic_name, ic_class),
+            self.check_get_imagecrawler_name(ic_name, ic_class),
+        ])
 
-    @property
-    @abstractmethod
-    def ic_class(self) -> Type[BaseImageCrawler]:  # pragma: no cover
+    def check_get_imagecrawler_class(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
         """
-        The class of your ImageCrawler.
-
-        Example implementation:
-            return MyImageCrawler
+        :param ic_name: ImageCrawler name
+        :param ic_class: ImageCrawler class
+        :return: always ``True``
+        :raises ValueError: on error
         """
-        raise NotImplementedError()
+        imagecrawler_class = self._get_imagecrawlers().get_class(ic_name)
+        if imagecrawler_class:
+            if ic_class is not imagecrawler_class:
+                raise ValueError(f'{imagecrawler_class!r} is not {ic_class!r}')
+        else:
+            raise ValueError(f'Unknown name {ic_name!r}')
+        return True
 
-    def check(self) -> None:
-        self.check_get_imagecrawler_class()
-        self.check_get_imagecrawler_name()
-
-    def check_get_imagecrawler_class(self) -> None:
-        # act
-        imagecrawler_class = get_imagecrawlers().get_class(self.ic_name)
-        # assert
-        self.assertIs(imagecrawler_class, self.ic_class)
-
-    def check_get_imagecrawler_name(self) -> None:
-        # act
-        imagecrawler_name = get_imagecrawlers().get_name(self.ic_class)
-        # assert
-        self.assertEqual(imagecrawler_name, self.ic_name)
+    def check_get_imagecrawler_name(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
+        """
+        :param ic_name: ImageCrawler name
+        :param ic_class: ImageCrawler class
+        :return: always ``True``
+        :raises ValueError: on error
+        """
+        imagecrawler_name = self._get_imagecrawlers().get_name(ic_class)
+        if imagecrawler_name:
+            if ic_name is not imagecrawler_name:
+                raise ValueError(f'{imagecrawler_name!r} is not {ic_name!r}')
+        else:
+            raise ValueError(f'Unknown class {ic_class!r}')
+        return True
 
 
 PROBE_DELAY_DEFAULT: float = 0.05

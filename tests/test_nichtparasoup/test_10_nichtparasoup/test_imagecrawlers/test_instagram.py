@@ -2,10 +2,12 @@ import unittest
 from collections import OrderedDict
 from json import dumps as json_dumps, loads as json_loads
 from os.path import dirname, join as path_join
-from typing import Any, Dict, Tuple, Type
+from typing import Any, Dict, Tuple
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urlparse
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
+import pytest
+
+from nichtparasoup.imagecrawler import Image, ImageCollection
 from nichtparasoup.imagecrawlers.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )
@@ -361,18 +363,9 @@ class InstagramHashtagDescriptionTest(unittest.TestCase):
         self.assertIn('tag_name', description.config)
 
 
-class InstagramHashtagLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'InstagramHashtag'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return InstagramHashtag
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_instagram_hashtag_loader() -> None:
+    ImageCrawlerLoaderTest().check('InstagramHashtag', InstagramHashtag)
 
 
 class InstagramProfileTest(unittest.TestCase):
@@ -553,15 +546,6 @@ class InstagramProfileDescriptionTest(unittest.TestCase):
         self.assertIn('user_name', description.config)
 
 
-class InstagramProfileLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'InstagramProfile'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return InstagramProfile
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_profile_loader() -> None:
+    ImageCrawlerLoaderTest().check('InstagramProfile', InstagramProfile)
