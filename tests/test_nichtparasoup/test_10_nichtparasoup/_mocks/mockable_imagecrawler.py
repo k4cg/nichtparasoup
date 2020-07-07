@@ -22,7 +22,7 @@ class MockableImageCrawler(BaseImageCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
-        return ImageCrawlerConfig(config)
+        return ImageCrawlerConfig(**config)
 
     def is_exhausted(self) -> bool:
         return False

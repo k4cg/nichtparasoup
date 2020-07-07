@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from .mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
+from .._mocks.mockable_imagecrawler import MockableImageCrawler, YetAnotherImageCrawler
 
 
 class TestBaseImageCrawlerEqual:
