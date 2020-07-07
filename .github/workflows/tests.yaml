@@ -27,30 +27,30 @@ jobs:
           - name: Style
             os: ubuntu-latest
             python: '3.8'
-            tox: -e style
+            toxenv: 'style'
           # check latest Python for all OS
           - name: Linux
             os: ubuntu-latest
             python: '3.8'
-            tox: -e coverage_start,py38,coverage_report
+            toxenv: 'tests_start, py38, coverage_report'
             upload_coverage: true
           - name: Windows
             os: windows-latest
             python: '3.8'
-            tox: -e py38
+            toxenv: 'py38'
           - name: MacOs
             os: macos-latest
             python: '3.8'
-            tox: -e py38
+            toxenv: 'py38'
           # check older Python
           - name: '3.7'
             os: ubuntu-latest
             python: '3.7'
-            tox: -e py37
+            toxenv: 'py37'
           - name: '3.6'
             os: ubuntu-latest
             python: '3.6'
-            tox: -e py36
+            toxenv: 'py36'
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -67,9 +67,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r requirements/tox.txt
       - name: Test nichtparasoup
-        run: python -m tox -r ${{ matrix.tox }}
+        run: python -m tox -r -s false
+        env:
+          TOXENV: ${{ matrix.toxenv }}
       - name: Test examples::nichtparasoup-imagecrawler-plugin
-        run: python -m tox -r -c examples/nichtparasoup-imagecrawler-plugin/ ${{ matrix.tox }}
+        run: python -m tox -r -s false -c examples/nichtparasoup-imagecrawler-plugin/
+        env:
+          TOXENV: ${{ matrix.toxenv }}
       - name: Upload coverage to Codecov
         if: matrix.upload_coverage
         # see https://github.com/codecov/codecov-action
@@ -79,3 +83,5 @@ jobs:
           file: ./coverage.xml
           # flags:  # must be ^[\w\,]+$
           name: os:${{ matrix.os }} py:${{ matrix.python }}
+    env:
+      TOX_PARALLEL_NO_SPINNER: 1
