@@ -141,7 +141,7 @@ class ImageCrawlerLoaderTest:
         """
         imagecrawler_name = self._get_imagecrawlers().get_name(ic_class)
         if imagecrawler_name:
-            if ic_name is not imagecrawler_name:
+            if ic_name != imagecrawler_name:
                 raise ValueError(f'{imagecrawler_name!r} is not {ic_name!r}')
         else:
             raise ValueError(f'Unknown class {ic_class!r}')

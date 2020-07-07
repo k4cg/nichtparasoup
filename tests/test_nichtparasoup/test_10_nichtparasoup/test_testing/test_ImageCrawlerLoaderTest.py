@@ -103,11 +103,9 @@ class TestImageCrawlerLoaderTest:
         # arrange
         iclt = ImageCrawlerLoaderTest()
         kic = KnownImageCrawlers([])
-        ic_name = 'Bar'
-        ic_class = LoadableImageCrawlerA
-        kic._list = {ic_name: ic_class}
+        kic._list = {'Bar': LoadableImageCrawlerA}
         iclt._get_imagecrawlers = lambda: kic  # type: ignore[assignment]
         # act
-        res = iclt.check_get_imagecrawler_name(ic_name, ic_class)
+        res = iclt.check_get_imagecrawler_name('Bar', LoadableImageCrawlerA)
         # assert
         assert res is True
