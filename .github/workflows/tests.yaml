@@ -60,6 +60,18 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+      - name: Get pip cache dir
+        id: pip-cache
+        # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
+        run: echo "::set-output name=dir::$(python -m pip cache dir)"
+      - name: Setup pip cache dir
+        # see https://github.com/actions/cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('requirements/**.txt') }}-${{ hashFiles('examples/nichtparasoup-imagecrawler-plugin/requirements/**.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-${{ matrix.python }}-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade wheel
@@ -71,9 +83,10 @@ jobs:
         env:
           TOXENV: ${{ matrix.toxenv }}
       - name: Test examples::nichtparasoup-imagecrawler-plugin
-        run: python -m tox -r -s false -c examples/nichtparasoup-imagecrawler-plugin/
+        run: python -m tox -r -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
+        working-directory: examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
         if: matrix.upload_coverage
         # see https://github.com/codecov/codecov-action
@@ -83,5 +96,8 @@ jobs:
           file: ./coverage.xml
           # flags:  # must be ^[\w\,]+$
           name: os:${{ matrix.os }} py:${{ matrix.python }}
+      - name: Clean pip cache dir
+        if: steps.pip-cache.outcome == 'success'
+        run: python -m pip cache remove 'nichtparasoup*' || true
     env:
       TOX_PARALLEL_NO_SPINNER: 1
