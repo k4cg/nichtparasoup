@@ -1,9 +1,9 @@
 import unittest
-from typing import Any, List, Type
+from typing import Any, List
 
-from nichtparasoup_placeholders import DummyImage
+import pytest
+from nichtparasoup_imagecrawler_dummyimage import DummyImage
 
-from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 _DUMMYIMAGE_RIGHT_CONFIG = {'width': 800, 'height': 600}
@@ -116,15 +116,6 @@ class DummyImageDescriptionTest(unittest.TestCase):
             self.assertIn(config_key, description.config)
 
 
-class DummyImageLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return "DummyImage"
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return DummyImage
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_loader() -> None:
+    assert ImageCrawlerLoaderTest().check('DummyImage', DummyImage)

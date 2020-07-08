@@ -3,7 +3,7 @@ import unittest
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.image import Image
 
-from .mockable_imagecrawler import MockableImageCrawler
+from .._mocks.mockable_imagecrawler import MockableImageCrawler
 
 
 class NPCoreTest(unittest.TestCase):

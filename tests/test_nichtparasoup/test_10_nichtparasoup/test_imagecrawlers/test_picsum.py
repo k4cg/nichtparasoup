@@ -1,7 +1,8 @@
 import unittest
-from typing import Any, List, Type
+from typing import Any, List
 
-from nichtparasoup.imagecrawler import BaseImageCrawler
+import pytest
+
 from nichtparasoup.imagecrawlers.picsum import Picsum
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
@@ -115,15 +116,6 @@ class PicsumDescriptionTest(unittest.TestCase):
             self.assertIn(config_key, description.config)
 
 
-class PicsumLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'Picsum'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return Picsum
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_loader() -> None:
+    ImageCrawlerLoaderTest().check('Picsum', Picsum)

@@ -5,7 +5,7 @@ import pytest
 from nichtparasoup.core import NPCore
 from nichtparasoup.core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus
 
-from .mockable_imagecrawler import MockableImageCrawler
+from .._mocks.mockable_imagecrawler import MockableImageCrawler
 
 _ImagecrawlersAndServer = Tuple[Iterable[Tuple[MockableImageCrawler, int]], Server]
 

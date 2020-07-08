@@ -1,10 +1,10 @@
 import unittest
 from os.path import dirname, join as path_join
-from typing import Any, List, Type
+from typing import Any, List
 
 import pytest
 
-from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection
+from nichtparasoup.imagecrawler import Image, ImageCollection
 from nichtparasoup.imagecrawlers.reddit import Reddit
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
@@ -214,15 +214,6 @@ class RedditDescriptionTest(unittest.TestCase):
             self.assertIn(config_key, description.config)
 
 
-class RedditLoaderTest(ImageCrawlerLoaderTest):
-
-    @property
-    def ic_name(self) -> str:
-        return 'Reddit'
-
-    @property
-    def ic_class(self) -> Type[BaseImageCrawler]:
-        return Reddit
-
-    def test_loader(self) -> None:
-        self.check()
+@pytest.mark.no_cover
+def test_loader() -> None:
+    assert ImageCrawlerLoaderTest().check('Reddit', Reddit)

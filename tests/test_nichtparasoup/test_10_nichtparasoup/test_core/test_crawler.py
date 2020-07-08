@@ -6,7 +6,7 @@ import pytest
 from nichtparasoup.core import Crawler
 from nichtparasoup.core.image import Image, ImageCollection
 
-from .mockable_imagecrawler import MockableImageCrawler
+from .._mocks.mockable_imagecrawler import MockableImageCrawler
 
 
 class _C(object):

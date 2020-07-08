@@ -6,7 +6,7 @@ from nichtparasoup.core import NPCore
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.server import Server
 
-from .mockable_imagecrawler import MockableImageCrawler
+from .._mocks.mockable_imagecrawler import MockableImageCrawler
 
 
 class ServerGetImageTest(unittest.TestCase):

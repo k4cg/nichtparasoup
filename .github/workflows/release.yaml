@@ -29,9 +29,12 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r requirements/tox.txt
       - name: Test nichtparasoup
-        run: python -m tox -r -e style,py38
-      - name: 'Test examples::nichtparasoup-imagecrawler-plugin'
-        run: python -m tox -r -c examples/nichtparasoup-imagecrawler-plugin/ -e style,py38
+        run: python -m tox
+      - name: Test examples::nichtparasoup-imagecrawler-plugin
+        run: python -m tox
+        working-directory: examples/nichtparasoup-imagecrawler-plugin/
+    env:
+      TOX_PARALLEL_NO_SPINNER: 1
   publish:
     name: Publishing
     # build in an isolated env
