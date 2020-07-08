@@ -79,11 +79,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r requirements/tox.txt
       - name: Test nichtparasoup
-        run: python -m tox -r -s false
+        run: python -m tox -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
       - name: Test examples::nichtparasoup-imagecrawler-plugin
-        run: python -m tox -r -s false
+        run: python -m tox -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
         working-directory: examples/nichtparasoup-imagecrawler-plugin/
