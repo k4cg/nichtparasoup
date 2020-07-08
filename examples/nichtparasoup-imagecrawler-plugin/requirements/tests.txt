@@ -6,14 +6,12 @@
 #
 attrs==19.3.0             # via pytest
 coverage==5.1             # via -r requirements/tests.in, pytest-cov
-importlib-metadata==1.6.1  # via pluggy, pytest
 more-itertools==8.4.0     # via pytest
 packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
-py==1.8.2                 # via pytest
+py==1.9.0                 # via pytest
 pyparsing==2.4.7          # via packaging
 pytest-cov==2.10.0        # via -r requirements/tests.in
 pytest==5.4.3             # via -r requirements/tests.in, pytest-cov
 six==1.15.0               # via packaging
 wcwidth==0.2.5            # via pytest
-zipp==3.1.0               # via importlib-metadata
