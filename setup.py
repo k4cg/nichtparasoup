@@ -12,6 +12,9 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         # actual config is done via `setup.cfg`/`pyproject.toml`
-        setup_requires=['setuptools_scm[toml] >= 3.5'],
-        use_scm_version=True,
+        setup_requires=[
+            # keep in sync with constraints.txt
+            'setuptools_scm[toml] == 4.1.2',
+            'toml == 0.10.1',
+        ],
     )
