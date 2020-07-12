@@ -1,1 +1,3 @@
+-c ../constraints.txt
+
 tox >= 3.14

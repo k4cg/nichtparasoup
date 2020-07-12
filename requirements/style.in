@@ -1,3 +1,5 @@
+-c ../constraints.txt
+
 flake8 >= 3.7
 flake8-annotations >= 2.0
 flake8-bugbear >= 20.1

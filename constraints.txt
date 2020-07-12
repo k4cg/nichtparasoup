@@ -1,0 +1,15 @@
+## keep in sync with `pyproject.toml`
+## keep in sync with `tox.ini`
+## keep in sync with `setup.py`
+
+# using setuptools_scm
+# when used in combination with pip in a monorepo there are currently some flaws
+# keep track of it and upgrade pip to a version that is actually fixed
+pip == 20.1.1
+
+
+setuptools == 49.2.0
+wheel == 0.34.2
+
+setuptools_scm == 4.1.2
+toml == 0.10.1
