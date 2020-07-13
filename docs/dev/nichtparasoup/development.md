@@ -9,9 +9,12 @@ Reach out to [jkowalleck](https://github.com/jkowalleck) to ask for help.
 ## Backend
 
 It is encouraged to use a [virtual python environment](https://docs.python.org/3/library/venv.html)
-via `python -m venv .venv` and activate it afterwards.
+via `python -m venv .venv` and activate it afterwards.  
+Then install the env tools via `python -m pip install -c constraints.txt wheel setuptools pip`.
 
-Install the development requirements from [requirements/dev.txt](../../../requirements/dev.txt) via `pip`.
+Install the development requirements [requirements/dev.txt](../../../requirements/dev.txt) 
+with the the [constraints.txt](../../../constraints.txt)
+via `python -m pip install -c constraints.txt -r requirements/dev.txt`.
 
 You might also want to install _nichtparasoup_ in developer mode.  
 Run `python -m pip install --no-build-isolation --editable .` from the project root.
