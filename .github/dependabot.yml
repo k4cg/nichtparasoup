@@ -32,7 +32,7 @@ updates:
     labels:
       - "dependencies"
       - "pip"
-      - "examples/nichtparasoup-imagecrawler-plugin:"
+      - "examples/nichtparasoup-imagecrawler-plugin"
     commit-message:
       ## prefix maximum string length of 15
       prefix: "examples"
