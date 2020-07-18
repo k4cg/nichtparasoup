@@ -39,7 +39,7 @@ for more details about config see the [config](../config/index.md) documentation
 
 for an eay handling this sub-command comes into play.
 
-`nichtparasoup serer config` 
+`nichtparasoup server config` 
 
 the following subcommands are available:
 * `check`          - validate and probe a YAML config file
