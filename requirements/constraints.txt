@@ -1,6 +1,12 @@
+## things in here are not actually requirements but constraints
+## they are listed as "requirements" to have tem monitored by dependency-bumpers like "renovate" or "dependabot"
+
+
 ## keep in sync with `pyproject.toml`
 ## keep in sync with `tox.ini`
 ## keep in sync with `setup.py`
+
+
 
 # using setuptools_scm
 # when used in combination with pip in a monorepo there are currently some flaws
