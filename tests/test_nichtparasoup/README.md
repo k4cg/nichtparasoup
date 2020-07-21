@@ -12,7 +12,7 @@ add additional needed requirements to the respective [requirements file](../../r
 
 ```shell script
 # run from project root:
-python -m pip install -c constraints.txt -r requirements/tox.txt
+python -m pip install -c requirements/constraints.txt -r requirements/tox.txt
 python -m tox
 ```
 
@@ -24,7 +24,7 @@ docker run \
   -w /usr/src/nichtparasoup \
   --rm \
   python:3.8 bash -c \
-  "python -m pip install -c constraints.txt wheel setuptools pip && python -m pip install -r requirements/tox.txt && python -m tox; rm -rf .tox;"
+  "python -m pip install -c requirements/constraints.txt wheel setuptools pip && python -m pip install -r requirements/tox.txt && python -m tox; rm -rf .tox;"
 ```
 
 ## contribution 
