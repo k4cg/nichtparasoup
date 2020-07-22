@@ -77,7 +77,7 @@ jobs:
           python -m pip install -c requirements/constraints.txt wheel setuptools pip
           python -m pip install -c requirements/constraints.txt -r requirements/tox.txt
       - name: Test nichtparasoup
-        run: python -m tox -s false
+        run: python -m tox -s false -- -n auto
         env:
           TOXENV: ${{ matrix.toxenv }}
       - name: Test examples::nichtparasoup-imagecrawler-plugin
