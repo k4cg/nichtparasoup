@@ -77,13 +77,9 @@ jobs:
           python -m pip install -c requirements/constraints.txt wheel setuptools pip
           python -m pip install -c requirements/constraints.txt -r requirements/tox.txt
       - name: Test nichtparasoup
-        run: python -m tox -s false
-        env:
-          TOXENV: ${{ matrix.toxenv }}
+        run: python -m tox -r -s false -- -n auto
       - name: Test examples::nichtparasoup-imagecrawler-plugin
-        run: python -m tox -s false
-        env:
-          TOXENV: ${{ matrix.toxenv }}
+        run: python -m tox -r -s false
         working-directory: examples/nichtparasoup-imagecrawler-plugin/
       - name: Upload coverage to Codecov
         if: matrix.upload_coverage
@@ -98,4 +94,5 @@ jobs:
         if: steps.pip-cache.outcome == 'success'
         run: python -m pip cache remove 'nichtparasoup*' || true
     env:
+      TOXENV: ${{ matrix.toxenv }}
       TOX_PARALLEL_NO_SPINNER: 1
