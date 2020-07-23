@@ -24,8 +24,8 @@ pyflakes==2.2.0           # via flake8
 pylint==2.5.3             # via -r ./style.in
 six==1.15.0               # via astroid
 testfixtures==6.14.1      # via flake8-isort
-toml==0.10.1              # via -c ./constraints.txt, isort, pylint
+toml==0.10.1              # via -c ./constraints.in, isort, pylint
 typed-ast==1.4.1          # via astroid, flake8-annotations, mypy
-typing-extensions==3.7.4.2  # via mypy
+typing-extensions==3.7.4.2 ; python_version < "3.8"  # via -c ./constraints.in, mypy
 wrapt==1.12.1             # via astroid
 zipp==3.1.0               # via importlib-metadata

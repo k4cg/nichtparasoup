@@ -6,5 +6,6 @@ cd "$(dirname "$0")"
 
 # all requirements are for build/dev
 # so it is a MUST that also pip/setuptools is pinned -> use `--allow-unsafe`
-find -type f -name '*.in' -exec \
-  pip-compile -qUr --allow-unsafe {} \;
+find -type f -name '*.in' \
+  -exec echo 'precessing {}' \; \
+  -exec pip-compile -qUr --allow-unsafe {} \;
