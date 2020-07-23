@@ -1,4 +1,4 @@
--c constraints.txt
+-c constraints.in
 
 flake8 >= 3.7
 flake8-annotations >= 2.0

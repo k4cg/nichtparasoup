@@ -1,4 +1,4 @@
--c constraints.txt
+-c constraints.in
 
 -r style.in
 -r tests.in
