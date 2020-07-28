@@ -8,14 +8,5 @@ requires = [
   # keep in sync with `requirements/constraints.txt`
   'setuptools == 49.2.0',
   'wheel == 0.34.2',
-  'setuptools-scm[toml] == 4.1.2',
-  'toml == 0.10.1',
 ]
 build-backend = 'setuptools.build_meta'
-
-
-[tool.setuptools_scm]
-# see https://pypi.org/project/setuptools-scm/
-fallback_version = 'UNKNOWN.scm'
-write_to = 'src/nichtparasoup/VERSION'
-write_to_template = '{version}'
