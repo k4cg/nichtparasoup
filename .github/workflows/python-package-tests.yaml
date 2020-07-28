@@ -1,0 +1,127 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: Test PythonPackage
+
+on:
+  push:
+    # run for branches, not tags
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/python-package-tests.yaml'
+      - 'python-package/**'
+      - '!python-package/docs/**'
+      - '!python-package/images/**'
+      - '!python-package/**/*.md'
+      - '!python-package/**/*.rst'
+      - '!python-package/AUTHORS'
+      - '!python-package/CHANGELOG'
+      - '!python-package/INSTALL'
+  pull_request:
+    paths:
+      - '.github/workflows/python-package-tests.yaml'
+      - 'python-package/**'
+      - '!python-package/docs/**'
+      - '!python-package/images/**'
+      - '!python-package/**/*.md'
+      - '!python-package/**/*.rst'
+      - '!python-package/AUTHORS'
+      - '!python-package/CHANGELOG'
+      - '!python-package/INSTALL'
+  schedule:
+    # schedule weekly tests, since install dependencies are not intended to be pinned
+    # this means: at 23:42 on Fridays
+    - cron: '42 23 * * 5'
+
+defaults:
+  run:
+    working-directory: python-package
+
+jobs:
+  test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # check the style
+          - name: 'Style'
+            os: ubuntu-latest
+            python: '3.8'
+            toxenv: style
+          # check latest Python for all OS
+          - name: Linux
+            os: 'ubuntu-latest'
+            python: '3.8'
+            toxenv: tests_start, py38, coverage_report
+            upload_coverage: true
+          - name: Windows
+            os: windows-latest
+            python: '3.8'
+            toxenv: py38
+          - name: 'MacOs'
+            os: macos-latest
+            python: '3.8'
+            toxenv: py38
+          # check older Python
+          - name: '3.7'
+            os: ubuntu-latest
+            python: '3.7'
+            toxenv: py37
+          - name: '3.6'
+            os: ubuntu-latest
+            python: '3.6'
+            toxenv: py36
+    steps:
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python ${{ matrix.python_version }}
+        # see https://github.com/actions/setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '${{ matrix.python }}'
+
+      - name: Get pip cache dir
+        id: pip-cache
+        # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
+        run: echo "::set-output name=dir::$(python -m pip cache dir)"
+
+      - name: Setup pip cache dir
+        # see https://github.com/actions/cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('python-package/requirements/*.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-${{ matrix.python }}-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install wheel setuptools pip
+          python -m pip install -r requirements/tox.txt
+
+      - name: Test nichtparasoup
+        run: python -m tox -r -s false -- -n auto
+        env:
+          TOXENV: ${{ matrix.toxenv }}
+          TOX_PARALLEL_NO_SPINNER: 1
+
+      # TODO
+      #- name: Upload coverage to Codecov
+      #  if: matrix.upload_coverage
+      #  continue-on-error: true
+      #  # see https://github.com/codecov/codecov-action
+      #  uses: codecov/codecov-action@v1.0.12
+      #  with:
+      #    token: ${{ secrets.CODECOV_TOKEN }}
+      #    file: python-package/coverage.xml
+      #    # flags:  # must be ^[\w\,]+$
+      #    name: os:${{ matrix.os }} py:${{ matrix.python }}
+
+      - name: Clean pip cache dir
+        if: steps.pip-cache.outcome == 'success'
+        run: python -m pip cache remove 'nichtparasoup*' || true
