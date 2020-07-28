@@ -1,0 +1,22 @@
+## see https://docs.codecov.io/docs/codecovyml-reference
+## validate via `curl --data-binary @codecov.yml https://codecov.io/validate`
+coverage:
+  status:
+    project:
+      PythonPackage:
+        paths:
+          - "src/"
+          - "tests/"
+        informational: true
+    patch:
+      PythonPackage:
+        paths:
+          - "src/"
+          - "tests/"
+        informational: true
+    changes:
+      PythonPackage:
+        paths:
+          - "src/"
+          - "tests/"
+        informational: true
