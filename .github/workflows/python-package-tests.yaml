@@ -18,6 +18,7 @@ on:
       - '!python-package/AUTHORS'
       - '!python-package/CHANGELOG'
       - '!python-package/INSTALL'
+      - '!python-package/LICENSE'
   pull_request:
     paths:
       - '.github/workflows/python-package-tests.yaml'
@@ -29,6 +30,7 @@ on:
       - '!python-package/AUTHORS'
       - '!python-package/CHANGELOG'
       - '!python-package/INSTALL'
+      - '!python-package/LICENSE'
   schedule:
     # schedule weekly tests, since install dependencies are not intended to be pinned
     # this means: at 23:42 on Fridays

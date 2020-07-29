@@ -15,6 +15,7 @@ on:
       - '!python-plugin-example/**/*.md'
       - '!python-plugin-example/**/*.rst'
       - '!python-plugin-example/INSTALL'
+      - '!python-plugin-example/LICENSE'
   pull_request:
     paths:
       - '.github/workflows/python-plugin-example-tests.yaml'
@@ -23,6 +24,7 @@ on:
       - '!python-plugin-example/**/*.md'
       - '!python-plugin-example/**/*.rst'
       - '!python-plugin-example/INSTALL'
+      - '!python-plugin-example/LICENSE'
   schedule:
     # schedule weekly tests, since install dependencies are not intended to be pinned
     # this means: at 23:42 on Fridays
