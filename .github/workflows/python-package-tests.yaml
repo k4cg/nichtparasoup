@@ -7,7 +7,8 @@ on:
   push:
     # run for branches, not tags
     branches:
-      - '**'
+      - 'master'
+      - '*.x'
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - 'python-package/**'
@@ -20,6 +21,9 @@ on:
       - '!python-package/INSTALL'
       - '!python-package/LICENSE'
   pull_request:
+    branches:
+      - 'master'
+      - '*.x'
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - 'python-package/**'
