@@ -104,17 +104,16 @@ jobs:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
 
-      # TODO
-      #- name: Upload coverage to Codecov
-      #  if: matrix.upload_coverage
-      #  continue-on-error: true
-      #  # see https://github.com/codecov/codecov-action
-      #  uses: codecov/codecov-action@v1.0.12
-      #  with:
-      #    token: ${{ secrets.CODECOV_TOKEN }}
-      #    file: python-plugin-example/coverage.xml
-      #    # flags:  # must be ^[\w\,]+$
-      #    name: os:${{ matrix.os }} py:${{ matrix.python }}
+      - name: Upload coverage to Codecov
+        if: matrix.upload_coverage
+        continue-on-error: true
+        # see https://github.com/codecov/codecov-action
+        uses: codecov/codecov-action@v1.0.12
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: python-plugin-example/coverage.xml
+          flags: python-plugin-example
+          name: python-plugin-example
 
       - name: Clean pip cache dir
         if: steps.pip-cache.outcome == 'success'
