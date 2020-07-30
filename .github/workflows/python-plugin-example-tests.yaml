@@ -29,10 +29,6 @@ on:
       - '!python-plugin-example/**/*.rst'
       - '!python-plugin-example/INSTALL'
       - '!python-plugin-example/LICENSE'
-  schedule:
-    # schedule weekly tests, since install dependencies are not intended to be pinned
-    # this means: at 23:42 on Fridays
-    - cron: '42 23 * * 5'
 
 defaults:
   run:
@@ -124,3 +120,20 @@ jobs:
       - name: Clean pip cache dir
         if: steps.pip-cache.outcome == 'success'
         run: python -m pip cache remove 'nichtparasoup*' || true
+
+  sonarcloud:
+    if: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        # see https://github.com/SonarSource/sonarcloud-github-action
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: python-plugin-example
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
