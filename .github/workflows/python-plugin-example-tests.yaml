@@ -107,7 +107,7 @@ jobs:
           TOX_PARALLEL_NO_SPINNER: 1
 
       - name: Upload coverage to Codecov
-        if: matrix.upload_coverage
+        if: ${{ matrix.upload_coverage }}
         continue-on-error: true
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
@@ -118,11 +118,10 @@ jobs:
           name: python-plugin-example
 
       - name: Clean pip cache dir
-        if: steps.pip-cache.outcome == 'success'
+        if: ${{ steps.pip-cache.outcome == 'success' }}
         run: python -m pip cache remove 'nichtparasoup*' || true
 
   sonarcloud:
-    if: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
