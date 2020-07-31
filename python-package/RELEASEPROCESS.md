@@ -1,27 +1,39 @@
 # Release process
 
-1. Get the latest code.
-   1. Run: `git checkout master`.
-   1. Run: `git pull`.
-1. Prepare the new release
-   1. Run ala: `git checkout -b release/2.X.Y`
-   1. Mark all "Unreleased" changes to be in the version
-      1. Modify [`HISTORY.md`](HISTORY.md) by just adding a new headline right under the
-         `## Unreleased`  so its right above te latest changes.
-         Example ala:
-         ```
-         ## Unreleased
 
-         ## 2.X.Y
+## General
 
-         * Changes
-           * foo...
-           * bar...
-         ```
-   1. Run ala: `git commmit -m 'preparing 2.X.Y' HISTORY.md`.
-   1. Run: `git push origin`.
-1. Merge release branch into "master" branch.
-   1. Create a PullRequest from the release branch to "master" branch on github.
-   1. Approve the PullRequest and merge it to "master" branch on github.
-1. Draft and publish a release on "master" branch in github.  
-   Put the latest part of the [`HISTORY.md`](HISTORY.md) in the release notes.
+1. if needed: bring the changes into the MAJOR version's branch.
+1. File changes:
+   * bump the `__version__` in `src/nichtparasoup/__init__.py`
+   * set the version in `HISTORY.md` to mark "unreleased" changes are released ones
+1. tag the version om MASTER/MAJOR branch 
+   with the value of `__version__` in `src/nichtparasoup/__init__.py`
+1. create a release in GitHub
+   * point tho the version's tag om MASTER/MAJOR branch
+   * copy/past the release notes from `HISTORY.md` 
+
+thats it, hte rest is automated via gh-workflow.
+
+## Major version split
+
+This happens when the development of a next major version starts.
+
+The current master gets branched out to allow patching the current version.  
+The master keeps on moving forward as usual.
+
+Steps:
+1. create a new branch `{MAJOR}.x` from master
+1. for that MAJOR version's branch:
+   * in github > Settings > Branches  
+    set the branch protection rules
+    to be the same as on current master.
+   * adapt the `README.md`: make URLs to target the branch
+   * set the `__version__` in `src/nichtparasoup/__init__.py`
+    to current `{MAJOR}.{MINOR}.{PATCH}`
+   * set the version in `HISTORY.md` to mark "unreleased" changes are released ones
+
+
+
+
+1. 
