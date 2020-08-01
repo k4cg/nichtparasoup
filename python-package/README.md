@@ -2,10 +2,9 @@
 
 [![PyPI](https://img.shields.io/pypi/v/nichtparasoup)](https://pypi.org/project/nichtparasoup/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)](https://pypi.org/project/nichtparasoup/)  
-[![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test/master)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3ATest+branch%3Amaster)
-[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/nichtparasoup?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=nichtparasoup)
-[![CodeCov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup)](https://codecov.io/gh/k4cg/nichtparasoup/branch/master)  
-
+[![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test+PythonPackage%22+branch%3A3.0-dev)
+[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=nichtparasoup%3APythonPackage)
+[![CodeCov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup/3.0-dev)](https://codecov.io/gh/k4cg/nichtparasoup/branch/3.0-dev)  
 
 ----
 
