@@ -4,7 +4,7 @@ version: 2
 updates:
   -
     package-ecosystem: "pip"
-    directory: "/"
+    directory: "/python-package/"
     schedule:
       interval: "weekly"
       day: "saturday"
@@ -13,16 +13,14 @@ updates:
     versioning-strategy: "auto"
     labels:
       - "dependencies"
-      - "pip"
-      - "nichtparasoup"
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "nichtparasoup"
+      prefix: "Python Package"
       include: "scope"
     open-pull-requests-limit: 999
   -
     package-ecosystem: "pip"
-    directory: "/examples/nichtparasoup-imagecrawler-plugin/"
+    directory: "/python-plugin-example/"
     schedule:
       interval: "weekly"
       day: "saturday"
@@ -31,11 +29,25 @@ updates:
     versioning-strategy: "auto"
     labels:
       - "dependencies"
-      - "pip"
-      - "examples/nichtparasoup-imagecrawler-plugin"
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "examples"
+      prefix: "PluginExample"
+      include: "scope"
+    open-pull-requests-limit: 999
+  -
+    package-ecosystem: "npm"
+    directory: "/web-ui/"
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+    allow:
+      - dependency-type: "all"
+    versioning-strategy: "auto"
+    labels:
+      - "dependencies"
+    commit-message:
+      ## prefix maximum string length of 15
+      prefix: "Web UI"
       include: "scope"
     open-pull-requests-limit: 999
   -
@@ -46,7 +58,6 @@ updates:
       day: "saturday"
     labels:
       - "dependencies"
-      - "github-actions"
     commit-message:
       ## prefix maximum string length of 15
       prefix: "gh-actions"

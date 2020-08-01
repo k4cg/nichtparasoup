@@ -1,81 +1,33 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
 root = true
 
 [*]
-end_of_line = LF
-
-[.editorconfig]
+insert_final_newline = true
 charset = utf-8
 trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.py]
-charset = utf-8
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.html]
-charset = utf-8
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-
-[*.css]
-charset = utf-8
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[*.js]
-charset = utf-8
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
+end_of_line = lf
 
 [*.{yml,yaml}]
-charset = utf-8
 indent_style = space
 indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
 
 [*.toml]
-charset = utf-8
 indent_style = space
 indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
 
 [*.md]
 charset = latin1
 indent_style = space
 indent_size = 2
+# 2 trailing spaces indicate line breaks.
 trim_trailing_whitespace = false
-insert_final_newline = true
 
-[*.{rst,txt,in}]
-charset = utf-8
+[*.{rst,txt}]
 indent_style = space
 indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
 
 [*.ini]
 charset = latin1
 indent_style = space
 indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[{*.cfg,.pypirc,.coveragerc,.flake8}]
-# all these ini-file like formats ...
-charset = latin1
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true

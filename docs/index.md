@@ -1,11 +1,6 @@
-# _nichtparasoup_
+# _nichtparasoup_ docs
 
-See:
-* [install](install/index.md)
-* [config](config/index.md)
-* [run](run/index.md)
-
-Advanced:
-* [web-api](web-api/index.md)
-* [dev](dev/index.md)
-
+See
+* The [python-package](../python-package/docs/index.md).
+* An [example for a plugin](../python-plugin-example/docs/index.md) of the python-package.
+* The source code of the [Web-UI](../web-ui/docs/index.md) for the python-package.

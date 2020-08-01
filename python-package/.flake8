@@ -1,0 +1,21 @@
+[flake8]
+## https://flake8.pycqa.org/en/latest/user/configuration.html
+
+exclude =
+    build,dist,__pycache__,.eggs,*_cache
+    .git,.tox,.venv,venv
+    _OLD,_TEST,
+    docs
+
+show-source  = True
+
+ignore =
+    # ignore `self`, `cls` markers of flake8-annotations>=2.0
+    ANN101,ANN102
+
+
+max-complexity = 5
+
+# allow up to 119 characters as this is the width of GitHub code review
+max-line-length = 120
+

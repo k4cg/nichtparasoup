@@ -3,35 +3,21 @@
 coverage:
   status:
     project:
-      nichtparasoup:
-        paths:
-          - "src/nichtparasoup/"
-          - "tests/nichtparasoup/"
+      PythonPackage:
         informational: true
-      web-ui:
-        paths:
-          - "src/web-ui/"
-          - "tests/web-ui/"
+        flags:
+          - python-package
+      PythonPluginExample:
         informational: true
-    patch:
-      nichtparasoup:
-        paths:
-          - "src/nichtparasoup/"
-          - "tests/nichtparasoup/"
-        informational: true
-      web-ui:
-        paths:
-          - "src/web-ui/"
-          - "tests/web-ui/"
-        informational: true
-    changes:
-      nichtparasoup:
-        paths:
-          - "src/nichtparasoup/"
-          - "tests/nichtparasoup/"
-        informational: true
-      web-ui:
-        paths:
-          - "src/web-ui/"
-          - "tests/web-ui/"
-        informational: true
+        flags:
+          - python-plugin-example
+flags:
+  python-package:
+    paths:
+      - python-package/src
+    carryforward: true
+  python-plugin-example:
+    paths:
+      - python-plugin-example/src
+    carryforward: true
+

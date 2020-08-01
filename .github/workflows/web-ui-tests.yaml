@@ -1,0 +1,55 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: Test WebUi
+
+on:
+  push:
+    tags:
+      # run again on release tags to have tools mark them
+      - '*.*.*'
+    branches:
+      - 'master'
+      - '3.0-dev'
+    paths:
+      - '.github/workflows/web-ui-tests.yaml'
+      - 'web-ui/**'
+      - '!web-ui/docs/**'
+      - '!web-ui/**.md'
+      - '!web-ui/**.rst'
+      - '!web-ui/LICENSE'
+  pull_request:
+    branches:
+      - 'master'
+      - '3.0-dev'
+    paths:
+      - '.github/workflows/web-ui-tests.yaml'
+      - 'web-ui/**'
+      - '!web-ui/docs/**'
+      - '!web-ui/**.md'
+      - '!web-ui/**.rst'
+      - '!web-ui/LICENSE'
+
+defaults:
+  run:
+    working-directory: web-ui
+
+jobs:
+  sonarcloud:
+    if: ${{ github.repository_owner == 'k4cg' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
+        continue-on-error: true
+        # see https://github.com/SonarSource/sonarcloud-github-action
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: web-ui
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

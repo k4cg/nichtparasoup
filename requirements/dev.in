@@ -1,8 +1,0 @@
--c constraints.in
-
--r style.in
--r tests.in
--r tox.in
-pip-tools >= 5.2
-isort >= 4.3
-autopep8 >= 1.5

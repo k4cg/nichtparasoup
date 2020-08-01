@@ -1,3 +1,0 @@
--c constraints.in
-
-tox >= 3.14

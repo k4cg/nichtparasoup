@@ -1,0 +1,15 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.in]
+indent_style = space
+indent_size = 4
+
+[{*.cfg,.pypirc,.coveragerc,.flake8}]
+# all these ini-file like formats ...
+charset = latin1
+indent_style = space
+indent_size = 4

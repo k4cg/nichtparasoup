@@ -1,0 +1,11 @@
+# build system specs
+# see https://www.python.org/dev/peps/pep-0517/
+# see https://www.python.org/dev/peps/pep-0518/
+
+[build-system]
+# see https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+requires = [
+  'setuptools',
+  'wheel',
+]
+build-backend = 'setuptools.build_meta'
