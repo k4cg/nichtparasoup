@@ -5,7 +5,9 @@ name: Test PythonPluginExample
 
 on:
   push:
-    # run for branches, not tags
+    tags:
+      # run again on tags to have tools mark them
+      - '*.*.*'
     branches:
       - 'master'
       - '*.x'
