@@ -44,6 +44,8 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       - name: SonarCloud Scan
+        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
+        continue-on-error: true
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:
