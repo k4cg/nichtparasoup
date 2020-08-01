@@ -15,8 +15,8 @@ on:
       - '.github/workflows/web-ui-tests.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
-      - '!web-ui/**/*.md'
-      - '!web-ui/**/*.rst'
+      - '!web-ui/**.md'
+      - '!web-ui/**.rst'
       - '!web-ui/LICENSE'
   pull_request:
     branches:
@@ -26,8 +26,8 @@ on:
       - '.github/workflows/web-ui-tests.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
-      - '!web-ui/**/*.md'
-      - '!web-ui/**/*.rst'
+      - '!web-ui/**.md'
+      - '!web-ui/**.rst'
       - '!web-ui/LICENSE'
 
 defaults:

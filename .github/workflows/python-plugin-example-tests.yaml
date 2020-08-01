@@ -15,8 +15,8 @@ on:
       - '.github/workflows/python-plugin-example-tests.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
-      - '!python-plugin-example/**/*.md'
-      - '!python-plugin-example/**/*.rst'
+      - '!python-plugin-example/**.md'
+      - '!python-plugin-example/**.rst'
       - '!python-plugin-example/INSTALL'
       - '!python-plugin-example/LICENSE'
   pull_request:
@@ -27,8 +27,8 @@ on:
       - '.github/workflows/python-plugin-example-tests.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
-      - '!python-plugin-example/**/*.md'
-      - '!python-plugin-example/**/*.rst'
+      - '!python-plugin-example/**.md'
+      - '!python-plugin-example/**.rst'
       - '!python-plugin-example/INSTALL'
       - '!python-plugin-example/LICENSE'
 
