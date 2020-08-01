@@ -1,8 +1,11 @@
-# developing _nichtparasoup_
+# developing _nichtparasoup_'s python package
 
-See 
-* [python package](nichtparasoup/index.md)
-* [web-ui](web-ui/index.md)
+See
+* [development](development.md)
+* [testing](testing.md)
 
-For releases, see:
-* [the docs](release.md)
+Additional
+* [plugin-development](plugin-development/index.md)
+
+Frontend
+* see project [web-ui](../../../web-ui/docs/index.md)

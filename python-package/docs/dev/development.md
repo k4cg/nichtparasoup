@@ -12,7 +12,7 @@ It is encouraged to use a [virtual python environment](https://docs.python.org/3
 via `python -m venv .venv` and activate it afterwards.  
 Then install the env tools via `python -m pip install wheel setuptools pip`.
 
-Install the development requirements [requirements/dev.txt](../../../requirements/dev.txt) 
+Install the development requirements [requirements/dev.txt](../../requirements/dev.txt) 
 via `python -m pip install -r requirements/dev.txt`.
 
 You might also want to install _nichtparasoup_ in developer mode.  
@@ -31,8 +31,3 @@ code style (fix via `autopep8`).
 ## Image crawler
 
 **TODO**
-
-
-## Frontend
-
-See [web-ui development docs](../web-ui/index.md)
