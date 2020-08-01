@@ -6,11 +6,11 @@ name: Test PythonPackage
 on:
   push:
     tags:
-      # run again on tags to have tools mark them
+      # run again on release tags to have tools mark them
       - '*.*.*'
     branches:
       - 'master'
-      - '*.x'
+      - '3.0-dev'
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - 'python-package/**'
@@ -25,7 +25,7 @@ on:
   pull_request:
     branches:
       - 'master'
-      - '*.x'
+      - '3.0-dev'
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - 'python-package/**'
