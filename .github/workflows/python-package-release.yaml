@@ -36,6 +36,7 @@ jobs:
           TOXEN: style, tests_start, py38
           TOX_PARALLEL_NO_SPINNER: 1
   publish:
+    if: ${{ github.repository_owner == 'k4cg' }}
     name: Publishing
     # build in an isolated env
     needs: ['test']

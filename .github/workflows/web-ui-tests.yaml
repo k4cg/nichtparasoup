@@ -35,8 +35,8 @@ defaults:
     working-directory: web-ui
 
 jobs:
-
   sonarcloud:
+    if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

@@ -120,7 +120,7 @@ jobs:
           TOX_PARALLEL_NO_SPINNER: 1
 
       - name: Upload coverage to Codecov
-        if: ${{ matrix.upload_coverage }}
+        if: ${{ github.repository_owner == 'k4cg' && matrix.upload_coverage }}
         continue-on-error: true
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
@@ -135,6 +135,7 @@ jobs:
         run: python -m pip cache remove 'nichtparasoup*' || true
 
   sonarcloud:
+    if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
