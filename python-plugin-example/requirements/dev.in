@@ -1,4 +1,4 @@
 -r style.in
 -r tests.in
 -r tox.in
-pip-tools >= 5.2
+pip-tools >= 5.3
