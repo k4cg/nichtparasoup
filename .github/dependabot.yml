@@ -31,7 +31,7 @@ updates:
       - "dependencies"
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "PluginExample"
+      prefix: "Plugin Example"
       include: "scope"
     open-pull-requests-limit: 999
   -

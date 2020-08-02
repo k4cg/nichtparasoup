@@ -12,6 +12,8 @@ show-source  = True
 ignore =
     # ignore `self`, `cls` markers of flake8-annotations>=2.0
     ANN101,ANN102
+    # ignore warnings for non-fstring with `{` in it
+    FS003
 
 
 max-complexity = 5
