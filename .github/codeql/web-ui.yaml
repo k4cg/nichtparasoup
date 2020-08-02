@@ -1,0 +1,13 @@
+## config for CodeQL - https://github.com/github/codeql-action
+## see https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#using-a-custom-configuration
+
+name: WebUi
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - web-ui/src
+paths-ignore:
+  - web-ui/node_modules
+  - 'web-ui/**/*.test.js'

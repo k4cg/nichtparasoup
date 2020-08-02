@@ -1,0 +1,12 @@
+## config for CodeQL - https://github.com/github/codeql-action
+## see https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#using-a-custom-configuration
+
+name: PythonPackage
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - python-package/src
+paths-ignore:
+  - python-package/src/nichtparasoup/_web-ui
