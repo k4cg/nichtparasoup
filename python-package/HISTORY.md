@@ -125,7 +125,8 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
   * improved `venv` support when it comes to testing.
   * Tests via `tox` were split.
     Code style tests are done via own test named `toxstyle` now (was part of standard tests).
-  * repo layout changed to be a monorepo.
+  * Repo layout changed to be a monorepo. See [the repo](https://github.com/k4cg/nichtparasoup).  
+    This also means, that the plugin-example was moved out of the project into an own one.
 
 ## 2.4.2
 
