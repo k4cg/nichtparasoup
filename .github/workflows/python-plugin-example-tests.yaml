@@ -5,9 +5,6 @@ name: Test PythonPluginExample
 
 on:
   push:
-    tags:
-      # run again on release tags to have tools mark them
-      - '*.*.*'
     branches:
       - 'master'
       - '3.0-dev'
@@ -31,6 +28,10 @@ on:
       - '!python-plugin-example/**.rst'
       - '!python-plugin-example/INSTALL'
       - '!python-plugin-example/LICENSE'
+  schedule:
+    # schedule weekly tests, since we dont run on every change of 'python-package/src'
+    # this means: at 23:55 on Fridays
+    - cron: '55 23 * * 5'
 
 defaults:
   run:
