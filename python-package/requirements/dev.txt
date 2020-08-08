@@ -43,7 +43,7 @@ pytest==6.0.1             # via -r requirements/tests.in, pytest-cov, pytest-for
 six==1.15.0               # via astroid, packaging, pip-tools, pytest-xdist, tox, virtualenv
 testfixtures==6.14.1      # via flake8-isort
 toml==0.10.1              # via autopep8, isort, pylint, pytest, tox
-tox==3.18.1               # via -r requirements/tox.in
+tox==3.19.0               # via -r requirements/tox.in
 typed-ast==1.4.1          # via mypy
 typing-extensions==3.7.4.2  # via mypy
 virtualenv==20.0.30       # via tox
