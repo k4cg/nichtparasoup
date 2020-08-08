@@ -7,9 +7,7 @@ This script is still needed for the following purposes:
   ATTENTION: `pip install`'s `--editable` flag might requires the `--no-build-isolation` flag.
 * dependency analyzers that don't support `setup.cfg`, yet.
 """
-import setuptools
+from setuptools import setup
 
-if __name__ == '__main__':
-    setuptools.setup(
-        # actual config is done via `setup.cfg`/`pyproject.toml`
-    )
+# actual config is done via `setup.cfg`
+setup(name='nichtparasoup')
