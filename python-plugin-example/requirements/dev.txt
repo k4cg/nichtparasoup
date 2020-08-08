@@ -8,34 +8,31 @@ appdirs==1.4.4            # via virtualenv
 astroid==2.4.2            # via pylint
 attrs==19.3.0             # via pytest
 click==7.1.2              # via pip-tools
-coverage==5.2.1           # via -r ./tests.in, pytest-cov
+coverage==5.2.1           # via -r requirements/tests.in, pytest-cov
 distlib==0.3.1            # via virtualenv
 filelock==3.0.12          # via tox, virtualenv
-importlib-metadata==1.7.0  # via pluggy, pytest, tox, virtualenv
-importlib-resources==3.0.0  # via virtualenv
 iniconfig==1.0.1          # via pytest
 isort==4.3.21             # via pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
 more-itertools==8.4.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
-mypy==0.782               # via -r ./style.in
+mypy==0.782               # via -r requirements/style.in
 packaging==20.4           # via pytest, tox
-pip-tools==5.3.1          # via -r ./dev.in
+pip-tools==5.3.1          # via -r requirements/dev.in
 pluggy==0.13.1            # via pytest, tox
 py==1.9.0                 # via pytest, tox
-pylint==2.5.3             # via -r ./style.in
+pylint==2.5.3             # via -r requirements/style.in
 pyparsing==2.4.7          # via packaging
-pytest-cov==2.10.0        # via -r ./tests.in
-pytest==6.0.1             # via -r ./tests.in, pytest-cov
+pytest-cov==2.10.0        # via -r requirements/tests.in
+pytest==6.0.1             # via -r requirements/tests.in, pytest-cov
 six==1.15.0               # via astroid, packaging, pip-tools, tox, virtualenv
 toml==0.10.1              # via pylint, pytest, tox
-tox==3.18.1               # via -r ./tox.in
-typed-ast==1.4.1          # via astroid, mypy
+tox==3.18.1               # via -r requirements/tox.in
+typed-ast==1.4.1          # via mypy
 typing-extensions==3.7.4.2  # via mypy
-virtualenv==20.0.29       # via tox
+virtualenv==20.0.30       # via tox
 wrapt==1.12.1             # via astroid
-zipp==3.1.0               # via importlib-metadata, importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
