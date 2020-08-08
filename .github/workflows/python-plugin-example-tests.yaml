@@ -103,7 +103,7 @@ jobs:
           python -m pip install wheel setuptools pip
           python -m pip install -r requirements/tox.txt
 
-      - name: Test nichtparasoup
+      - name: Test python-plugin-example
         run: python -m tox -r -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
