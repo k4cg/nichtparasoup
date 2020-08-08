@@ -12,7 +12,7 @@ include README.md
 include requirements/*.txt
 include pyproject.toml
 include setup.cfg setup.py
-graft src/nichtparasoup
+graft src
 
 
 # additional files and folders
@@ -33,11 +33,8 @@ include tox.ini
 
 # excludes
 
-## this is a fully working example. it might get moved to another standalone project.
-prune examples/nichtparasoup-imagecrawler-plugin
-
 global-exclude *_cache/*
 global-exclude __pycache__
 global-exclude *.py[cod]
 
-global-exclude .gitignore
+global-exclude .gitignore .gitattributes

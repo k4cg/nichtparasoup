@@ -37,4 +37,4 @@ global-exclude *_cache/*
 global-exclude __pycache__
 global-exclude *.py[cod]
 
-global-exclude .gitignore
+global-exclude .gitignore .gitattributes
