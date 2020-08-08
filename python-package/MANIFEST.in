@@ -17,7 +17,7 @@ graft src/nichtparasoup
 
 # additional files and folders
 
-include LICENSE AUTHORS INSTALL HISTORY.md
+include LICENSE INSTALL HISTORY.md
 
 graft docs
 graft examples
