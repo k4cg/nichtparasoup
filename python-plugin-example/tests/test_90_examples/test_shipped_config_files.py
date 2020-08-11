@@ -2,7 +2,6 @@ from glob import glob
 from os.path import basename, dirname, join
 
 import pytest
-
 from nichtparasoup.testing.configfile import ConfigFileTest
 
 

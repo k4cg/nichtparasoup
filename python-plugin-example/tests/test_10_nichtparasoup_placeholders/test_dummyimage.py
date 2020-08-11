@@ -2,9 +2,9 @@ import unittest
 from typing import Any, List
 
 import pytest
-from nichtparasoup_imagecrawler_dummyimage import DummyImage
-
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
+
+from nichtparasoup_imagecrawler_dummyimage import DummyImage
 
 _DUMMYIMAGE_RIGHT_CONFIG = {'width': 800, 'height': 600}
 
