@@ -20,7 +20,7 @@ If you find an ImageCrawler for your favourite ImageBoard missing, feel free to 
 Contribute it to the _nichtparasoup_ project or write it as an independent plugin :-)
 
 
-![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/logo.png)
+![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/3.0-dev/python-package/images/logo.png)
 
 
 ---
@@ -31,10 +31,10 @@ It turns out to be a very non-invasive way of entertaining a crowd of nerds
 without having the noise and interruptions of videos or other stuff.
 
 Here is what it looks like in your browser
-![screenshot](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/k4cg/nichtparasoup/3.0-dev/python-package/images/screenshot.png)
 
 and even better, on a video projector in your local hackspace!
-![hackspace](https://raw.githubusercontent.com/k4cg/nichtparasoup/master/images/hackspace.jpg)
+![hackspace](https://raw.githubusercontent.com/k4cg/nichtparasoup/3.0-dev/python-package/images/hackspace.jpg)
 
 
 ## How it works
@@ -67,18 +67,18 @@ Visit [nicht.parasoup.de/demo/](http://nicht.parasoup.de/demo/) to try it!
 
 ## Install, Usage, Config, etc
 
-see the [docs](https://github.com/k4cg/nichtparasoup/tree/master/docs/index.md).
+see the [docs](https://github.com/k4cg/nichtparasoup/tree/3.0-dev/python-package/docs/index.md).
 
 ## License
 
-MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/master/LICENSE) file for details.
+MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/3.0-dev/python-package/LICENSE) file for details.
 
 
 ## Credits
 
-* see the [`AUTHORS`](https://github.com/k4cg/nichtparasoup/blob/master/AUTHORS) file 
-   for a list of essential contributors.
+* code is written by the authors shown 
+  at the [source code repository](https://github.com/k4cg/nichtparasoup/3.0-dev/python-package).
 * parts of the logo are taken
-   from [Smashicons](https://www.flaticon.com/authors/smashicons)
-   on [www.flaticon.com](https://www.flaticon.com/)
-   are licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+  from [Smashicons](https://www.flaticon.com/authors/smashicons)
+  on [www.flaticon.com](https://www.flaticon.com/)
+  are licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
