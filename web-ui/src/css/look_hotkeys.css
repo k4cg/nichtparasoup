@@ -1,0 +1,60 @@
+
+
+
+#keys {
+  position: absolute;
+  right: 1em;
+  bottom: 1.2ex;
+}
+
+#hotkeys {
+  padding: 0.5ex 1em;
+  line-height: 3ex;
+
+  position: absolute;
+  left: 0em;
+  bottom: -5ex; /* neg. height */
+  right: 0em;
+  background-color: #111;
+  background-color: rgba(23, 23, 23, 0.9);
+  border-top: 1px solid #808080;
+  transition: all 0.6s ease-in-out 0s;
+
+  display: inline;
+  display: inline-block;
+  margin: 0ex 0em;
+  list-style: none;
+}
+
+footer:hover #hotkeys ,
+#hotkeys.forceShow {
+  bottom: 0ex;
+}
+
+#hotkeys.forceShow {
+  transition: none;
+}
+
+#hotkeys dd ,
+#hotkeys dt ,
+.hotkey {
+  display: inline;
+  display: inline-block;
+  padding: 0.2ex 0.4ex;
+  margin: 0ex 0em;
+}
+
+#hotkeys dd.active {
+  background-color: white;
+  color: black;
+}
+
+#hotkeys dt {
+  margin-right: 1em;
+}
+
+
+
+
+
+

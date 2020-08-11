@@ -1,0 +1,11 @@
+
+
+input[type="range"] {
+  position: relative;
+  top: 5px;
+  direction: rtl;
+}
+
+
+
+

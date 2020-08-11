@@ -7,6 +7,7 @@
 
 Here you find the source code of _nichtparasoup_'s frontend.
 
-*coming soon*
+## build process
 
-# TODO: write 
+none so far. the sources are simply copied over to
+[`../python-package/src/nichtparasoup/_web-ui/static/`](../python-package/src/nichtparasoup/_web-ui/static).

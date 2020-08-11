@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
+    <title>nichtparasoup - Hackspace Entertainment System</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+
+    <link rel="stylesheet" href="css/normalize.css" />
+
+    <link rel="stylesheet" href="css/sourceIcons.css" />
+    <link rel="stylesheet" href="css/look_buttons.css" />
+    <link rel="stylesheet" href="css/look_stateSwitch.css" />
+    <link rel="stylesheet" href="css/look_hotkeys.css" />
+    <link rel="stylesheet" href="css/look.css" />
+    <link rel="stylesheet" href="css/look_fullscreen.css" />
+    <link rel="stylesheet" href="css/look_bossMode.css" />
+
+    <link rel="stylesheet" href="css/feel.css" />
+
+    <script type="application/javascript" src="js/helper.js"></script>
+    <script type="application/javascript" src="js/look_maxSizer.js"></script>
+    <script type="application/javascript" src="js/look_stateSwitch.js"></script>
+    <script type="application/javascript" src="js/feel.js"></script>
+    <script type="application/javascript" src="js/feel_hotkeys.js"></script>
+
+    <script type="application/javascript">
+        window.helperFuncs.addEvent(window, "load", function () {
+            this.maxSizer.init('#wall figure img');
+            this.stateSwitch.init(this.document.getElementById('c_state'));
+            this.stateSwitch.init(this.document.getElementById('c_background'));
+            this.nichtparasoup.init('wall', 2);
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="wall">
+        <!-- images added here -->
+    </div>
+
+    <header>
+        <!-- top controls -->
+        <div id="controls">
+
+            <span id="serverControls">
+                <button id="sc_reset" title="reset server">reset</button>
+            </span>
+
+            <span class="spacer">&nbsp;</span>
+
+            <label class="button stateSwitchContainer" for="c_background"
+                title="keep playing even when the window lost the focus">
+                play in background:
+                <input id="c_background" type="checkbox" />
+            </label>
+
+            <label for="c_speed" title="set image interval">
+                speed:
+                slow <input id="c_speed" type="range" min="3" max="23" /> fast
+            </label>
+
+            <label class="button stateSwitchContainer" for="c_state" title="play/pause">
+                play:
+                <input id="c_state" type="checkbox" checked="checked" />
+            </label>
+        </div>
+
+        <span id="burger">&#9776;</span>
+    </header>
+
+    <footer>
+        <!-- bottom hints -->
+        <span class="spacer">&nbsp;</span>
+
+        <dl id="hotkeys">
+            <dd class="button">esc</dd><!-- no key indicator needed, the effect will be clear ;-) -->
+            <dt>boss mode</dt>
+            <dd class="button hk_32">space</dd>
+            <dt>play/pause</dt>
+            <dd class="button hk_107 hk_61 hk_171 hk_187">+</dd>
+            <dt>faster</dt>
+            <dd class="button hk_109 hk_173 hk_189">-</dd>
+            <dt>slower</dt>
+            <dd class="button">j</dd><!-- no key indicator needed, the effect will be clear ;-) -->
+            <dt>next image</dt>
+        </dl>
+
+        <span class="button hotkey" id="keys">hot keys</span>
+    </footer>
+</body>
+
+</html>

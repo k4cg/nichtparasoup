@@ -1,0 +1,208 @@
+
+
+* { cursor: default; }
+a { cursor: pointer; }
+
+html {
+	direction: ltr;
+	text-align: left;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+
+html, body {
+	color: #ccc;
+	background-color: black;
+}
+
+header {
+	z-index: 99999;
+	display: block;
+	position: fixed;
+	top: 0ex;
+	left: 0em;
+	right: 0em;
+	height: 5ex;
+	line-height: 5ex;
+	text-align: left;
+	padding: 0ex 1em;
+	color: #ccc;
+	background-color: transparent;
+	cursor: default;
+	white-space: nowrap;
+
+}
+
+header #burger {
+	color: #eee;
+	position: fixed;
+	top: inherit;
+	right: inherit;
+	margin-right: 1em;
+	text-shadow:
+		-1px -1px 0px black,
+		 1px -1px 0px black,
+		-1px  1px 0px black,
+		 1px  1px 0px black;
+}
+
+header #controls {
+	text-align: center;
+	padding-left: 3em;
+	padding-right: 3em;
+	position: absolute;
+	top: -7ex; /* neg. height */
+	left: 0em;
+	right: 0em;
+	background-color: #111;
+	background-color: rgba(23, 23, 23, 0.9);
+	border-bottom: 1px solid #808080;
+	transition: all 0.6s ease-in-out 0s;
+}
+
+header #controls #serverControls {
+	margin: 0ex 2em;
+}
+
+header #controls #serverControls button {
+	margin-right: 0.5em;
+}
+
+header #controls label {
+	text-align: left;
+	margin-right: 1em;
+	margin-left: 1em;
+}
+
+header:hover {
+	color: white;
+}
+
+header:hover #burger {
+	font-weight: bold;
+}
+
+header:hover #controls ,
+#controls.forceShow {
+	top: 0ex;
+}
+
+#controls.forceShow {
+	transition: none;
+}
+
+footer {
+	z-index: 99999;
+	text-align: center;
+	position: fixed;
+	right: 0em;
+	bottom: 0ex;
+	left: 0em;
+	background-color: transparent;
+	color: #ccc;
+	font-size: smaller;
+	height: 4ex;
+
+}
+
+#wall figure {
+	position: relative;
+	margin: 1ex 1ex;
+	border: 1px solid #7f7f7f;
+	display: inline;
+	display: inline-block;
+	float: left;
+
+	animation: scaleIn linear 0.5s;
+	-webkit-animation: scaleIn linear 0.5s;
+	-moz-animation: scaleIn linear 0.5s;
+	-o-animation: scaleIn linear 0.5s;
+	-ms-animation: scaleIn linear 0.5s;
+
+	transform-origin: top left;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+}
+
+@keyframes scaleIn {
+	from { transform: scale(0); }
+	to   { transform: scale(1); }
+}
+
+@-webkit-keyframes scaleIn {
+	from { -webkit-transform: scale(0); }
+	to   { -webkit-transform: scale(1); }
+}
+
+@-moz-keyframes scaleIn {
+	from { -moz-transform: scale(0); }
+	to   { -moz-transform: scale(1); }
+}
+
+@-o-keyframes scaleIn {
+	from { -o-transform: scale(0); }
+	to   { -o-transform: scale(1); }
+}
+
+@-ms-keyframes scaleIn {
+	from { -ms-transform: scale(0); }
+	to   { -ms-transform: scale(1); }
+}
+
+#wall figure img {
+	display: block; /* needed for alignment of the image to its container box ... */
+}
+
+#wall figure figcaption {
+	display: block;
+	position: absolute;
+	bottom: 0ex;
+	right: 0em;
+	line-height: 2.5ex;
+	min-height: 2.5ex;
+	min-width: 2.5ex;
+	background-size: 2.5ex 2.5ex;
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-color: transparent;
+	color: white;
+	opacity: 0.5;
+	text-align: initial; /* fall back to native */
+}
+
+#wall figure figcaption a {
+	display: none;
+	word-wrap: break-word;
+	text-decoration: none;
+	color: inherit;
+	margin: 0.1ex 0.1em;
+}
+
+#wall figure figcaption:hover {
+	opacity: 1;
+	background-color: #606060;
+	background-color: rgba(100, 100, 100, 0.7);
+	left: 0em;
+}
+
+#wall figure figcaption:hover a {
+	display: block;
+}
+
+#wall figure figcaption[data-is_generic="true"] a::after {
+    content: "generic";
+    vertical-align: text-top;
+    font-size: small;
+    font-variant: small-caps;
+    line-height: 1.5ex;
+    color: #f06030;
+    background-color: #333333;
+    display: inline-block;
+    padding: 0.1ex 0.1em;
+    margin: 0ex 1ex;
+    border-radius: 0.5ex;
+    border: 1px solid #303030;
+}
