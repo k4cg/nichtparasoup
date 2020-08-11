@@ -1,3 +1,13 @@
+flake8 >= 3.7
+flake8-annotations >= 2.0
+flake8-bugbear >= 20.1
+flake8-isort >= 4.0
+flake8-use-fstring >= 1.1
+pep8-naming >= 0.9
+# flake8-builtins  # nice in general, but seams not bug-free, yet.
+# lake8-docstrings # not in use, until all docs are done.
+# flake8-quotes    # not in use until black code styles are setup
+
 mypy >= 0.761
 
 # pylint >= 2.5

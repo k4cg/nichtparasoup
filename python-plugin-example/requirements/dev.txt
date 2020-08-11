@@ -5,31 +5,41 @@
 #    pip-compile ./dev.in
 #
 appdirs==1.4.4            # via virtualenv
-attrs==19.3.0             # via pytest
+attrs==19.3.0             # via flake8-bugbear, pytest
 autopep8==1.5.4           # via -r ./dev.in
 click==7.1.2              # via pip-tools
 coverage==5.2.1           # via -r ./tests.in, pytest-cov
 distlib==0.3.1            # via virtualenv
 filelock==3.0.12          # via tox, virtualenv
-importlib-metadata==1.7.0  # via pluggy, pytest, tox, virtualenv
+flake8-annotations==2.3.0  # via -r ./style.in
+flake8-bugbear==20.1.4    # via -r ./style.in
+flake8-isort==4.0.0       # via -r ./style.in
+flake8-polyfill==1.0.2    # via pep8-naming
+flake8-use-fstring==1.1   # via -r ./style.in
+flake8==3.8.3             # via -r ./style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
+importlib-metadata==1.7.0  # via flake8, pluggy, pytest, tox, virtualenv
 importlib-resources==3.0.0  # via virtualenv
 iniconfig==1.0.1          # via pytest
-isort==5.3.2              # via -r ./dev.in
+isort==5.3.2              # via -r ./dev.in, flake8-isort
+mccabe==0.6.1             # via flake8
 more-itertools==8.4.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
 mypy==0.782               # via -r ./style.in
 packaging==20.4           # via pytest, tox
+pep8-naming==0.11.1       # via -r ./style.in
 pip-tools==5.3.1          # via -r ./dev.in
 pluggy==0.13.1            # via pytest, tox
 py==1.9.0                 # via pytest, tox
-pycodestyle==2.6.0        # via autopep8
+pycodestyle==2.6.0        # via autopep8, flake8
+pyflakes==2.2.0           # via flake8
 pyparsing==2.4.7          # via packaging
 pytest-cov==2.10.0        # via -r ./tests.in
 pytest==6.0.1             # via -r ./tests.in, pytest-cov
 six==1.15.0               # via packaging, pip-tools, tox, virtualenv
+testfixtures==6.14.1      # via flake8-isort
 toml==0.10.1              # via autopep8, pytest, tox
 tox==3.19.0               # via -r ./tox.in
-typed-ast==1.4.1          # via mypy
+typed-ast==1.4.1          # via flake8-annotations, mypy
 typing-extensions==3.7.4.2  # via mypy
 virtualenv==20.0.30       # via tox
 zipp==3.1.0               # via importlib-metadata, importlib-resources
