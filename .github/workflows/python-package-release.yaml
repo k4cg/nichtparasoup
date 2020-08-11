@@ -2,22 +2,21 @@
 # read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
 # see for event payloads: https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#release
 
-name: Release ${{ github.event.release.tag_name }}
+name: Release
 
 on:
   release:
     types:
       - created
 
-defaults:
-  run:
-    working-directory: python-package
-
 jobs:
   test-version:
     name: Assert version
     # assure that the correct version is marked where needed
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python-package
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -57,6 +56,9 @@ jobs:
     name: Tests
     # these tests are just to ensure that a minimal quality is given. full tests are done in `tests` action
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python-package
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -81,6 +83,9 @@ jobs:
     needs: ['test-version']
     # build in an isolated env
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python-package
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -104,6 +109,46 @@ jobs:
         with:
           name: build-results
           path: python-package/dist
+
+  publish-asset-wheel:
+    name: Publish to assets
+    needs: ['test', 'build']
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dist
+    steps:
+      - name: Download build results
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-results
+          path: dist
+      - name: find wheel
+        id: files
+        run: |
+          echo "::set-output name=source::$(ls -qb1 *.tar.gz)"
+          echo "::set-output name=wheel::$(ls -qb1 *.whl)"
+      - name: Publish wheel
+        # use https://github.com/actions/upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/${{ steps.files.outputs.wheel }}
+          asset_name: ${{ steps.files.outputs.wheel }}
+          asset_content_type: application/x-pywheel+zip
+      - name: Publish source
+        # use https://github.com/actions/upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/${{ steps.files.outputs.source }}
+          asset_name: ${{ steps.files.outputs.source }}
+          asset_content_type: application/tar+gzip
 
   publish-pypi:
     name: Publish to PyPI
