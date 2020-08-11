@@ -51,7 +51,7 @@ _FilePath = str
 
 
 class WebServer:
-    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'template')
+    _TEMPLATE_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'templates')
     _STATIC_FILES: _DirPath = path_join(dirname(__file__), '_web-ui', 'static')
     _STATIC_INDEX: _FilePath = 'index.html'  # relative to cls._STATIC_FILES
 
@@ -160,7 +160,7 @@ class WebServer:
             if icon
         ]
         # cannot use dict for `names_icons_list` in template. will break the template occasionally :-/
-        template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css'))
+        template = Template(filename=path_join(self._TEMPLATE_FILES, 'css', 'sourceIcons.css.mako'))
         css = template.render(names_icons_list=names_icons_list)
         return Response(css, mimetype='text/css')
 

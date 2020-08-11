@@ -37,3 +37,4 @@ stick to these rules:
 * each testable function/class has its own file:   name the test file   `test_*.py`
 * test files are performed in alphabetical order - so add a number to have them ordered
 * name the test functions `test_*`
+* put test data in a folder called `testdata_+`

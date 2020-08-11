@@ -4,10 +4,13 @@ from nichtparasoup.config import parse_yaml_file
 
 
 class TestConfigParserDefaults:
+    _TESTDATA = realpath(dirname(__file__))
+    _TESTDATA_POSITIVE = path_join(_TESTDATA, 'testdata_configs', 'positive')
+    _TESTDATA_NEGATIVE = path_join(_TESTDATA, 'testdata_configs', 'negative')
 
     def test_set_optional_loglevel(self) -> None:
         # arrange
-        file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'logging_level_missing.yaml'))
+        file = path_join(self._TESTDATA_POSITIVE, 'logging_level_missing.yaml')
         # act
         config = parse_yaml_file(file)
         # assert
@@ -15,7 +18,7 @@ class TestConfigParserDefaults:
 
     def test_set_optional_weight(self) -> None:
         # arrange
-        file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'crawler_weight_missing.yaml'))
+        file = path_join(self._TESTDATA_POSITIVE, 'crawler_weight_missing.yaml')
         # act
         config = parse_yaml_file(file)
         # assert
@@ -24,7 +27,7 @@ class TestConfigParserDefaults:
 
     def test_set_optional_exhausted(self) -> None:
         # arrange
-        file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'crawler_exhausted_missing.yaml'))
+        file = path_join(self._TESTDATA_POSITIVE, 'crawler_exhausted_missing.yaml')
         # act
         config = parse_yaml_file(file)
         # assert
@@ -33,7 +36,7 @@ class TestConfigParserDefaults:
 
     def test_set_optional_config(self) -> None:
         # arrange
-        file = realpath(path_join(dirname(__file__), 'configs', 'positive', 'crawler_config_missing.yaml'))
+        file = path_join(self._TESTDATA_POSITIVE, 'crawler_config_missing.yaml')
         # act
         config = parse_yaml_file(file)
         # assert
