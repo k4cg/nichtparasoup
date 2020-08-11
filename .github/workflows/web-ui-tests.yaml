@@ -5,9 +5,6 @@ name: Test WebUi
 
 on:
   push:
-    tags:
-      # run again on release tags to have tools mark them
-      - '*.*.*'
     branches:
       - 'master'
       - '3.0-dev'
