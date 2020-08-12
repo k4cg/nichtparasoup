@@ -114,19 +114,19 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     [PEP517](https://www.python.org/dev/peps/pep-0517/) &
     [PEP518](https://www.python.org/dev/peps/pep-0518/).  
     *ATTENTION*: `pip install`'s `--editable` flag might requires the `--no-build-isolation` flag.
-  * Improved some [docs](docs). Added an `index.md` to all folders. restructured some docs.
+  * Improved some [docs](docs/index.md). Added an `index.md` to all folders. restructured some docs.
   * Internal
-    * All internal imports were made relative (again).
-    * Logging reviewed, uses %-strings as params, now.
+    * All internal imports were made relative.
+    * Logging reviewed, uses `%`-strings as params, now.
     * `try`/`except` got some overhaul to cover needed parts, only.
   * Removed `ddt` from the testing dependencies. Closes [issue #233](https://github.com/k4cg/nichtparasoup/issues/233).
   * Version-bumped some dependencies, pinned dev dependencies via `pip-compile`.
   * Added some more tests.
   * improved `venv` support when it comes to testing.
   * Tests via `tox` were split.
-    Code style tests are done via own test named `toxstyle` now (was part of standard tests).
+    Code style tests are done via own test named `style` now (was part of standard tests).
   * Repo layout changed to be a monorepo. See [the repo](https://github.com/k4cg/nichtparasoup).  
-    This also means, that the plugin-example was moved out of the project into an own one.
+    This also means, that the plugin-example was moved out of the project into an own project.
 
 ## 2.4.2
 
