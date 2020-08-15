@@ -11,7 +11,6 @@ on:
     branches:
       - 'master'
       - '3.0-dev'
-      - 'sonar/coverage_draft1'
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - 'python-package/**'
@@ -65,8 +64,7 @@ jobs:
             os: 'ubuntu-latest'
             python: '3.8'
             toxenv: tests_start, py38, coverage_report
-            upload_coverage: true
-            sonar_scanner: true
+            has_coverage: true
           - name: Windows
             os: windows-latest
             python: '3.8'
@@ -114,10 +112,35 @@ jobs:
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
-      - name: Upload coverage to Codecov
-        if: ${{ github.repository_owner == 'k4cg' && matrix.upload_coverage }}
-        # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-        continue-on-error: true
+      - name: Artifact coverage
+        if: ${{ matrix.has_coverage }}
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: python-package/coverage.xml
+          if-no-files-found: error
+      - name: Clean pip cache dir
+        if: ${{ steps.pip-cache.outcome == 'success' }}
+        run: python -m pip cache remove 'nichtparasoup*' || true
+
+  codecov:
+    name: CodeCov
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
+    if: ${{ github.repository_owner == 'k4cg' }}
+    needs: ['test']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+      - name: Fetch coverage
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+          path: python-package
+      - name: Upload coverage to CodeCov
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
         with:
@@ -125,14 +148,12 @@ jobs:
           file: python-package/coverage.xml
           flags: python-package
           name: python-package
-      - name: Clean pip cache dir
-        if: ${{ steps.pip-cache.outcome == 'success' }}
-        run: python -m pip cache remove 'nichtparasoup*' || true
 
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ github.repository_owner == 'k4cg' }}
+    needs: ['test']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -141,9 +162,13 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
+      - name: Fetch coverage
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+          path: python-package
       - name: SonarCloud Scan
-        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
-        continue-on-error: true
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:

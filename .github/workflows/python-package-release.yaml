@@ -108,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-results
-          path: python-package/dist
+          path: python-package/dist/
           if-no-files-found: error
 
   publish-asset-wheel:

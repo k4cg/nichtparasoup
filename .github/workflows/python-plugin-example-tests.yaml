@@ -8,7 +8,6 @@ on:
     branches:
       - 'master'
       - '3.0-dev'
-      - 'sonar/coverage_draft1'
     paths:
       - '.github/workflows/python-plugin-example-tests.yaml'
       - 'python-plugin-example/**'
@@ -105,7 +104,7 @@ jobs:
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: coverage.xml
+          name: coverage
           path: python-plugin-example/coverage.xml
           if-no-files-found: error
       - name: Clean pip cache dir
@@ -126,10 +125,9 @@ jobs:
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: coverage.xml
-          path: python-plugin-example/coverage.xml
+          name: coverage
+          path: python-plugin-example
       - name: Upload coverage to CodeCov
-        continue-on-error: true
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
         with:
@@ -152,14 +150,12 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       - name: Fetch coverage
-          # see https://github.com/actions/download-artifact
-          uses: actions/download-artifact@v2
-          with:
-            name: coverage.xml
-            path: python-plugin-example/coverage.xml
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+          path: python-plugin-example
       - name: SonarCloud Scan
-        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
-        continue-on-error: true
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:
