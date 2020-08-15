@@ -28,10 +28,6 @@ on:
       - '!python-plugin-example/**.rst'
       - '!python-plugin-example/INSTALL'
       - '!python-plugin-example/LICENSE'
-  schedule:
-    # schedule weekly tests, since we dont run on every change of 'python-package/src'
-    # this means: at 23:55 on Fridays
-    - cron: '55 23 * * 5'
 
 defaults:
   run:
@@ -55,7 +51,7 @@ jobs:
             os: 'ubuntu-latest'
             python: '3.8'
             toxenv: tests_start, py38, coverage_report
-            upload_coverage: true
+            has_coverage: true
           - name: Windows
             os: windows-latest
             python: '3.8'
@@ -77,18 +73,15 @@ jobs:
       - name: Fetch Code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2
-
       - name: Setup Python ${{ matrix.python_version }}
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v2
         with:
-          python-version: '${{ matrix.python }}'
-
+          python-version: ${{ matrix.python }}
       - name: Get pip cache dir
         id: pip-cache
         # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
         run: echo "::set-output name=dir::$(python -m pip cache dir)"
-
       - name: Setup pip cache dir
         # see https://github.com/actions/cache
         uses: actions/cache@v2
@@ -97,22 +90,44 @@ jobs:
           key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('python-plugin-example/requirements/*.txt') }}
           restore-keys: |
             pip-${{ runner.os }}-${{ matrix.python }}-
-
       - name: Install dependencies
         run: |
           python -m pip install wheel setuptools pip
           python -m pip install -r requirements/tox.txt
-
       - name: Test python-plugin-example
         run: python -m tox -r -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
+      - name: Artifact coverage
+        if: ${{ matrix.has_coverage }}
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: python-plugin-example/coverage.xml
+          if-no-files-found: error
+      - name: Clean pip cache dir
+        if: ${{ steps.pip-cache.outcome == 'success' }}
+        run: python -m pip cache remove 'nichtparasoup*' || true
 
-      - name: Upload coverage to Codecov
-        if: ${{ github.repository_owner == 'k4cg' && matrix.upload_coverage }}
-        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
-        continue-on-error: true
+  codecov:
+    name: CodeCov
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
+    if: ${{ github.repository_owner == 'k4cg' }}
+    needs: ['test']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+      - name: Fetch coverage
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+          path: python-plugin-example
+      - name: Upload coverage to CodeCov
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
         with:
@@ -121,22 +136,26 @@ jobs:
           flags: python-plugin-example
           name: python-plugin-example
 
-      - name: Clean pip cache dir
-        if: ${{ steps.pip-cache.outcome == 'success' }}
-        run: python -m pip cache remove 'nichtparasoup*' || true
-
   sonarcloud:
     name: SonarScanner
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ github.repository_owner == 'k4cg' }}
+    needs: ['test']
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
+      - name: Fetch coverage
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+          path: python-plugin-example
       - name: SonarCloud Scan
-        # have PRs backed-up: Anyone without write access to a repository cannot read and use secrets
-        continue-on-error: true
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -148,9 +167,12 @@ jobs:
   codeql:
     # see https://github.com/github/codeql-action
     name: CodeQL
+    # disabled since it took to long
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
         uses: actions/checkout@v2
         with:
           # We must fetch at least the immediate parents so that if this is
@@ -161,9 +183,11 @@ jobs:
         # the head of the pull request instead of the merge commit.
         if: ${{ github.event_name == 'pull_request' }}
       - name: Initialize CodeQL
+        # see https://github.com/github/codeql-action
         uses: github/codeql-action/init@v1
         with:
           languages: python
           config-file: ./.github/codeql/python-plugin-example.yaml
       - name: Perform CodeQL Analysis
+        # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1

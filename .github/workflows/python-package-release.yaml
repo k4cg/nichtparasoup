@@ -103,12 +103,13 @@ jobs:
         run: |
           rm -rf build dist
           python -m pep517.build --source --binary --out-dir dist .
-      - name: Upload build results
+      - name: Artifact build results
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
           name: build-results
-          path: python-package/dist
+          path: python-package/dist/
+          if-no-files-found: error
 
   publish-asset-wheel:
     name: Publish to assets
@@ -118,13 +119,13 @@ jobs:
       run:
         working-directory: dist
     steps:
-      - name: Download build results
+      - name: Fetch build results
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
           name: build-results
           path: dist
-      - name: find wheel
+      - name: Find dist files
         id: files
         run: |
           echo "::set-output name=source::$(ls -qb1 *.tar.gz)"
