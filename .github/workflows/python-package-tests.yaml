@@ -115,7 +115,8 @@ jobs:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
       - name: Artifact pytest-report
-        if: ${{ ! matrix.no-unit-test }}
+        continue-on-error: true
+        if: ${{ always && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -123,7 +124,8 @@ jobs:
           path: python-package/pytests/
           if-no-files-found: error
       - name: Artifact coverage
-        if: ${{ matrix.has-coverage }}
+        continue-on-error: true
+        if: ${{ always() && matrix.has-coverage }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -131,7 +133,7 @@ jobs:
           path: python-package/coverage.xml
           if-no-files-found: error
       - name: Clean pip cache dir
-        if: ${{ steps.pip-cache.outcome == 'success' }}
+        if: ${{ always() && steps.pip-cache.outcome == 'success' }}
         run: python -m pip cache remove 'nichtparasoup*' || true
 
   codecov:
@@ -173,12 +175,14 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       - name: Fetch pytest-report
+        continue-on-error: true
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
           name: pytest-report
           path: python-package/pytests
       - name: Fetch coverage
+        continue-on-error: true
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
