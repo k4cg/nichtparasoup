@@ -32,6 +32,10 @@ on:
 defaults:
   run:
     working-directory: python-plugin-example
+env:
+  project-directory: python-plugin-example
+  reports-directory: reports
+  latest-python-version: '3.8'
 
 jobs:
   test:
@@ -44,20 +48,24 @@ jobs:
           # check the style
           - name: 'Style'
             os: ubuntu-latest
+            # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: style
+            no-unit-test: true
           # check latest Python for all OS
           - name: Linux
             os: 'ubuntu-latest'
+            # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: tests_start, py38, coverage_report
-            has_coverage: true
           - name: Windows
             os: windows-latest
+            # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: py38
           - name: 'MacOs'
             os: macos-latest
+            # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: py38
           # check older Python
@@ -83,64 +91,116 @@ jobs:
         # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
         run: echo "::set-output name=dir::$(python -m pip cache dir)"
       - name: Setup pip cache dir
+        continue-on-error: true
         # see https://github.com/actions/cache
         uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('python-plugin-example/requirements/*.txt') }}
-          restore-keys: |
-            pip-${{ runner.os }}-${{ matrix.python }}-
+          key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles(format('{0}/requirements/*.txt', env.project-directory)) }}
+          restore-keys: pip-${{ runner.os }}-${{ matrix.python }}-
       - name: Install dependencies
         run: |
           python -m pip install wheel setuptools pip
           python -m pip install -r requirements/tox.txt
-      - name: Test python-plugin-example
-        run: python -m tox -r -s false
+      - name: Test ${{ env.project-directory }}
+        run:
+          python -m tox -r -s false --
+          --junit-xml=reports/pytests/${{ runner.os }}-${{ matrix.python }}.xml
+          -o junit_suite_name=${{ runner.os }}-${{ matrix.python }}
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
-      - name: Artifact coverage
-        if: ${{ matrix.has_coverage }}
+      - name: Artifact reports
+        if: ${{ always() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: coverage
-          path: python-plugin-example/coverage.xml
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
-      - name: Clean pip cache dir
-        if: ${{ steps.pip-cache.outcome == 'success' }}
+      - name: Tidy pip cache dir
+        if: ${{ always() }}
         run: python -m pip cache remove 'nichtparasoup*' || true
+
+  test-reporting_merge:
+    name: Merge test reports
+    needs: ['test']
+    # jus wait until 'test' finished, but run regardless of the outcome
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+      - name: Fetch reports
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}
+      - name: Setup Python
+        # see https://github.com/actions/setup-python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.latest-python-version }}
+      - name: Get pip cache dir
+        id: pip-cache
+        # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
+        run: echo "::set-output name=dir::$(python -m pip cache dir)"
+      - name: Setup pip cache dir
+        continue-on-error: true
+        # see https://github.com/actions/cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: pip-${{ runner.os }}-${{ env.latest-python-version }}-${{ hashFiles(format('{0}/requirements/*.txt', env.project-directory)) }}
+          restore-keys: pip-${{ runner.os }}-${{ env.latest-python-version }}-
+      - name: Install dependencies
+        run: |
+          python -m pip install wheel setuptools pip
+          python -m pip install -r requirements/tox.txt
+      - name: Merge pytest-reports
+        run: python -m tox -r
+        env:
+          TOXENV: pytests_merge
+      - name: Artifact combined reports
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}/
+          if-no-files-found: error
 
   codecov:
     name: CodeCov
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ github.repository_owner == 'k4cg' }}
+    if: ${{ always() && github.repository_owner == 'k4cg' }}
     needs: ['test']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2
-      - name: Fetch coverage
+      - name: Fetch reports
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: coverage
-          path: python-plugin-example
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: Upload coverage to CodeCov
         # see https://github.com/codecov/codecov-action
         uses: codecov/codecov-action@v1.0.12
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: python-plugin-example/coverage.xml
-          flags: python-plugin-example
-          name: python-plugin-example
+          file: ${{ env.project-directory }}/${{ env.reports-directory }}/coverage.xml
+          flags: ${{ env.project-directory }}
+          name: ${{ env.project-directory }}
 
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ github.repository_owner == 'k4cg' }}
-    needs: ['test']
+    if: ${{ always() && github.repository_owner == 'k4cg' }}
+    needs: ['test', 'test-reporting_merge']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -149,17 +209,18 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Fetch coverage
+      - name: Fetch reports
+        continue-on-error: true
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: coverage
-          path: python-plugin-example
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: SonarCloud Scan
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:
-          projectBaseDir: python-plugin-example
+          projectBaseDir: ${{ env.project-directory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -187,7 +248,7 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: python
-          config-file: ./.github/codeql/python-plugin-example.yaml
+          config-file: ./.github/codeql/${{ env.project-directory }}.yaml
       - name: Perform CodeQL Analysis
         # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1

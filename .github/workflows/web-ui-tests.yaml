@@ -30,6 +30,8 @@ on:
 defaults:
   run:
     working-directory: web-ui
+env:
+  project-directory: web-ui
 
 jobs:
   sonarcloud:
@@ -48,7 +50,7 @@ jobs:
         # see https://github.com/SonarSource/sonarcloud-github-action
         uses: sonarsource/sonarcloud-github-action@master
         with:
-          projectBaseDir: web-ui
+          projectBaseDir: ${{ env.project-directory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -76,7 +78,7 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: javascript
-          config-file: ./.github/codeql/web-ui.yaml
+          config-file: ./.github/codeql/${{ env.project-directory }}.yaml
       - name: Perform CodeQL Analysis
         # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1
