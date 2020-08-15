@@ -8,6 +8,7 @@ on:
     branches:
       - 'master'
       - '3.0-dev'
+      - 'sonar/xunit_draft1'
     paths:
       - '.github/workflows/python-plugin-example-tests.yaml'
       - 'python-plugin-example/**'
@@ -46,12 +47,13 @@ jobs:
             os: ubuntu-latest
             python: '3.8'
             toxenv: style
+            no-unit-test: true
           # check latest Python for all OS
           - name: Linux
             os: 'ubuntu-latest'
             python: '3.8'
             toxenv: tests_start, py38, coverage_report
-            has_coverage: true
+            has-coverage: true
           - name: Windows
             os: windows-latest
             python: '3.8'
@@ -99,8 +101,16 @@ jobs:
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
+      - name: Artifact pytest-report
+        if: ${{ ! matrix.no-unit-test }}
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest-report
+          path: python-plugin-example/pytests/
+          if-no-files-found: error
       - name: Artifact coverage
-        if: ${{ matrix.has_coverage }}
+        if: ${{ matrix.has-coverage }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -149,6 +159,12 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
+      - name: Fetch pytest-report
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: pytest-report
+          path: python-plugin-example/pytests
       - name: Fetch coverage
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
