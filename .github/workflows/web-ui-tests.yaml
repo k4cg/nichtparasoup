@@ -8,6 +8,7 @@ on:
     branches:
       - 'master'
       - '3.0-dev'
+      - 'sonar/coverage_draft1'
     paths:
       - '.github/workflows/web-ui-tests.yaml'
       - 'web-ui/**'
@@ -34,10 +35,13 @@ defaults:
 jobs:
   sonarcloud:
     name: SonarScanner
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
@@ -57,7 +61,8 @@ jobs:
     name: CodeQL
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
         uses: actions/checkout@v2
         with:
           # We must fetch at least the immediate parents so that if this is
@@ -68,9 +73,11 @@ jobs:
         # the head of the pull request instead of the merge commit.
         if: ${{ github.event_name == 'pull_request' }}
       - name: Initialize CodeQL
+        # see https://github.com/github/codeql-action
         uses: github/codeql-action/init@v1
         with:
           languages: javascript
           config-file: ./.github/codeql/web-ui.yaml
       - name: Perform CodeQL Analysis
+        # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1
