@@ -180,6 +180,8 @@ jobs:
   codeql:
     # see https://github.com/github/codeql-action
     name: CodeQL
+    # disabled since it took to long
+    if: ${{ false }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
