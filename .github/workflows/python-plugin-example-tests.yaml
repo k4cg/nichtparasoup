@@ -201,7 +201,7 @@ jobs:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ always() && github.repository_owner == 'k4cg' }}
-    needs: ['test-reporinng_merge']
+    needs: ['test', 'test-reporinng_merge']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
