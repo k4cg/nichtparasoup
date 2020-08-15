@@ -124,6 +124,8 @@ jobs:
   test-reporinng_merge:
     name: Merge test reports
     needs: ['test']
+    # jus wait until 'test' finished, but run regardless of the outcome
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
