@@ -166,7 +166,7 @@ jobs:
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: pytests
+          name: pytest-report
           path: python-plugin-example/pytests/
           if-no-files-found: error
 
