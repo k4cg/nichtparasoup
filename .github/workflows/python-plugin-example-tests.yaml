@@ -102,7 +102,7 @@ jobs:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
       - name: Artifact pytest-report
-        if: ${{ ! matrix.no-unit-test }}
+        if: ${{ always() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -110,7 +110,7 @@ jobs:
           path: python-plugin-example/pytests/
           if-no-files-found: error
       - name: Artifact coverage
-        if: ${{ matrix.has-coverage }}
+        if: ${{ always() && matrix.has-coverage }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -118,7 +118,7 @@ jobs:
           path: python-plugin-example/coverage.xml
           if-no-files-found: error
       - name: Clean pip cache dir
-        if: ${{ steps.pip-cache.outcome == 'success' }}
+        if: ${{ always() && steps.pip-cache.outcome == 'success' }}
         run: python -m pip cache remove 'nichtparasoup*' || true
 
   test-reporinng_merge:
