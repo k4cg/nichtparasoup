@@ -114,7 +114,7 @@ jobs:
           python -m pip install -r requirements/tox.txt
 
       - name: Test python-package
-        run: python -m tox -r -s false -- -n auto
+        run: python -m tox -r -s false
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
