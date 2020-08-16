@@ -87,6 +87,9 @@ jobs:
         # as shown here: https://github.com/actions/cache/blob/master/examples.md#using-pip-to-get-cache-location
         run: echo "::set-output name=dir::$(python -m pip cache dir)"
       - run: |
+          echo "${{ join(env.project-directory, '/requirements/*.txt') }}"
+          echo "${{ join('python-plugin-example', '/requirements/*.txt') }}"
+          echo "${{ 'python-plugin-example/requirements/*.txt' }}"
           echo "${{ hashFiles(join(env.project-directory, '/requirements/*.txt')) }}"
           echo "${{ hashFiles(join('python-plugin-example', '/requirements/*.txt')) }}"
           echo "${{ hashFiles('python-plugin-example/requirements/*.txt') }}"
