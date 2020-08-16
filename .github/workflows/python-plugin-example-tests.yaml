@@ -119,11 +119,11 @@ jobs:
           name: coverage
           path: python-plugin-example/coverage.xml
           if-no-files-found: error
-      - name: Clean pip cache dir
+      - name: Tidy pip cache dir
         if: ${{ always() && steps.pip-cache.outcome == 'success' }}
         run: python -m pip cache remove 'nichtparasoup*' || true
 
-  test-reporinng_merge:
+  test-reporting_merge:
     name: Merge test reports
     needs: ['test']
     # jus wait until 'test' finished, but run regardless of the outcome
@@ -201,7 +201,7 @@ jobs:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ always() && github.repository_owner == 'k4cg' }}
-    needs: ['test', 'test-reporinng_merge']
+    needs: ['test', 'test-reporting_merge']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
