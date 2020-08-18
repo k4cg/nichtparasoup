@@ -223,7 +223,6 @@ jobs:
           name: ${{ env.reports-directory }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: SonarCloud Scan
-        
         # see https://github.com/SonarSource/sonarcloud-github-action
         run: sonar-scanner
             -Dsonar.pullrequest.branch='${{ github.head_ref }}'
