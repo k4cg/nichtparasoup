@@ -36,6 +36,7 @@ env:
   project-directory: python-plugin-example
   reports-directory: reports
   latest-python-version: '3.8'
+  SONAR_HOST_URL: https://sonarcloud.io
 
 jobs:
   test:
@@ -203,6 +204,11 @@ jobs:
     needs: ['test', 'test-reporting_merge']
     runs-on: ubuntu-latest
     steps:
+      - name: Setup sonarqube
+        # see https://github.com/Warchant/setup-sonar-scanner
+        uses: warchant/setup-sonar-scanner@v1
+        width:
+          version: '4.4.0.2170'
       - name: Fetch Code
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2
@@ -218,9 +224,11 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: SonarCloud Scan
         # see https://github.com/SonarSource/sonarcloud-github-action
-        uses: sonarsource/sonarcloud-github-action@master
+        run: sonar-scanner
+            -Dsonar.pullrequest.branch='${{ github.head_ref }}'
+            -Dsonar.pullrequest.base='${{ github.base_ref }}'
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
         with:
-          projectBaseDir: ${{ env.project-directory }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
