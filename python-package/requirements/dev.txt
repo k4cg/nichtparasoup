@@ -17,10 +17,12 @@ flake8-isort==4.0.0       # via -r ./style.in
 flake8-polyfill==1.0.2    # via pep8-naming
 flake8-use-fstring==1.1   # via -r ./style.in
 flake8==3.8.3             # via -r ./style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
+future==0.18.2            # via junitparser
 importlib-metadata==1.7.0  # via flake8, pluggy, pytest, tox, virtualenv
 importlib-resources==3.0.0  # via virtualenv
 iniconfig==1.0.1          # via pytest
 isort==5.4.2              # via -r ./dev.in, flake8-isort
+junitparser==1.4.1        # via -r ./tests.in
 mccabe==0.6.1             # via flake8
 more-itertools==8.4.0     # via pytest
 mypy-extensions==0.4.3    # via mypy

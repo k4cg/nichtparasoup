@@ -30,7 +30,7 @@ ignore_errors = True
 show_missing = True
 
 [html]
-directory = htmlcov
+directory = reports/htmlcov
 
 [xml]
-output = coverage.xml
+output = reports/coverage.xml
