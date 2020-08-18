@@ -207,7 +207,7 @@ jobs:
       - name: Setup sonarqube
         # see https://github.com/Warchant/setup-sonar-scanner
         uses: warchant/setup-sonar-scanner@v1
-        width:
+        with:
           version: '4.4.0.2170'
       - name: Fetch Code
         # see https://github.com/actions/checkout
