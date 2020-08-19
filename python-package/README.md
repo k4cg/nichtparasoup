@@ -1,10 +1,10 @@
 # nichtparasoup
 
-[![PyPI](https://img.shields.io/pypi/v/nichtparasoup)](https://pypi.org/project/nichtparasoup/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)](https://pypi.org/project/nichtparasoup/)  
-[![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test+PythonPackage%22+branch%3A3.0-dev)
-[![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=nichtparasoup%3APythonPackage)
-[![Sonar Coverage](https://img.shields.io/sonar/coverage/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/component_measures?id=nichtparasoup%3APythonPackage&metric=coverage)
+[![shield_pypi-version]][link_pypi]
+[![shield_pypi-python]][link_pypi]  
+[![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_sonar-quality]][link-sonar-dashboard]
+[![shield_sonar-coverage]][link_sonar-coverage]
 
 ----
 
@@ -81,3 +81,17 @@ MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/3.0-dev/pyt
   from [Smashicons](https://www.flaticon.com/authors/smashicons)
   on [www.flaticon.com](https://www.flaticon.com/)
   are licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+
+
+
+[shield_pypi-version]: https://img.shields.io/pypi/v/nichtparasoup "PyPi release-version"
+[shield_pypi-python]: https://img.shields.io/pypi/pyversions/nichtparasoup "PyPi py-versions"
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev "test status"
+[shield_sonar-quality]: https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io "quality"
+[shield_sonar-coverage]: https://img.shields.io/sonar/coverage/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io "coverage"
+[shield_codecov]: https://img.shields.io/codecov/c/github/k4cg/nichtparasoup/3.0-dev "civerage"
+[link_pypi]: https://pypi.org/project/nichtparasoup/
+[link_gh-workflow-test]: https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test+PythonPackage%22+branch%3A3.0-dev
+[link-sonar-dashboard]: https://sonarcloud.io/dashboard?id=nichtparasoup%3APythonPackage
+[link_sonar-coverage]: https://sonarcloud.io/component_measures?id=nichtparasoup%3APythonPackage&metric=coverage
+[link_codecov]: https://codecov.io/gh/k4cg/nichtparasoup/tree/3.0-dev/python-plugin-example
