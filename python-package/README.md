@@ -4,10 +4,9 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nichtparasoup)](https://pypi.org/project/nichtparasoup/)  
 [![Test Status](https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev)](https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test+PythonPackage%22+branch%3A3.0-dev)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/dashboard?id=nichtparasoup%3APythonPackage)
-[![CodeCov](https://img.shields.io/codecov/c/github/k4cg/nichtparasoup/3.0-dev)](https://codecov.io/gh/k4cg/nichtparasoup/branch/3.0-dev)  
+[![Sonar Coverage](https://img.shields.io/sonar/coverage/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/component_measures?id=nichtparasoup%3APythonPackage&metric=coverage)
 
 ----
-
 
 _nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
