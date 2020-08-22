@@ -4,7 +4,7 @@
 #
 #    pip-compile ./tests.in
 #
-attrs==19.3.0             # via pytest
+attrs==20.1.0             # via pytest
 coverage==5.2.1           # via -r ./tests.in, pytest-cov
 future==0.18.2            # via junitparser
 importlib-metadata==1.7.0  # via pluggy, pytest
