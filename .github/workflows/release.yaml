@@ -82,7 +82,7 @@ jobs:
 
   build:
     name: Build
-    needs: ['test-version']
+    needs: test-version
     # build in an isolated env
     runs-on: ubuntu-latest
     steps:

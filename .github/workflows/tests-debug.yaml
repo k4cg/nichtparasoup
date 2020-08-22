@@ -1,0 +1,53 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: DEBUG
+
+on:
+  workflow_run:
+    workflows:
+      - PythonPackage Tests
+      - PythonPluginExample Tests
+      - WebUi Tests
+    types:
+      - completed
+
+env:
+  FOO_ENV_VAR: foo
+
+jobs:
+  debug:
+    name: DEBUG after ${{ github.event.workflow.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: env
+      # see https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#contexts
+      - run: echo "$CONTEXT"
+        name: github
+        env:
+          CONTEXT:  ${{ toJson(github) }}
+      - run: echo "$CONTEXT"
+        name: env
+        env:
+          CONTEXT:  ${{ toJson(env) }}
+      - run: echo "$CONTEXT"
+        name: runner
+        env:
+          CONTEXT:  ${{ toJson(runner) }}
+      - run: echo "$CONTEXT"
+        name: strategy
+        env:
+          CONTEXT:  ${{ toJson(strategy) }}
+      - run: echo "$CONTEXT"
+        name: matrix
+        env:
+          CONTEXT:  ${{ toJson(matrix) }}
+      - run: echo "$CONTEXT"
+        name: needs
+        env:
+          CONTEXT:  ${{ toJson(needs) }}
+      - run: echo "$CONTEXT"
+        name: secrets
+        env:
+          CONTEXT:  ${{ toJson(secrets) }}
+

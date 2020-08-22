@@ -1,0 +1,65 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: SonarCloud
+
+on:
+  workflow_run:
+    workflows:
+      - PythonPackage Tests
+      - PythonPluginExample Tests
+      - WebUi Tests
+    types:
+      - completed
+
+jobs:
+  sonarcloud:
+    name: SonarScanner after ${{ github.event.workflow.name }}
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
+    if: ${{ github.repository_owner == 'jkowalleck' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: set ENV
+        run: |
+          case $ISSUER_WORKFLOW_NAME in
+          'PythonPackage Tests')
+            echo '::set-env name=project-directory::python-package'
+            echo '::set-env name=reports-directory::reports'
+            ;;
+          'PythonPluginExample Tests')
+            echo '::set-env name=project-directory::python-plugin-example'
+            echo '::set-env name=reports-directory::reports'
+            ;;
+          'WebUi Tests')
+            echo '::set-env name=project-directory::web-ui'
+            ;;
+          *)
+            echo "::error::unconfigured ISSUER_WORKFLOW_NAME ${ISSUER_WORKFLOW_NAME}"
+            exit 1
+            ;;
+          esac
+        env:
+           ISSUER_WORKFLOW_NAME: ${{ github.event.workflow.name }}
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: Fetch reports
+        if: ${{ env.reports-directory }}
+        # see https://github.com/jkowalleck/download-artifact
+        uses: jkowalleck/download-artifact@v1.0.0
+        with:
+          artifacts-url: ${{ github.event.workflow_run.artifacts_url }}
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarCloud Scan
+        # see https://github.com/SonarSource/sonarcloud-github-action
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: ${{ env.project-directory }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

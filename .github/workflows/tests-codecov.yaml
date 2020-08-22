@@ -1,0 +1,58 @@
+# GitHubActions for testing
+# read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+
+name: CodeCov
+
+on:
+  workflow_run:
+    workflows:
+      - PythonPackage Tests
+      - PythonPluginExample Tests
+    #  - WebUi Tests
+    types:
+      - completed
+
+jobs:
+  codecov:
+    name: CodeCov after ${{ github.event.workflow.name }}
+    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
+    if: ${{ github.repository_owner == 'jkowalleck' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: set ENV
+        run: |
+          case $ISSUER_WORKFLOW_NAME in
+          'PythonPackage Tests')
+            echo '::set-env name=project-directory::python-package'
+            echo '::set-env name=reports-directory::reports'
+            ;;
+          'PythonPluginExample Tests')
+            echo '::set-env name=project-directory::python-plugin-example'
+            echo '::set-env name=reports-directory::reports'
+            ;;
+          *)
+            echo "::error::unconfigured ISSUER_WORKFLOW_NAME ${ISSUER_WORKFLOW_NAME}"
+            exit 1
+            ;;
+          esac
+        env:
+          ISSUER_WORKFLOW_NAME: ${{ github.event.workflow.name }}
+      - name: Fetch Code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2
+      - name: Fetch reports
+        # see https://github.com/jkowalleck/download-artifact
+        uses: jkowalleck/download-artifact@v1.0.0
+        with:
+          artifacts-url: ${{ github.event.workflow_run.artifacts_url }}
+          name: ${{ env.reports-directory }}
+          path: ${{ env.project-directory }}/${{ env.reports-directory }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload coverage to CodeCov
+        # see https://github.com/codecov/codecov-action
+        uses: codecov/codecov-action@v1.0.13
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ${{ env.project-directory }}/${{ env.reports-directory }}/coverage.xml
+          flags: ${{ env.project-directory }}
+          name: ${{ env.project-directory }}
