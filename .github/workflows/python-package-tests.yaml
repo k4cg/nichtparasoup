@@ -202,7 +202,7 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: Upload coverage to CodeCov
         # see https://github.com/codecov/codecov-action
-        uses: codecov/codecov-action@v1.0.12
+        uses: codecov/codecov-action@v1.0.13
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ${{ env.project-directory }}/${{ env.reports-directory }}/coverage.xml
