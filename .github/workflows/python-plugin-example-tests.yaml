@@ -1,7 +1,7 @@
 # GitHubActions for testing
 # read the docs: https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
 
-name: Test PythonPluginExample
+name: PythonPluginExample Test
 
 on:
   push:
