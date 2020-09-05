@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 0
       - name: SonarCloud Scan
         # see https://github.com/SonarSource/sonarcloud-github-action
-        uses: sonarsource/sonarcloud-github-action@v1.3
+        uses: sonarsource/sonarcloud-github-action@v1.4
         with:
           projectBaseDir: ${{ env.project-directory }}
         env:
