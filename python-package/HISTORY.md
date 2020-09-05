@@ -7,6 +7,8 @@ Unreleased
 
 ## 3.0.0a1
 
+Released 2020-09-05
+
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
   * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
