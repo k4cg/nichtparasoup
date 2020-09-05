@@ -1,9 +1,9 @@
 # Changelog
 
-## Unreleased
+## 3.0.0
 
-! upcoming version will be `3.0.0` of __nichtparasoup__ !
-see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
+Unreleased
+-- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
@@ -129,15 +129,21 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.4.2
 
+Released 2020-06-20
+
 * Fixed
   * config yaml parser when `yamale>=2.1` is installed.
 
 ## 2.4.1
 
+Released 2020-02-21
+
 * Fixed
   * commandline completion for config files to properly suggest `*.yaml` & `*.yml` files.
 
 ## 2.4.0
+
+Released 2020-02-21
 
 * Changes
   * upgraded dependency `werkzeug` from `>=0.15` to `>=1.0`.
@@ -149,10 +155,14 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.3.1
 
+Released 2020-01-28
+
 * Fixed
   * paging of the `Pr0gramm` ImageCrawler in `promoted=True` mode.
 
 ## 2.3.0
+
+Released 2020-01-26
 
 * Breaking changes
   * `nichtparasoup config --check`'s "duplicate image crawler" is no longer a Warning but an Error.
@@ -167,6 +177,8 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.2.2
 
+Released 2020-01-12
+
 * Fixed
   * exception catch in `instagram` imagecrawler.
   * hyperlinks in the `README.md`.
@@ -175,10 +187,14 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.2.1
 
+Released 2019-12-20
+
 * Fixed
   * web UI settings storage.
 
 ## 2.2.0
+
+Released 2019-12-20
 
 * Breaking changes
   * in the config the crawlers' `type` was renamed to `name`.
@@ -201,10 +217,14 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.1.1
 
+Released 2019-11-28
+
 * Fixed
   * auto-play is no longer broken, when image-gallery-mode is canceled by browser's builtin functions.
 
 ## 2.1.0
+
+Released 2019-11-28
 
 * Added
   * ImageCrawler for Instagram: `InstagramProfile` & `InstagramHashtag`.
@@ -213,10 +233,14 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
 
 ## 2.0.1
 
+Released 2019-11-26
+
 * Fixed
   * internal version detection.
 
 ## 2.0.0
+
+Released 2019-11-26
 
 Rewrite from scratch.
 
@@ -254,6 +278,9 @@ Rewrite from scratch.
     * image crawler for "9gag"
 
 ## 1.x.x
+
+Rolling releases in repository
+until 2019-10-10
 
 basic feature complete implementation
 

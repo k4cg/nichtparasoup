@@ -5,7 +5,7 @@
 1. if needed: bring the changes into the `master` branch.
 1. File changes:
    * bump the `__version__` in `src/nichtparasoup/__init__.py`
-   * set the version in `HISTORY.md` to mark "unreleased" changes as released ones
+   * set the version & release-date in `HISTORY.md` to mark "unreleased" changes as released ones
 1. tag the version on `master` branch
    * use the exact value of `__version__` in `src/nichtparasoup/__init__.py`.  
    * the release workflow will check version match of tag, package and source
