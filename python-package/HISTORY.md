@@ -5,8 +5,6 @@
 ! upcoming version will be `3.0.0` of __nichtparasoup__ !
 see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
-**TODO** write the latest changes, review what are actual breaking chages and what are just normal changes.
-
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
   * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
@@ -36,42 +34,43 @@ see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/mil
     * `nichtparasoup.core.server.CrawlerStatus`   -- replaces `.Status.crawlers()`.
     * `nichtparasoup.core.server.BlacklistStatus` -- replaces `.Status.blacklist()`.
   * Removed the install-extras `development` and `testing`.
-* Changes
   * Defaulting arguments of `nichtparasoup.core.Crawler.__init__()` became kwargs.
-  * Parameters of `nichtparasoup.core.Crawler.fill_up_to()` changed:
+  * Arguments of `nichtparasoup.core.Crawler.fill_up_to()` changed:
     * `filled_by` became a kwarg.
     * `timeout` became a kwarg and was renamed to `delay`.
-  * Parameters of `nichtparasoup.core.NPCore.fill_up_to()` changed:
+  * Arguments of `nichtparasoup.core.NPCore.fill_up_to()` changed:
     * `on_refill` became a kwarg.
     * `timeout` became a kwarg and was renamed to `delay`.
   * Some arguments of `nichtparasoup.core.NPCore.add_imagecrawler()` became kwargs and got default values.
-  * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
   * Arguments of `nichtparasoup.core.imagecrawler.RemoteFetcher` became kwargs.
-  * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
-  * Method  `nichtparasoup.core.imagecrawler.BaseImageCrawler.__init__()` became abstract 
-    in favour of proper argument definition and typing.
-  * All builtin imagecrawlers' `__init__()` got proper argument definition and typing. 
-  * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
-  * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
-  * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
-    `nichtparasoup.__version__` is no longer a module but a string.
+  * Method `nichtparasoup.core.imagecrawler.BaseImageCrawler.__init__()` became abstract 
+    in favour of proper argument definition and typing in implementations
+  * All builtin imagecrawlers' `__init__()` got proper argument definition and typing
+    as they are implementations of `nichtparasoup.core.imagecrawler.BaseImageCrawler.__init__()`.
   * Package `nichtparasoup.testing` got a huge overhaul. 
     * Classes do no longer implement `unittets.TestCase` anymore.
     * Functionality was split into chunks for easier use.
     * Class `.configfile.ConfigFileTest` (previously named `.config.ConfigFileTest`) was reworked.
     * Class `.imagecrawler.FileFetcher` supports fully qualified urls now, including schema and netloc.
-      Therefore an optional parameter `base_url` was added.
+      Therefore an optional argument `base_url` was added.
+  * Server's imagecrawler can get exhausted when the crawling source's end is reached.
+    Resolves [issue #152](https://github.com/k4cg/nichtparasoup/issues/152).
+* Removed:
+  * `nichtparasoup.core.server.type_module_name_str()`
+  * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
+* Changes
+  * Method `nichtparasoup.code.Crawler.crawl()` returns number of actually added images, was number of crawled images.
+  * `nichtparasoup.core.imagecrawler.ImageRecognizer` also detects `.webp`.
+  * `nichtparasoup.core.imagecrawler.BaseImageCrawler` does not call `self._reset()` on first run anymore.
+  * Class `nichtparasoup.core.server.ServerStatus` is not abstract anymore.
+  * `nichtparasoup.VERSION` was moved to `nichtparasoup.__version__`, therefore
+    `nichtparasoup.__version__` is no longer a module but a string.
   * Install-extras `development` and `testing` were changed to be separate (`pip-compile`d pinned) files:
     * [dev requirements](requirements/dev.txt)
     * [tests requirements](requirements/tests.txt)
 * Fixed
   * False-positives in `nichtparasoup.core.imagecrawler.ImageRecognizer.path_is_image()`.
-  * Server's imagecrawler can get exhausted when the crawling source's end is reached.
-    Resolves [issue #152](https://github.com/k4cg/nichtparasoup/issues/152).
   * Fixed a possible endless loop of `nichtparasoup.code.Crawler.fill_up_to()`.
-* Removed:
-  * `nichtparasoup.core.server.type_module_name_str()`
-  * `development` and `testing` extras were removed. replaced by files in `requirements/` folder. See "changes".
 * Added
   * Web-API: `Crawler.name` to `status/crawlers` API. See the [docs](docs/web_api/status/crawlers.md).
   * Public CLI package `nichtparasoup.cli` for use via `python3 -m`.
