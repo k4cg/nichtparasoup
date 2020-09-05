@@ -5,6 +5,8 @@
 Unreleased
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+## 3.0.0a1
+
 * Breaking changes
   * Requires `python>=3.6` -- was `python>=3.5`.
   * [CommandLine Interface](docs/run/index.md) overhaul. See cli help via `nichtparasoup --help`.
