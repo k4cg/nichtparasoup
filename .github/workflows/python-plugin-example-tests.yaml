@@ -10,6 +10,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/python-plugin-example-tests.yaml'
+      - '.github/codeql/python-plugin-example.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
       - '!python-plugin-example/**.md'
@@ -22,6 +23,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/python-plugin-example-tests.yaml'
+      - '.github/codeql/python-plugin-example.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
       - '!python-plugin-example/**.md'
@@ -246,7 +248,7 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: python
-          config-file: ./.github/codeql/${{ env.project-directory }}.yaml
+          config-file: .github/codeql/${{ env.project-directory }}.yaml
       - name: Perform CodeQL Analysis
         # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1

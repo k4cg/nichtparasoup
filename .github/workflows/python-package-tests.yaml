@@ -13,6 +13,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/python-package-tests.yaml'
+      - '.github/codeql/python-package.yaml'
       - 'python-package/**'
       - '!python-package/src/nichtparasoup/_web-ui/static/**'
       - '!python-package/docs/**'
@@ -29,6 +30,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/python-package-tests.yaml'
+      - '.github/codeql/python-package.yaml'
       - 'python-package/**'
       - '!python-package/src/nichtparasoup/_web-ui/static/**'
       - '!python-package/docs/**'
@@ -136,7 +138,6 @@ jobs:
       - name: Tidy pip cache dir
         if: ${{ always() }}
         run: python -m pip cache remove 'nichtparasoup*' || true
-
   test-reporting_merge:
     name: Merge test reports
     needs: ['test']
@@ -185,7 +186,6 @@ jobs:
           name: ${{ env.reports-directory }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
-
   codecov:
     name: CodeCov
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
@@ -210,7 +210,6 @@ jobs:
           file: ${{ env.project-directory }}/${{ env.reports-directory }}/coverage.xml
           flags: ${{ env.project-directory }}
           name: ${{ env.project-directory }}
-
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
@@ -239,7 +238,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   codeql:
     # see https://github.com/github/codeql-action
     name: CodeQL
@@ -261,7 +259,7 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: python
-          config-file: ./.github/codeql/${{ env.project-directory }}.yaml
+          config-file: .github/codeql/${{ env.project-directory }}.yaml
       - name: Perform CodeQL Analysis
         # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1

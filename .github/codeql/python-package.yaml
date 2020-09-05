@@ -7,8 +7,8 @@ queries:
   - uses: security-and-quality
 
 paths:
-  - python-package/bin
-  - python-package/src
+  - python-package
 paths-ignore:
-  # web-ui is generated
-  - python-package/src/nichtparasoup/_web-ui
+  - python-package/tests
+  # parts of web-ui are generated
+  - python-package/src/nichtparasoup/_web-ui/static

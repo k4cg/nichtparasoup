@@ -10,6 +10,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/web-ui-tests.yaml'
+      - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
@@ -21,6 +22,7 @@ on:
       - '3.0-dev'
     paths:
       - '.github/workflows/web-ui-tests.yaml'
+      - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
@@ -76,7 +78,7 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: javascript
-          config-file: ./.github/codeql/${{ env.project-directory }}.yaml
+          config-file: .github/codeql/${{ env.project-directory }}.yaml
       - name: Perform CodeQL Analysis
         # see https://github.com/github/codeql-action
         uses: github/codeql-action/analyze@v1
