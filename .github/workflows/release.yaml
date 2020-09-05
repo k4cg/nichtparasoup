@@ -18,45 +18,6 @@ env:
   latest-python-version: '3.8'
 
 jobs:
-  test-version:
-    name: Assert version
-    # assure that the correct version is marked where needed
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch Code
-        # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
-      - name: Setup Python
-        # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.latest-python-version }}
-      - name: get package version
-        id: package
-        run: echo "::set-output name=version::$(python setup.py --version)"
-      - name: get nichtparasoup version
-        id: nichtparasoup
-        run: |
-          from nichtparasoup import __version__
-          print(f'::set-output name=version::{__version__}', sep='', flush=True)
-        shell: python
-        env:
-          PYTHONPATH: src
-      - name: Assert package_version
-        if: ${{ steps.package.outputs.version != github.event.release.tag_name }}
-        run: |
-          echo ERROR: assertion mismatch
-          echo package.version : ${{ steps.package.outputs.version }}
-          echo release.tag_name: ${{ github.event.release.tag_name }}
-          exit 1
-      - name: Assert nichtparasoup_version
-        if: ${{ steps.nichtparasoup.outputs.version != github.event.release.tag_name }}
-        run: |
-          echo ERROR: assertion mismatch
-          echo nichtparasoup.version: ${{ steps.nichtparasoup.outputs.version }}
-          echo release.tag_name     : ${{ github.event.release.tag_name }}
-          exit 2
-
   test:
     name: Tests
     # these tests are just to ensure that a minimal quality is given. full tests are done in `tests` action
@@ -77,12 +38,11 @@ jobs:
       - name: Test nichtparasoup
         run: python -m tox -r -s false
         env:
-          TOXENV: style, tests_start, py38
+          NP_VERSION_EXPECTED: ${{ github.event.release.tag_name }}
+          TOXENV: version, style, tests_start, py38
           TOX_PARALLEL_NO_SPINNER: 1
-
   build:
     name: Build
-    needs: ['test-version']
     # build in an isolated env
     runs-on: ubuntu-latest
     steps:
@@ -109,7 +69,6 @@ jobs:
           name: build-results
           path: ${{ env.project-directory }}/${{ env.dist-dir }}/
           if-no-files-found: error
-
   publish-asset-wheel:
     name: Publish to assets
     needs: ['test', 'build']
@@ -147,7 +106,6 @@ jobs:
           asset_path: ${{ env.dist-dir }}/${{ steps.files.outputs.source }}
           asset_name: ${{ steps.files.outputs.source }}
           asset_content_type: application/tar+gzip
-
   publish-pypi:
     name: Publish to PyPI
     needs: ['test', 'build']
