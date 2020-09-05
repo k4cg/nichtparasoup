@@ -7,7 +7,7 @@ queries:
   - uses: security-and-quality
 
 paths:
-  - web-ui/src
+  - web-ui
 paths-ignore:
   - web-ui/node_modules
   - 'web-ui/**/*.test.js'

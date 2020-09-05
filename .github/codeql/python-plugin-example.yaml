@@ -7,4 +7,6 @@ queries:
   - uses: security-and-quality
 
 paths:
-  - python-plugin-example/src
+  - python-plugin-example
+paths-ignore:
+  - python-plugin-example/tests
