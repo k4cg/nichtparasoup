@@ -18,7 +18,7 @@ This project includes:
 * **minimal** setup config [`setup.cfg`](setup.cfg)
 * some **minimal** project setup configs
 
-For details how write a ImageCrawler plugins,
+For details how to write a ImageCrawler plugins,
 see the [dedicated docs](../python-package/docs/dev/plugin-development/index.md). 
 
 
