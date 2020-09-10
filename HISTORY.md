@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-add upcoming unreleased modiications here
+add upcoming unreleased modifications here
+
+## 2.4.3
+
+* Fixed
+  * issue #381 - Instagram Profile Crawler
 
 ## 2.4.2
 
