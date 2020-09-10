@@ -1,4 +1,4 @@
-import pytest  # type: ignore
+import pytest
 
 from nichtparasoup.config import _DEFAULTS_FILE
 from nichtparasoup.testing.config import ConfigFileTest

@@ -1,7 +1,7 @@
 from glob import glob
 from os.path import basename, dirname, join as path_join, realpath
 
-import pytest  # type: ignore
+import pytest
 from ddt import ddt, idata, unpack  # type: ignore
 
 from nichtparasoup.testing.config import ConfigFileTest

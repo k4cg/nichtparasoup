@@ -14,7 +14,7 @@ class ConfigFileValidateTest(unittest.TestCase):
         pass
 
     def test_detect_duplicates(self) -> None:
-        import re
+        import re  # isort:skip
         # arrange
         tester = ConfigFileTest()
         test_file = path.join(self._TESTDATA_DIR, 'duplicates.yaml')
