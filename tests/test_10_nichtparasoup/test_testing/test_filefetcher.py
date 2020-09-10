@@ -117,7 +117,7 @@ class FileFetcherTest(unittest.TestCase):
             filefetcher._get_file_uri('unknown_file')
 
     def test_get_stream(self) -> None:
-        from urllib.response import addinfourl
+        from urllib.response import addinfourl  # isort:skip
         # arrange
         filefetcher = FileFetcher(
             dict(

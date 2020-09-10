@@ -125,6 +125,7 @@ class WebServer(object):
 
     def run(self) -> None:
         from werkzeug.serving import run_simple
+
         from nichtparasoup._internals import _log
         self.imageserver.start()
         try:

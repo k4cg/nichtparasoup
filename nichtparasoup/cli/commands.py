@@ -9,6 +9,7 @@ class Commands(object):
     @staticmethod
     def run(config_file: Optional[str] = None) -> int:
         from os.path import abspath
+
         from nichtparasoup._internals import _logging_init
         from nichtparasoup.config import get_config, get_imagecrawler
         from nichtparasoup.core import NPCore
@@ -44,6 +45,7 @@ class Commands(object):
     @staticmethod
     def config_dump_file(config_file: str) -> int:
         from os.path import abspath, isfile
+
         from nichtparasoup._internals import _confirm
         from nichtparasoup.config import dump_defaults
         config_file = abspath(config_file)
@@ -62,6 +64,7 @@ class Commands(object):
     @staticmethod
     def config_check_file(config_file: str) -> int:
         from os.path import abspath
+
         from nichtparasoup.testing.config import ConfigFileTest
         config_file = abspath(config_file)
         config_test = ConfigFileTest()
@@ -136,6 +139,7 @@ class Commands(object):
     @staticmethod
     def completion(shell: str) -> int:
         from sys import stdout
+
         from argcomplete import shellcode  # type: ignore
         stdout.write(shellcode(
             ['nichtparasoup'], shell=shell,
