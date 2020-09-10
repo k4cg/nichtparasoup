@@ -71,7 +71,7 @@ _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 class InstagramQueryHashFinder(object):
     __CONTAINER_PATH_RE = {
         'tag': r'/static/bundles/metro/TagPageContainer\.js/.+?\.js',
-        'profile': r'/static/bundles/metro/ProfilePageContainer\.js/.+?\.js',
+        'profile': r'/static/bundles/metro/Consumer\.js/.+?\.js',
     }
 
     __QUERY_HASH_RE = r'queryId:"(.+?)"'
