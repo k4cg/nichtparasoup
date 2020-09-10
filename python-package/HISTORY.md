@@ -131,6 +131,11 @@ Released 2020-09-05
   * Repo layout changed to be a monorepo. See [the repo](https://github.com/k4cg/nichtparasoup).  
     This also means, that the plugin-example was moved out of the project into an own project.
 
+## 2.4.3
+
+* Fixed
+  * issue #381 - Instagram Profile Crawler
+
 ## 2.4.2
 
 Released 2020-06-20

@@ -56,8 +56,8 @@ class _InstagramFileFetcher(FileFetcher):
 
 _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/': 'index.html',
-    '/static/bundles/metro/ProfilePageContainer.js/e243abb1f92c.js': 'e243abb1f92c.js',
     '/static/bundles/metro/TagPageContainer.js/1bad9348735e.js': '1bad9348735e.js',
+    '/static/bundles/metro/Consumer.js/ebbdfced63f8.js': 'ebbdfced63f8.js',
     '/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
         'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first-1,after,tag_name-foo}',
@@ -71,31 +71,29 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
         'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first-5,after,tag_name-foo}',
     '/natgeo/?__a=1': 'natgeo.__a=1',
-    '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
+    '/graphql/query/?query_hash=51fdd02b67508306ad4484ff574a0b62&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-1,after,id-787132}',
+        'query_hash=51fdd02b67508306ad4484ff574a0b62&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=ff260833edf142911047af6024eb634a&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
         'query_hash=ff260833edf142911047af6024eb634a&variables={first-1,after,id-787132}',
     '/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
         'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first-1,after,id-787132}',
-    '/graphql/query/?query_hash=8c86fed24fa03a8a2eea2a70a80c7b6b&'
+    '/graphql/query/?query_hash=97b41c52301f77ce508f55e66d17620e&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=8c86fed24fa03a8a2eea2a70a80c7b6b&variables={first-1,after,id-787132}',
-    '/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&'
+        'query_hash=97b41c52301f77ce508f55e66d17620e&variables={first-1,after,id-787132}',
+    '/graphql/query/?query_hash=51fdd02b67508306ad4484ff574a0b62&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
-        'query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={first-5,after,id-787132}',
+        'query_hash=51fdd02b67508306ad4484ff574a0b62&variables={first-5,after,id-787132}',
 }, base_url='https://www.instagram.com/', base_dir=_InstagramFileFetcher.TESTDATA_PATH)
 
 _QUERYHASHES_EXPECTED_TAG = {'f0986789a5c5d17c2400faebf16efd0d',
                              'ff260833edf142911047af6024eb634a',
                              '174a5243287c5f3a7de741089750ab3b'}
 
-_QUERYHASHES_EXPECTED_PROFILE = {'f0986789a5c5d17c2400faebf16efd0d',
-                                 'ff260833edf142911047af6024eb634a',
-                                 '2c5d4d8b70cad329c4a6ebe3abb6eedd',
-                                 '8c86fed24fa03a8a2eea2a70a80c7b6b'}
+_QUERYHASHES_EXPECTED_PROFILE = {'97b41c52301f77ce508f55e66d17620e',
+                                 '51fdd02b67508306ad4484ff574a0b62'}
 
 
 class InstagramQueryHashFinderTest(unittest.TestCase):
@@ -370,7 +368,7 @@ def test_instagram_hashtag_loader() -> None:
 
 class InstagramProfileTest(unittest.TestCase):
     _PROFILE_ID = '787132'
-    _QUERY_HASH = '2c5d4d8b70cad329c4a6ebe3abb6eedd'
+    _QUERY_HASH = '51fdd02b67508306ad4484ff574a0b62'
 
     def setUp(self) -> None:
         InstagramProfile._query_hash = None

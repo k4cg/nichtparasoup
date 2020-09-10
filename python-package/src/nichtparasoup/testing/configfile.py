@@ -17,4 +17,12 @@ class ConfigFileTest:
         config = parse_yaml_file(self.config_file)
         tester = ConfigTest(config)
         tester.check_duplicates()
-        tester.probe()
+        config_probe_results = tester.probe()
+        failed_imagecrawlers = [
+            probed.imagecrawler
+            for probed
+            in config_probe_results  # pylint: disable=not-an-iterable
+            if probed.result.is_failure
+        ]
+        if failed_imagecrawlers:
+            raise Exception('ProbeError(s) occurred for:\n\t' + '\n\t'.join(map(str, failed_imagecrawlers)))
