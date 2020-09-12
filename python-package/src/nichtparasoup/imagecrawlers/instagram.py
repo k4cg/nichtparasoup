@@ -128,11 +128,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         self._amount = 10
         self._has_next_page: bool = True
         self._cursor: Optional[str] = None
-        self._remote_fetcher = RemoteFetcher(headers={
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Nexus 5X Build/OPR4.170623.006) '
-                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
-                          #  ' NichtParasoup'
-        })
+        self._remote_fetcher = RemoteFetcher()
 
     def is_exhausted(self) -> bool:
         return not self._has_next_page
@@ -310,6 +306,8 @@ class InstagramHashtag(BaseInstagramCrawler):
 
 class InstagramProfile(BaseInstagramCrawler):
 
+    __PROFILE_ID_RE = r'"profilePage_([0-9]+)"'
+
     def __init__(self, user_name: str) -> None:  # pragma: no cover
         super().__init__(user_name=user_name)
         self.__profile_id: Optional[str] = None
@@ -347,20 +345,27 @@ class InstagramProfile(BaseInstagramCrawler):
     def _get_query_variables(self) -> Dict[str, Any]:
         return {'id': self._get_profile_id()}
 
-    def _fetch_profile(self) -> Dict[str, Any]:
-        # this is much easier than parsing `window._sharedData` from the website - let's hope it is stable again
+    def __fetch_profile_id__a(self) -> str:
+        # this is much easier than `__fetch_profile__page` - let's hope it is stable again
         profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url() + '?__a=1')
-        profile: Dict[str, Any] = json_loads(profile_string)
-        return profile
+        try:
+            profile: Dict[str, Any] = json_loads(profile_string)
+            return str(profile['graphql']['user']['id'])
+        except Exception as ex:
+            raise InstagramError('profile_id not found') from ex
+
+    def __fetch_profile_id__page(self) -> str:
+        profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url())
+        match = re_compile(self.__PROFILE_ID_RE).search(profile_string)
+        if not match:
+            raise InstagramError('profile_id not found')
+        return match.group(1)
 
     def _fetch_profile_id(self) -> str:
-        profile = self._fetch_profile()
         try:
-            user_id: str = profile['graphql']['user']['id']
-        except KeyError as ex:
-            raise InstagramError('profile_id not found') from ex
-        else:
-            return user_id
+            return self.__fetch_profile_id__a()
+        except InstagramError:
+            return self.__fetch_profile_id__page()
 
     def _get_profile_id(self) -> str:
         with self.__PROFILE_ID_LOCK:

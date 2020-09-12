@@ -70,6 +70,7 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/graphql/query/?query_hash=174a5243287c5f3a7de741089750ab3b&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
         'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first-5,after,tag_name-foo}',
+    '/natgeo/': 'natgeo',
     '/natgeo/?__a=1': 'natgeo.__a=1',
     '/graphql/query/?query_hash=51fdd02b67508306ad4484ff574a0b62&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22id%22%3A+%22787132%22%7D':
