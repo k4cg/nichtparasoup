@@ -5,18 +5,16 @@
 #    pip-compile ./tests.in
 #
 attrs==20.1.0             # via pytest
-coverage==5.2.1           # via -r ./tests.in, pytest-cov
+coverage==5.2.1           # via -r requirements/tests.in, pytest-cov
 future==0.18.2            # via junitparser
-importlib-metadata==1.7.0  # via pluggy, pytest
 iniconfig==1.0.1          # via pytest
-junitparser==1.4.1        # via -r ./tests.in
+junitparser==1.4.1        # via -r requirements/tests.in
 more-itertools==8.5.0     # via pytest
 packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
 py==1.9.0                 # via pytest
 pyparsing==2.4.7          # via packaging
-pytest-cov==2.10.1        # via -r ./tests.in
-pytest==6.0.1             # via -r ./tests.in, pytest-cov
+pytest-cov==2.10.1        # via -r requirements/tests.in
+pytest==6.0.2             # via -r requirements/tests.in, pytest-cov
 six==1.15.0               # via packaging
 toml==0.10.1              # via pytest
-zipp==3.1.0               # via importlib-metadata
