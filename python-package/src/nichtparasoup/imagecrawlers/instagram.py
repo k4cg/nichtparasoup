@@ -128,7 +128,11 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         self._amount = 10
         self._has_next_page: bool = True
         self._cursor: Optional[str] = None
-        self._remote_fetcher = RemoteFetcher()
+        self._remote_fetcher = RemoteFetcher(headers={
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Nexus 5X Build/OPR4.170623.006) '
+                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'
+                          #  ' NichtParasoup'
+        })
 
     def is_exhausted(self) -> bool:
         return not self._has_next_page
