@@ -5,21 +5,19 @@
 #    pip-compile ./style.in
 #
 attrs==20.1.0             # via flake8-bugbear
-flake8-annotations==2.3.0  # via -r ./style.in
-flake8-bugbear==20.1.4    # via -r ./style.in
-flake8-isort==4.0.0       # via -r ./style.in
+flake8-annotations==2.4.0  # via -r requirements/style.in
+flake8-bugbear==20.1.4    # via -r requirements/style.in
+flake8-isort==4.0.0       # via -r requirements/style.in
 flake8-polyfill==1.0.2    # via pep8-naming
-flake8-use-fstring==1.1   # via -r ./style.in
-flake8==3.8.3             # via -r ./style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
-importlib-metadata==1.7.0  # via flake8
+flake8-use-fstring==1.1   # via -r requirements/style.in
+flake8==3.8.3             # via -r requirements/style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-use-fstring
 isort==5.5.1              # via flake8-isort
 mccabe==0.6.1             # via flake8
 mypy-extensions==0.4.3    # via mypy
-mypy==0.782               # via -r ./style.in
-pep8-naming==0.11.1       # via -r ./style.in
+mypy==0.782               # via -r requirements/style.in
+pep8-naming==0.11.1       # via -r requirements/style.in
 pycodestyle==2.6.0        # via flake8
 pyflakes==2.2.0           # via flake8
 testfixtures==6.14.2      # via flake8-isort
-typed-ast==1.4.1          # via flake8-annotations, mypy
+typed-ast==1.4.1          # via mypy
 typing-extensions==3.7.4.3  # via mypy
-zipp==3.1.0               # via importlib-metadata
