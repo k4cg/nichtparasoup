@@ -4,6 +4,7 @@ __all__ = [
     "ImageCrawlerInfo", "RemoteFetcher", "ImageRecognizer"
 ]
 
+import os
 from abc import ABC, abstractmethod
 from http.client import HTTPResponse
 from pathlib import PurePath
@@ -12,6 +13,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from urllib.response import addinfourl
+from uuid import uuid4
 
 from .._internals import _log, _type_module_name_str
 from .image import ImageCollection
@@ -199,6 +201,8 @@ class BaseImageCrawler(ABC):
 
 class RemoteFetcher:
 
+    ENV_STOREDIR = 'NP_DEBUG_REMOTEFETCHER_STOREDIR'
+
     _HEADERS_DEFAULT = {
         'User-Agent': 'NichtParasoup',
     }
@@ -211,10 +215,51 @@ class RemoteFetcher:
         self._headers = self._HEADERS_DEFAULT.copy()
         if headers:
             self._headers.update(headers)
+        self._debug_store_dir = self._debug_get_store_dir()
+
+    @classmethod
+    def _debug_get_store_dir(cls) -> Optional[str]:
+        env_store_dir = os.environ.get(cls.ENV_STOREDIR)
+        if not env_store_dir:
+            return None
+        store_dir = os.path.abspath(env_store_dir)
+        return store_dir if os.path.isdir(store_dir) else None
 
     @staticmethod
     def _valid_uri(uri: _Uri) -> bool:
         return urlparse(uri).scheme in {'http', 'https'}
+
+    def __debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
+        stored_dir = self._debug_store_dir
+        if not stored_dir:
+            return None
+        file_name = f'{uuid4()}.nprfl'
+        file = os.path.join(stored_dir, file_name)
+        type4log = _type_module_name_str(type(self))
+        _log('debug', f'{type4log} writing response for {request_url!r} to {file_name!r}')
+        try:
+            self.__debug_write_response_file(file, response)
+        except Exception as ex:
+            _log('debug', f'{type4log} failed writing response for {request_url!r} to {file_name!r}', exc_info=ex)
+
+    @staticmethod
+    def __debug_write_response_file(file: str, response: HTTPResponse) -> None:
+        url = response.geturl()
+        with open(file, 'wt') as fp_meta:
+            fp_meta.writelines([url, '\n', str(response.getcode()), '\n'])
+            fp_meta.write('\n')
+            fp_meta.writelines(f'{header}: {value}\n' for header, value in response.getheaders())
+            fp_meta.write('\n')
+        response_fp = response.fp  # type: ignore[attr-defined]
+        if response_fp:
+            with open(file, 'ab') as fp_data:
+                fp_pos = fp_data.tell()
+                fp_data.write(response_fp.read())
+            response_fp.close()
+            fp_data = open(file, 'rb')
+            fp_data.seek(fp_pos)
+            fp_data.seekable = lambda: False  # type: ignore[assignment]
+            response.fp = fp_data  # type: ignore[attr-defined]
 
     def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
         if not self._valid_uri(uri):
@@ -226,17 +271,22 @@ class RemoteFetcher:
         except Exception as ex:  # pylint: disable=broad-except
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
-        actual_uri = response.geturl()  # after following redirects ...
-        return response, actual_uri
+        if isinstance(response, HTTPResponse):
+            self.__debug_write_response(response, uri)
+        return response, response.geturl()
 
     def get_bytes(self, uri: _Uri) -> Tuple[bytes, _Uri]:
         response, actual_uri = self.get_stream(uri)
-        return response.read(), actual_uri
+        response_bytes = response.read()
+        response.close()
+        return response_bytes, actual_uri
 
     def get_string(self, uri: _Uri, charset_fallback: str = 'UTF-8') -> Tuple[str, _Uri]:
         response, actual_uri = self.get_stream(uri)
         charset = str(response.info().get_param('charset', charset_fallback))
-        return response.read().decode(charset), actual_uri
+        response_string = response.read().decode(charset)
+        response.close()
+        return response_string, actual_uri
 
 
 class RemoteFetchError(Exception):

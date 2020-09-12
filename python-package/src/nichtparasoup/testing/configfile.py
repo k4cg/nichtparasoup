@@ -18,11 +18,13 @@ class ConfigFileTest:
         tester = ConfigTest(config)
         tester.check_duplicates()
         config_probe_results = tester.probe()
-        failed_imagecrawlers = [
-            probed.imagecrawler
+        failed = [
+            probed
             for probed
             in config_probe_results  # pylint: disable=not-an-iterable
             if probed.result.is_failure
         ]
-        if failed_imagecrawlers:
-            raise Exception('ProbeError(s) occurred for:\n\t' + '\n\t'.join(map(str, failed_imagecrawlers)))
+        if failed:
+            raise Exception('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
+                f'{fail.imagecrawler!r} with {fail.result.errors!r}' for fail in failed
+            ))

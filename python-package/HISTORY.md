@@ -5,6 +5,17 @@
 Unreleased
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+* Added
+  * `nichtparasoup.core.imagecrawler.RemoteFetcher` got the ability to write communication logs.  
+    The log target dir is controlled via env var `NP_DEBUG_REMOTEFETCHER_STOREDIR`.  
+    The log target dir must exist and be writeable.
+* Misc
+  * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
+    If the env var is present:
+    * A directory is created: `./tests/.logs/${NP_TESTLOG_NAME}`.  
+    * The env var `NP_DEBUG_REMOTEFETCHER_STOREDIR` defaults to `./tests/.logs/${NP_TESTLOG_NAME}`.  
+    Tests via `tox` enable these logs per default and will add a suffix to `NP_TESTLOG_NAME`: `_{envname}`
+
 ## 3.0.0a1
 
 Released 2020-09-05
@@ -134,7 +145,7 @@ Released 2020-09-05
 ## 2.4.3
 
 * Fixed
-  * issue #381 - Instagram Profile Crawler
+  * Instagram Profile Crawler - [issue #381](https://github.com/k4cg/nichtparasoup/issues/381).
 
 ## 2.4.2
 
