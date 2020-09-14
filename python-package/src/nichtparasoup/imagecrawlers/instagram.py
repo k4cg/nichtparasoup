@@ -13,6 +13,7 @@ from threading import Lock
 from typing import Any, Dict, Optional, Pattern, Set
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 
+from .._internals import _log
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
 if sys.version_info >= (3, 8):  # pragma: no cover
@@ -71,7 +72,6 @@ _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
 
 class InstagramQueryHashFinder:
-
     __CONTAINER_PATH_RE = {
         'tag': r'/static/bundles/metro/TagPageContainer\.js/.+?\.js',
         'profile': r'/static/bundles/metro/Consumer\.js/.+?\.js',
@@ -107,7 +107,6 @@ class InstagramQueryHashFinder:
 
 
 class BaseInstagramCrawler(BaseImageCrawler, ABC):
-
     _QUERY_HASH_LOCK: Lock
     """Class Lock for :ref:``_query_hash``.
     see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
@@ -305,12 +304,11 @@ class InstagramHashtag(BaseInstagramCrawler):
 
 
 class InstagramProfile(BaseInstagramCrawler):
-
     __PROFILE_ID_RE = r'"profilePage_([0-9]+)"'
 
-    def __init__(self, user_name: str) -> None:  # pragma: no cover
-        super().__init__(user_name=user_name)
-        self.__profile_id: Optional[str] = None
+    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:  # pragma: no cover
+        super().__init__(user_name=user_name, profile_id=profile_id)
+        self.__profile_id: Optional[str] = str(self._config['profile_id']) if 'profile_id' in self._config else None
         self.__PROFILE_ID_LOCK = Lock()
 
     @classmethod
@@ -325,11 +323,37 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
-        user_name = config['user_name']
+        profile_id = config.get('profile_id')
+        user_name = config.get('user_name')
+        has_profile_id = profile_id is not None
+        has_user_name = user_name is not None
+        if has_user_name and has_profile_id:
+            raise KeyError('either "profile_id" or "user_name" required')
+        if has_profile_id:
+            return cls._check_config_id(profile_id)
+        if has_user_name:
+            return cls._check_config_name(user_name)
+        raise KeyError('either "profile_id" or "user_name" required')
+
+    @classmethod
+    def _check_config_id(cls, profile_id: Any) -> ImageCrawlerConfig:
+        if type(profile_id) is not int:  # pylint: disable=unidiomatic-typecheck
+            raise TypeError(f'profile_id {profile_id!r} is not int')
+        if profile_id <= 0:
+            raise ValueError(f'profile_id {profile_id!r} is <= 0')
+        return ImageCrawlerConfig(
+            profile_id=profile_id,
+        )
+
+    @classmethod
+    def _check_config_name(cls, user_name: Any) -> ImageCrawlerConfig:
         if type(user_name) is not str:  # pylint: disable=unidiomatic-typecheck
             raise TypeError(f'user_name {user_name!r} is not str')
         if len(user_name) == 0:
             raise ValueError(f'user_name {user_name!r} is empty')
+        _log('info', 'An InstagramProfile user_name was given.'
+                     ' It will be tried to fetch the profile_id automatically.'
+                     '\n\tBut this might fail, so be prepared to provide the profile_id yourself.')
         return ImageCrawlerConfig(
             user_name=user_name.lower(),
         )
@@ -370,7 +394,15 @@ class InstagramProfile(BaseInstagramCrawler):
     def _get_profile_id(self) -> str:
         with self.__PROFILE_ID_LOCK:
             if self.__profile_id is None:
-                self.__profile_id = self._fetch_profile_id()
+                try:
+                    self.__profile_id = self._fetch_profile_id()
+                except InstagramError as ex:
+                    _log('error', f'InstagramProfile for {self._config["user_name"]!r} failed'
+                                  ' to gather the profile_id automatically.'
+                                  '\n\tYou have to provide the profile_id yourself.'
+                                  '\n\tTherefore the crawler was marked as exhausted.')
+                    self._has_next_page = False
+                    raise ex
         return self.__profile_id
 
     def _get_profile_url(self) -> str:

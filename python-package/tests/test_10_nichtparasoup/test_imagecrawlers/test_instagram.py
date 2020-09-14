@@ -367,6 +367,42 @@ def test_instagram_hashtag_loader() -> None:
     ImageCrawlerLoaderTest().check('InstagramHashtag', InstagramHashtag)
 
 
+class TestInstagramProfileConfig:
+
+    def test_neither_name_not_id(self) -> None:
+        with pytest.raises(KeyError, match=r'either .* required'):
+            InstagramProfile.check_config(dict())
+
+    def test_name_and_id(self) -> None:
+        with pytest.raises(KeyError, match=r'either .* required'):
+            InstagramProfile.check_config(dict(user_name='foo', profile_id=123))
+
+    def test_name_wrong_type(self) -> None:
+        for wrong in [False, 23, 4.2, [], (), {}, self]:
+            with pytest.raises(TypeError, match=r'user_name .* is not str'):
+                InstagramProfile._check_config_name(wrong)
+
+    def test_name_wrong_value(self) -> None:
+        with pytest.raises(ValueError, match=r'user_name .* is empty'):
+            InstagramProfile._check_config_name('')
+
+    def test_name_correct(self) -> None:
+        InstagramProfile._check_config_name('foo')
+
+    def test_id_wrong_type(self) -> None:
+        for wrong in [False, '23', 4.2, [], (), {}, self]:
+            with pytest.raises(TypeError, match=r'profile_id .* is not int'):
+                InstagramProfile._check_config_id(wrong)
+
+    def test_id_wrong_value(self) -> None:
+        for wrong in [-1, 0]:
+            with pytest.raises(ValueError, match=r'profile_id .* is <= 0'):
+                InstagramProfile._check_config_id(wrong)
+
+    def test_id_correct(self) -> None:
+        InstagramProfile._check_config_id(23)
+
+
 class InstagramProfileTest(unittest.TestCase):
     _PROFILE_ID = '787132'
     _QUERY_HASH = '51fdd02b67508306ad4484ff574a0b62'

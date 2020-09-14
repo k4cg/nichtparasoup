@@ -14,7 +14,8 @@ crawlers:
       tag_name: "cyberpunk"
   - name: "InstagramProfile"
     config:
-      user_name: "beeple_crap"
+      # user_name: "beeple_crap"
+      profile_id: 4254967
   - name: "InstagramHashtag"
     config:
       tag_name: "synthwave"

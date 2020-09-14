@@ -58,7 +58,8 @@ crawlers:
     name: "InstagramProfile"
     weight: 1
     config:
-      user_name: "natgeo"
+      # user_name: "natgeo"
+      profile_id: 787132
 
 
 
