@@ -54,7 +54,6 @@ class ImageCrawlerConfig(Dict[_ImageCrawlerConfigKey, Any]):
 
 
 class BaseImageCrawler(ABC):
-
     _np_name: Optional[str] = None
     """Internal name used in nichtparasoup configs.
     Value is assigned automatically.
@@ -200,7 +199,6 @@ class BaseImageCrawler(ABC):
 
 
 class RemoteFetcher:
-
     ENV_STOREDIR = 'NP_DEBUG_REMOTEFETCHER_STOREDIR'
 
     _HEADERS_DEFAULT = {
@@ -215,14 +213,13 @@ class RemoteFetcher:
         self._headers = self._HEADERS_DEFAULT.copy()
         if headers:
             self._headers.update(headers)
-        self._debug_store_dir = self._debug_get_store_dir()
+        self._debug_store_dir = self._debug_get_store_dir(os.environ.get(self.ENV_STOREDIR))
 
-    @classmethod
-    def _debug_get_store_dir(cls) -> Optional[str]:
-        env_store_dir = os.environ.get(cls.ENV_STOREDIR)
-        if not env_store_dir:
+    @staticmethod
+    def _debug_get_store_dir(store_dir: Optional[str]) -> Optional[str]:
+        if not store_dir:
             return None
-        store_dir = os.path.abspath(env_store_dir)
+        store_dir = os.path.abspath(store_dir)
         return store_dir if os.path.isdir(store_dir) else None
 
     @staticmethod
@@ -241,6 +238,7 @@ class RemoteFetcher:
             self.__debug_write_response_file(file, response)
         except Exception as ex:
             _log('debug', f'{type4log} failed writing response for {request_url!r} to {file_name!r}', exc_info=ex)
+            raise ex
 
     @staticmethod
     def __debug_write_response_file(file: str, response: HTTPResponse) -> None:
