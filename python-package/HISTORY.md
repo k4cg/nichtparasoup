@@ -146,6 +146,8 @@ Released 2020-09-05
 
 ## 2.4.3
 
+Released 2020-09-10
+
 * Fixed
   * Instagram Profile Crawler - [issue #381](https://github.com/k4cg/nichtparasoup/issues/381).
 
