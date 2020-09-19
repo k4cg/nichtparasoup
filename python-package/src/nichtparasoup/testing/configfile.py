@@ -1,4 +1,4 @@
-__all__ = ["ConfigFileTest"]
+__all__ = ["ConfigFileTest", "ConfigFileTestError"]
 
 from ..config import parse_yaml_file
 from .config import ConfigTest
@@ -25,6 +25,10 @@ class ConfigFileTest:
             if probed.result.is_failure
         ]
         if failed:
-            raise Exception('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
+            raise ConfigFileTestError('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
                 f'{fail.imagecrawler!r} with {fail.result.errors!r}' for fail in failed
             ))
+
+
+class ConfigFileTestError(Exception):
+    pass

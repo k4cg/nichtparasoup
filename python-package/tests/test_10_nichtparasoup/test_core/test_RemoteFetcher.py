@@ -24,6 +24,7 @@ class TestRemoteFetcher:
 
         return MirrorHTTPRequestHandler
 
+    @pytest.mark.server  # starts a local server
     @pytest.mark.parametrize(
         'use_debug_store_dir',
         [True, False],
@@ -98,6 +99,7 @@ class TestRemoteFetcher:
         # assert
         assert valid is False
 
+    @pytest.mark.server  # starts a local server
     def test_get_bytes(self) -> None:
         exp_code = 200
         exp_body = b'foo'
@@ -113,6 +115,7 @@ class TestRemoteFetcher:
         # assert
         assert got_body == exp_body
 
+    @pytest.mark.server  # starts a local server
     def test_get_string(self) -> None:
         exp_code = 200
         exp_body = 'bar'

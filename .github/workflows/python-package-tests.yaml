@@ -85,6 +85,8 @@ jobs:
             # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: py38
+            # no server - missing the network entitlement on headless macOS
+            pytest_args: -m 'not server'
           # check older Python
           - name: '3.7'
             os: ubuntu-latest
@@ -123,6 +125,7 @@ jobs:
         id: tests
         run:
           python -m tox -r -s false --
+          ${{ matrix.pytest_args }}
           --junit-xml=reports/pytests/${{ runner.os }}-${{ matrix.python }}.xml
           -o junit_suite_name=${{ runner.os }}-${{ matrix.python }}
         env:
