@@ -5,13 +5,13 @@
 #    pip-compile ./dev.in
 #
 appdirs==1.4.4            # via virtualenv
-attrs==20.1.0             # via flake8-bugbear, pytest
+attrs==20.2.0             # via flake8-bugbear, pytest
 autopep8==1.5.4           # via -r ./dev.in
 click==7.1.2              # via pip-tools
-coverage==5.2.1           # via -r ./tests.in, pytest-cov
+coverage==5.3             # via -r ./tests.in, pytest-cov
 distlib==0.3.1            # via virtualenv
 filelock==3.0.12          # via tox, virtualenv
-flake8-annotations==2.3.0  # via -r ./style.in
+flake8-annotations==2.4.0  # via -r ./style.in
 flake8-bugbear==20.1.4    # via -r ./style.in
 flake8-isort==4.0.0       # via -r ./style.in
 flake8-polyfill==1.0.2    # via pep8-naming
@@ -21,7 +21,7 @@ future==0.18.2            # via junitparser
 importlib-metadata==1.7.0  # via flake8, pluggy, pytest, tox, virtualenv
 importlib-resources==3.0.0  # via virtualenv
 iniconfig==1.0.1          # via pytest
-isort==5.5.1              # via -r ./dev.in, flake8-isort
+isort==5.5.2              # via -r ./dev.in, flake8-isort
 junitparser==1.4.1        # via -r ./tests.in
 mccabe==0.6.1             # via flake8
 more-itertools==8.5.0     # via pytest
@@ -36,7 +36,7 @@ pycodestyle==2.6.0        # via autopep8, flake8
 pyflakes==2.2.0           # via flake8
 pyparsing==2.4.7          # via packaging
 pytest-cov==2.10.1        # via -r ./tests.in
-pytest==6.0.1             # via -r ./tests.in, pytest-cov
+pytest==6.0.2             # via -r ./tests.in, pytest-cov
 six==1.15.0               # via packaging, pip-tools, tox, virtualenv
 testfixtures==6.14.2      # via flake8-isort
 toml==0.10.1              # via autopep8, pytest, tox
