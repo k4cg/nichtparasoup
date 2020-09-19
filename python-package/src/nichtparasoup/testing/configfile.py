@@ -1,4 +1,4 @@
-__all__ = ["ConfigFileTest"]
+__all__ = ["ConfigFileTest", "ConfigFileTestError"]
 
 from ..config import parse_yaml_file
 from .config import ConfigTest
@@ -17,4 +17,18 @@ class ConfigFileTest:
         config = parse_yaml_file(self.config_file)
         tester = ConfigTest(config)
         tester.check_duplicates()
-        tester.probe()
+        config_probe_results = tester.probe()
+        failed = [
+            probed
+            for probed
+            in config_probe_results  # pylint: disable=not-an-iterable
+            if probed.result.is_failure
+        ]
+        if failed:
+            raise ConfigFileTestError('ProbeError(s) occurred for:\n\t' + '\n\t'.join(
+                f'{fail.imagecrawler!r} with {fail.result.errors!r}' for fail in failed
+            ))
+
+
+class ConfigFileTestError(Exception):
+    pass

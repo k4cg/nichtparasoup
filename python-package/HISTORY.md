@@ -5,6 +5,19 @@
 Unreleased
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+* Added
+  * `nichtparasoup.core.imagecrawler.RemoteFetcher` got the ability to write communication logs.  
+    The log target dir is controlled via env var `NP_DEBUG_REMOTEFETCHER_STOREDIR`.  
+    The log target dir must exist and be writeable.
+  * Crawler `nichtparasoup.imagecrawlers.instagram.InstagramProfile` got a new optional config: `profile_id`.  
+    See the [InstagramProfile's docs](docs/imagecrawlers/instagram_profile.md) for details.
+* Misc
+  * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
+    If the env var is present:
+    * A directory is created: `./tests/.logs/${NP_TESTLOG_NAME}`.  
+    * The env var `NP_DEBUG_REMOTEFETCHER_STOREDIR` defaults to `./tests/.logs/${NP_TESTLOG_NAME}`.  
+    Tests via `tox` enable these logs per default and will add a suffix to `NP_TESTLOG_NAME`: `_{envname}`
+
 ## 3.0.0a1
 
 Released 2020-09-05
@@ -130,6 +143,13 @@ Released 2020-09-05
     Code style tests are done via own test named `style` now (was part of standard tests).
   * Repo layout changed to be a monorepo. See [the repo](https://github.com/k4cg/nichtparasoup).  
     This also means, that the plugin-example was moved out of the project into an own project.
+
+## 2.4.3
+
+Released 2020-09-10
+
+* Fixed
+  * Instagram Profile Crawler - [issue #381](https://github.com/k4cg/nichtparasoup/issues/381).
 
 ## 2.4.2
 

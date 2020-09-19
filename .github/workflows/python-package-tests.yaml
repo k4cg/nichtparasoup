@@ -85,6 +85,8 @@ jobs:
             # ${{ env.latest-python-version }}
             python: '3.8'
             toxenv: py38
+            # no server - missing the network entitlement on headless macOS
+            pytest_args: -m 'not server'
           # check older Python
           - name: '3.7'
             os: ubuntu-latest
@@ -120,13 +122,25 @@ jobs:
           python -m pip install wheel setuptools pip
           python -m pip install -r requirements/tox.txt
       - name: Test ${{ env.project-directory }}
+        id: tests
         run:
           python -m tox -r -s false --
+          ${{ matrix.pytest_args }}
           --junit-xml=reports/pytests/${{ runner.os }}-${{ matrix.python }}.xml
           -o junit_suite_name=${{ runner.os }}-${{ matrix.python }}
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
+          NP_TESTLOG_NAME: ${{ matrix.name }}
+      - name: Artifact testlogs
+        if: ${{ failure() && ! matrix.no-unit-test }}
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: testlogs
+          # see `LOGDIR` in `tests/__init__.py`
+          path: ${{ env.project-directory }}/tests/.logs/
+          if-no-files-found: error
       - name: Artifact reports
         if: ${{ always() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
