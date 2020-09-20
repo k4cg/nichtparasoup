@@ -173,31 +173,6 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
 
-  codecov:
-    name: CodeCov
-    # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ always() && github.repository_owner == 'k4cg' }}
-    needs: ['test']
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch Code
-        # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
-      - name: Fetch reports
-        # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ env.reports-directory }}
-          path: ${{ env.project-directory }}/${{ env.reports-directory }}
-      - name: Upload coverage to CodeCov
-        # see https://github.com/codecov/codecov-action
-        uses: codecov/codecov-action@v1.0.13
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ${{ env.project-directory }}/${{ env.reports-directory }}/coverage.xml
-          flags: ${{ env.project-directory }}
-          name: ${{ env.project-directory }}
-
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
