@@ -11,6 +11,8 @@ Unreleased
     The log target dir must exist and be writeable.
   * Crawler `nichtparasoup.imagecrawlers.instagram.InstagramProfile` got a new optional config: `profile_id`.  
     See the [InstagramProfile's docs](docs/imagecrawlers/instagram_profile.md) for details.
+  * All functions that take a path to a server's config file now support `pathlib.PathLike`,
+    and still support `str` like before.
 * Misc
   * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
     If the env var is present:
