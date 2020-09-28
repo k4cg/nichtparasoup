@@ -1,23 +1,26 @@
 __all__ = ["get_config", "get_defaults", "dump_defaults", "get_imagecrawler", "parse_yaml_file",
            "ImageCrawlerSetupError",
            "DEFAULTS_FILE", "SCHEMA_FILE",
-           "Config"]
+           "Config", "ConfigFilePath"]
 
-from os.path import dirname, join, realpath
+from os import PathLike
+from pathlib import Path
 from shutil import copyfile
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from yamale import make_data, make_schema, validate as yamale_validate  # type: ignore
 
 from ..core.imagecrawler import BaseImageCrawler
 from ..imagecrawlers import get_imagecrawlers
 
-_FilePath = str
-
 Config = Dict[str, Any]
 
-DEFAULTS_FILE: _FilePath = join(dirname(realpath(__file__)), "defaults.yaml")
-SCHEMA_FILE: _FilePath = join(dirname(realpath(__file__)), "schema.yaml")
+ConfigFilePath = Union[str, PathLike]
+
+DEFAULTS_FILE: ConfigFilePath = str((Path(__file__).parent / 'defaults.yaml').resolve(strict=True))
+SCHEMA_FILE: str = str((Path(__file__).parent / 'schema.yaml').resolve(strict=True))
+
+_YAML_PARSER = 'ruamel'
 
 
 class ImageCrawlerSetupError(Exception):
@@ -53,9 +56,9 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         return imagecrawler
 
 
-def parse_yaml_file(file_path: _FilePath) -> Config:
-    _data = make_data(file_path, parser='ruamel')
-    _schema = make_schema(SCHEMA_FILE, parser='ruamel')
+def parse_yaml_file(file_path: ConfigFilePath) -> Config:
+    _data = make_data(Path(file_path).resolve(strict=True), parser=_YAML_PARSER)
+    _schema = make_schema(SCHEMA_FILE, parser=_YAML_PARSER)
     yamale_validate(_schema, _data, strict=True)
     config: Config = _data[0][0]
     config.setdefault('logging', {})
@@ -67,15 +70,15 @@ def parse_yaml_file(file_path: _FilePath) -> Config:
     return config
 
 
-def dump_defaults(file_path: _FilePath) -> None:  # pragma: no cover
-    copyfile(DEFAULTS_FILE, file_path)
+def dump_defaults(file_path: ConfigFilePath) -> None:  # pragma: no cover
+    copyfile(DEFAULTS_FILE, str(file_path))
 
 
 def get_defaults() -> Config:  # pragma: no cover
     return parse_yaml_file(DEFAULTS_FILE)
 
 
-def get_config(config_file: Optional[_FilePath] = None) -> Config:
+def get_config(config_file: Optional[ConfigFilePath] = None) -> Config:
     if not config_file:
         return get_defaults()
     try:

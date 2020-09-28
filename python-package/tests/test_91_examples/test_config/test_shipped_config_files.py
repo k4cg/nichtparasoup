@@ -3,6 +3,7 @@ from os.path import basename, dirname, join
 
 import pytest
 
+from nichtparasoup.config import ConfigFilePath
 from nichtparasoup.testing.configfile import ConfigFileTest
 
 
@@ -17,5 +18,5 @@ class TestShippedExampleConfigFile:
     @pytest.mark.online  # probing goes over the internet
     @pytest.mark.slow  # probing might be slow
     @pytest.mark.parametrize('file', __EXAMPLE_FILES, ids=basename)
-    def test_example(self, file: str) -> None:
+    def test_example(self, file: ConfigFilePath) -> None:
         ConfigFileTest(file).check_file()

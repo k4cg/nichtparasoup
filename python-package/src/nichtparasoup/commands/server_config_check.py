@@ -9,7 +9,7 @@ from click import Argument, Command, FloatRange, IntRange, Option, Path, echo, g
 from click.exceptions import ClickException
 
 from .._internals import _log
-from ..config import Config, parse_yaml_file
+from ..config import Config, ConfigFilePath, parse_yaml_file
 from ..imagecrawler import BaseImageCrawler
 from ..testing.config import (
     PROBE_DELAY_DEFAULT, PROBE_RETRIES_DEFAULT, ConfigProbeCallback, ConfigProbeCallbackReason, ConfigProbeResults,
@@ -17,15 +17,13 @@ from ..testing.config import (
 )
 from ._internals import _cli_option_debug
 
-_FilePath = str
-
 
 def _print_if(condition: Any, *args: Any, **kwargs: Any) -> None:
     if condition:
         echo(*args, **kwargs)
 
 
-def main(file: _FilePath, *,
+def main(file: ConfigFilePath, *,
          probe: bool = True, probe_retries: int = PROBE_RETRIES_DEFAULT, probe_delay: float = PROBE_DELAY_DEFAULT,
          probe_fail_fast: bool = False,
          verbose: bool = False

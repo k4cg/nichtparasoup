@@ -1,14 +1,12 @@
 __all__ = ["ConfigFileTest", "ConfigFileTestError"]
 
-from ..config import parse_yaml_file
+from ..config import ConfigFilePath, parse_yaml_file
 from .config import ConfigTest
-
-_FilePath = str
 
 
 class ConfigFileTest:
 
-    def __init__(self, config_file: _FilePath) -> None:  # pragma: no cover
+    def __init__(self, config_file: ConfigFilePath) -> None:  # pragma: no cover
         self.config_file = config_file
 
     def check_file(self) -> None:  # pragma: no cover
