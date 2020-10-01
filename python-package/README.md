@@ -86,7 +86,7 @@ MIT - see the [`LICENSE`](https://github.com/k4cg/nichtparasoup/blob/3.0-dev/pyt
 
 [shield_pypi-version]: https://img.shields.io/pypi/v/nichtparasoup?logo=PyPI&logoColor=white "PyPi release-version"
 [shield_pypi-python]: https://img.shields.io/pypi/pyversions/nichtparasoup?logo=Python&logoColor=white "PyPi py-versions"
-[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev?logo=GitHub%20Actions&logoColor=white "test status"
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPackage/3.0-dev?logo=GitHub&logoColor=white "test status"
 [shield_sonar-quality]: https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io&logo=SonarCloud&logoColor=white "quality"
 [shield_sonar-coverage]: https://img.shields.io/sonar/coverage/nichtparasoup:PythonPackage?server=https%3A%2F%2Fsonarcloud.io&logo=SonarCloud&logoColor=white "coverage"
 [link_pypi]: https://pypi.org/project/nichtparasoup/

@@ -23,7 +23,7 @@ see the [dedicated docs](../python-package/docs/dev/plugin-development/index.md)
 
 
 
-[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPluginExample/3.0-dev?logo=GitHub%20Actions&logoColor=white "test status"
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/k4cg/nichtparasoup/Test%20PythonPluginExample/3.0-dev?logo=GitHub&logoColor=white "test status"
 [shield_sonar-quality]: https://img.shields.io/sonar/quality_gate/nichtparasoup:PythonPluginExample?server=https%3A%2F%2Fsonarcloud.io&logo=SonarCloud&logoColor=white "quality"
 [shield_sonar-coverage]: https://img.shields.io/sonar/coverage/nichtparasoup:PythonPluginExample?server=https%3A%2F%2Fsonarcloud.io&logo=SonarCloud&logoColor=white "coverage"
 [link_gh-workflow-test]: https://github.com/k4cg/nichtparasoup/actions?query=workflow%3A%22Test+PythonPluginExample%22+branch%3A3.0-dev
