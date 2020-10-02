@@ -4,7 +4,7 @@
 #
 #    pip-compile ./build.in
 #
-importlib-metadata==1.7.0  # via pep517
+importlib-metadata==2.0.0  # via pep517
 pep517==0.8.2             # via -r ./build.in
 toml==0.10.1              # via pep517
-zipp==3.1.0               # via importlib-metadata, pep517
+zipp==3.2.0               # via importlib-metadata, pep517
