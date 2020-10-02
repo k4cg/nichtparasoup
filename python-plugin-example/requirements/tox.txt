@@ -17,4 +17,4 @@ six==1.15.0               # via packaging, tox, virtualenv
 toml==0.10.1              # via tox
 tox==3.20.0               # via -r ./tox.in
 virtualenv==20.0.31       # via tox
-zipp==3.1.0               # via importlib-metadata, importlib-resources
+zipp==3.2.0               # via importlib-metadata, importlib-resources
