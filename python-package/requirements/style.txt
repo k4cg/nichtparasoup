@@ -10,7 +10,7 @@ flake8-bugbear==20.1.4    # via -r ./style.in
 flake8-isort==4.0.0       # via -r ./style.in
 flake8-polyfill==1.0.2    # via pep8-naming
 flake8-use-fstring==1.1   # via -r ./style.in
-flake8==3.8.3             # via -r ./style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
+flake8==3.8.4             # via -r ./style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
 importlib-metadata==2.0.0  # via flake8
 isort==5.5.4              # via flake8-isort
 mccabe==0.6.1             # via flake8
