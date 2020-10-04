@@ -40,7 +40,7 @@ class KnownImageCrawlers:
         for entry in entries:
             try:
                 self._append(entry)
-            except Exception as ex:  # pylint: disable=broad-except
+            except Exception as ex:
                 _log('debug', 'Entry point skipped: %r from %r\n\t%s', entry.name, entry.dist, ex, exc_info=ex)
             else:
                 _log('debug', 'Entry point added: %r from %r', entry.name, entry.dist)

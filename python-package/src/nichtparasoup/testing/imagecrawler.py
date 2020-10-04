@@ -245,8 +245,8 @@ class ImageCrawlerTest:
         :return: tuple(crawled images, crawl error, whether to retry)
         """
         try:
-            images = self.imagecrawler._crawl()  # pylint: disable=protected-access
-        except BaseException as ex:  # pylint: disable=broad-except
+            images = self.imagecrawler._crawl()
+        except BaseException as ex:
             return ImagecrawlerProbeResult(None, [ex])
         else:
             return ImagecrawlerProbeResult(images, [])

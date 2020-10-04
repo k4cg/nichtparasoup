@@ -42,8 +42,8 @@ ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Opt
 
 
 def _default_probe_callback(reason: ConfigProbeCallbackReason,
-                            crawler: BaseImageCrawler,  # pylint: disable=unused-argument
-                            error: Optional[BaseException]  # pylint: disable=unused-argument
+                            crawler: BaseImageCrawler,
+                            error: Optional[BaseException]
                             ) -> Optional[bool]:
     """Default implementation of ``ConfigProbeCallback``
 
@@ -121,7 +121,7 @@ class ConfigTest:
             ic_probe_result = imagecrawler_test_class(imagecrawler).probe(
                 retries=retries, retry_delay=delay,
                 retry_callback=retry_callback)
-            result.append(  # pylint: disable=no-member # false-positive
+            result.append(
                 ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
             probe_continue = callback_(
                 ConfigProbeCallbackReason.failure if ic_probe_result.is_failure else ConfigProbeCallbackReason.finish,

@@ -33,7 +33,7 @@ class Reddit(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         subreddit = config['subreddit']
-        if type(subreddit) is not str:  # pylint: disable=unidiomatic-typecheck
+        if type(subreddit) is not str:
             raise TypeError(f'subreddit {subreddit!r} is not str')
         if len(subreddit) == 0:
             raise ValueError(f'subreddit {subreddit!r} is empty')
@@ -56,7 +56,7 @@ class Reddit(BaseImageCrawler):
         for child in listing['data']['children']:
             image_uri = self._get_image(child['data'])
             if image_uri:
-                images.add(  # pylint: disable=no-member # false-positive
+                images.add(
                     Image(
                         uri=image_uri,
                         source=urljoin(uri, child['data']['permalink']),

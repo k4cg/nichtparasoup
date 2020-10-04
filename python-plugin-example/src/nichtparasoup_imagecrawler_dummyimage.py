@@ -30,9 +30,9 @@ class DummyImage(BaseImageCrawler):
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         width = config['width']
         height = config['height']
-        if type(width) is not int:  # pylint: disable=unidiomatic-typecheck
+        if type(width) is not int:
             raise TypeError(f'width {width!r} is not int')
-        if type(height) is not int:  # pylint: disable=unidiomatic-typecheck
+        if type(height) is not int:
             raise TypeError(f'height {height!r} is not int')
         if width <= 0:
             raise ValueError(f'width {width} <= 0')
@@ -60,7 +60,7 @@ class DummyImage(BaseImageCrawler):
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
         for _ in range(self._BUNCH):
-            images.add(  # pylint: disable=no-member # false positive
+            images.add(
                 Image(uri=self._get_image_uri(**self._config),
                       source='https://dummyimage.com/',
                       is_generic=True))

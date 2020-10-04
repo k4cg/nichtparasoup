@@ -19,7 +19,7 @@ class ConfigFileTest:
         failed = [
             probed
             for probed
-            in config_probe_results  # pylint: disable=not-an-iterable
+            in config_probe_results
             if probed.result.is_failure
         ]
         if failed:

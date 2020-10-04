@@ -28,7 +28,7 @@ class Echo(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         image_uri = config['image_uri']
-        if type(image_uri) is not str:  # pylint: disable=unidiomatic-typecheck
+        if type(image_uri) is not str:
             raise TypeError(f'image_uri {image_uri!r} is not str')
         if len(image_uri) == 0:
             raise ValueError(f'image_uri {image_uri!r} is empty')
@@ -45,7 +45,7 @@ class Echo(BaseImageCrawler):
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
         image_uri = self.get_config()["image_uri"]
-        images.add(  # pylint: disable=no-member  # false-positive
+        images.add(
             Image(
                 uri=image_uri,
                 source=image_uri,

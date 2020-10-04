@@ -127,7 +127,7 @@ class BaseImageCrawler(ABC):
             _log('debug', 'Crawling started %r', self)
             try:
                 crawled = self._crawl()
-            except Exception as ex:  # pylint: disable=broad-except
+            except Exception as ex:
                 _log('debug', 'Error during crawling %r: %s', self, ex, exc_info=ex)
                 _log('error', 'Handled an error during crawling %s', self)
                 return ImageCollection()
@@ -266,7 +266,7 @@ class RemoteFetcher:
         request = Request(uri, headers=self._headers)
         try:
             response: Union[HTTPResponse, addinfourl] = urlopen(request, timeout=self._timeout)
-        except Exception as ex:  # pylint: disable=broad-except
+        except Exception as ex:
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
         if isinstance(response, HTTPResponse):

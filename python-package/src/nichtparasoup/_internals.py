@@ -9,7 +9,7 @@ import sys
 from typing import Any, List, Optional, TextIO, Type, Union
 
 if sys.version_info >= (3, 8):
-    from typing import Literal  # pylint: disable=no-name-in-module
+    from typing import Literal
 else:
     from typing_extensions import Literal
 
