@@ -15,7 +15,7 @@ else:
 
 try:
     from termcolor import colored
-except ImportError:
+except ImportError:  # pragma: no cover
     colored = None  # type: ignore
 
 _LINEBREAK = '\r\n'
@@ -29,7 +29,7 @@ _LOG_LEVEL = Literal['debug', 'info', 'warning', 'error', 'critical']
 def _format(message: Union[str, List[str]], color: Optional[str] = None) -> str:
     if isinstance(message, list):
         message = _LINEBREAK.join(message)
-    if color and colored:
+    if color and colored:  # pragma: no cover
         message = colored(message, color=color)
     return message.rstrip()
 
@@ -44,8 +44,7 @@ def _logging_init(level: int = _LOG_LEVEL_DEFAULT) -> None:
 
 def _log(level: _LOG_LEVEL, message: Union[str, List[str]], *args: Any, **kwargs: Any) -> None:
     _logging_init()
-    message = _format(message)
-    getattr(_LOGGER, level)(message, *args, **kwargs)
+    getattr(_LOGGER, level)(_format(message), *args, **kwargs)
 
 
 def _message(message: Union[str, List[str]], color: Optional[str] = None, file: Optional[TextIO] = None) -> None:
@@ -59,11 +58,11 @@ def _message_exception(exception: BaseException, file: Optional[TextIO] = None) 
     if not file:
         file = sys.stderr
     exception_name = type(exception).__name__
-    if colored:
+    if colored:  # pragma: no cover
         color = 'yellow' if isinstance(exception, Warning) else 'red'
         exception_name = colored(exception_name, color)
     _message(f'{exception_name}: {exception}', file=file)
 
 
-def _type_module_name_str(type_: Type[Any]) -> str:
+def _type_module_name_str(type_: Type[Any]) -> str:  # pragma: no cover
     return f'{type_.__module__}:{type_.__name__}'

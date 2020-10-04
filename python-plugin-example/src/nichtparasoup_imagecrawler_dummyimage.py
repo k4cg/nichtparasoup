@@ -8,7 +8,7 @@ from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection,
 
 class DummyImage(BaseImageCrawler):
 
-    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+    def __init__(self, *, width: int, height: int) -> None:
         super().__init__(width=width, height=height)
 
     @classmethod
@@ -43,7 +43,8 @@ class DummyImage(BaseImageCrawler):
             height=height,
         )
 
-    def is_exhausted(self) -> bool:  # pragma: no cover
+    def is_exhausted(self) -> bool:
+        # this is a generic crawler that never exhausts
         return False
 
     @staticmethod

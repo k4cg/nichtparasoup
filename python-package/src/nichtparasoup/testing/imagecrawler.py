@@ -35,7 +35,7 @@ class FileFetcher(RemoteFetcher):
     def __init__(self, known_files: Dict[_Uri, _FilePath], *,
                  base_url: Optional[_Uri] = None, base_dir: Optional[_DirPath] = None,
                  **kwargs: Any
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         super().__init__(**kwargs)
         self._known: Dict[UrlParseResult, _FilePath] = {
             self._build_uri(uri, base_url): self._build_file(file, base_dir)
@@ -171,7 +171,7 @@ class ImagecrawlerProbeResult:
     def __init__(self,
                  images: Optional[ImageCollection],
                  errors: List[BaseException]
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         self.images = images
         self.errors = errors
 
@@ -205,7 +205,7 @@ class ImagecrawlerProbeResult:
 
 class ImageCrawlerTest:
 
-    def __init__(self, imagecrawler: BaseImageCrawler) -> None:  # pragma: no cover
+    def __init__(self, imagecrawler: BaseImageCrawler) -> None:
         self.imagecrawler = imagecrawler
 
     def probe(self, *,

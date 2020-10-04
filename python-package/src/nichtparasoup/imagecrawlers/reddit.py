@@ -12,7 +12,7 @@ from ..imagecrawler import (
 class Reddit(BaseImageCrawler):
     # see https://github.com/reddit-archive/reddit/wiki/JSON
 
-    def __init__(self, *, subreddit: str) -> None:  # pragma: no cover
+    def __init__(self, *, subreddit: str) -> None:
         super().__init__(subreddit=subreddit)
         self._uri_base = f'https://www.reddit.com/r/{url_quote(self._config["subreddit"])}.json?after='
         self._after: Optional[str] = None

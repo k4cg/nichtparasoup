@@ -34,7 +34,7 @@ class KnownImageCrawlers:
             'Pr0gramm': Pr0gramm,
         }
 
-    def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
+    def __init__(self, entries: Iterable[EntryPoint]) -> None:
         self._list: Dict[_ImagecrawlerName, _ImagecrawlerClass] = self._builtins().copy()
         _log('debug', 'Builtin imagecrawlers loaded: %r', self._list)
         for entry in entries:

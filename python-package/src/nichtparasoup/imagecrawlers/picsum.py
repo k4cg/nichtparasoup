@@ -8,7 +8,7 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 class Picsum(BaseImageCrawler):
     _bunch = 10
 
-    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+    def __init__(self, *, width: int, height: int) -> None:
         super().__init__(width=width, height=height)
 
     @classmethod
@@ -43,7 +43,8 @@ class Picsum(BaseImageCrawler):
     def _get_image_uri(width: int, height: int) -> str:
         return f'https://picsum.photos/{width}/{height}'
 
-    def is_exhausted(self) -> bool:  # pragma: no cover
+    def is_exhausted(self) -> bool:
+        # is an generic, is never exhausted
         return False
 
     def _reset(self) -> None:  # pragma: no cover

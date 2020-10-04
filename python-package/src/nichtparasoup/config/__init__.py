@@ -27,7 +27,7 @@ class ImageCrawlerSetupError(Exception):
 
     def __init__(self,
                  ic_name: str, ic_class: type, ic_config: Dict[Any, Any],
-                 message: Optional[str] = None) -> None:  # pragma: no cover
+                 message: Optional[str] = None) -> None:
         super().__init__()
         self._name = ic_name
         self._class = ic_class

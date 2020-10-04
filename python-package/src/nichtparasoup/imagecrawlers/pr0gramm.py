@@ -9,7 +9,7 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 
 class Pr0gramm(BaseImageCrawler):
 
-    def __init__(self, *, promoted: bool = True, tags: Optional[str] = None) -> None:  # pragma: no cover
+    def __init__(self, *, promoted: bool = True, tags: Optional[str] = None) -> None:
         super().__init__(promoted=promoted, tags=tags)
         self._at_end: bool = False
         self._older: Optional[int] = None

@@ -15,7 +15,7 @@ from .imagecrawler import ImagecrawlerProbeRetryCallback
 
 
 class ConfigImagecrawlerProbeResult:
-    def __init__(self, imagecrawler: BaseImageCrawler, result: ImagecrawlerProbeResult) -> None:  # pragma: no cover
+    def __init__(self, imagecrawler: BaseImageCrawler, result: ImagecrawlerProbeResult) -> None:
         self.imagecrawler = imagecrawler
         self.result = result
 
@@ -59,7 +59,7 @@ def _default_probe_callback(reason: ConfigProbeCallbackReason,
 
 
 class DuplicateImagecrawlersException(Exception):
-    def __init__(self, duplicates: List[BaseImageCrawler]) -> None:  # pragma: no cover
+    def __init__(self, duplicates: List[BaseImageCrawler]) -> None:
         super().__init__()
         self.duplicates = duplicates
 
@@ -69,7 +69,7 @@ class DuplicateImagecrawlersException(Exception):
 
 class ConfigTest:
 
-    def __init__(self, config: Config) -> None:  # pragma: no cover
+    def __init__(self, config: Config) -> None:
         self.config = config
 
     def check_duplicates(self) -> None:

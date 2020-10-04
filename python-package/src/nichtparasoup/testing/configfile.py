@@ -6,10 +6,10 @@ from .config import ConfigTest
 
 class ConfigFileTest:
 
-    def __init__(self, config_file: ConfigFilePath) -> None:  # pragma: no cover
+    def __init__(self, config_file: ConfigFilePath) -> None:
         self.config_file = config_file
 
-    def check_file(self) -> None:  # pragma: no cover
+    def check_file(self) -> None:
         """Do all necessary tests a file might need.
         """
         config = parse_yaml_file(self.config_file)

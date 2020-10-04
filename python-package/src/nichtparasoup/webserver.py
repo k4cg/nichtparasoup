@@ -35,7 +35,7 @@ class _SimpleJsonResponse(Response):
                  mimetype: Optional[str] = 'application/json',
                  content_type: Optional[str] = 'application/json',
                  direct_passthrough: bool = False
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         super().__init__(
             response=self._json_encoder.encode(response),
             status=status,
@@ -58,7 +58,7 @@ class WebServer:
     def __init__(self, imageserver: Server,
                  hostname: str, port: int,
                  *,
-                 developer_mode: bool = False) -> None:  # pragma: no cover
+                 developer_mode: bool = False) -> None:
         """
         :param imageserver: The imageserver to represent.
         :param hostname: The hostname to bind to.

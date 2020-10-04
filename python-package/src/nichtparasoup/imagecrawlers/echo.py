@@ -8,7 +8,7 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 
 class Echo(BaseImageCrawler):
 
-    def __init__(self, *, image_uri: str) -> None:  # pragma: no cover
+    def __init__(self, *, image_uri: str) -> None:
         super().__init__(image_uri=image_uri)
 
     @classmethod
@@ -36,7 +36,8 @@ class Echo(BaseImageCrawler):
             image_uri=image_uri,
         )
 
-    def is_exhausted(self) -> bool:  # pragma: no cover
+    def is_exhausted(self) -> bool:
+        # is generic -> never exhausts
         return False
 
     def _reset(self) -> None:  # pragma: no cover

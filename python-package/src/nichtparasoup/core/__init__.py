@@ -32,7 +32,7 @@ class Crawler:
                  restart_at_front_when_exhausted: bool = False,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         if weight <= 0:
             raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
@@ -138,7 +138,7 @@ class CrawlerCollection(List[Crawler]):
 
 class NPCore:
 
-    def __init__(self) -> None:  # pragma: no cover
+    def __init__(self) -> None:
         self.crawlers = CrawlerCollection()
         self.blacklist = Blacklist()
 

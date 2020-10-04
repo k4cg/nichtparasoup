@@ -16,9 +16,9 @@ from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 from .._internals import _log
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
-if sys.version_info >= (3, 8):  # pragma: no cover
+if sys.version_info >= (3, 8):
     from typing import Literal
-else:  # pragma: no cover
+else:
     from typing_extensions import Literal
 
 #
@@ -79,7 +79,7 @@ class InstagramQueryHashFinder:
 
     __QUERY_HASH_RE = r'queryId:"(.+?)"'
 
-    def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:  # pragma: no cover
+    def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:
         self._container_re = re_compile(self.__CONTAINER_PATH_RE[container_type])
         self._query_hash_re = re_compile(self.__QUERY_HASH_RE)
         self._remote_fetcher = RemoteFetcher()
@@ -117,12 +117,12 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
     """
 
-    def __init_subclass__(cls, **kwargs: Any) -> None:  # pragma: no cover
+    def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
         cls._QUERY_HASH_LOCK = Lock()
         cls._query_hash = None
 
-    def __init__(self, **config: Any) -> None:  # pragma: no cover
+    def __init__(self, **config: Any) -> None:
         super().__init__(**config)
         self._amount = 10
         self._has_next_page: bool = True
@@ -267,7 +267,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
 class InstagramHashtag(BaseInstagramCrawler):
 
-    def __init__(self, *, tag_name: str) -> None:  # pragma: no cover
+    def __init__(self, *, tag_name: str) -> None:
         super().__init__(tag_name=tag_name)
 
     @classmethod
@@ -306,7 +306,7 @@ class InstagramHashtag(BaseInstagramCrawler):
 class InstagramProfile(BaseInstagramCrawler):
     __PROFILE_ID_RE = r'"profilePage_([0-9]+)"'
 
-    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:  # pragma: no cover
+    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:
         super().__init__(user_name=user_name, profile_id=profile_id)
         self.__profile_id: Optional[str] = str(self._config['profile_id']) if 'profile_id' in self._config else None
         self.__PROFILE_ID_LOCK = Lock()
