@@ -34,7 +34,7 @@ class ImageCrawlerInfo:
                  description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[_Uri] = None,
-                 **more: Any) -> None:  # pragma: no cover
+                 **more: Any) -> None:
         """
         :param description: short description
         :param long_description: long description
@@ -61,7 +61,7 @@ class BaseImageCrawler(ABC):
     """
 
     @abstractmethod
-    def __init__(self, **config: Any) -> None:  # pragma: no cover
+    def __init__(self, **config: Any) -> None:
         """Basic init.
 
         example implementation:
@@ -115,7 +115,7 @@ class BaseImageCrawler(ABC):
         self._reset_before_next_crawl = True
         _log('debug', 'crawler reset planned for %r', self)
 
-    def crawl(self) -> ImageCollection:  # pragma: no cover
+    def crawl(self) -> ImageCollection:
         with self._crawl_lock:
             if self._reset_before_next_crawl:
                 _log('debug', 'Crawler resetting %r', self)
@@ -127,7 +127,7 @@ class BaseImageCrawler(ABC):
             _log('debug', 'Crawling started %r', self)
             try:
                 crawled = self._crawl()
-            except Exception as ex:  # pylint: disable=broad-except
+            except Exception as ex:
                 _log('debug', 'Error during crawling %r: %s', self, ex, exc_info=ex)
                 _log('error', 'Handled an error during crawling %s', self)
                 return ImageCollection()
@@ -137,7 +137,7 @@ class BaseImageCrawler(ABC):
 
     @classmethod
     @abstractmethod
-    def info(cls) -> ImageCrawlerInfo:  # pragma: no cover
+    def info(cls) -> ImageCrawlerInfo:
         """Get info of the crawler
 
         example implementation:
@@ -208,7 +208,7 @@ class RemoteFetcher:
     def __init__(self, *,
                  timeout: float = 10.0,
                  headers: Optional[Dict[str, str]] = None
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         self._timeout = timeout
         self._headers = self._HEADERS_DEFAULT.copy()
         if headers:
@@ -266,7 +266,7 @@ class RemoteFetcher:
         request = Request(uri, headers=self._headers)
         try:
             response: Union[HTTPResponse, addinfourl] = urlopen(request, timeout=self._timeout)
-        except Exception as ex:  # pylint: disable=broad-except
+        except Exception as ex:
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
         if isinstance(response, HTTPResponse):
@@ -289,7 +289,7 @@ class RemoteFetcher:
 
 class RemoteFetchError(Exception):
 
-    def __init__(self, msg: str, uri: _Uri) -> None:  # pragma: no cover
+    def __init__(self, msg: str, uri: _Uri) -> None:
         super().__init__()
         self.msg = msg
         self.uri = uri

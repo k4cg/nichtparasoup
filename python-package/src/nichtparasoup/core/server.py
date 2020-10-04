@@ -52,7 +52,7 @@ class Server:
     def __init__(self, core: NPCore, *,
                  crawler_upkeep: int = 30,
                  reset_timeout: int = 60 * 60
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         self.core = core
         self.keep = crawler_upkeep
         self.reset_timeout = reset_timeout
@@ -187,7 +187,7 @@ class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler']):
 
 class ServerRefiller(Thread):
 
-    def __init__(self, server: Server, delay: float) -> None:  # pragma: no cover
+    def __init__(self, server: Server, delay: float) -> None:
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
         self._delay = delay
@@ -222,7 +222,7 @@ class ServerRefiller(Thread):
 
 
 class _ServerLocks:
-    def __init__(self) -> None:  # pragma: no cover
+    def __init__(self) -> None:
         self.stats_get_image = Lock()
         self.reset = Lock()
         self.refill = Lock()

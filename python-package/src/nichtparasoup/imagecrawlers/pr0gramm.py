@@ -9,7 +9,7 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 
 class Pr0gramm(BaseImageCrawler):
 
-    def __init__(self, *, promoted: bool = True, tags: Optional[str] = None) -> None:  # pragma: no cover
+    def __init__(self, *, promoted: bool = True, tags: Optional[str] = None) -> None:
         super().__init__(promoted=promoted, tags=tags)
         self._at_end: bool = False
         self._older: Optional[int] = None
@@ -42,7 +42,7 @@ class Pr0gramm(BaseImageCrawler):
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         promoted: bool = config.get('promoted', True)
-        if type(promoted) is not bool:  # pylint: disable=unidiomatic-typecheck # isinstance(bool) causes false-positive
+        if type(promoted) is not bool:
             raise TypeError(f'promoted {promoted!r} is not bool')
         tags = cls.__check_config_tags(config.get('tags', None))
         return ImageCrawlerConfig(
@@ -88,12 +88,12 @@ class Pr0gramm(BaseImageCrawler):
         api_uri = self._get_api_uri(
             flags=1,
             promoted=promoted,
-            tags=self._config.get('tags', None),  # pylint: disable=no-member # false-positive
+            tags=self._config.get('tags', None),
             older=self._older)
         response_raw, api_uri = self._remote_fetcher.get_string(api_uri)
         response = json_loads(response_raw)
         for item in response['items']:
-            images.add(  # pylint: disable=no-member # false-positive
+            images.add(
                 Image(
                     uri=urljoin(self.__IMG_BASE_URL, str(item['image'])),
                     source=urljoin(self.__POST_BASE_URL, str(item['id'])),

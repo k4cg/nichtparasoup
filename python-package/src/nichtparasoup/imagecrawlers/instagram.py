@@ -16,9 +16,9 @@ from urllib.parse import quote_plus as url_quote, urlencode, urljoin
 from .._internals import _log
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
 
-if sys.version_info >= (3, 8):  # pragma: no cover
-    from typing import Literal  # pylint: disable=no-name-in-module,ungrouped-imports
-else:  # pragma: no cover
+if sys.version_info >= (3, 8):
+    from typing import Literal
+else:
     from typing_extensions import Literal
 
 #
@@ -79,7 +79,7 @@ class InstagramQueryHashFinder:
 
     __QUERY_HASH_RE = r'queryId:"(.+?)"'
 
-    def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:  # pragma: no cover
+    def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:
         self._container_re = re_compile(self.__CONTAINER_PATH_RE[container_type])
         self._query_hash_re = re_compile(self.__QUERY_HASH_RE)
         self._remote_fetcher = RemoteFetcher()
@@ -98,7 +98,7 @@ class InstagramQueryHashFinder:
     def _get_from_remote_js(self, js_uri: str) -> Set[str]:
         try:
             js_src, _ = self._remote_fetcher.get_string(js_uri)
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             return set()
         return self._get_from_js(js_src)
 
@@ -117,12 +117,12 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
     """
 
-    def __init_subclass__(cls, **kwargs: Any) -> None:  # pragma: no cover
+    def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
         cls._QUERY_HASH_LOCK = Lock()
         cls._query_hash = None
 
-    def __init__(self, **config: Any) -> None:  # pragma: no cover
+    def __init__(self, **config: Any) -> None:
         super().__init__(**config)
         self._amount = 10
         self._has_next_page: bool = True
@@ -141,7 +141,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         query_uri = self._get_query_uri(self._get_query_hash(), self._amount, self._cursor, self._get_query_variables())
         response = self._query(query_uri)
         for edge in response['edges']:
-            images.update(  # pylint: disable=no-member
+            images.update(
                 self._get_images_from_media_edge_node(edge['node'])
             )
             del edge
@@ -157,7 +157,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         if node['is_video']:
             return images
         source = cls._get_post_url(node['shortcode'])
-        images.add(  # pylint: disable=no-member # false-positive
+        images.add(
             Image(
                 uri=node['display_url'],
                 source=source,
@@ -169,7 +169,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         for side_edge in node['edge_sidecar_to_children']['edges']:
             if side_edge['node']['is_video']:
                 continue  # for side_edge in ...
-            images.add(  # pylint: disable=no-member # false-positive
+            images.add(
                 Image(
                     uri=side_edge['node']['display_url'],
                     source=source,
@@ -231,7 +231,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         uri = self._get_query_uri(query_hash, 1, None, self._get_query_variables())
         try:
             self._query(uri)
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             return False
         else:
             return True
@@ -246,13 +246,13 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
     def _get_query_hash(self) -> str:
         cls = self.__class__
         # same class => same query_hash ... so lock and search ... others may use the same hash later
-        with cls._QUERY_HASH_LOCK:  # pylint: disable=protected-access
-            if not cls._query_hash:  # pylint: disable=protected-access
+        with cls._QUERY_HASH_LOCK:
+            if not cls._query_hash:
                 query_hash = self._find_query_hash()
                 if not query_hash:
                     raise InstagramError('Did not find query hash')
-                cls._query_hash = query_hash  # pylint: disable=protected-access
-        return cls._query_hash  # pylint: disable=protected-access
+                cls._query_hash = query_hash
+        return cls._query_hash
 
     @abstractmethod
     def _get_query_variables(self) -> Dict[str, Any]:  # pragma: no cover
@@ -267,7 +267,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
 class InstagramHashtag(BaseInstagramCrawler):
 
-    def __init__(self, *, tag_name: str) -> None:  # pragma: no cover
+    def __init__(self, *, tag_name: str) -> None:
         super().__init__(tag_name=tag_name)
 
     @classmethod
@@ -283,7 +283,7 @@ class InstagramHashtag(BaseInstagramCrawler):
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         tag_name = config['tag_name']
-        if type(tag_name) is not str:  # pylint: disable=unidiomatic-typecheck
+        if type(tag_name) is not str:
             raise TypeError(f'tag_name {tag_name!r} is not str')
         if len(tag_name) == 0:
             raise ValueError(f'tag_name {tag_name!r} is empty')
@@ -306,7 +306,7 @@ class InstagramHashtag(BaseInstagramCrawler):
 class InstagramProfile(BaseInstagramCrawler):
     __PROFILE_ID_RE = r'"profilePage_([0-9]+)"'
 
-    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:  # pragma: no cover
+    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:
         super().__init__(user_name=user_name, profile_id=profile_id)
         self.__profile_id: Optional[str] = str(self._config['profile_id']) if 'profile_id' in self._config else None
         self.__PROFILE_ID_LOCK = Lock()
@@ -337,7 +337,7 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def _check_config_id(cls, profile_id: Any) -> ImageCrawlerConfig:
-        if type(profile_id) is not int:  # pylint: disable=unidiomatic-typecheck
+        if type(profile_id) is not int:
             raise TypeError(f'profile_id {profile_id!r} is not int')
         if profile_id <= 0:
             raise ValueError(f'profile_id {profile_id!r} is <= 0')
@@ -347,7 +347,7 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def _check_config_name(cls, user_name: Any) -> ImageCrawlerConfig:
-        if type(user_name) is not str:  # pylint: disable=unidiomatic-typecheck
+        if type(user_name) is not str:
             raise TypeError(f'user_name {user_name!r} is not str')
         if len(user_name) == 0:
             raise ValueError(f'user_name {user_name!r} is empty')

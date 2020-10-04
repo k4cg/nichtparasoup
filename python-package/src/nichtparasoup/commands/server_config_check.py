@@ -102,7 +102,7 @@ def probe_config(config: Config, *,
     failed_imagecrawlers = [
         (probed.imagecrawler, probed.result.errors)
         for probed
-        in config_probe_results  # pylint: disable=not-an-iterable
+        in config_probe_results
         if probed.result.is_failure
     ]
     if failed_imagecrawlers:

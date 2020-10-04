@@ -53,7 +53,7 @@ class Image:
     def __init__(self, *,
                  uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
-                 **more: Any) -> None:  # pragma: no cover
+                 **more: Any) -> None:
         self.uri = uri
         self.source = source
         self.more = more
@@ -76,7 +76,7 @@ class Image:
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'
 
-    def __str__(self) -> str:
+    def __str__(self) -> str:  # pragma: no cover
         return self.uri
 
 

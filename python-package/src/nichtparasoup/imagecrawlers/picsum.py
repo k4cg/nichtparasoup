@@ -8,7 +8,7 @@ from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawle
 class Picsum(BaseImageCrawler):
     _bunch = 10
 
-    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+    def __init__(self, *, width: int, height: int) -> None:
         super().__init__(width=width, height=height)
 
     @classmethod
@@ -26,9 +26,9 @@ class Picsum(BaseImageCrawler):
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         width = config['width']
         height = config['height']
-        if type(width) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
+        if type(width) is not int:
             raise TypeError(f'width {width!r} is not int')
-        if type(height) is not int:  # pylint: disable=unidiomatic-typecheck  # isinstacnce(int) causes false=positive
+        if type(height) is not int:
             raise TypeError(f'height {height!r} is not int')
         if width <= 0:
             raise ValueError(f'width {width} <= 0')
@@ -43,7 +43,8 @@ class Picsum(BaseImageCrawler):
     def _get_image_uri(width: int, height: int) -> str:
         return f'https://picsum.photos/{width}/{height}'
 
-    def is_exhausted(self) -> bool:  # pragma: no cover
+    def is_exhausted(self) -> bool:
+        # is an generic, is never exhausted
         return False
 
     def _reset(self) -> None:  # pragma: no cover
@@ -51,9 +52,9 @@ class Picsum(BaseImageCrawler):
 
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
-        image_uri = self._get_image_uri(**self.get_config())  # pylint: disable=not-a-mapping  # false-positive
+        image_uri = self._get_image_uri(**self.get_config())
         for _ in range(0, self._bunch):
-            images.add(  # pylint: disable=no-member # false-positive
+            images.add(
                 Image(
                     uri=image_uri,
                     source=image_uri,

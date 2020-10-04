@@ -8,7 +8,7 @@ from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection,
 
 class DummyImage(BaseImageCrawler):
 
-    def __init__(self, *, width: int, height: int) -> None:  # pragma: no cover
+    def __init__(self, *, width: int, height: int) -> None:
         super().__init__(width=width, height=height)
 
     @classmethod
@@ -30,9 +30,9 @@ class DummyImage(BaseImageCrawler):
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
         width = config['width']
         height = config['height']
-        if type(width) is not int:  # pylint: disable=unidiomatic-typecheck
+        if type(width) is not int:
             raise TypeError(f'width {width!r} is not int')
-        if type(height) is not int:  # pylint: disable=unidiomatic-typecheck
+        if type(height) is not int:
             raise TypeError(f'height {height!r} is not int')
         if width <= 0:
             raise ValueError(f'width {width} <= 0')
@@ -43,7 +43,8 @@ class DummyImage(BaseImageCrawler):
             height=height,
         )
 
-    def is_exhausted(self) -> bool:  # pragma: no cover
+    def is_exhausted(self) -> bool:
+        # this is a generic crawler that never exhausts
         return False
 
     @staticmethod
@@ -60,7 +61,7 @@ class DummyImage(BaseImageCrawler):
     def _crawl(self) -> ImageCollection:
         images = ImageCollection()
         for _ in range(self._BUNCH):
-            images.add(  # pylint: disable=no-member # false positive
+            images.add(
                 Image(uri=self._get_image_uri(**self._config),
                       source='https://dummyimage.com/',
                       is_generic=True))

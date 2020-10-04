@@ -23,7 +23,7 @@ def main(file: ConfigFilePath, *, overwrite: Optional[bool] = None) -> None:  # 
 def _write_file(file: ConfigFilePath) -> None:  # pragma: no cover
     try:
         dump_defaults(file)
-    except Exception as ex:  # pylint: disable=broad-except
+    except Exception as ex:
         _log('debug', 'Handled exception: %s', ex, exc_info=ex)
         raise ClickException(str(ex)) from ex
 

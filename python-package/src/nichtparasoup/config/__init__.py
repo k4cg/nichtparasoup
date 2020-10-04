@@ -27,7 +27,7 @@ class ImageCrawlerSetupError(Exception):
 
     def __init__(self,
                  ic_name: str, ic_class: type, ic_config: Dict[Any, Any],
-                 message: Optional[str] = None) -> None:  # pragma: no cover
+                 message: Optional[str] = None) -> None:
         super().__init__()
         self._name = ic_name
         self._class = ic_class
@@ -52,7 +52,7 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
     except Exception as ex:
         raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config, str(ex)) from ex
     else:
-        imagecrawler._np_name = imagecrawler_name  # pylint: disable=protected-access
+        imagecrawler._np_name = imagecrawler_name
         return imagecrawler
 
 

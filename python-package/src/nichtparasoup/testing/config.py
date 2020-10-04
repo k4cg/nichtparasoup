@@ -15,7 +15,7 @@ from .imagecrawler import ImagecrawlerProbeRetryCallback
 
 
 class ConfigImagecrawlerProbeResult:
-    def __init__(self, imagecrawler: BaseImageCrawler, result: ImagecrawlerProbeResult) -> None:  # pragma: no cover
+    def __init__(self, imagecrawler: BaseImageCrawler, result: ImagecrawlerProbeResult) -> None:
         self.imagecrawler = imagecrawler
         self.result = result
 
@@ -42,8 +42,8 @@ ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Opt
 
 
 def _default_probe_callback(reason: ConfigProbeCallbackReason,
-                            crawler: BaseImageCrawler,  # pylint: disable=unused-argument
-                            error: Optional[BaseException]  # pylint: disable=unused-argument
+                            crawler: BaseImageCrawler,
+                            error: Optional[BaseException]
                             ) -> Optional[bool]:
     """Default implementation of ``ConfigProbeCallback``
 
@@ -59,7 +59,7 @@ def _default_probe_callback(reason: ConfigProbeCallbackReason,
 
 
 class DuplicateImagecrawlersException(Exception):
-    def __init__(self, duplicates: List[BaseImageCrawler]) -> None:  # pragma: no cover
+    def __init__(self, duplicates: List[BaseImageCrawler]) -> None:
         super().__init__()
         self.duplicates = duplicates
 
@@ -69,7 +69,7 @@ class DuplicateImagecrawlersException(Exception):
 
 class ConfigTest:
 
-    def __init__(self, config: Config) -> None:  # pragma: no cover
+    def __init__(self, config: Config) -> None:
         self.config = config
 
     def check_duplicates(self) -> None:
@@ -121,7 +121,7 @@ class ConfigTest:
             ic_probe_result = imagecrawler_test_class(imagecrawler).probe(
                 retries=retries, retry_delay=delay,
                 retry_callback=retry_callback)
-            result.append(  # pylint: disable=no-member # false-positive
+            result.append(
                 ConfigImagecrawlerProbeResult(imagecrawler, ic_probe_result))
             probe_continue = callback_(
                 ConfigProbeCallbackReason.failure if ic_probe_result.is_failure else ConfigProbeCallbackReason.finish,

@@ -32,7 +32,7 @@ class Crawler:
                  restart_at_front_when_exhausted: bool = False,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         if weight <= 0:
             raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
@@ -71,7 +71,7 @@ class Crawler:
         return self._image_added_wr() if self._image_added_wr else None
 
     def reset(self) -> None:  # pragma: no cover
-        self.images.clear()  # pylint: disable=no-member  # false positive
+        self.images.clear()
         self.imagecrawler.reset()
 
     def crawl(self) -> int:
@@ -94,9 +94,9 @@ class Crawler:
         if is_image_addable:
             images = ImageCollection(filter(is_image_addable, images))
         for image in images:
-            self.images.add(image)  # pylint: disable=no-member  # false positive
+            self.images.add(image)
             if image_added:
-                image_added(image)  # pylint: disable=not-callable
+                image_added(image)
         return len(images)
 
     def fill_up_to(self, to: int, *,
@@ -119,14 +119,14 @@ class Crawler:
     def pop_random_image(self) -> Optional[Image]:
         image = self.get_random_image()
         if image:
-            self.images.discard(image)  # pylint: disable=no-member
+            self.images.discard(image)
         return image
 
 
 class CrawlerCollection(List[Crawler]):
 
     def get_random(self) -> Optional[Crawler]:
-        crawlers = self.copy()  # pylint: disable=no-member
+        crawlers = self.copy()
         if not crawlers:
             return None
         return choices(
@@ -138,29 +138,29 @@ class CrawlerCollection(List[Crawler]):
 
 class NPCore:
 
-    def __init__(self) -> None:  # pragma: no cover
+    def __init__(self) -> None:
         self.crawlers = CrawlerCollection()
         self.blacklist = Blacklist()
 
     def _is_image_not_in_blacklist(self, image: Image) -> bool:
         # must be compatible to: _IsImageAddable
-        return image.uri not in self.blacklist  # pylint: disable=unsupported-membership-test
+        return image.uri not in self.blacklist
 
     def _add_image_to_blacklist(self, image: Image) -> None:
         # must be compatible to: _OnImageAdded
         if not image.is_generic:
-            self.blacklist.add(image.uri)  # pylint: disable=no-member
+            self.blacklist.add(image.uri)
 
     def has_imagecrawler(self, imagecrawler: BaseImageCrawler) -> bool:
         return imagecrawler in (
-            crawler.imagecrawler for crawler in self.crawlers  # pylint: disable=not-an-iterable
+            crawler.imagecrawler for crawler in self.crawlers
         )
 
     def add_imagecrawler(self, imagecrawler: BaseImageCrawler, *,
                          weight: _CrawlerWeight = 1.0,
                          restart_at_front_when_exhausted: bool = False
                          ) -> None:
-        self.crawlers.append(  # pylint: disable=no-member
+        self.crawlers.append(
             Crawler(
                 imagecrawler,
                 weight=weight,
@@ -174,7 +174,7 @@ class NPCore:
                    on_refill: Optional[_OnFill],
                    delay: float = _FILLUP_DELAY_DEFAULT) -> None:
         fill_treads: List[Thread] = []
-        for crawler in self.crawlers.copy():  # pylint: disable=no-member
+        for crawler in self.crawlers.copy():
             fill_tread = Thread(target=crawler.fill_up_to,
                                 args=(to,),
                                 kwargs={'filled_by': on_refill, 'delay': delay},
@@ -189,12 +189,12 @@ class NPCore:
         :return: Length of blacklist before a reset.
         """
         reset_treads: List[Thread] = []
-        for crawler in self.crawlers.copy():  # pylint: disable=no-member
+        for crawler in self.crawlers.copy():
             reset_tread = Thread(target=crawler.reset, daemon=True)
             reset_treads.append(reset_tread)
             reset_tread.start()
         blacklist_len = len(self.blacklist)
-        self.blacklist.clear()  # pylint: disable=no-member
+        self.blacklist.clear()
         for reset_tread in reset_treads:
             reset_tread.join()
         return blacklist_len

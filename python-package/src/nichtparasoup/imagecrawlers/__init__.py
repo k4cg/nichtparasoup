@@ -34,13 +34,13 @@ class KnownImageCrawlers:
             'Pr0gramm': Pr0gramm,
         }
 
-    def __init__(self, entries: Iterable[EntryPoint]) -> None:  # pragma: no cover
+    def __init__(self, entries: Iterable[EntryPoint]) -> None:
         self._list: Dict[_ImagecrawlerName, _ImagecrawlerClass] = self._builtins().copy()
         _log('debug', 'Builtin imagecrawlers loaded: %r', self._list)
         for entry in entries:
             try:
                 self._append(entry)
-            except Exception as ex:  # pylint: disable=broad-except
+            except Exception as ex:
                 _log('debug', 'Entry point skipped: %r from %r\n\t%s', entry.name, entry.dist, ex, exc_info=ex)
             else:
                 _log('debug', 'Entry point added: %r from %r', entry.name, entry.dist)
