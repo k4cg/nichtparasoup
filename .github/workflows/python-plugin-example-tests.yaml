@@ -37,12 +37,16 @@ defaults:
 env:
   project-directory: python-plugin-example
   reports-directory: reports
+  reports-artifact: reports
+  coverage-artifact: coverage
   latest-python-version: '3.8'
 
 jobs:
   test:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    env:
+      coverage-artifact-dir: _coverage
     strategy:
       fail-fast: false
       matrix:
@@ -117,21 +121,21 @@ jobs:
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.reports-directory }}
+          name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
       - name: Rename coverage for artifact
         if: ${{ always() && ! matrix.no-unit-test }}
         run: |
-          mkdir _coverage
-          mv .coverage _coverage/${{ runner.os }}-${{ matrix.python }}.coverage
+          mkdir ${{ env.coverage-artifact-dir }}
+          mv .coverage ${{ env.coverage-artifact-dir }}/${{ runner.os }}-${{ matrix.python }}.coverage
       - name: Artifact coverage
         if: ${{ always() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: coverage
-          path: ${{ env.project-directory }}/_coverage/
+          name: ${{ env.coverage-artifact }}
+          path: ${{ env.project-directory }}/${{ env.coverage-artifact-dir }}/
           if-no-files-found: error
       - name: Tidy pip cache dir
         if: ${{ always() }}
@@ -143,6 +147,8 @@ jobs:
     # jus wait until 'test' finished, but run regardless of the outcome
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    env:
+      coverage-artifact-dir: _coverage
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -151,14 +157,14 @@ jobs:
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: ${{ env.reports-directory }}
+          name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: Fetch coverage
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: coverage
-          path: ${{ env.project-directory }}/_coverage
+          name: ${{ env.coverage-artifact }}
+          path: ${{ env.project-directory }}/${{ env.coverage-artifact-dir }}
       - name: Setup Python
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v2
@@ -187,7 +193,7 @@ jobs:
           TOXENV: pytests_merge
       - name: Merge pytest-coverage
         run: |
-          python -m coverage combine _coverage/*.coverage
+          python -m coverage combine ${{ env.coverage-artifact-dir }}/*
           python -m tox -r
         env:
           TOXENV: coverage_report
@@ -195,7 +201,7 @@ jobs:
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.reports-directory }}
+          name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
 
@@ -217,7 +223,7 @@ jobs:
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
         with:
-          name: ${{ env.reports-directory }}
+          name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: SonarCloud Scan
         # see https://github.com/SonarSource/sonarcloud-github-action
