@@ -7,6 +7,7 @@ webserver:
 
 imageserver:
   crawler_upkeep: 30
+  reset_timeout: 600
 
 crawlers:
   - name: "MockableImageCrawler"

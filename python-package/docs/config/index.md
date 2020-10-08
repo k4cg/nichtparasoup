@@ -17,6 +17,7 @@ webserver:
 
 imageserver:
   crawler_upkeep: 30
+  reset_timeout: 3600
 
 crawlers:
   - name: "Reddit"
@@ -53,12 +54,23 @@ logging:
 
 - ImageServer config
 - type: map
+- optional
 
 ### `crawler_upkeep`
 
 - number of images the server must keep at all time
 - type: integer
 - constraint: >= 10
+- optional
+- default: 30
+
+### `reset_timeout`
+
+- number of seconds the server must nt be reset
+- type: integer
+- constraint: >= 600
+- optional
+- default: 3600
 
 ## `crawlers`
 

@@ -13,6 +13,11 @@ Unreleased
     See the [InstagramProfile's docs](docs/imagecrawlers/instagram_profile.md) for details.
   * All functions that take a path to a server's config file now support `pathlib.PathLike`,
     and still support `str` like before.
+  * New optional config setting `imageserver.reset_timeout`.  Its default value is `3600`.  
+    See the [docs](docs/config/index.md).
+* Changes
+  * Config setting `imageserver.crawler_upkeep` is optional, now. Its default value is `30`.  
+    See the [docs](docs/config/index.md).
 * Misc
   * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
     If the env var is present:

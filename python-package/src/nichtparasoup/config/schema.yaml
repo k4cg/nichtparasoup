@@ -1,7 +1,7 @@
 ## schema for yamale - see https://github.com/23andMe/Yamale
 
 webserver: include('Webserver', strict=True)
-imageserver: include('ImageServer', strict=True)
+imageserver: include('ImageServer', strict=True, required=False, none=False)
 crawlers: list(include('Crawler', strict=True), min=1)
 logging: include('Logging', strict=True, required=False, none=False)
 
@@ -15,7 +15,8 @@ Webserver:
   port: int(min=1, max=65535)
 ---
 ImageServer:
-  crawler_upkeep: int(min=10)
+  crawler_upkeep: int(min=10, required=False, none=False)
+  reset_timeout: int(min=600, required=False, none=False)
 ---
 Crawler:
   name: str(min=1)

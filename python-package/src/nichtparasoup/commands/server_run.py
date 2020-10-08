@@ -16,7 +16,7 @@ from ._internals import _cli_option_debug
 def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
     _logging_init(getattr(logging, config['logging']['level']))
     _log('debug', 'Config: %r', config)
-    imageserver = ImageServer(NPCore(), **config['imageserver'])
+    imageserver = ImageServer(NPCore(), **config.get('imageserver', {}))
     for crawler_config in config['crawlers']:
         imagecrawler = get_imagecrawler(crawler_config)
         if not imageserver.core.has_imagecrawler(imagecrawler):

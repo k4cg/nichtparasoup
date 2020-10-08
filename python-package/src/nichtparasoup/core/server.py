@@ -47,6 +47,10 @@ class Server:
     This class is intended to be thread save.
     This class intended to be a stable interface.
     Its public methods return base types only.
+
+    :param core: the core
+    :param crawler_upkeep: number of images the server must keep at all time
+    :param reset_timeout: number of seconds the server must nt be reset
     """
 
     def __init__(self, core: NPCore, *,
@@ -54,8 +58,8 @@ class Server:
                  reset_timeout: int = 60 * 60
                  ) -> None:
         self.core = core
-        self.keep = crawler_upkeep
-        self.reset_timeout = reset_timeout
+        self.keep = max(crawler_upkeep, 10)
+        self.reset_timeout = max(reset_timeout, 600)
         self.stats = ServerStatistics()
         self._refiller: Optional[ServerRefiller] = None
         self._trigger_reset = False
