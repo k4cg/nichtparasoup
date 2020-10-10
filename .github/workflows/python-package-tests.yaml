@@ -54,7 +54,7 @@ env:
   reports-directory: reports
   reports-artifact: reports
   coverage-artifact: coverage
-  latest-python-version: '3.8'
+  latest-python-version: '3.9'
 
 jobs:
   test:
@@ -69,29 +69,29 @@ jobs:
           # check the style
           - name: 'Style'
             os: ubuntu-latest
-            # ${{ env.latest-python-version }}
-            python: '3.8'
+            python: '3.9'  # should be ${{ env.latest-python-version }}
             toxenv: tests_start, style
             no-unit-test: true
           # check latest Python for all OS
           - name: Linux
             os: 'ubuntu-latest'
-            # ${{ env.latest-python-version }}
-            python: '3.8'
-            toxenv: tests_start, py38
+            python: '3.9'  # should be ${{ env.latest-python-version }}
+            toxenv: tests_start, py39
           - name: Windows
             os: windows-latest
-            # ${{ env.latest-python-version }}
-            python: '3.8'
-            toxenv: tests_start, py38
+            python: '3.9'  # should be ${{ env.latest-python-version }}
+            toxenv: tests_start, py39
           - name: 'MacOs'
             os: macos-latest
-            # ${{ env.latest-python-version }}
-            python: '3.8'
-            toxenv: tests_start, py38
+            python: '3.9'  # should be ${{ env.latest-python-version }}
+            toxenv: tests_start, py39
             # no server - missing the network entitlement on headless macOS
             pytest_args: -m 'not server'
           # check older Python
+          - name: '3.8'
+            os: ubuntu-latest
+            python: '3.8'
+            toxenv: tests_start, py38
           - name: '3.7'
             os: ubuntu-latest
             python: '3.7'

@@ -15,7 +15,7 @@ defaults:
 env:
   project-directory: python-package
   dist-dir: dist
-  latest-python-version: '3.8'
+  latest-python-version: '3.9'
 
 jobs:
   test:
@@ -39,7 +39,7 @@ jobs:
         run: python -m tox -r -s false
         env:
           NP_VERSION_EXPECTED: ${{ github.event.release.tag_name }}
-          TOXENV: version, style, tests_start, py38
+          TOXENV: version, style, tests_start, py39
           TOX_PARALLEL_NO_SPINNER: 1
   build:
     name: Build
