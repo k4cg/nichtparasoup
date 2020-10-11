@@ -1,8 +1,10 @@
 # web-api: server status
 
-call via `/status/server`.
+Call via `/status/server`.
 
-example response:
+HTTP Status Code: 200.
+
+Example response:
 
 ```json
 {

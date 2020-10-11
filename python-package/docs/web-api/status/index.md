@@ -1,10 +1,12 @@
 # web-api: status
 
-get several information about the server
+Get several information about the server
 
-call via `/status` or `/status/<what>`.  
+Call via `/status` or `/status/<what>`.  
 
-available values for `<what>` are:
+HTTP Status Code: 200.
+
+Available values for `<what>` are:
 
 * `server`    - read more about [server status](server.md)
 * `crawlers`  - read more about [crawlers status](crawlers.md)

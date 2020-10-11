@@ -26,7 +26,7 @@ class _SimpleJsonEncoder(JSONEncoder):
 
 
 class _SimpleJsonResponse(Response):
-    _json_encoder = _SimpleJsonEncoder()
+    __json_encoder: Optional[_SimpleJsonEncoder] = None
 
     def __init__(self,
                  response: Any,
@@ -36,8 +36,10 @@ class _SimpleJsonResponse(Response):
                  content_type: Optional[str] = 'application/json',
                  direct_passthrough: bool = False
                  ) -> None:
+        if not self.__json_encoder:
+            self.__json_encoder = _SimpleJsonEncoder()
         super().__init__(
-            response=self._json_encoder.encode(response),
+            response=self.__json_encoder.encode(response),
             status=status,
             headers=headers,
             mimetype=mimetype,
@@ -78,7 +80,7 @@ class WebServer:
             Rule('/css/sourceIcons.css', endpoint='sourceicons')
         ])
 
-    def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
+    def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)
 
     def dispatch_request(self, request: Request) -> Union[Response, HTTPException]:
@@ -108,7 +110,7 @@ class WebServer:
         forward.autocorrect_location_header = False
         return forward
 
-    def on_get(self, _: Request) -> Union[_SimpleJsonResponse, NotFound]:
+    def on_get(self, _: Request) -> _SimpleJsonResponse:
         response = self.imageserver.get_image()
         return _SimpleJsonResponse({
             'uri': response.image.uri,
@@ -119,7 +121,10 @@ class WebServer:
                 'id': id(response.crawler),
                 'type': _type_module_name_str(type(response.crawler.imagecrawler)),
             },
-        }) if response else NotFound()
+        }) if response else _SimpleJsonResponse({
+            'status': 404,
+            'desc': 'Server is exhausted. Come back later.'
+        }, status='404 EXHAUSTED')
 
     _STATUS_WHATS = {
         'server': ServerStatus,
@@ -141,7 +146,7 @@ class WebServer:
         return _SimpleJsonResponse({
             'requested': reset.requested,
             'timeout': reset.timeout,
-        })
+        }, status=202)
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers: Set[Type[BaseImageCrawler]] = {
@@ -164,7 +169,7 @@ class WebServer:
         css = template.render(names_icons_list=names_icons_list)
         return Response(css, mimetype='text/css')
 
-    def run(self) -> None:
+    def run(self) -> None:  # pragma: no cover
         self.imageserver.start()
         if self.developer_mode:
             _log('info', ' * starting %s in web-developer mode', type(self).__name__)

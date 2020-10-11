@@ -18,6 +18,9 @@ Unreleased
 * Changes
   * Config setting `imageserver.crawler_upkeep` is optional, now. Its default value is `30`.  
     See the [docs](docs/config/index.md).
+  * JSON API responses
+    * `/get` now sends valid JSON when a "404" occurred. See the [docs](docs/web-api/get.md).
+    * `/reset` now sends HTTP status code "202".
 * Misc
   * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
     If the env var is present:
