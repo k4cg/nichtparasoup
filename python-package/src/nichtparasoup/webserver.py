@@ -15,7 +15,7 @@ from werkzeug.wrappers import Request, Response
 from . import __version__ as nichtparasoup_version
 from ._internals import _log, _type_module_name_str
 from .core.imagecrawler import BaseImageCrawler
-from .core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus
+from .core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus, StatusLike
 
 
 class _SimpleJsonEncoder(JSONEncoder):
@@ -35,7 +35,7 @@ class _SimpleJsonResponse(Response):
                  mimetype: Optional[str] = 'application/json',
                  content_type: Optional[str] = 'application/json',
                  direct_passthrough: bool = False
-                 ) -> None:
+                 ) -> None:  # pragma: no cover
         if not self.__json_encoder:
             self.__json_encoder = _SimpleJsonEncoder()
         super().__init__(
@@ -90,9 +90,6 @@ class WebServer:
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
-        if self.developer_mode:
-            # via `werkzeug.wrappers.CORSResponseMixin`
-            response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
         return response
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
@@ -101,6 +98,9 @@ class WebServer:
         if isinstance(response, Response):
             response.cache_control.no_cache = True
             response.cache_control.no_store = True
+            if self.developer_mode:
+                # via `werkzeug.wrappers.CORSResponseMixin`
+                response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
         return response(environ, start_response)
 
     def on_root(self, _: Request) -> Response:
@@ -110,7 +110,7 @@ class WebServer:
         forward.autocorrect_location_header = False
         return forward
 
-    def on_get(self, _: Request) -> _SimpleJsonResponse:
+    def on_get(self, _: Request) -> Response:
         response = self.imageserver.get_image()
         return _SimpleJsonResponse({
             'uri': response.image.uri,
@@ -126,22 +126,28 @@ class WebServer:
             'desc': 'Server is exhausted. Come back later.'
         }, status='404 EXHAUSTED')
 
-    _STATUS_WHATS = {
+    _STATUS_WHATS: Dict[str, Type[StatusLike]] = {
         'server': ServerStatus,
         'blacklist': BlacklistStatus,
         'crawlers': CrawlerStatus,
     }
 
-    def on_status(self, _: Request) -> _SimpleJsonResponse:
-        response = {what: status_type(self.imageserver) for what, status_type in self._STATUS_WHATS.items()}
+    def on_status(self, _: Request) -> Response:
+        response: Dict[str, Union[StatusLike, str]] = {
+            what: status_type.of_server(self.imageserver)
+            for what, status_type
+            in self._STATUS_WHATS.items()
+        }
         response['version'] = nichtparasoup_version
         return _SimpleJsonResponse(response)
 
-    def on_status_what(self, _: Request, what: str) -> Union[NotFound, _SimpleJsonResponse]:
+    def on_status_what(self, _: Request, what: str) -> Response:
         status_type = self._STATUS_WHATS.get(what)
-        return _SimpleJsonResponse(status_type(self.imageserver)) if status_type else NotFound()
+        if status_type:
+            return _SimpleJsonResponse(status_type.of_server(self.imageserver))
+        raise NotFound()
 
-    def on_reset(self, _: Request) -> _SimpleJsonResponse:
+    def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
         return _SimpleJsonResponse({
             'requested': reset.requested,

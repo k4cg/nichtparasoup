@@ -27,7 +27,7 @@ def test_server(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
     # act
-    status = ServerStatus(server)
+    status = ServerStatus.of_server(server)
     # assert
     assert status  # TODO write the tests
 
@@ -37,7 +37,7 @@ def test_blacklist(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
     # act
-    status = BlacklistStatus(server)
+    status = BlacklistStatus.of_server(server)
     # assert
     assert status  # TODO write the tests
 
@@ -47,6 +47,6 @@ def test_crawlers(imagecrawlers_and_server: _ImagecrawlersAndServer) -> None:
     # arrange
     imagecrawlers, server = imagecrawlers_and_server
     # act
-    status = CrawlerStatus(server)
+    status = CrawlerStatus.of_server(server)
     # assert
     assert status  # TODO write the tests
