@@ -7,7 +7,8 @@ __all__ = [
 import os
 from abc import ABC, abstractmethod
 from http.client import HTTPResponse
-from pathlib import PurePath
+from os import PathLike
+from pathlib import Path, PurePath
 from threading import Lock
 from typing import Any, Dict, Optional, Tuple, Union
 from urllib.parse import urlparse
@@ -198,6 +199,9 @@ class BaseImageCrawler(ABC):
         raise NotImplementedError()
 
 
+_DebugStoreDir = Union[str, PathLike]
+
+
 class RemoteFetcher:
     ENV_STOREDIR = 'NP_DEBUG_REMOTEFETCHER_STOREDIR'
 
@@ -216,11 +220,11 @@ class RemoteFetcher:
         self._debug_store_dir = self._debug_get_store_dir(os.environ.get(self.ENV_STOREDIR))
 
     @staticmethod
-    def _debug_get_store_dir(store_dir: Optional[str]) -> Optional[str]:
+    def _debug_get_store_dir(store_dir: Optional[_DebugStoreDir]) -> Optional[Path]:
         if not store_dir:
             return None
-        store_dir = os.path.abspath(store_dir)
-        return store_dir if os.path.isdir(store_dir) else None
+        store_path = Path(store_dir)
+        return store_path if store_path.is_dir() else None
 
     @staticmethod
     def _valid_uri(uri: _Uri) -> bool:
@@ -231,7 +235,7 @@ class RemoteFetcher:
         if not stored_dir:
             return None
         file_name = f'{uuid4()}.nprfl'
-        file = os.path.join(stored_dir, file_name)
+        file = stored_dir / file_name
         type4log = _type_module_name_str(type(self))
         _log('debug', f'{type4log} writing response for {request_url!r} to {file_name!r}')
         try:
@@ -241,7 +245,7 @@ class RemoteFetcher:
             raise ex
 
     @staticmethod
-    def __debug_write_response_file(file: str, response: HTTPResponse) -> None:
+    def __debug_write_response_file(file: Path, response: HTTPResponse) -> None:
         url = response.geturl()
         with open(file, 'wt') as fp_meta:
             fp_meta.writelines([url, '\n', str(response.getcode()), '\n'])
