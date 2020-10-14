@@ -90,7 +90,8 @@ class WebServer:
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
-        return response
+        else:
+            return response
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)

@@ -7,7 +7,6 @@ __all__ = [
 import os
 from abc import ABC, abstractmethod
 from http.client import HTTPResponse
-from os import PathLike
 from pathlib import Path, PurePath
 from threading import Lock
 from typing import Any, Dict, Optional, Tuple, Union
@@ -199,7 +198,7 @@ class BaseImageCrawler(ABC):
         raise NotImplementedError()
 
 
-_DebugStoreDir = Union[str, PathLike]
+_DebugStoreDir = Union[str, os.PathLike]
 
 
 class RemoteFetcher:
