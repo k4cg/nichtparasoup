@@ -1,10 +1,10 @@
 import random
 from json import loads as json_loads
-from typing import TYPE_CHECKING, Set
+from typing import TYPE_CHECKING, Any, Dict, Set, Tuple
 from uuid import uuid4
 
 import pytest
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import HTTPException, InternalServerError, NotFound
 from werkzeug.test import Client
 from werkzeug.wrappers import Request, Response
 
@@ -85,7 +85,76 @@ class TestWebserverFunctional:
         assert cors_ignore is developer_mode
 
 
-class TestWebserverUnit:
+class TestWebserverDispatch:
+    class FakeAdapter:
+        def __init__(self, endpoint: str, values: Dict[str, Any]) -> None:
+            self.endpoint = endpoint
+            self.values = values
+
+        def match(self) -> Tuple[str, Dict[str, Any]]:
+            return self.endpoint, self.values
+
+    @pytest.fixture()
+    def sut(self) -> WebServer:
+        return WebServer(Server(NPCore()), '', 0)
+
+    def test_request_regular(self, sut: WebServer) -> None:
+        # arrange
+        request = Request({})
+        response_exp = Response()
+        sut.on_dummy = lambda *_, **__: response_exp  # type: ignore[assignment,attr-defined,misc]
+        adapter = self.FakeAdapter('dummy', {})
+        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        # act
+        response_got = sut.dispatch_request(request)
+        # assert
+        assert response_got is response_exp
+
+    def test_request_httpxception(self, sut: WebServer) -> None:
+        # arrange
+        response_exp = HTTPException()
+
+        def on_dummy(*_: Any, **__: Any) -> Response:
+            raise response_exp
+
+        request = Request({})
+        sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
+        adapter = self.FakeAdapter('dummy', {})
+        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        # act
+        response_got = sut.dispatch_request(request)
+        # assert
+        assert response_got is response_exp
+
+    def test_request_exception(self, sut: WebServer) -> None:
+        # arrange
+        def on_dummy(*_: Any, **__: Any) -> Response:
+            raise Exception
+
+        request = Request({})
+        sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
+        adapter = self.FakeAdapter('dummy', {})
+        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        # act
+        response_got = sut.dispatch_request(request)
+        # assert
+        assert isinstance(response_got, InternalServerError)
+
+    def test_dispatch_request_baseexception(self, sut: WebServer) -> None:
+        # arrange
+        def on_dummy(*_: Any, **__: Any) -> Response:
+            raise BaseException()
+
+        request = Request({})
+        sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
+        adapter = self.FakeAdapter('dummy', {})
+        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        # act & assert
+        with pytest.raises(BaseException):
+            sut.dispatch_request(request)
+
+
+class TestWebserverActions:
 
     @pytest.fixture()
     def sut(self) -> WebServer:
