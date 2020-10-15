@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Typ
 
 from mako.template import Template  # type: ignore
 from werkzeug.datastructures import Headers
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import HTTPException, InternalServerError, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
@@ -15,7 +15,7 @@ from werkzeug.wrappers import Request, Response
 from . import __version__ as nichtparasoup_version
 from ._internals import _log, _type_module_name_str
 from .core.imagecrawler import BaseImageCrawler
-from .core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus
+from .core.server import BlacklistStatus, CrawlerStatus, Server, ServerStatus, StatusLike
 
 
 class _SimpleJsonEncoder(JSONEncoder):
@@ -26,7 +26,7 @@ class _SimpleJsonEncoder(JSONEncoder):
 
 
 class _SimpleJsonResponse(Response):
-    _json_encoder = _SimpleJsonEncoder()
+    __json_encoder: Optional[_SimpleJsonEncoder] = None
 
     def __init__(self,
                  response: Any,
@@ -35,9 +35,11 @@ class _SimpleJsonResponse(Response):
                  mimetype: Optional[str] = 'application/json',
                  content_type: Optional[str] = 'application/json',
                  direct_passthrough: bool = False
-                 ) -> None:
+                 ) -> None:  # pragma: no cover
+        if not self.__json_encoder:
+            self.__json_encoder = _SimpleJsonEncoder()
         super().__init__(
-            response=self._json_encoder.encode(response),
+            response=self.__json_encoder.encode(response),
             status=status,
             headers=headers,
             mimetype=mimetype,
@@ -78,7 +80,7 @@ class WebServer:
             Rule('/css/sourceIcons.css', endpoint='sourceicons')
         ])
 
-    def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:
+    def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)
 
     def dispatch_request(self, request: Request) -> Union[Response, HTTPException]:
@@ -88,10 +90,11 @@ class WebServer:
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
-        if self.developer_mode:
-            # via `werkzeug.wrappers.CORSResponseMixin`
-            response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
-        return response
+        except Exception as ex:
+            _log('debug', 'Handled exception: %s', ex, exc_info=ex)
+            return InternalServerError(original_exception=ex)
+        else:
+            return response
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)
@@ -99,6 +102,9 @@ class WebServer:
         if isinstance(response, Response):
             response.cache_control.no_cache = True
             response.cache_control.no_store = True
+            if self.developer_mode:
+                # via `werkzeug.wrappers.CORSResponseMixin`
+                response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
         return response(environ, start_response)
 
     def on_root(self, _: Request) -> Response:
@@ -108,7 +114,7 @@ class WebServer:
         forward.autocorrect_location_header = False
         return forward
 
-    def on_get(self, _: Request) -> Union[_SimpleJsonResponse, NotFound]:
+    def on_get(self, _: Request) -> Response:
         response = self.imageserver.get_image()
         return _SimpleJsonResponse({
             'uri': response.image.uri,
@@ -119,29 +125,38 @@ class WebServer:
                 'id': id(response.crawler),
                 'type': _type_module_name_str(type(response.crawler.imagecrawler)),
             },
-        }) if response else NotFound()
+        }) if response else _SimpleJsonResponse({
+            'status': 404,
+            'desc': 'Server is exhausted. Come back later.'
+        }, status='404 EXHAUSTED')
 
-    _STATUS_WHATS = {
+    _STATUS_WHATS: Dict[str, Type[StatusLike]] = {
         'server': ServerStatus,
         'blacklist': BlacklistStatus,
         'crawlers': CrawlerStatus,
     }
 
-    def on_status(self, _: Request) -> _SimpleJsonResponse:
-        response = {what: status_type(self.imageserver) for what, status_type in self._STATUS_WHATS.items()}
+    def on_status(self, _: Request) -> Response:
+        response: Dict[str, Union[StatusLike, str]] = {
+            what: status_type.of_server(self.imageserver)
+            for what, status_type
+            in self._STATUS_WHATS.items()
+        }
         response['version'] = nichtparasoup_version
         return _SimpleJsonResponse(response)
 
-    def on_status_what(self, _: Request, what: str) -> Union[NotFound, _SimpleJsonResponse]:
+    def on_status_what(self, _: Request, what: str) -> Response:
         status_type = self._STATUS_WHATS.get(what)
-        return _SimpleJsonResponse(status_type(self.imageserver)) if status_type else NotFound()
+        if status_type:
+            return _SimpleJsonResponse(status_type.of_server(self.imageserver))
+        raise NotFound()
 
-    def on_reset(self, _: Request) -> _SimpleJsonResponse:
+    def on_reset(self, _: Request) -> Response:
         reset = self.imageserver.request_reset()
         return _SimpleJsonResponse({
             'requested': reset.requested,
             'timeout': reset.timeout,
-        })
+        }, status=202)
 
     def on_sourceicons(self, _: Request) -> Response:
         imagecrawlers: Set[Type[BaseImageCrawler]] = {
@@ -164,7 +179,7 @@ class WebServer:
         css = template.render(names_icons_list=names_icons_list)
         return Response(css, mimetype='text/css')
 
-    def run(self) -> None:
+    def run(self) -> None:  # pragma: no cover
         self.imageserver.start()
         if self.developer_mode:
             _log('info', ' * starting %s in web-developer mode', type(self).__name__)

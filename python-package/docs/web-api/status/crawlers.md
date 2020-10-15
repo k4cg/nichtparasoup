@@ -1,8 +1,10 @@
 # web-api: crawlers status
 
-call via `/status/crawlers`.
+Call via `/status/crawlers`.
 
-example response:
+HTTP Status Code: 200.
+
+Example response:
 
 ```json
 {

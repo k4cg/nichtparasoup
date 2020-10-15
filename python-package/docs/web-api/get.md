@@ -1,10 +1,37 @@
 # web-api: get
 
-will pop a random image from the ImageServer.
+Will pop a random image from the ImageServer, if not exhausted.
 
-call via `/get`.
+Call via `/get`.
 
-example response:
+## when exhausted
+
+HTTP Status Code: 404.
+
+Example response when not exhausted:
+
+```json
+{
+  "status": 404,
+  "desc": "Server is exhausted. Come back later."
+}
+```
+
+### `status`
+
+- status code
+- type: integer
+
+### `desc`
+
+- arbitrary message
+- type: string
+
+## when not exhausted 
+
+HTTP Status Code: 200.
+
+Example response when not exhausted:
 
 ```json
 {
@@ -20,43 +47,43 @@ example response:
 ```
 
 
-## `uri`
+### `uri`
 
 - thr URI of an image
 - type: string
 
 
-## `is_generic`
+### `is_generic`
 
 - whether the image URI is generic or not
 - type: boolean
 
 
-## `source`
+### `source`
 
 - the image's source
 - type: null or string
 
 
-## `more`
+### `more`
 
 - additional relevant information the crawler found 
 - type: object
 
 
-## `crawler`
+### `crawler`
 
 - information about the ImageCrawler that found this image
 - type: object 
 
 
-### `id`
+#### `id`
 
 - the ImageCrawler's id - see also [crawlers status](status_crawlers.md)
 - type: integer
 
 
-### `type`
+#### `type`
 
 - the ImageCrawler's type for easy access in the frontend
 - type: string
