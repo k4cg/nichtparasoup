@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Typ
 
 from mako.template import Template  # type: ignore
 from werkzeug.datastructures import Headers
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import HTTPException, InternalServerError, NotFound
 from werkzeug.routing import Map, Rule
 from werkzeug.serving import run_simple
 from werkzeug.utils import redirect
@@ -90,6 +90,9 @@ class WebServer:
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
         except HTTPException as ex:
             return ex
+        except Exception as ex:
+            _log('debug', 'Handled exception: %s', ex, exc_info=ex)
+            return InternalServerError(original_exception=ex)
         else:
             return response
 

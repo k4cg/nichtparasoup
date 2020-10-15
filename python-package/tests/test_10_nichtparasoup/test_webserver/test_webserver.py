@@ -85,7 +85,7 @@ class TestWebserverFunctional:
         assert cors_ignore is developer_mode
 
 
-class TestWebserver:
+class TestWebserverUnit:
 
     @pytest.fixture()
     def sut(self) -> WebServer:
