@@ -63,7 +63,7 @@ jobs:
           python -m pip install tox -c requirements/tox.txt
       - name: Build package
         run: python -m tox -r -s false -e build
-        with:
+        env:
           NP_DIST_DIR: ${{ env.dist-dir }}
       - name: Artifact build results
         # see https://github.com/actions/upload-artifact
@@ -74,7 +74,7 @@ jobs:
           if-no-files-found: error
   publish-release:
     name: Publish to assets
-    needs: ['build', 'install']
+    needs: ['build']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch build results
@@ -111,7 +111,7 @@ jobs:
           asset_content_type: application/tar+gzip
   publish-pypi:
     name: Publish to PyPI
-    needs: ['build', 'install']
+    needs: ['build']
     if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
