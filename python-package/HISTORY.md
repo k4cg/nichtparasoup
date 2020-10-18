@@ -3,7 +3,13 @@
 ## 3.0.0
 
 Unreleased
+
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
+
+
+## 3.0.0a2
+
+Released 2020-10-18
 
 * Added
   * `nichtparasoup.core.imagecrawler.RemoteFetcher` got the ability to write communication logs.  
@@ -20,7 +26,7 @@ Unreleased
     See the [docs](docs/config/index.md).
   * JSON API responses
     * `/get` now sends valid JSON when a "404" occurred. See the [docs](docs/web-api/get.md).
-    * `/reset` now sends HTTP status code "202".
+    * `/reset` now sends HTTP status code "202", was "200".
 * Misc
   * Tests can persist logs of `nichtparasoup` - controlled via env var `NP_TESTLOG_NAME`.  
     If the env var is present:
