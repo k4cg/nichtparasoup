@@ -17,6 +17,7 @@ env:
   dist-dir: dist
   latest-python-version: '3.9'
 
+
 jobs:
   test:
     name: Tests
@@ -33,16 +34,18 @@ jobs:
           python-version: ${{ env.latest-python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install wheel setuptools pip
-          python -m pip install -r requirements/tox.txt
-      - name: Test nichtparasoup
+          python -m pip install -U wheel setuptools pip
+          python -m pip install tox -c requirements/tox.txt
+      - name: Run tests
         run: python -m tox -r -s false
         env:
           NP_VERSION_EXPECTED: ${{ github.event.release.tag_name }}
-          TOXENV: version, style, tests_start, py39
+          # test against ${{ env.latest-python-version }}
+          TOXENV: style, version, tests_start, py39, build, install
           TOX_PARALLEL_NO_SPINNER: 1
   build:
     name: Build
+    needs: ['test']
     # build in an isolated env
     runs-on: ubuntu-latest
     steps:
@@ -57,11 +60,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U wheel setuptools pip
-          python -m pip install -r requirements/build.txt
+          python -m pip install tox -c requirements/tox.txt
       - name: Build package
-        run: |
-          rm -rf build ${{ env.dist-dir }}
-          python -m pep517.build --source --binary --out-dir ${{ env.dist-dir }} .
+        run: python -m tox -r -s false -e build
+        with:
+          NP_DIST_DIR: ${{ env.dist-dir }}
       - name: Artifact build results
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
@@ -69,9 +72,9 @@ jobs:
           name: build-results
           path: ${{ env.project-directory }}/${{ env.dist-dir }}/
           if-no-files-found: error
-  publish-asset-wheel:
+  publish-release:
     name: Publish to assets
-    needs: ['test', 'build']
+    needs: ['build', 'install']
     runs-on: ubuntu-latest
     steps:
       - name: Fetch build results
@@ -108,7 +111,7 @@ jobs:
           asset_content_type: application/tar+gzip
   publish-pypi:
     name: Publish to PyPI
-    needs: ['test', 'build']
+    needs: ['build', 'install']
     if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:

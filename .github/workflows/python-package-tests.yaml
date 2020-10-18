@@ -76,30 +76,30 @@ jobs:
           - name: Linux
             os: 'ubuntu-latest'
             python: '3.9'  # should be ${{ env.latest-python-version }}
-            toxenv: tests_start, py39
+            toxenv: tests_start, py39, build, install
           - name: Windows
             os: windows-latest
             python: '3.9'  # should be ${{ env.latest-python-version }}
-            toxenv: tests_start, py39
+            toxenv: tests_start, py39, build, install
           - name: 'MacOs'
             os: macos-latest
             python: '3.9'  # should be ${{ env.latest-python-version }}
-            toxenv: tests_start, py39
+            toxenv: tests_start, py39, build, install
             # no server - missing the network entitlement on headless macOS
             pytest_args: -m 'not server'
           # check older Python
           - name: '3.8'
             os: ubuntu-latest
             python: '3.8'
-            toxenv: tests_start, py38
+            toxenv: tests_start, py38, build, install
           - name: '3.7'
             os: ubuntu-latest
             python: '3.7'
-            toxenv: tests_start, py37
+            toxenv: tests_start, py37, build, install
           - name: '3.6'
             os: ubuntu-latest
             python: '3.6'
-            toxenv: tests_start, py36
+            toxenv: tests_start, py36, build, install
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
@@ -123,8 +123,8 @@ jobs:
           restore-keys: pip-${{ runner.os }}-${{ matrix.python }}-
       - name: Install dependencies
         run: |
-          python -m pip install wheel setuptools pip
-          python -m pip install -r requirements/tox.txt
+          python -m pip install -U wheel setuptools pip
+          python -m pip install tox -c requirements/tox.txt
       - name: Test ${{ env.project-directory }}
         id: tests
         run:
@@ -213,19 +213,14 @@ jobs:
           restore-keys: pip-${{ runner.os }}-${{ env.latest-python-version }}-
       - name: Install dependencies
         run: |
-          python -m pip install wheel setuptools pip
-          python -m pip install -r requirements/tox.txt
-          python -m pip install coverage -c requirements/tests.txt
+          python -m pip install -U wheel setuptools pip
+          python -m pip install coverage tox -c requirements/tests.txt -c requirements/tox.txt
       - name: Merge pytest-reports
-        run: python -m tox -r
-        env:
-          TOXENV: pytests_merge
+        run: python -m tox -r -e pytests_merge
       - name: Merge coverage
         run: |
           python -m coverage combine ${{ env.coverage-artifact-dir }}/*
-          python -m tox -r
-        env:
-          TOXENV: coverage_report
+          python -m tox -r -e coverage_report
       - name: Artifact combined reports
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2

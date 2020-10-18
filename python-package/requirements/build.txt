@@ -6,3 +6,8 @@
 #
 pep517==0.8.2             # via -r requirements/build.in
 toml==0.10.1              # via pep517
+wheel==0.35.1             # via -r requirements/build.in
+
+# The following packages are considered to be unsafe in a requirements file:
+# pip
+# setuptools
