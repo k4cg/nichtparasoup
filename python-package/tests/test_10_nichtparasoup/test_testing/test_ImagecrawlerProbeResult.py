@@ -14,7 +14,8 @@ class TestImagecrawlerProbeResultAdd:
         other = 1337
         # act & assert
         with pytest.raises(TypeError, match='unsupported operand'):
-            one + other
+            # safety checks for untyped usage
+            one + other  # type: ignore[operator]
 
     def test_errors(self) -> None:
         # arrange

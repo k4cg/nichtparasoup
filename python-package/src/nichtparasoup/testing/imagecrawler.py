@@ -175,20 +175,21 @@ class ImagecrawlerProbeResult:
         self.images = images
         self.errors = errors
 
-    def __add__(self, other: Any) -> 'ImagecrawlerProbeResult':
-        if isinstance(other, ImagecrawlerProbeResult):
-            images: Optional[ImageCollection] = None
-            if self.images is not None and other.images is not None:
-                images = ImageCollection(self.images | other.images)
-            elif self.images is not None:
-                images = ImageCollection(self.images)
-            elif other.images is not None:
-                images = ImageCollection(other.images)
-            return ImagecrawlerProbeResult(
-                images,
-                self.errors + other.errors
-            )
-        return NotImplemented
+    def __add__(self, other: 'ImagecrawlerProbeResult') -> 'ImagecrawlerProbeResult':
+        if not isinstance(other, ImagecrawlerProbeResult):
+            # safety checks for untyped usage
+            return NotImplemented  # type: ignore[unreachable]
+        images: Optional[ImageCollection] = None
+        if self.images is not None and other.images is not None:
+            images = ImageCollection(self.images | other.images)
+        elif self.images is not None:
+            images = ImageCollection(self.images)
+        elif other.images is not None:
+            images = ImageCollection(other.images)
+        return ImagecrawlerProbeResult(
+            images,
+            self.errors + other.errors
+        )
 
     @property
     def is_failure(self) -> bool:
