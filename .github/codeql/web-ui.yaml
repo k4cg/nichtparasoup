@@ -2,12 +2,10 @@
 ## see https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#using-a-custom-configuration
 
 name: WebUi
-
 queries:
   - uses: security-and-quality
-
-paths:
-  - web-ui
+paths: [ 'web-ui' ]
 paths-ignore:
-  - web-ui/node_modules
+  - 'web-ui/node_modules'
   - 'web-ui/**/*.test.js'
+  - 'web-ui/**/*.spec.js'

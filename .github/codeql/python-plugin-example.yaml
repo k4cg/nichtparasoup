@@ -2,11 +2,8 @@
 ## see https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#using-a-custom-configuration
 
 name: PythonPluginExample
-
 queries:
   - uses: security-and-quality
-
-paths:
-  - python-plugin-example
+paths: [ 'python-plugin-example' ]
 paths-ignore:
-  - python-plugin-example/tests
+  - 'python-plugin-example/tests'
