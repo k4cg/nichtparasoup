@@ -6,17 +6,16 @@ name: Release
 
 on:
   release:
-    types:
-      - created
+    types: [ 'created' ]
 
 defaults:
   run:
     working-directory: python-package
+
 env:
   project-directory: python-package
   dist-dir: dist
   latest-python-version: '3.9'
-
 
 jobs:
   test:
@@ -40,12 +39,12 @@ jobs:
         run: python -m tox -r -s false
         env:
           NP_VERSION_EXPECTED: ${{ github.event.release.tag_name }}
-          # test against ${{ env.latest-python-version }}
+          # test against `pyXX` - ${{ env.latest-python-version }}
           TOXENV: style, version, tests_start, py39, build, install
           TOX_PARALLEL_NO_SPINNER: 1
   build:
     name: Build
-    needs: ['test']
+    needs: [ 'test' ]
     # build in an isolated env
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +73,7 @@ jobs:
           if-no-files-found: error
   publish-release:
     name: Publish to assets
-    needs: ['build']
+    needs: [ 'build' ]
     runs-on: ubuntu-latest
     steps:
       - name: Fetch build results
@@ -90,7 +89,7 @@ jobs:
           echo "::set-output name=wheel::$(ls -qb1 *.whl)"
         working-directory: ${{ env.dist-dir }}
       - name: Publish wheel
-        # use https://github.com/actions/upload-release-asset
+        # see https://github.com/actions/upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,7 +99,7 @@ jobs:
           asset_name: ${{ steps.files.outputs.wheel }}
           asset_content_type: application/x-pywheel+zip
       - name: Publish source
-        # use https://github.com/actions/upload-release-asset
+        # see https://github.com/actions/upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -111,7 +110,7 @@ jobs:
           asset_content_type: application/tar+gzip
   publish-pypi:
     name: Publish to PyPI
-    needs: ['build']
+    needs: [ 'build' ]
     if: ${{ github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:

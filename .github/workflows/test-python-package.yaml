@@ -5,12 +5,8 @@ name: PythonPackage Test
 
 on:
   push:
-    tags:
-      # run again on release tags to have tools mark them
-      - '*.*.*'
-    branches:
-      - 'master'
-      - '3.0-dev'
+    tags: [ '*.*.*' ]  # run again on release tags to have tools mark them
+    branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - '.github/codeql/python-package.yaml'
@@ -25,9 +21,7 @@ on:
       - '!python-package/INSTALL'
       - '!python-package/LICENSE'
   pull_request:
-    branches:
-      - 'master'
-      - '3.0-dev'
+    branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/python-package-tests.yaml'
       - '.github/codeql/python-package.yaml'
@@ -49,6 +43,7 @@ on:
 defaults:
   run:
     working-directory: python-package
+
 env:
   project-directory: python-package
   reports-directory: reports
@@ -169,10 +164,9 @@ jobs:
       - name: Tidy pip cache dir
         if: ${{ always() }}
         run: python -m pip cache remove 'nichtparasoup*' || true
-
   test-reporting_merge:
     name: Merge test reports
-    needs: ['test']
+    needs: [ 'test' ]
     # jus wait until 'test' finished, but run regardless of the outcome
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -228,12 +222,11 @@ jobs:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
-
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
     if: ${{ always() && github.repository_owner == 'k4cg' }}
-    needs: ['test', 'test-reporting_merge']
+    needs: [ 'test', 'test-reporting_merge' ]
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
@@ -257,7 +250,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   codeql:
     # see https://github.com/github/codeql-action
     name: CodeQL

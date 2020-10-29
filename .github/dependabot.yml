@@ -2,64 +2,57 @@
 
 version: 2
 updates:
-  -
-    package-ecosystem: "pip"
-    directory: "/python-package/"
+  - package-ecosystem: 'pip'
+    directory: '/python-package/'
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: 'weekly'
+      day: 'saturday'
     allow:
-      - dependency-type: "all"
-    versioning-strategy: "auto"
-    labels:
-      - "dependencies"
+      - dependency-type: 'all'
+    versioning-strategy: 'auto'
+    labels: [ 'dependencies' ]
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "Python Package"
-      include: "scope"
+      prefix: 'Python Package'
+      include: 'scope'
     open-pull-requests-limit: 999
-  -
-    package-ecosystem: "pip"
-    directory: "/python-plugin-example/"
+  - package-ecosystem: 'pip'
+    directory: '/python-plugin-example/'
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: 'weekly'
+      day: 'saturday'
     allow:
-      - dependency-type: "all"
-    versioning-strategy: "auto"
+      - dependency-type: 'all'
+    versioning-strategy: 'auto'
     labels:
-      - "dependencies"
+      - 'dependencies'
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "Plugin Example"
-      include: "scope"
+      prefix: 'Plugin Example'
+      include: 'scope'
     open-pull-requests-limit: 999
-  -
-    package-ecosystem: "npm"
-    directory: "/web-ui/"
+  - package-ecosystem: 'npm'
+    directory: '/web-ui/'
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: 'weekly'
+      day: 'saturday'
     allow:
-      - dependency-type: "all"
-    versioning-strategy: "auto"
-    labels:
-      - "dependencies"
+      - dependency-type: 'all'
+    versioning-strategy: 'auto'
+    labels: [ 'dependencies' ]
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "Web UI"
-      include: "scope"
+      prefix: 'Web UI'
+      include: 'scope'
     open-pull-requests-limit: 999
-  -
-    package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "saturday"
-    labels:
-      - "dependencies"
+      interval: 'weekly'
+      day: 'saturday'
+    labels: [ 'dependencies' ]
     commit-message:
       ## prefix maximum string length of 15
-      prefix: "gh-actions"
-      include: "scope"
+      prefix: 'gh-actions'
+      include: 'scope'
     open-pull-requests-limit: 999

@@ -2,13 +2,9 @@
 ## see https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#using-a-custom-configuration
 
 name: PythonPackage
-
 queries:
   - uses: security-and-quality
-
-paths:
-  - python-package
+paths: [ 'python-package' ]
 paths-ignore:
-  - python-package/tests
-  # parts of web-ui are generated
-  - python-package/src/nichtparasoup/_web-ui/static
+  - 'python-package/tests'
+  - 'python-package/src/nichtparasoup/_web-ui/static'  # parts of web-ui are generated

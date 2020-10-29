@@ -5,9 +5,7 @@ name: WebUi Test
 
 on:
   push:
-    branches:
-      - 'master'
-      - '3.0-dev'
+    branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/web-ui-tests.yaml'
       - '.github/codeql/web-ui.yaml'
@@ -17,9 +15,7 @@ on:
       - '!web-ui/**.rst'
       - '!web-ui/LICENSE'
   pull_request:
-    branches:
-      - 'master'
-      - '3.0-dev'
+    branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/web-ui-tests.yaml'
       - '.github/codeql/web-ui.yaml'
@@ -32,6 +28,7 @@ on:
 defaults:
   run:
     working-directory: web-ui
+
 env:
   project-directory: web-ui
 
@@ -56,7 +53,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   codeql:
     # see https://github.com/github/codeql-action
     name: CodeQL
