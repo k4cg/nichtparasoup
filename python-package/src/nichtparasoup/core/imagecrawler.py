@@ -131,9 +131,8 @@ class BaseImageCrawler(ABC):
                 _log('debug', 'Error during crawling %r: %s', self, ex, exc_info=ex)
                 _log('error', 'Handled an error during crawling %s', self)
                 return ImageCollection()
-            else:
-                _log('debug', 'Crawling finished %r', self)
-                return crawled
+            _log('debug', 'Crawling finished %r', self)
+            return crawled
 
     @classmethod
     @abstractmethod
