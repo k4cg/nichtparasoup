@@ -51,9 +51,8 @@ def get_imagecrawler(config_crawler: Dict[str, Any]) -> BaseImageCrawler:
         imagecrawler = imagecrawler_class(**imagecrawler_config)
     except Exception as ex:
         raise ImageCrawlerSetupError(imagecrawler_name, imagecrawler_class, imagecrawler_config, str(ex)) from ex
-    else:
-        imagecrawler._np_name = imagecrawler_name
-        return imagecrawler
+    imagecrawler._np_name = imagecrawler_name
+    return imagecrawler
 
 
 def parse_yaml_file(file_path: ConfigFilePath) -> Config:

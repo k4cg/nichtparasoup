@@ -249,5 +249,4 @@ class ImageCrawlerTest:
             images = self.imagecrawler._crawl()
         except BaseException as ex:
             return ImagecrawlerProbeResult(None, [ex])
-        else:
-            return ImagecrawlerProbeResult(images, [])
+        return ImagecrawlerProbeResult(images, [])

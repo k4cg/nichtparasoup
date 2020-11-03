@@ -233,8 +233,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
             self._query(uri)
         except Exception:
             return False
-        else:
-            return True
+        return True
 
     def _find_query_hash(self) -> Optional[str]:
         query_hashes = self._get_queryhashfinder().find_hashes()
@@ -374,7 +373,7 @@ class InstagramProfile(BaseInstagramCrawler):
         profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url() + '?__a=1')
         try:
             profile: Dict[str, Any] = json_loads(profile_string)
-            return str(profile['graphql']['user']['id'])
+            return str(profile['graphql']['user']['id'])  # may raise KeyError
         except Exception as ex:
             raise InstagramError('profile_id not found') from ex
 
