@@ -5,8 +5,8 @@ from urllib.parse import parse_qs, urlsplit
 import pytest
 
 from nichtparasoup.imagecrawler import Image, ImageCollection
-from nichtparasoup.imagecrawlers.pr0gramm import Pr0gramm
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
+from np_shipped_imagecrawlers.pr0gramm import Pr0gramm
 
 
 class TestPr0grammConfigPromoted:

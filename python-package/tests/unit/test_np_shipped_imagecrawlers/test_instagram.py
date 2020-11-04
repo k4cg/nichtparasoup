@@ -8,10 +8,10 @@ from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, url
 import pytest
 
 from nichtparasoup.imagecrawler import Image, ImageCollection
-from nichtparasoup.imagecrawlers.instagram import (
+from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
+from np_shipped_imagecrawlers.instagram import (
     BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
 )
-from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
 _Uri = str
 _FilePath = str

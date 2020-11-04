@@ -1,8 +1,8 @@
 import pytest
 
 from nichtparasoup.commands.server_config_check import make_probe_status_callback
-from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import ConfigProbeCallbackReason
+from np_shipped_imagecrawlers.echo import Echo  # TODO use own mock instead
 
 
 @pytest.mark.parametrize('verbose', [True, False], ids=['verbose', 'compact'])

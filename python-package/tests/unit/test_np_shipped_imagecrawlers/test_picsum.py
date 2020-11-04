@@ -3,8 +3,8 @@ from typing import Any, List
 
 import pytest
 
-from nichtparasoup.imagecrawlers.picsum import Picsum
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
+from np_shipped_imagecrawlers.picsum import Picsum
 
 _picsum_right_config = {'width': 800, 'height': 600}
 

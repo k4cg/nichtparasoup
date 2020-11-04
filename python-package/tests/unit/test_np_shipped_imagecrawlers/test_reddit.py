@@ -5,8 +5,8 @@ from typing import Any, List
 import pytest
 
 from nichtparasoup.imagecrawler import Image, ImageCollection
-from nichtparasoup.imagecrawlers.reddit import Reddit
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
+from np_shipped_imagecrawlers.reddit import Reddit
 
 _reddit_right_config = dict(subreddit='aww')
 

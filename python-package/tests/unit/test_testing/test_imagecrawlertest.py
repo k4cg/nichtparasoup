@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional
 
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImagecrawlerProbeRetryCallback, ImageCrawlerTest
+from np_shipped_imagecrawlers.echo import Echo  # TODO use own mock instead
 
 from . import PROBE_DELAY_IN_TESTS
 

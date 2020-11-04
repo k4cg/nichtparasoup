@@ -3,8 +3,8 @@ from typing import Any, List
 
 import pytest
 
-from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
+from np_shipped_imagecrawlers.echo import Echo
 
 
 class EchoConfigImageUriTest(unittest.TestCase):

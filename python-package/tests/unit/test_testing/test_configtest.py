@@ -6,11 +6,11 @@ import pytest
 from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import ImageCrawlerConfig, ImageCrawlerInfo
 from nichtparasoup.imagecrawler import BaseImageCrawler
-from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import (
     ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException, _default_probe_callback,
 )
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
+from np_shipped_imagecrawlers.echo import Echo  # TODO use own mock instead
 
 from . import PROBE_DELAY_IN_TESTS
 
