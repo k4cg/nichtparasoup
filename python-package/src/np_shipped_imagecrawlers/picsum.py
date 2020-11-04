@@ -2,7 +2,7 @@ __all__ = ["Picsum"]
 
 from typing import Any, Dict
 
-from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo
 
 
 class Picsum(BaseImageCrawler):

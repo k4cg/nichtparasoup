@@ -6,6 +6,8 @@ Unreleased
 
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+* Breaking Changes:
+  * All ImageCrawler implementations were moved from `nichtparasoup.imagecrawlers` to `np_shipped_imagecrawlers`.
 
 ## 3.0.0a2
 

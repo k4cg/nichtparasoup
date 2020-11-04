@@ -8,13 +8,10 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
 
 from pkg_resources import EntryPoint, iter_entry_points
 
-from .._internals import _log
-from ..core.imagecrawler import BaseImageCrawler
-from .echo import Echo
-from .instagram import InstagramHashtag, InstagramProfile
-from .picsum import Picsum
-from .pr0gramm import Pr0gramm
-from .reddit import Reddit
+from np_shipped_imagecrawlers import Echo, InstagramHashtag, InstagramProfile, Picsum, Pr0gramm, Reddit
+
+from ._internals import _log
+from .core.imagecrawler import BaseImageCrawler
 
 _ImagecrawlerName = str
 _ImagecrawlerClass = Type[BaseImageCrawler]
