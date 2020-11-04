@@ -1,4 +1,4 @@
-"""All imagecrcrawlers that were shipped with nichtparasoup.
+"""All ImageCrcrawler implementations that were shipped with nichtparasoup.
 """
 
 __all__ = [
