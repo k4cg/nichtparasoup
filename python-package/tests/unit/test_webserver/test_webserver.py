@@ -21,6 +21,8 @@ from .._mocks.mockable_imagecrawler import MockableImageCrawler
 class TestWebserverFunctional:
     # http://werkzeug.palletsprojects.com/en/0.16.x/test/
 
+    _HTTP_METHODS = {'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'}
+
     _KNOWN_WEB_PATHS_JSON_RESPONSE: Set[str] = {
         # all paths that are expected to deliver JSON response
         '/get',
@@ -47,6 +49,14 @@ class TestWebserverFunctional:
     def client(self) -> _ClientType:
         sut = WebServer(Server(NPCore()), '', 0)
         return Client(sut, Response)
+
+    @pytest.mark.parametrize('path', list(_KNOWN_WEB_PATHS))
+    @pytest.mark.parametrize('method', list(_HTTP_METHODS))
+    def test_http_method(self, path: str, method: str, client: _ClientType) -> None:
+        # act
+        response = client.open(path, method=method)
+        # assert
+        assert (response.status_code == 405) is (method != 'GET')
 
     def test_unknown(self, client: _ClientType) -> None:
         # arrange

@@ -67,18 +67,22 @@ class WebServer:
         :param port: The port to bind to.
         :param developer_mode: Run in insecure web-developer mode; sets CORS to "*".
         """
-        self.developer_mode = developer_mode
-        self.imageserver = imageserver
-        self.hostname = hostname
-        self.port = port
-        self.url_map = Map([
+        routes = [
             Rule('/', endpoint='root'),
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
             Rule('/status/<what>', endpoint='status_what'),
             Rule('/reset', endpoint='reset'),
             Rule('/css/sourceIcons.css', endpoint='sourceicons')
-        ])
+        ]
+        for route in routes:
+            # would have set 'GET' in constructor, but this would also set 'HEAD' - which is not supported
+            route.methods = {'GET'}
+        self.developer_mode = developer_mode
+        self.imageserver = imageserver
+        self.hostname = hostname
+        self.port = port
+        self.url_map = Map(routes)
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)

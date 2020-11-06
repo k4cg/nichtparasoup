@@ -6,6 +6,8 @@ Unreleased
 
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
+* Changes
+  * API supports HTTP method "GET" only. Did support all methods in the past. 
 
 ## 3.0.0a2
 
