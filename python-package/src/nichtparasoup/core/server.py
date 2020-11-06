@@ -5,7 +5,6 @@ __all__ = ["Server", "ImageResponse", "ResetResponse",
            ]
 
 import sys
-from copy import copy
 from threading import Event, Lock, Thread
 from time import sleep, time
 from typing import Any, Dict, List, Optional, Set, Type, TypeVar, Union
@@ -71,16 +70,18 @@ class Server:
         self._locks = _ServerLocks()
         self.__running = False
 
+    def has_image(self) -> bool:
+        return any(crawler.images for crawler in self.core.crawlers)
+
     def get_image(self) -> Optional[ImageResponse]:
-        crawler = self.core.crawlers.get_random()
-        if not crawler:
-            return None
-        image = copy(crawler.pop_random_image())
-        if not image:
-            return None
-        with self._locks.stats_get_image:
-            self.stats.count_images_served += 1
-        return ImageResponse(image, crawler)
+        for crawler in self.core.crawlers.shuffle():
+            image = crawler.pop_random_image()
+            if image is None:
+                continue
+            with self._locks.stats_get_image:
+                self.stats.count_images_served += 1
+            return ImageResponse(image, crawler)
+        return None
 
     @staticmethod
     def _log_refill_crawler(crawler: Crawler, refilled: int) -> None:
