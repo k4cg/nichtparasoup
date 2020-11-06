@@ -82,13 +82,13 @@ class WebServer:
         self.imageserver = imageserver
         self.hostname = hostname
         self.port = port
-        self.url_map = Map(routes)
+        self._url_map = Map(routes)
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)
 
     def dispatch_request(self, request: Request) -> Union[Response, HTTPException]:
-        adapter = self.url_map.bind_to_environ(request.environ)
+        adapter = self._url_map.bind_to_environ(request.environ)
         try:
             endpoint, values = adapter.match()
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)

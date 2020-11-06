@@ -114,7 +114,7 @@ class TestWebserverDispatch:
         response_exp = Response()
         sut.on_dummy = lambda *_, **__: response_exp  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
-        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act
         response_got = sut.dispatch_request(request)
         # assert
@@ -130,7 +130,7 @@ class TestWebserverDispatch:
         request = Request({})
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
-        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act
         response_got = sut.dispatch_request(request)
         # assert
@@ -144,7 +144,7 @@ class TestWebserverDispatch:
         request = Request({})
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
-        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act
         response_got = sut.dispatch_request(request)
         # assert
@@ -158,7 +158,7 @@ class TestWebserverDispatch:
         request = Request({})
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
-        sut.url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
+        sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act & assert
         with pytest.raises(BaseException):
             sut.dispatch_request(request)
