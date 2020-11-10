@@ -183,9 +183,9 @@ class ImagecrawlerProbeResult:
         if self.images is not None and other.images is not None:
             images = ImageCollection(self.images | other.images)
         elif self.images is not None:
-            images = ImageCollection(self.images)
+            images = self.images.copy()
         elif other.images is not None:
-            images = ImageCollection(other.images)
+            images = other.images.copy()
         return ImagecrawlerProbeResult(
             images,
             self.errors + other.errors

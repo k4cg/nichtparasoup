@@ -124,7 +124,6 @@ class Crawler:
 
 
 class CrawlerCollection(List[Crawler]):
-
     def copy(self) -> 'CrawlerCollection':
         return CrawlerCollection(super().copy())
 

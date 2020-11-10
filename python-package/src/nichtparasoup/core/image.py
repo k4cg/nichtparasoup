@@ -81,4 +81,5 @@ class Image:
 
 
 class ImageCollection(Set[Image]):
-    ...
+    def copy(self) -> 'ImageCollection':
+        return ImageCollection(super().copy())
