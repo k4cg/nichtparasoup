@@ -53,10 +53,11 @@ class TestWebserverFunctional:
     @pytest.mark.parametrize('path', list(_KNOWN_WEB_PATHS))
     @pytest.mark.parametrize('method', list(_HTTP_METHODS))
     def test_http_method(self, path: str, method: str, client: _ClientType) -> None:
+        expect_405 = method != 'GET'
         # act
         response = client.open(path, method=method)
         # assert
-        assert (response.status_code == 405) is (method != 'GET')
+        assert (response.status_code == 405) is expect_405
 
     def test_unknown(self, client: _ClientType) -> None:
         # arrange

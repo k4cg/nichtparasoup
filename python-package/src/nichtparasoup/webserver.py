@@ -67,7 +67,7 @@ class WebServer:
         :param port: The port to bind to.
         :param developer_mode: Run in insecure web-developer mode; sets CORS to "*".
         """
-        routes = [
+        rules = [
             Rule('/', endpoint='root'),
             Rule('/get', endpoint='get'),
             Rule('/status', endpoint='status'),
@@ -75,14 +75,14 @@ class WebServer:
             Rule('/reset', endpoint='reset'),
             Rule('/css/sourceIcons.css', endpoint='sourceicons')
         ]
-        for route in routes:
+        for rule in rules:
             # would have set 'GET' in constructor, but this would also set 'HEAD' - which is not supported
-            route.methods = {'GET'}
+            rule.methods = {'GET'}
         self.developer_mode = developer_mode
         self.imageserver = imageserver
         self.hostname = hostname
         self.port = port
-        self._url_map = Map(routes)
+        self._url_map = Map(rules)
 
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)
@@ -112,7 +112,7 @@ class WebServer:
         return response(environ, start_response)
 
     def on_root(self, _: Request) -> Response:
-        # relative-path is valid via https://tools.ietf.org/html/rfc3986#section-4.2
+        # relative path is valid via https://tools.ietf.org/html/rfc3986#section-4.2
         forward = redirect(self._STATIC_INDEX, code=302, Response=Response)
         # to prevent extensive (reverse proxy) header parsing, it is kept as a relative-path
         forward.autocorrect_location_header = False
@@ -131,7 +131,7 @@ class WebServer:
             },
         }) if response else _SimpleJsonResponse({
             'status': 404,
-            'desc': 'Server is exhausted. Come back later.'
+            'desc': 'Server is exhausted. Come back later.',
         }, status='404 EXHAUSTED')
 
     _STATUS_WHATS: Dict[str, Type[StatusLike]] = {

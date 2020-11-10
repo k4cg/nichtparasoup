@@ -1,51 +1,97 @@
 import unittest
 from time import time
+from typing import Tuple
 from unittest.mock import MagicMock
 
-from nichtparasoup.core import NPCore
+import pytest
+
+from nichtparasoup.core import Crawler, NPCore
 from nichtparasoup.core.image import Image, ImageCollection
 from nichtparasoup.core.server import Server
 
 from .._mocks.mockable_imagecrawler import MockableImageCrawler
 
 
-class ServerGetImageTest(unittest.TestCase):
+@pytest.fixture()
+def empty_server() -> Server:
+    return Server(NPCore())
 
-    def setUp(self) -> None:
-        self.server = Server(NPCore())
 
-    def tearDown(self) -> None:
-        del self.server
+@pytest.fixture()
+def server_empty_imagecrawler() -> Server:
+    server = Server(NPCore())
+    imagecrawler = MockableImageCrawler()
+    server.core.add_imagecrawler(imagecrawler)
+    return server
 
-    def test_get_image_no_crawler(self) -> None:
+
+@pytest.fixture()
+def server_crawler_image() -> Tuple[Server, Crawler, Image]:
+    image = Image(uri='testURI', is_generic=True, source='testSource', bla=1, foo="bar")
+    server = Server(NPCore())
+    server.core.add_imagecrawler(MockableImageCrawler())
+    crawler = server.core.crawlers[0]
+    crawler.images = ImageCollection([image])
+    crawler.get_random_image = MagicMock(return_value=image)  # type: ignore[assignment]
+    crawler.pop_random_image = MagicMock(return_value=image)  # type: ignore[assignment]
+    return server, crawler, image
+
+
+class TestServerGetImageTest:
+
+    def test_get_image_no_crawler(self, empty_server: Server) -> None:
+        assert len(empty_server.core.crawlers) == 0
         # act
-        image = self.server.get_image()
+        image = empty_server.get_image()
         # assert
-        self.assertIsNone(image)
+        assert image is None
 
-    def test_get_image_no_images(self) -> None:
-        # arrange
-        self.server.core.add_imagecrawler(MockableImageCrawler())
+    def test_get_image_no_images(self, server_empty_imagecrawler: Server) -> None:
+        assert len(server_empty_imagecrawler.core.crawlers) > 0
+        assert all(len(c.images) == 0 for c in server_empty_imagecrawler.core.crawlers)
         # act
-        image = self.server.get_image()
+        image = server_empty_imagecrawler.get_image()
         # assert
-        self.assertIsNone(image)
+        assert image is None
 
-    def test_get_image_some_images(self) -> None:
-        # arrange
-        image_crawled = Image(uri='testURI', is_generic=True, source='testSource', bla=1, foo="bar")
-        imagecrawler = MockableImageCrawler()
-        imagecrawler.crawl = MagicMock(return_value=ImageCollection([image_crawled]))  # type: ignore[assignment]
-        self.server.core.add_imagecrawler(imagecrawler)
-        crawler = self.server.core.crawlers[0]
+    def test_get_image_some_images(self, server_crawler_image: Tuple[Server, Crawler, Image]) -> None:
+        server, crawler, image = server_crawler_image
+        assert len(server.core.crawlers) > 0
+        assert any(len(c.images) > 0 for c in server.core.crawlers)
         # act
-        self.server.core.crawlers[0].crawl()
-        image_got = self.server.get_image()
+        result = server.get_image()
         # assert
-        self.assertIsNotNone(image_got)
-        if image_got:  # needed to trick mypy
-            self.assertEqual(image_crawled, image_got.image)
-            self.assertEqual(crawler, image_got.crawler)
+        assert result is not None
+        if result:  # needed to trick mypy
+            assert result.image == image
+            assert result.crawler == crawler
+
+
+class TestServerHasImageTest:
+
+    def test_get_image_no_crawler(self, empty_server: Server) -> None:
+        assert len(empty_server.core.crawlers) == 0
+        # act
+        has_image = empty_server.has_image()
+        # assert
+        assert has_image is False
+
+    def test_get_image_no_images(self, server_empty_imagecrawler: Server) -> None:
+        assert len(server_empty_imagecrawler.core.crawlers) > 0
+        assert all(len(c.images) == 0 for c in server_empty_imagecrawler.core.crawlers)
+        # act
+        has_image = server_empty_imagecrawler.has_image()
+        # assert
+        assert has_image is False
+
+    def test_get_image_some_images(self, server_crawler_image: Tuple[Server, Crawler, Image]) -> None:
+        server, crawler, image = server_crawler_image
+        assert len(server.core.crawlers) > 0
+        assert any(len(c.images) > 0 for c in server.core.crawlers)
+        # act
+        has_image = server.has_image()
+        # assert
+        assert has_image is True
 
 
 class ServerResetTest(unittest.TestCase):

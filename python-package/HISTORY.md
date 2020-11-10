@@ -7,7 +7,12 @@ Unreleased
 -- see the [milestone tracking at github](https://github.com/k4cg/nichtparasoup/milestone/2).
 
 * Changes
-  * API supports HTTP method "GET" only. Did support all methods in the past. 
+  * API supports HTTP method "GET" only. Did support all HTTP methods in the past. 
+* Added
+  * New method `nichtparasoup.server.has_image() -> bool`.
+* Fixes
+  * API `/get` no longer responds false "404 EXHAUSTED" HTTP Status code.
+  * `nichtparasoup.server.get_image()` no longer responds false `None`.
 
 ## 3.0.0a2
 

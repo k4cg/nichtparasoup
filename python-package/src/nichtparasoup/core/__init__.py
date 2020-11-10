@@ -4,7 +4,7 @@ from random import choice, choices
 from threading import Thread
 from time import sleep
 from types import MethodType
-from typing import Callable, List, Optional, Set, Union
+from typing import Callable, Generator, List, Optional, Set, Union
 from weakref import ReferenceType, WeakMethod
 
 from .image import Image, ImageCollection, ImageUri
@@ -125,6 +125,9 @@ class Crawler:
 
 class CrawlerCollection(List[Crawler]):
 
+    def copy(self) -> 'CrawlerCollection':
+        return CrawlerCollection(super().copy())
+
     def get_random(self) -> Optional[Crawler]:
         crawlers = self.copy()
         if not crawlers:
@@ -134,6 +137,15 @@ class CrawlerCollection(List[Crawler]):
             weights=[crawler.weight for crawler in crawlers],
             k=1
         )[0]
+
+    def shuffle(self) -> Generator[Crawler, None, None]:
+        crawlers = self.copy()
+        while crawlers:
+            crawler = crawlers.get_random()
+            if crawler is None:
+                continue
+            yield crawler
+            crawlers.remove(crawler)
 
 
 class NPCore:
