@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements/tests.in
 #
-attrs==20.2.0             # via pytest
+attrs==20.3.0             # via pytest
 coverage==5.3             # via -r requirements/tests.in, pytest-cov
 future==0.18.2            # via junitparser
 iniconfig==1.1.1          # via pytest
