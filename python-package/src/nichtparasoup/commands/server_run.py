@@ -33,7 +33,7 @@ def main(config: Config, *, develop: bool = False) -> None:  # pragma: no cover
 
 def _param_get_config(_: Context, param: Parameter,
                       config_file: Optional[str]
-                      ) -> Config:  # pragma: no cover
+                      ) -> Config:
     try:
         return get_config(config_file)
     except Exception as ex:

@@ -89,7 +89,7 @@ def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False
 def probe_config(config: Config, *,
                  retries: int, delay: float,
                  fail_fast: bool = False,
-                 verbose: bool = False) -> None:  # pragma: no cover
+                 verbose: bool = False) -> None:
     # TODO implement a progress bar ?
     config_probe_start = time()
     config_probe_results = ConfigTest(config).probe(

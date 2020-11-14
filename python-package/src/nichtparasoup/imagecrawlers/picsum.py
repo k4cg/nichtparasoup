@@ -16,8 +16,8 @@ class Picsum(BaseImageCrawler):
         return ImageCrawlerInfo(
             description='Find images from https://picsum.photos',
             config={
-                'width': 'how many pixels of the image to find should be wide',
-                'height': 'how many pixels of the image to find should be high',
+                'width': 'desired width in pixels',
+                'height': 'desired height in pixels',
             },
             icon_url='https://picsum.photos/assets/images/favicon/favicon-32x32.png',
         )

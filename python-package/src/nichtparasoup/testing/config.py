@@ -74,6 +74,9 @@ class ConfigTest:
 
     def check_duplicates(self) -> None:
         """Check for duplicate imagecrawlers in a config.
+
+        This represents a functional test.
+
          :raise DuplicateImagecrawlersException: when duplicates were found
          """
         duplicates = self.find_duplicates()
@@ -82,6 +85,9 @@ class ConfigTest:
 
     def find_duplicates(self) -> List[BaseImageCrawler]:
         """Find duplicate imagecrawlers in a config.
+
+        This represents a functional test method.
+
          :return: duplicates
          """
         imagecrawlers: List[BaseImageCrawler] = []
@@ -104,6 +110,9 @@ class ConfigTest:
               imagecrawler_test_class: Type[ImageCrawlerTest] = ImageCrawlerTest
               ) -> ConfigProbeResults:
         """Probe a config.
+
+        This represents a functional test.
+
         :param delay: delay to wait between each crawler probes
         :param retries: number of retries in case an error occurred
         :param callback: callback function

@@ -8,8 +8,8 @@ from ..imagecrawlers import get_imagecrawlers
 from ._internals import _cli_option_debug
 
 
-def main() -> None:  # pragma: no cover
-    imagecrawlers = get_imagecrawlers()  # may trigger debug output
+def main() -> None:
+    imagecrawlers = get_imagecrawlers()
     if len(imagecrawlers) == 0:
         raise ClickException('No ImageCrawler found.')
     for imagecrawler in sorted(imagecrawlers.names()):

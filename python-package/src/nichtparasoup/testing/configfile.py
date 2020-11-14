@@ -11,6 +11,8 @@ class ConfigFileTest:
 
     def check_file(self) -> None:
         """Do all necessary tests a file might need.
+
+        This represents a functional test.
         """
         config = parse_yaml_file(self.config_file)
         tester = ConfigTest(config)

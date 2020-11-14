@@ -10,17 +10,21 @@ from ..config import ConfigFilePath, dump_defaults
 from ._internals import _cli_option_debug
 
 
-def main(file: ConfigFilePath, *, overwrite: Optional[bool] = None) -> None:  # pragma: no cover
+def main(file: ConfigFilePath, *, overwrite: Optional[bool] = None) -> None:
     _log('debug', 'ConfigFile: %r', file)
     if isfile(file):
         if overwrite is None:
-            confirm('File already exists, overwrite?', default=False, abort=True)
-        elif not overwrite:
+            overwrite = confirm(
+                'File already exists, overwrite?',
+                default=False,
+                abort=True
+            )
+        if not overwrite:
             raise BadParameter('File already exists.', param_hint='file')
     _write_file(file)
 
 
-def _write_file(file: ConfigFilePath) -> None:  # pragma: no cover
+def _write_file(file: ConfigFilePath) -> None:
     try:
         dump_defaults(file)
     except Exception as ex:

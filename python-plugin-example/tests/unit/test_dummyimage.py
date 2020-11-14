@@ -1,15 +1,13 @@
-import unittest
-from typing import Any, List
+from typing import Any
 
 import pytest
-from nichtparasoup.testing.imagecrawler import ImageCrawlerLoaderTest
 
 from nichtparasoup_imagecrawler_dummyimage import DummyImage
 
 _DUMMYIMAGE_RIGHT_CONFIG = {'width': 800, 'height': 600}
 
 
-class DummyImageConfigCorrect(unittest.TestCase):
+class TestDummyImageConfigCorrect:
 
     def test__check_config_right_value(self) -> None:
         # arrange
@@ -17,105 +15,101 @@ class DummyImageConfigCorrect(unittest.TestCase):
         # act
         config_out = DummyImage.check_config(config_in)
         # assert
-        self.assertDictEqual(config_in, config_out)
+        assert config_out == config_in
 
 
-class DummyImageConfigWidthTest(unittest.TestCase):
-
-    def setUp(self) -> None:
-        self._dummyimage_right_config_wo_width = _DUMMYIMAGE_RIGHT_CONFIG.copy()
-        del self._dummyimage_right_config_wo_width["width"]
-
-    def tearDown(self) -> None:
-        del self._dummyimage_right_config_wo_width
+class TestDummyImageConfigWidth:
 
     def test__check_config_missing_value(self) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        del config_in['width']
+        # act & assert
+        with pytest.raises(KeyError):
+            DummyImage.check_config(config_in)
+
+    @pytest.mark.parametrize(
+        'wrong_type',
+        [None, True, '', [], (), {}, object()],
+        ids=type
+    )
+    def test__check_config_wrong_type(self, wrong_type: Any) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        config_in['width'] = wrong_type
         # assert
-        with self.assertRaises(KeyError):
-            DummyImage.check_config(self._dummyimage_right_config_wo_width)
+        with pytest.raises(TypeError):
+            DummyImage.check_config(config_in)
 
-    def test__check_config_wrong_type(self) -> None:
-        wrong_types: List[Any] = [None, True, "", [], (), {}, self]
-        for wrong_type in wrong_types:
-            # arrange
-            config_in = self._dummyimage_right_config_wo_width
-            config_in["width"] = wrong_type
-            # assert
-            with self.assertRaises(TypeError, msg=repr(config_in)):
-                DummyImage.check_config(config_in)
-
-    def test__check_config_wrong_value(self) -> None:
-        wrong_values = [0, -1]
-        for wrong_value in wrong_values:
-            # arrange
-            config_in = self._dummyimage_right_config_wo_width
-            config_in["width"] = wrong_value
-            # assert
-            with self.assertRaises(ValueError, msg=repr(config_in)):
-                DummyImage.check_config(config_in)
+    @pytest.mark.parametrize(
+        'wrong_value',
+        [0, -1],
+        ids=['zero', 'negative']
+    )
+    def test__check_config_wrong_value(self, wrong_value: int) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        config_in['width'] = wrong_value
+        # assert
+        with pytest.raises(ValueError):
+            DummyImage.check_config(config_in)
 
 
-class DummyImageConfigHeightTest(unittest.TestCase):
-
-    def setUp(self) -> None:
-        self._dummyimage_right_config_wo_height = _DUMMYIMAGE_RIGHT_CONFIG.copy()
-        del self._dummyimage_right_config_wo_height["height"]
-
-    def tearDown(self) -> None:
-        del self._dummyimage_right_config_wo_height
+class TestDummyImageConfigHeight:
 
     def test__check_config_missing_value(self) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        del config_in['height']
+        # act & assert
+        with pytest.raises(KeyError):
+            DummyImage.check_config(config_in)
+
+    @pytest.mark.parametrize(
+        'wrong_type',
+        [None, True, '', [], (), {}, object()],
+        ids=type
+    )
+    def test__check_config_wrong_type(self, wrong_type: Any) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        config_in['height'] = wrong_type
         # assert
-        with self.assertRaises(KeyError):
-            DummyImage.check_config(self._dummyimage_right_config_wo_height)
+        with pytest.raises(TypeError):
+            DummyImage.check_config(config_in)
 
-    def test__check_config_wrong_type(self) -> None:
-        wrong_types: List[Any] = [None, True, "", [], (), {}, self]
-        for wrong_type in wrong_types:
-            # arrange
-            config_in = self._dummyimage_right_config_wo_height
-            config_in["height"] = wrong_type
-            # assert
-            with self.assertRaises(TypeError, msg=repr(config_in)):
-                DummyImage.check_config(config_in)
-
-    def test__check_config_wrong_value(self) -> None:
-        wrong_values = [0, -1]
-        for wrong_value in wrong_values:
-            # arrange
-            config_in = self._dummyimage_right_config_wo_height
-            config_in["height"] = wrong_value
-            # assert
-            with self.assertRaises(ValueError, msg=repr(config_in)):
-                DummyImage.check_config(config_in)
+    @pytest.mark.parametrize(
+        'wrong_value',
+        [0, -1],
+        ids=['zero', 'negative']
+    )
+    def test__check_config_wrong_value(self, wrong_value: int) -> None:
+        # arrange
+        config_in = _DUMMYIMAGE_RIGHT_CONFIG.copy()
+        config_in['height'] = wrong_value
+        # assert
+        with pytest.raises(ValueError):
+            DummyImage.check_config(config_in)
 
 
-class DummyImageCrawlTest(unittest.TestCase):
+class TestDummyImageCrawl:
 
     def test_crawl(self) -> None:
         # arrange
         crawler = DummyImage(**_DUMMYIMAGE_RIGHT_CONFIG)
         # act
-        images_crawled = crawler.crawl()
-        images_crawled_len = len(images_crawled)
-        image_crawled = images_crawled.pop() if images_crawled_len else None
+        images_crawled = crawler._crawl()
         # assert
-        self.assertEqual(images_crawled_len, crawler._BUNCH, "crawler did not finish")
-        if image_crawled:
-            self.assertTrue(image_crawled.is_generic, 'this is not generic')
+        assert len(images_crawled) == crawler._BUNCH, 'crawler did not finish'
+        for image_crawled in images_crawled:
+            assert image_crawled.is_generic is True, 'this is not generic'
 
 
-class DummyImageDescriptionTest(unittest.TestCase):
+class TestDummyImageDescription:
 
     def test_description_config(self) -> None:
         # act
         description = DummyImage.info()
         # assert
         assert isinstance(description.config, dict)
-        for config_key in _DUMMYIMAGE_RIGHT_CONFIG.keys():
-            self.assertIn(config_key, description.config)
-
-
-@pytest.mark.no_cover
-def test_loader() -> None:
-    assert ImageCrawlerLoaderTest().check('DummyImage', DummyImage)
+        assert _DUMMYIMAGE_RIGHT_CONFIG.keys() == description.config.keys()

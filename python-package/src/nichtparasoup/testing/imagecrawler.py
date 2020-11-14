@@ -107,6 +107,9 @@ class ImageCrawlerLoaderTest:
 
     def check(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
         """
+
+        This represents an integration test.
+
         :param ic_name: ImageCrawler name
         :param ic_class: ImageCrawler class
         :return:
@@ -119,6 +122,9 @@ class ImageCrawlerLoaderTest:
 
     def check_get_imagecrawler_class(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
         """
+
+        This represents an integration test.
+
         :param ic_name: ImageCrawler name
         :param ic_class: ImageCrawler class
         :return: always ``True``
@@ -134,6 +140,9 @@ class ImageCrawlerLoaderTest:
 
     def check_get_imagecrawler_name(self, ic_name: str, ic_class: Type[BaseImageCrawler]) -> bool:
         """
+
+        This represents an integration test.
+
         :param ic_name: ImageCrawler name
         :param ic_class: ImageCrawler class
         :return: always ``True``
@@ -214,6 +223,15 @@ class ImageCrawlerTest:
               retry_delay: float = PROBE_DELAY_DEFAULT,
               retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
               ) -> ImagecrawlerProbeResult:
+        """Probe an image crawler.
+
+        This represents a functional test.
+
+        :param retries: number of retries in case an error occurred
+        :param retry_delay: delay to wait between each crawler probes
+        :param retry_callback: callback function
+        :return: probe result
+        """
         return self.probe_until_success(
             retries=retries,
             retry_delay=retry_delay,
@@ -225,7 +243,10 @@ class ImageCrawlerTest:
                             retry_delay: float = PROBE_DELAY_DEFAULT,
                             retry_callback: Optional[ImagecrawlerProbeRetryCallback] = None
                             ) -> ImagecrawlerProbeResult:
-        """
+        """Probe an image crawler until success.
+
+        This represents a functional test.
+
         :param retries: Number of retries if probing failed.
         :param retry_delay: Delay between retries.
         :param retry_callback: Is called when a retry is triggered. Retry will be omitted if callable returns ``False``.
@@ -242,8 +263,11 @@ class ImageCrawlerTest:
         return result
 
     def probe_once(self) -> ImagecrawlerProbeResult:
-        """
-        :return: tuple(crawled images, crawl error, whether to retry)
+        """Probe an image crawler once.
+
+        This represents a functional test.
+
+        :return: crawled images and crawler errors.
         """
         try:
             images = self.imagecrawler._crawl()
