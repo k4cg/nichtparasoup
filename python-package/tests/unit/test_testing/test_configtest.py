@@ -99,7 +99,7 @@ class ConfigTestProbeTest(unittest.TestCase):
 
         callback_args = []
 
-        def callback(r: ConfigProbeCallbackReason, ic: BaseImageCrawler, ex: Optional[BaseException]) -> Optional[bool]:
+        def callback(r: ConfigProbeCallbackReason, ic: BaseImageCrawler, ex: Optional[Exception]) -> Optional[bool]:
             callback_args.append((r, ic, ex))
             return None
 
@@ -141,7 +141,7 @@ class ConfigTestProbeTest(unittest.TestCase):
 
         callback_args = []
 
-        def callback(r: ConfigProbeCallbackReason, ic: BaseImageCrawler, ex: Optional[BaseException]) -> Optional[bool]:
+        def callback(r: ConfigProbeCallbackReason, ic: BaseImageCrawler, ex: Optional[Exception]) -> Optional[bool]:
             callback_args.append((r, ic, ex))
             return False if r is ConfigProbeCallbackReason.failure and ic == echo_foo_bar else None
 
@@ -162,7 +162,7 @@ class ConfigTestMakeProbeRetryCallbackTest(unittest.TestCase):
         # arrange
         retry_callback = ConfigTest._make_probe_retry_callback(lambda _, __, ___: issued)
         # act
-        ret = retry_callback(Echo(image_uri='https://foo.bar'), BaseException())
+        ret = retry_callback(Echo(image_uri='https://foo.bar'), Exception())
         # assert
         self.assertIs(expected, ret)
 

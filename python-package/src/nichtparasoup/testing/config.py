@@ -32,7 +32,7 @@ class ConfigProbeCallbackReason(Enum):
     failure = auto()
 
 
-ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Optional[BaseException]], Optional[bool]]
+ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Optional[Exception]], Optional[bool]]
 """
 :param: reason why called
 :param: imagecrawler processed
@@ -43,7 +43,7 @@ ConfigProbeCallback = Callable[[ConfigProbeCallbackReason, BaseImageCrawler, Opt
 
 def _default_probe_callback(reason: ConfigProbeCallbackReason,
                             crawler: BaseImageCrawler,
-                            error: Optional[BaseException]
+                            error: Optional[Exception]
                             ) -> Optional[bool]:
     """Default implementation of ``ConfigProbeCallback``
 
@@ -99,7 +99,7 @@ class ConfigTest:
 
     @staticmethod
     def _make_probe_retry_callback(callback: ConfigProbeCallback) -> ImagecrawlerProbeRetryCallback:
-        def retry_callback(imagecrawler: BaseImageCrawler, ex: BaseException) -> bool:
+        def retry_callback(imagecrawler: BaseImageCrawler, ex: Exception) -> bool:
             return callback(ConfigProbeCallbackReason.retry, imagecrawler, ex) is not False
 
         return retry_callback

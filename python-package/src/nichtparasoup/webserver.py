@@ -196,7 +196,7 @@ class WebServer:
                 processes=1, threaded=True,
                 use_reloader=False,
                 use_debugger=False)
-        except BaseException as ex:
+        except Exception as ex:
             _log('debug', 'Handled exception: %s', ex, exc_info=ex)
             _log('error', ' * Error occurred. stopping everything')
             raise ex

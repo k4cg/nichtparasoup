@@ -160,7 +160,7 @@ class ImageCrawlerLoaderTest:
 PROBE_DELAY_DEFAULT: float = 0.05
 PROBE_RETRIES_DEFAULT: int = 2
 
-ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, BaseException], bool]
+ImagecrawlerProbeRetryCallback = Callable[[BaseImageCrawler, Exception], bool]
 """ImageCrawlerTest probe callback.
 See :ref:``ImageCrawlerTest.probe``
 :param: imagecrawler
@@ -179,7 +179,7 @@ class ImagecrawlerProbeResult:
 
     def __init__(self,
                  images: Optional[ImageCollection],
-                 errors: List[BaseException]
+                 errors: List[Exception]
                  ) -> None:
         self.images = images
         self.errors = errors
@@ -271,6 +271,6 @@ class ImageCrawlerTest:
         """
         try:
             images = self.imagecrawler._crawl()
-        except BaseException as ex:
+        except Exception as ex:
             return ImagecrawlerProbeResult(None, [ex])
         return ImagecrawlerProbeResult(images, [])

@@ -82,5 +82,5 @@ def get_config(config_file: Optional[ConfigFilePath] = None) -> Config:
         return get_defaults()
     try:
         return parse_yaml_file(config_file)
-    except BaseException as ex:
+    except Exception as ex:
         raise ValueError(f'invalid config file {config_file!r}: {ex}') from ex

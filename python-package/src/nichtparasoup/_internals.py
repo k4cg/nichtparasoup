@@ -54,7 +54,7 @@ def _message(message: Union[str, List[str]], color: Optional[str] = None, file: 
     file.write(message + _LINEBREAK)
 
 
-def _message_exception(exception: BaseException, file: Optional[TextIO] = None) -> None:
+def _message_exception(exception: Exception, file: Optional[TextIO] = None) -> None:
     if not file:
         file = sys.stderr
     exception_name = type(exception).__name__

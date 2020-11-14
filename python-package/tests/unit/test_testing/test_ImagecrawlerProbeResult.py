@@ -19,7 +19,7 @@ class TestImagecrawlerProbeResultAdd:
 
     def test_errors(self) -> None:
         # arrange
-        errors = [BaseException(), Exception(), TypeError(), BrokenPipeError()]
+        errors = [Exception(), TypeError(), BrokenPipeError()]
         one = ImagecrawlerProbeResult(None, errors[:2])
         other = ImagecrawlerProbeResult(None, errors[2:])
         # act

@@ -78,7 +78,7 @@ def make_probe_status_callback(*, fail_fast: bool = False, verbose: bool = False
     }
 
     def callback(reason: ConfigProbeCallbackReason, imagecrawler: BaseImageCrawler,
-                 _: Optional[BaseException]) -> Optional[bool]:
+                 _: Optional[Exception]) -> Optional[bool]:
         apply = callback_behaviour[reason]
         _print_if(verbose, apply.print_string.format(imagecrawler=imagecrawler), nl=apply.print_newline)
         return apply.return_value

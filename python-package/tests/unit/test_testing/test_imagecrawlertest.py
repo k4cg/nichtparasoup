@@ -75,7 +75,7 @@ class TestImageCrawlerProbeOnce:
     def test_failed(self) -> None:
         # arrange
         tester = ImageCrawlerTest(Echo(image_uri='https://foo.bar'))
-        error = BaseException()
+        error = Exception()
 
         def fake_crawl() -> ImageCollection:
             raise error
@@ -153,7 +153,7 @@ class ImageCrawlerProbeUntilSuccessTest(unittest.TestCase):
         crawled_retries = -1
         retry_callback_args = []
 
-        def retry_callback(ic: BaseImageCrawler, ex: BaseException) -> bool:
+        def retry_callback(ic: BaseImageCrawler, ex: Exception) -> bool:
             retry_callback_args.append((ic, ex))
             return True
 
@@ -183,7 +183,7 @@ class ImageCrawlerProbeUntilSuccessTest(unittest.TestCase):
         retries = 3
         retry_callback_args = []
 
-        def retry_callback(ic: BaseImageCrawler, ex: BaseException) -> bool:
+        def retry_callback(ic: BaseImageCrawler, ex: Exception) -> bool:
             retry_callback_args.append((ic, ex))
             return False
 

@@ -151,17 +151,17 @@ class TestWebserverDispatch:
         # assert
         assert isinstance(response_got, InternalServerError)
 
-    def test_dispatch_request_baseexception(self, sut: WebServer) -> None:
+    def test_dispatch_request_exception(self, sut: WebServer) -> None:
         # arrange
         def on_dummy(*_: Any, **__: Any) -> Response:
-            raise BaseException()
+            raise Exception()
 
         request = Request({})
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
         sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act & assert
-        with pytest.raises(BaseException):
+        with pytest.raises(Exception):
             sut.dispatch_request(request)
 
 
