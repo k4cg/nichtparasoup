@@ -10,7 +10,7 @@ from ..imagecrawlers import get_imagecrawlers
 from ._internals import _cli_option_debug
 
 
-def main(name: str) -> None:  # pragma: no cover
+def main(name: str) -> None:
     imagecrawler_class = get_imagecrawlers().get_class(name)
     if not imagecrawler_class:
         raise BadParameter(f'Unknown imagecrawler {name!r}\n\tSee "imagecrawler list" command for possible values',
@@ -18,7 +18,7 @@ def main(name: str) -> None:  # pragma: no cover
     _print_imagecrawler_info(imagecrawler_class)
 
 
-def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None:   # pragma: no cover
+def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None:
     _log('debug', 'imagecrawler_class = %r', imagecrawler_class)
     bull = ' * '
     imagecrawler_info = imagecrawler_class.info()
@@ -30,11 +30,8 @@ def _print_imagecrawler_info(imagecrawler_class: Type[BaseImageCrawler]) -> None
     if imagecrawler_info.config:
         echo('CONFIG')
         mlen = max(map(len, imagecrawler_info.config.keys()))
-        echo('\n'.join(
-            f'{bull} {key:{mlen}}: {desc}'
-            for key, desc
-            in imagecrawler_info.config.items()
-        ))
+        for key, desc in imagecrawler_info.config.items():
+            echo(f'{bull} {key:{mlen}}: {desc}')
         echo()
 
 
