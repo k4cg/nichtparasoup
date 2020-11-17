@@ -26,13 +26,15 @@ graft tests
 
 include .coveragerc
 include .flake8
+include .isort.cfg
+include .mypy.ini
 include pytest.ini
-include mypy.ini
 include tox.ini
 
 
 # excludes
 
+prune tests/.logs
 global-exclude *_cache/*
 global-exclude __pycache__
 global-exclude *.py[cod]

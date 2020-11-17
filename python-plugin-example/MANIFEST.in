@@ -18,7 +18,7 @@ graft src
 
 # additional files and folders
 
-include INSTALL
+include LICENSE INSTALL
 
 graft docs
 graft examples
@@ -26,8 +26,9 @@ graft tests
 
 include .coveragerc
 include .flake8
+include .isort.cfg
+include .mypy.ini
 include pytest.ini
-include mypy.ini
 include tox.ini
 
 
