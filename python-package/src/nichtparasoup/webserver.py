@@ -87,28 +87,27 @@ class WebServer:
     def __call__(self, environ: Dict[str, Any], start_response: Any) -> Any:  # pragma: no cover
         return self.wsgi_app(environ, start_response)
 
-    def dispatch_request(self, request: Request) -> Union[Response, HTTPException]:
+    def dispatch_request(self, request: Request) -> Response:
         adapter = self._url_map.bind_to_environ(request.environ)
         try:
             endpoint, values = adapter.match()
             response: Response = getattr(self, f'on_{endpoint}')(request, **values)
-        except HTTPException as ex:
-            return ex
-        except Exception as ex:
-            _log('debug', 'Handled exception: %s', ex, exc_info=ex)
-            return InternalServerError(original_exception=ex)
-        else:
             return response
+        except HTTPException as ex:
+            _log('debug', 'Handled expected exception: %s', ex, exc_info=ex)
+            raise ex
+        except Exception as ex:
+            _log('debug', 'Handled unexpected exception: %s', ex, exc_info=ex)
+            raise InternalServerError(original_exception=ex) from ex
 
     def wsgi_app(self, environ: Dict[str, Any], start_response: Any) -> Any:
         request = Request(environ)
         response = self.dispatch_request(request)
-        if isinstance(response, Response):
-            response.cache_control.no_cache = True
-            response.cache_control.no_store = True
-            if self.developer_mode:
-                # via `werkzeug.wrappers.CORSResponseMixin`
-                response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
+        response.cache_control.no_cache = True
+        response.cache_control.no_store = True
+        if self.developer_mode:
+            # via `werkzeug.wrappers.CORSResponseMixin`
+            response.access_control_allow_origin = '*'  # type: ignore[attr-defined]
         return response(environ, start_response)
 
     def on_root(self, _: Request) -> Response:

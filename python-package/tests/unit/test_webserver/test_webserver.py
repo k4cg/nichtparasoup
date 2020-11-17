@@ -54,19 +54,23 @@ class TestWebserverFunctional:
     @pytest.mark.parametrize('method', list(_HTTP_METHODS))
     def test_http_method(self, path: str, method: str, client: _ClientType) -> None:
         expect_405 = method != 'GET'
+        error = response = None
         # act
-        response = client.open(path, method=method)
+        try:
+            got = client.open(path, method=method).status_code
+        except HTTPException as error:
+            got = error.code
         # assert
-        assert (response.status_code == 405) is expect_405
+        assert (got == 405) is expect_405
 
     def test_unknown(self, client: _ClientType) -> None:
         # arrange
         path = '/' + str(uuid4())
         assert path not in self._KNOWN_WEB_PATHS
-        # act
-        response = client.get(path)
         # assert
-        assert response.status_code == 404
+        with pytest.raises(NotFound):
+            # act
+            client.get(path)
 
     @pytest.mark.parametrize('path', list(_KNOWN_WEB_PATHS))
     def test_no_caching(self, path: str, client: _ClientType) -> None:
@@ -121,23 +125,7 @@ class TestWebserverDispatch:
         # assert
         assert response_got is response_exp
 
-    def test_request_httpxception(self, sut: WebServer) -> None:
-        # arrange
-        response_exp = HTTPException()
-
-        def on_dummy(*_: Any, **__: Any) -> Response:
-            raise response_exp
-
-        request = Request({})
-        sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
-        adapter = self.FakeAdapter('dummy', {})
-        sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
-        # act
-        response_got = sut.dispatch_request(request)
-        # assert
-        assert response_got is response_exp
-
-    def test_request_exception(self, sut: WebServer) -> None:
+    def test_dispatch_request_unexpected_exception(self, sut: WebServer) -> None:
         # arrange
         def on_dummy(*_: Any, **__: Any) -> Response:
             raise Exception
@@ -146,23 +134,26 @@ class TestWebserverDispatch:
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
         sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
-        # act
-        response_got = sut.dispatch_request(request)
         # assert
-        assert isinstance(response_got, InternalServerError)
+        with pytest.raises(InternalServerError):
+            # act
+            sut.dispatch_request(request)
 
-    def test_dispatch_request_exception(self, sut: WebServer) -> None:
+    def test_dispatch_request_expected_exception(self, sut: WebServer) -> None:
         # arrange
+        expected_ex = HTTPException()
+
         def on_dummy(*_: Any, **__: Any) -> Response:
-            raise Exception()
+            raise expected_ex
 
         request = Request({})
         sut.on_dummy = on_dummy  # type: ignore[assignment,attr-defined,misc]
         adapter = self.FakeAdapter('dummy', {})
         sut._url_map.bind_to_environ = lambda _: adapter  # type: ignore[assignment,misc]
         # act & assert
-        with pytest.raises(Exception):
+        with pytest.raises(HTTPException) as ex:
             sut.dispatch_request(request)
+        assert ex.value is expected_ex
 
 
 class TestWebserverActions:
