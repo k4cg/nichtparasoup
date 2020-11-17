@@ -54,11 +54,11 @@ class TestWebserverFunctional:
     @pytest.mark.parametrize('method', list(_HTTP_METHODS))
     def test_http_method(self, path: str, method: str, client: _ClientType) -> None:
         expect_405 = method != 'GET'
-        error = response = None
         # act
         try:
             got = client.open(path, method=method).status_code
         except HTTPException as error:
+            assert error.code is not None
             got = error.code
         # assert
         assert (got == 405) is expect_405
