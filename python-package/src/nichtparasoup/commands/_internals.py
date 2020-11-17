@@ -29,7 +29,7 @@ def __cli_enable_debug(ctx: Context, _: Any, value: bool) -> None:  # pragma: no
 
 _cli_option_debug = Option(
     param_decls=['--debug'],
-    help='TODO',
+    help='Enable debug output and therefore run in insecure mode.',
     is_flag=True,
     expose_value=False,
     callback=__cli_enable_debug
