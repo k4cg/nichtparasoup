@@ -52,7 +52,6 @@ class Crawler:
     weight = property(get_weight, set_weight)
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
-        # type self._is_image_addable_wr: Optional[ReferenceType[_OnImageAdded]] self._is_image_addable_wr
         return self._is_image_addable_wr() if self._is_image_addable_wr else None
 
     def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
