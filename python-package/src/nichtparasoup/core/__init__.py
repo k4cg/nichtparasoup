@@ -55,9 +55,15 @@ class Crawler:
         return self._is_image_addable_wr() if self._is_image_addable_wr else None
 
     def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
+        """
+        If a (Class)Method is passed, a weak reference is stored;
+        There is no support for Functions/Lambdas/StaticMethods, yet.
+
+        :param is_image_addable: callable.
+        """
         t_is_image_addable = type(is_image_addable)
         if t_is_image_addable != MethodType:
-            # TODO: add function/lambda support - and write proper tests for it
+            # TODO: add Functions/Lambdas/StaticMethods support
             raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
         self._is_image_addable_wr: Optional[WeakMethod] = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
