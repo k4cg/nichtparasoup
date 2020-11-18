@@ -1,8 +1,7 @@
 import sys
 from random import uniform as randfloat
-from typing import Any, Union
+from typing import Any, Callable, Union
 from unittest.mock import Mock
-from weakref import WeakMethod
 
 import pytest
 
@@ -12,7 +11,6 @@ if sys.version_info[:2] >= (3, 7):
     from contextlib import nullcontext as does_not_raise
 else:
     from contextlib import contextmanager
-
 
     @contextmanager
     def does_not_raise() -> None:
@@ -83,7 +81,7 @@ class __DummySetIsImageAddable:
         'Lambda'
     ],
 )
-def test_get_set_is_image_addable(is_image_addable, expectation: Any) -> None:
+def test_get_set_is_image_addable(is_image_addable: Callable[[Any], bool], expectation: Any) -> None:
     # arrange
     old_is_image_addable = Mock()
     sut = Mock(Sut, _is_image_addable_wr=lambda: old_is_image_addable)

@@ -52,13 +52,15 @@ class Crawler:
     weight = property(get_weight, set_weight)
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
+        # type self._is_image_addable_wr: Optional[ReferenceType[_OnImageAdded]] self._is_image_addable_wr
         return self._is_image_addable_wr() if self._is_image_addable_wr else None
 
     def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
         t_is_image_addable = type(is_image_addable)
-        if not isinstance(is_image_addable, MethodType):
+        if t_is_image_addable != MethodType:
+            # TODO: add function/lambda support - and write proper tests for it
             raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
-        self._is_image_addable_wr = WeakMethod(is_image_addable)
+        self._is_image_addable_wr: Optional[WeakMethod] = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
     def del_is_image_addable(self) -> None:
         self._is_image_addable_wr = None
