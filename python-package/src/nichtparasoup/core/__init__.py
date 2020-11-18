@@ -37,9 +37,8 @@ class Crawler:
         self.weight = weight
         self.restart_at_front_when_exhausted = restart_at_front_when_exhausted
         self.images = ImageCollection()
-        self._is_image_addable_wr: Optional[ReferenceType[_IsImageAddable]] = None
         self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
-        self.set_is_image_addable(is_image_addable)
+        self.is_image_addable = is_image_addable
         self.set_image_added(on_image_added)
 
     def get_weight(self) -> _CrawlerWeight:
@@ -52,18 +51,19 @@ class Crawler:
 
     weight = property(get_weight, set_weight)
 
-    def set_is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
-        t_is_image_addable = type(is_image_addable)
-        if None is is_image_addable:
-            self._is_image_addable_wr = None
-        elif MethodType is t_is_image_addable:
-            self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore[assignment,arg-type]
-        else:
-            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
-        # TODO: add function/lambda support - and write proper tests for it
-
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
         return self._is_image_addable_wr() if self._is_image_addable_wr else None
+
+    def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
+        t_is_image_addable = type(is_image_addable)
+        if not isinstance(is_image_addable, MethodType):
+            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
+        self._is_image_addable_wr = WeakMethod(is_image_addable)
+
+    def del_is_image_addable(self) -> None:
+        self._is_image_addable_wr = None
+
+    is_image_addable = property(get_is_image_addable, set_is_image_addable, del_is_image_addable)
 
     def set_image_added(self, image_added: Optional[_OnImageAdded]) -> None:
         t_image_added = type(image_added)
@@ -97,7 +97,7 @@ class Crawler:
         """Add images, if allowed.
         :return: Number of newly added images.
         """
-        is_image_addable = self.get_is_image_addable()
+        is_image_addable = self.is_image_addable
         image_added = self.get_image_added()
         if is_image_addable:
             images = ImageCollection(filter(is_image_addable, images))
