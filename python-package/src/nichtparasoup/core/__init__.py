@@ -33,8 +33,6 @@ class Crawler:
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None
                  ) -> None:
-        if weight <= 0:
-            raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
         self.weight = weight
         self.restart_at_front_when_exhausted = restart_at_front_when_exhausted
@@ -43,6 +41,16 @@ class Crawler:
         self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
+
+    @property
+    def weight(self) -> _CrawlerWeight:
+        return self._weight
+
+    @weight.setter
+    def weight(self, weight: _CrawlerWeight) -> None:
+        if weight <= 0:
+            raise ValueError(f'weight {weight!r} <= 0')
+        self._weight = weight
 
     def set_is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
         t_is_image_addable = type(is_image_addable)
