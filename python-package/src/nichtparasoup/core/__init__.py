@@ -32,7 +32,7 @@ class Crawler:
                  restart_at_front_when_exhausted: bool = False,
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None
-                 ) -> None:
+                 ) -> None:  # pragma: no cover
         self.imagecrawler = imagecrawler
         self.weight = weight
         self.restart_at_front_when_exhausted = restart_at_front_when_exhausted

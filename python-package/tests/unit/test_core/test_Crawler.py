@@ -32,8 +32,8 @@ else:
 )
 def test_weight(weight: Union[int, float], expectation: Any) -> None:
     # arrange
-    sut = Mock(Sut)
-    sut._weight = old_weight = None
+    old_weight = None
+    sut = Mock(Sut, _weight=old_weight)
     # act
     with expectation as ex:
         Sut.set_weight(sut, weight)
