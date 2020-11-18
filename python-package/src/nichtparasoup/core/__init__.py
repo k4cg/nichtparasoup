@@ -42,15 +42,15 @@ class Crawler:
         self.set_is_image_addable(is_image_addable)
         self.set_image_added(on_image_added)
 
-    @property
-    def weight(self) -> _CrawlerWeight:
+    def get_weight(self) -> _CrawlerWeight:
         return self._weight
 
-    @weight.setter
-    def weight(self, weight: _CrawlerWeight) -> None:
+    def set_weight(self, weight: _CrawlerWeight) -> None:
         if weight <= 0:
             raise ValueError(f'weight {weight!r} <= 0')
         self._weight = weight
+
+    weight = property(get_weight, set_weight)
 
     def set_is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
         t_is_image_addable = type(is_image_addable)

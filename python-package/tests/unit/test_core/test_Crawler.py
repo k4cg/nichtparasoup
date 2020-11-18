@@ -6,7 +6,6 @@ from unittest.mock import Mock
 import pytest
 
 from nichtparasoup.core import Crawler as Sut
-from nichtparasoup.core.imagecrawler import BaseImageCrawler
 
 if sys.version_info[:2] >= (3, 7):
     from contextlib import nullcontext as does_not_raise
@@ -33,10 +32,10 @@ else:
 )
 def test_weight(weight: Union[int, float], expectation: Any) -> None:
     # arrange
-    sut = Sut(Mock(BaseImageCrawler))
-    old_weight = sut.weight
+    sut = Mock(Sut)
+    sut._weight = old_weight = None
     # act
     with expectation as ex:
-        sut.weight = weight
+        Sut.set_weight(sut, weight)
     # assert
-    assert sut.weight == (weight if ex is None else old_weight)
+    assert Sut.get_weight(sut) == (weight if ex is None else old_weight)
