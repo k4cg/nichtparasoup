@@ -160,3 +160,15 @@ def test_get_del_image_added() -> None:
     Sut.del_image_added(sut)
     # assert
     assert Sut.get_image_added(sut) is None
+
+
+def test_reset() -> None:
+    # arrange
+    images_clear = Mock()
+    imagecrawler_reset = Mock()
+    sut = Mock(Sut, images=Mock(clear=images_clear), imagecrawler=Mock(reset=imagecrawler_reset))
+    # act
+    Sut.reset(sut)
+    # assert
+    images_clear.assert_called_once()
+    imagecrawler_reset.assert_called_once()
