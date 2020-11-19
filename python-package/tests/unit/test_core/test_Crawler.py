@@ -65,13 +65,13 @@ class __DummySetIsImageAddable:
 
 
 @pytest.mark.parametrize(
-    ('is_image_addable', 'expectation'),
+    'is_image_addable',
     [
-        (__DummySetIsImageAddable().im, does_not_raise()),
-        (__DummySetIsImageAddable.cm, does_not_raise()),
-        (__DummySetIsImageAddable.sm, pytest.raises(NotImplementedError)),  # not implemented, yet
-        (__dummy_set_is_image_addable, pytest.raises(NotImplementedError)),  # not implemented, yet
-        (lambda i: __dummy_set_is_image_addable(i), pytest.raises(NotImplementedError)),  # not implemented, yet
+        __DummySetIsImageAddable().im,
+        __DummySetIsImageAddable.cm,
+        __DummySetIsImageAddable.sm,
+        __dummy_set_is_image_addable,
+        lambda i: __dummy_set_is_image_addable(i),
     ],
     ids=[
         'InstanceMethod',
@@ -81,26 +81,23 @@ class __DummySetIsImageAddable:
         'Lambda'
     ],
 )
-def test_get_set_is_image_addable(is_image_addable: Callable[[Any], bool], expectation: Any) -> None:
+def test_get_set_is_image_addable(is_image_addable: Callable[[Any], bool]) -> None:
     # arrange
     old_is_image_addable = Mock()
-    sut = Mock(Sut, _is_image_addable_wr=lambda: old_is_image_addable)
+    sut = Mock(Sut, _is_image_addable=old_is_image_addable)
     assert Sut.get_is_image_addable(sut) is old_is_image_addable
     # act
-    with expectation as ex:
-        Sut.set_is_image_addable(sut, is_image_addable)
+    Sut.set_is_image_addable(sut, is_image_addable)
     new_is_image_addable = Sut.get_is_image_addable(sut)
     # assert
-    if ex:
-        assert new_is_image_addable is old_is_image_addable
-    else:
-        assert new_is_image_addable == is_image_addable
+    assert new_is_image_addable == is_image_addable
 
 
 def test_get_del_is_image_addable() -> None:
     # arrange
-    sut = Mock(Sut, _is_image_addable_wr=Mock())
-    assert Sut.get_is_image_addable(sut) is not None
+    old_is_image_addable = Mock()
+    sut = Mock(Sut, _is_image_addable=old_is_image_addable)
+    assert Sut.get_is_image_addable(sut) is old_is_image_addable
     # act
     Sut.del_is_image_addable(sut)
     # assert
@@ -126,13 +123,13 @@ class __DummySetImageAdded:
 
 
 @pytest.mark.parametrize(
-    ('image_added', 'expectation'),
+    'image_added',
     [
-        (__DummySetImageAdded().im, does_not_raise()),
-        (__DummySetImageAdded.cm, does_not_raise()),
-        (__DummySetImageAdded.sm, pytest.raises(NotImplementedError)),  # not implemented, yet
-        (__dummy_set_image_added, pytest.raises(NotImplementedError)),  # not implemented, yet
-        (lambda i: __dummy_set_image_added(i), pytest.raises(NotImplementedError)),  # not implemented, yet
+        __DummySetImageAdded().im,
+        __DummySetImageAdded.cm,
+        __DummySetImageAdded.sm,
+        __dummy_set_image_added,
+        lambda i: __dummy_set_image_added(i)
     ],
     ids=[
         'InstanceMethod',
@@ -142,26 +139,23 @@ class __DummySetImageAdded:
         'Lambda'
     ],
 )
-def test_get_set_image_added(image_added: Callable[[Any], None], expectation: Any) -> None:
+def test_get_set_image_added(image_added: Callable[[Any], None]) -> None:
     # arrange
     old_image_added = Mock()
-    sut = Mock(Sut, _image_added_wr=lambda: old_image_added)
+    sut = Mock(Sut, _image_added=old_image_added)
     assert Sut.get_image_added(sut) is old_image_added
     # act
-    with expectation as ex:
-        Sut.set_image_added(sut, image_added)
+    Sut.set_image_added(sut, image_added)
     new_image_added = Sut.get_image_added(sut)
     # assert
-    if ex:
-        assert new_image_added is old_image_added
-    else:
-        assert new_image_added == image_added
+    assert new_image_added == image_added
 
 
 def test_get_del_image_added() -> None:
     # arrange
-    sut = Mock(Sut, _image_added_wr=Mock())
-    assert Sut.get_image_added(sut) is not None
+    old_image_added = Mock()
+    sut = Mock(Sut, _image_added=old_image_added)
+    assert Sut.get_image_added(sut) is old_image_added
     # act
     Sut.del_image_added(sut)
     # assert

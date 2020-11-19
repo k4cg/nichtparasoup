@@ -51,42 +51,42 @@ class Crawler:
     weight = property(get_weight, set_weight)
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
-        return self._is_image_addable_wr() if self._is_image_addable_wr else None
+        return self._is_image_addable() if isinstance(self._is_image_addable, WeakMethod) else self._is_image_addable
 
     def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
         """
-        If a (Class)Method is passed, a weak reference is stored;
-        There is no support for Functions/Lambdas/StaticMethods, yet.
-
-        :param is_image_addable: callable.
+        :param is_image_addable: callable. If a (Class)Method is passed, a weak reference is stored instead.
         """
-        t_is_image_addable = type(is_image_addable)
-        if t_is_image_addable is not MethodType:
-            # TODO: add Functions/Lambdas/StaticMethods support
-            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
-        self._is_image_addable_wr: Optional[WeakMethod] = WeakMethod(is_image_addable)  # type: ignore[arg-type]
+        # written in this stupid way to satisfy mypy
+        if type(is_image_addable) is not MethodType:
+            self._is_image_addable: Union[_IsImageAddable, WeakMethod, None] = is_image_addable
+        else:
+            self._is_image_addable = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
     def del_is_image_addable(self) -> None:
-        self._is_image_addable_wr = None
+        self._is_image_addable = None
 
     is_image_addable = property(get_is_image_addable, set_is_image_addable, del_is_image_addable)
 
     def get_image_added(self) -> Optional[_OnImageAdded]:
-        return self._image_added_wr() if self._image_added_wr else None
+        return self._image_added() if isinstance(self._image_added, WeakMethod) else self._image_added
 
     def set_image_added(self, image_added: _OnImageAdded) -> None:
-        t_image_added = type(image_added)
-        if t_image_added is not MethodType:
-            # TODO: add function/lambda support - and write proper tests for it
-            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
-        self._image_added_wr: Optional[WeakMethod] = WeakMethod(image_added)  # type: ignore[assignment,arg-type]
+        """
+        :param image_added: callable. If a (Class)Method is passed, a weak reference is stored instead.
+        """
+        # written in this stupid way to satisfy mypy
+        if type(image_added) is not MethodType:
+            self._image_added: Union[_OnImageAdded, WeakMethod, None] = image_added
+        else:
+            self._image_added = WeakMethod(image_added)  # type: ignore[arg-type]
 
     def del_image_added(self) -> None:
-        self._image_added_wr = None
+        self._image_added = None
 
     image_added = property(get_image_added, set_image_added, del_image_added)
 
-    def reset(self) -> None:  # pragma: no cover
+    def reset(self) -> None:
         self.images.clear()
         self.imagecrawler.reset()
 
