@@ -106,7 +106,7 @@ class Crawler:
         :return: Number of newly added images.
         """
         is_image_addable = self.is_image_addable
-        image_added = self.get_image_added()
+        image_added = self.image_added
         if is_image_addable:
             images = ImageCollection(filter(is_image_addable, images))
         for image in images:
