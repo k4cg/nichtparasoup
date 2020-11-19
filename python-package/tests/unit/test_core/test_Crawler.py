@@ -1,5 +1,5 @@
 import sys
-from random import uniform as randfloat
+from random import randint, uniform as randfloat
 from typing import Any, Callable, Union
 from unittest.mock import Mock
 
@@ -170,3 +170,35 @@ def test_reset() -> None:
     # assert
     sut.images.clear.assert_called_once()
     sut.imagecrawler.reset.assert_called_once()
+
+
+@pytest.mark.parametrize('is_exhausted', [True, False])
+@pytest.mark.parametrize('restart_at_front_when_exhausted', [True, False])
+def test_crawl(is_exhausted: bool, restart_at_front_when_exhausted: bool) -> None:
+    # arrange
+    images = {Mock() for _ in range(randint(0, 99))}
+    sut = Mock(
+        Sut,
+        imagecrawler=Mock(
+            is_exhausted=Mock(return_value=is_exhausted),
+            crawl=Mock(return_value=images),
+        ),
+        restart_at_front_when_exhausted=restart_at_front_when_exhausted,
+        _add_images=Mock(return_value=len(images)),
+    )
+    # act
+    crawled = Sut.crawl(sut)
+    # assert
+    sut.imagecrawler.is_exhausted.assert_called_once()
+    if is_exhausted:
+        if restart_at_front_when_exhausted:
+            sut.imagecrawler.reset.assert_called_once()
+        else:
+            sut.imagecrawler.reset.assert_not_called()
+    if is_exhausted and not restart_at_front_when_exhausted:
+        sut.imagecrawler.crawl.assert_not_called()
+        assert crawled == 0
+    else:
+        sut.imagecrawler.crawl.assert_called_once()
+        sut._add_images.assert_called_once_with(images)
+        assert crawled == len(images)
