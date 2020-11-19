@@ -5,7 +5,7 @@ from threading import Thread
 from time import sleep
 from types import MethodType
 from typing import Callable, Generator, List, Optional, Set, Union
-from weakref import ReferenceType, WeakMethod
+from weakref import WeakMethod
 
 from .image import Image, ImageCollection, ImageUri
 from .imagecrawler import BaseImageCrawler
@@ -37,9 +37,8 @@ class Crawler:
         self.weight = weight
         self.restart_at_front_when_exhausted = restart_at_front_when_exhausted
         self.images = ImageCollection()
-        self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
         self.is_image_addable = is_image_addable
-        self.set_image_added(on_image_added)
+        self.image_added = on_image_added
 
     def get_weight(self) -> _CrawlerWeight:
         return self._weight
@@ -62,7 +61,7 @@ class Crawler:
         :param is_image_addable: callable.
         """
         t_is_image_addable = type(is_image_addable)
-        if t_is_image_addable != MethodType:
+        if t_is_image_addable is not MethodType:
             # TODO: add Functions/Lambdas/StaticMethods support
             raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
         self._is_image_addable_wr: Optional[WeakMethod] = WeakMethod(is_image_addable)  # type: ignore[arg-type]
@@ -72,18 +71,20 @@ class Crawler:
 
     is_image_addable = property(get_is_image_addable, set_is_image_addable, del_is_image_addable)
 
-    def set_image_added(self, image_added: Optional[_OnImageAdded]) -> None:
-        t_image_added = type(image_added)
-        if None is image_added:
-            self._image_added_wr = None
-        elif MethodType is t_image_added:
-            self._image_added_wr = WeakMethod(image_added)  # type: ignore[assignment,arg-type]
-        else:
-            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
-        # TODO: add function/lambda support - and write proper tests for it
-
     def get_image_added(self) -> Optional[_OnImageAdded]:
         return self._image_added_wr() if self._image_added_wr else None
+
+    def set_image_added(self, image_added: _OnImageAdded) -> None:
+        t_image_added = type(image_added)
+        if t_image_added is not MethodType:
+            # TODO: add function/lambda support - and write proper tests for it
+            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
+        self._image_added_wr: Optional[WeakMethod] = WeakMethod(image_added)  # type: ignore[assignment,arg-type]
+
+    def del_image_added(self) -> None:
+        self._image_added_wr = None
+
+    image_added = property(get_image_added, set_image_added, del_image_added)
 
     def reset(self) -> None:  # pragma: no cover
         self.images.clear()

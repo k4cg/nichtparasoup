@@ -105,3 +105,64 @@ def test_get_del_is_image_addable() -> None:
     Sut.del_is_image_addable(sut)
     # assert
     assert Sut.get_is_image_addable(sut) is None
+
+
+def __dummy_set_image_added(_: Any) -> None:
+    raise NotImplementedError()
+
+
+class __DummySetImageAdded:
+
+    @staticmethod
+    def sm(_: Any) -> None:
+        raise NotImplementedError()
+
+    @classmethod
+    def cm(cls, _: Any) -> None:
+        raise NotImplementedError()
+
+    def im(self, _: Any) -> None:
+        raise NotImplementedError()
+
+
+@pytest.mark.parametrize(
+    ('image_added', 'expectation'),
+    [
+        (__DummySetImageAdded().im, does_not_raise()),
+        (__DummySetImageAdded.cm, does_not_raise()),
+        (__DummySetImageAdded.sm, pytest.raises(NotImplementedError)),  # not implemented, yet
+        (__dummy_set_image_added, pytest.raises(NotImplementedError)),  # not implemented, yet
+        (lambda i: __dummy_set_image_added(i), pytest.raises(NotImplementedError)),  # not implemented, yet
+    ],
+    ids=[
+        'InstanceMethod',
+        'ClassMethod',
+        'StaticMethod',
+        'Function',
+        'Lambda'
+    ],
+)
+def test_get_set_image_added(image_added: Callable[[Any], None], expectation: Any) -> None:
+    # arrange
+    old_image_added = Mock()
+    sut = Mock(Sut, _image_added_wr=lambda: old_image_added)
+    assert Sut.get_image_added(sut) is old_image_added
+    # act
+    with expectation as ex:
+        Sut.set_image_added(sut, image_added)
+    new_image_added = Sut.get_image_added(sut)
+    # assert
+    if ex:
+        assert new_image_added is old_image_added
+    else:
+        assert new_image_added == image_added
+
+
+def test_get_del_image_added() -> None:
+    # arrange
+    sut = Mock(Sut, _image_added_wr=Mock())
+    assert Sut.get_image_added(sut) is not None
+    # act
+    Sut.del_image_added(sut)
+    # assert
+    assert Sut.get_image_added(sut) is None
