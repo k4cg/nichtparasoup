@@ -21,8 +21,8 @@ else:
 @pytest.mark.parametrize(
     ('weight', 'expectation'),
     [
-        (-randfloat(1.0, 99999.0), pytest.raises(ValueError, match='weight')),
-        (0, pytest.raises(ValueError, match='weight')),
+        (-randfloat(1.0, 99999.0), pytest.raises(ValueError)),
+        (0, pytest.raises(ValueError)),
         (+randfloat(1.0, 99999.0), does_not_raise()),
     ],
     ids=[
@@ -33,13 +33,14 @@ else:
 )
 def test_get_set_weight(weight: Union[int, float], expectation: Any) -> None:
     # arrange
-    old_weight = Mock()
-    sut = Mock(Sut, _weight=old_weight)
-    assert Sut.get_weight(sut) is old_weight
+    old_weight = 0.1
+    sut = Sut(imagecrawler=Mock())
+    sut.weight = old_weight
+    assert sut.weight != weight
     # act
     with expectation as ex:
-        Sut.set_weight(sut, weight)
-    new_weight = Sut.get_weight(sut)
+        sut.weight = weight
+    new_weight = sut.weight
     # assert
     if ex:
         assert new_weight is old_weight
@@ -84,25 +85,23 @@ class __DummySetIsImageAddable:
 )
 def test_get_set_is_image_addable(is_image_addable: Callable[[Any], bool]) -> None:
     # arrange
-    old_is_image_addable = Mock()
-    sut = Mock(Sut, _is_image_addable=old_is_image_addable)
-    assert Sut.get_is_image_addable(sut) is old_is_image_addable
+    sut = Sut(imagecrawler=Mock())
+    assert sut.is_image_addable != is_image_addable
     # act
-    Sut.set_is_image_addable(sut, is_image_addable)
-    new_is_image_addable = Sut.get_is_image_addable(sut)
+    sut.is_image_addable = is_image_addable
     # assert
-    assert new_is_image_addable == is_image_addable
+    assert sut.is_image_addable == is_image_addable
 
 
 def test_get_del_is_image_addable() -> None:
     # arrange
-    old_is_image_addable = Mock()
-    sut = Mock(Sut, _is_image_addable=old_is_image_addable)
-    assert Sut.get_is_image_addable(sut) is old_is_image_addable
+    sut = Sut(imagecrawler=Mock())
+    sut.is_image_addable = lambda _: False
+    assert sut.is_image_addable is not None
     # act
-    Sut.del_is_image_addable(sut)
+    del sut.is_image_addable
     # assert
-    assert Sut.get_is_image_addable(sut) is None
+    assert sut.is_image_addable is None
 
 
 def __dummy_set_image_added(_: Any) -> None:
@@ -142,25 +141,22 @@ class __DummySetImageAdded:
 )
 def test_get_set_image_added(image_added: Callable[[Any], None]) -> None:
     # arrange
-    old_image_added = Mock()
-    sut = Mock(Sut, _image_added=old_image_added)
-    assert Sut.get_image_added(sut) is old_image_added
+    sut = Sut(imagecrawler=Mock())
+    assert sut.image_added != image_added
     # act
-    Sut.set_image_added(sut, image_added)
-    new_image_added = Sut.get_image_added(sut)
+    sut.image_added = image_added
     # assert
-    assert new_image_added == image_added
+    assert sut.image_added == image_added
 
 
 def test_get_del_image_added() -> None:
     # arrange
-    old_image_added = Mock()
-    sut = Mock(Sut, _image_added=old_image_added)
-    assert Sut.get_image_added(sut) is old_image_added
+    sut = Sut(imagecrawler=Mock())
+    sut.image_added = lambda _: None
     # act
-    Sut.del_image_added(sut)
+    del sut.image_added
     # assert
-    assert Sut.get_image_added(sut) is None
+    assert sut.image_added is None
 
 
 def test_reset() -> None:

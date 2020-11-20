@@ -40,21 +40,22 @@ class Crawler:
         self.is_image_addable = is_image_addable
         self.image_added = on_image_added
 
-    def get_weight(self) -> _CrawlerWeight:
+    @property
+    def weight(self) -> _CrawlerWeight:
         return self._weight
 
-    def set_weight(self, weight: _CrawlerWeight) -> None:
+    @weight.setter
+    def weight(self, weight: _CrawlerWeight) -> None:
         if weight <= 0:
-            raise ValueError(f'weight {weight!r} <= 0')
+            raise ValueError(f'expected grater than 0, got {weight!r}')
         self._weight = weight
 
-    # TODO: remove functions
-    weight = property(get_weight, set_weight)
-
-    def get_is_image_addable(self) -> Optional[_IsImageAddable]:
+    @property
+    def is_image_addable(self) -> Optional[_IsImageAddable]:
         return self._is_image_addable() if isinstance(self._is_image_addable, WeakMethod) else self._is_image_addable
 
-    def set_is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
+    @is_image_addable.setter
+    def is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
         """
         :param is_image_addable: callable. If a (Class)Method is passed, a weak reference is stored instead.
         """
@@ -64,16 +65,16 @@ class Crawler:
         else:
             self._is_image_addable = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
-    def del_is_image_addable(self) -> None:
+    @is_image_addable.deleter
+    def is_image_addable(self) -> None:
         self._is_image_addable = None
 
-    # TODO: remove functions
-    is_image_addable = property(get_is_image_addable, set_is_image_addable, del_is_image_addable)
-
-    def get_image_added(self) -> Optional[_OnImageAdded]:
+    @property
+    def image_added(self) -> Optional[_OnImageAdded]:
         return self._image_added() if isinstance(self._image_added, WeakMethod) else self._image_added
 
-    def set_image_added(self, image_added: _OnImageAdded) -> None:
+    @image_added.setter
+    def image_added(self, image_added: _OnImageAdded) -> None:
         """
         :param image_added: callable. If a (Class)Method is passed, a weak reference is stored instead.
         """
@@ -83,10 +84,9 @@ class Crawler:
         else:
             self._image_added = WeakMethod(image_added)  # type: ignore[arg-type]
 
-    def del_image_added(self) -> None:
+    @image_added.deleter
+    def image_added(self) -> None:
         self._image_added = None
-
-    image_added = property(get_image_added, set_image_added, del_image_added)
 
     def reset(self) -> None:
         self.images.clear()
