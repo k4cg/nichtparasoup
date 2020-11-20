@@ -1,7 +1,7 @@
 import sys
 from random import randint, uniform as randfloat
-from typing import Any, Callable, Union
-from unittest.mock import Mock, PropertyMock, call, patch
+from typing import Any, Callable, Optional, Union
+from unittest.mock import Mock, NonCallableMock, PropertyMock, call, patch
 
 import pytest
 
@@ -74,34 +74,26 @@ class __DummySetIsImageAddable:
         __DummySetIsImageAddable.sm,
         __dummy_set_is_image_addable,
         lambda i: __dummy_set_is_image_addable(i),
+        None,
     ],
     ids=[
         'InstanceMethod',
         'ClassMethod',
         'StaticMethod',
         'Function',
-        'Lambda'
+        'Lambda',
+        'None'
     ],
 )
-def test_get_set_is_image_addable(is_image_addable: Callable[[Any], bool]) -> None:
+def test_get_set_is_image_addable(is_image_addable: Optional[Callable[[Any], bool]]) -> None:
     # arrange
     sut = Sut(imagecrawler=Mock())
+    sut.is_image_addable = NonCallableMock()
     assert sut.is_image_addable != is_image_addable
     # act
     sut.is_image_addable = is_image_addable
     # assert
     assert sut.is_image_addable == is_image_addable
-
-
-def test_get_del_is_image_addable() -> None:
-    # arrange
-    sut = Sut(imagecrawler=Mock())
-    sut.is_image_addable = lambda _: False
-    assert sut.is_image_addable is not None
-    # act
-    del sut.is_image_addable
-    # assert
-    assert sut.is_image_addable is None
 
 
 def __dummy_set_image_added(_: Any) -> None:
@@ -129,34 +121,27 @@ class __DummySetImageAdded:
         __DummySetImageAdded.cm,
         __DummySetImageAdded.sm,
         __dummy_set_image_added,
-        lambda i: __dummy_set_image_added(i)
+        lambda i: __dummy_set_image_added(i),
+        None,
     ],
     ids=[
         'InstanceMethod',
         'ClassMethod',
         'StaticMethod',
         'Function',
-        'Lambda'
+        'Lambda',
+        'None',
     ],
 )
-def test_get_set_image_added(image_added: Callable[[Any], None]) -> None:
+def test_image_added(image_added: Optional[Callable[[Any], None]]) -> None:
     # arrange
     sut = Sut(imagecrawler=Mock())
+    sut.image_added = NonCallableMock()
     assert sut.image_added != image_added
     # act
     sut.image_added = image_added
     # assert
     assert sut.image_added == image_added
-
-
-def test_get_del_image_added() -> None:
-    # arrange
-    sut = Sut(imagecrawler=Mock())
-    sut.image_added = lambda _: None
-    # act
-    del sut.image_added
-    # assert
-    assert sut.image_added is None
 
 
 def test_reset() -> None:

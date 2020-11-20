@@ -21,8 +21,10 @@ Unreleased
     They are replaced by a new property `nichtparasoup.core.Crawler.image_added`.
 * Added
   * New method `nichtparasoup.server.has_image() -> bool`.
-  * New property `nichtparasoup.core.Crawler.is_image_addable` with getter, setter, deleter.
-  * New property `nichtparasoup.core.Crawler.image_added` with getter, setter, deleter.
+  * New property `nichtparasoup.core.Crawler.is_image_addable` with getter, setter.
+    Support any kind of Callable now, formerly supported `MethodType` only.
+  * New property `nichtparasoup.core.Crawler.image_added` with getter, setter.
+    Support any kind of Callable now, formerly supported `MethodType` only.
 * Fixes
   * API `/get` no longer responds false "404 EXHAUSTED" HTTP Status code.
   * `nichtparasoup.server.get_image()` no longer responds false `None`.

@@ -55,7 +55,7 @@ class Crawler:
         return self._is_image_addable() if isinstance(self._is_image_addable, WeakMethod) else self._is_image_addable
 
     @is_image_addable.setter
-    def is_image_addable(self, is_image_addable: _IsImageAddable) -> None:
+    def is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
         """
         :param is_image_addable: callable. If a (Class)Method is passed, a weak reference is stored instead.
         """
@@ -65,16 +65,12 @@ class Crawler:
         else:
             self._is_image_addable = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
-    @is_image_addable.deleter
-    def is_image_addable(self) -> None:
-        self._is_image_addable = None
-
     @property
     def image_added(self) -> Optional[_OnImageAdded]:
         return self._image_added() if isinstance(self._image_added, WeakMethod) else self._image_added
 
     @image_added.setter
-    def image_added(self, image_added: _OnImageAdded) -> None:
+    def image_added(self, image_added: Optional[_OnImageAdded]) -> None:
         """
         :param image_added: callable. If a (Class)Method is passed, a weak reference is stored instead.
         """
@@ -83,10 +79,6 @@ class Crawler:
             self._image_added: Union[_OnImageAdded, WeakMethod, None] = image_added
         else:
             self._image_added = WeakMethod(image_added)  # type: ignore[arg-type]
-
-    @image_added.deleter
-    def image_added(self) -> None:
-        self._image_added = None
 
     def reset(self) -> None:
         self.images.clear()
