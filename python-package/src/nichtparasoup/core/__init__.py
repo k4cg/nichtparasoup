@@ -48,6 +48,7 @@ class Crawler:
             raise ValueError(f'weight {weight!r} <= 0')
         self._weight = weight
 
+    # TODO: remove functions
     weight = property(get_weight, set_weight)
 
     def get_is_image_addable(self) -> Optional[_IsImageAddable]:
@@ -66,6 +67,7 @@ class Crawler:
     def del_is_image_addable(self) -> None:
         self._is_image_addable = None
 
+    # TODO: remove functions
     is_image_addable = property(get_is_image_addable, set_is_image_addable, del_is_image_addable)
 
     def get_image_added(self) -> Optional[_OnImageAdded]:

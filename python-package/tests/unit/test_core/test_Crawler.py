@@ -1,11 +1,12 @@
 import sys
 from random import randint, uniform as randfloat
 from typing import Any, Callable, Union
-from unittest.mock import Mock
+from unittest.mock import Mock, PropertyMock, call, patch
 
 import pytest
 
 from nichtparasoup.core import Crawler as Sut
+from nichtparasoup.core.image import Image, ImageCollection
 
 if sys.version_info[:2] >= (3, 7):
     from contextlib import nullcontext as does_not_raise
@@ -202,3 +203,30 @@ def test_crawl(is_exhausted: bool, restart_at_front_when_exhausted: bool) -> Non
         sut.imagecrawler.crawl.assert_called_once()
         sut._add_images.assert_called_once_with(images)
         assert crawled == len(images)
+
+
+def test__add_images() -> None:
+    # arrange
+    old_images = ImageCollection(Mock(Image, name=f'image{i}') for i in range(randint(0, 99)))
+    invalid_images = ImageCollection(Mock(Image, name=f'image{i}') for i in range(randint(0, 99)))
+    new_images = ImageCollection(Mock(Image, name=f'image{i}') for i in range(randint(0, 99)))
+    image_added = Mock(callable, return_value=None)
+    with patch.multiple(
+        Sut,
+        is_image_addable=PropertyMock(return_value=lambda image: image not in invalid_images),
+        image_added=PropertyMock(return_value=image_added)
+    ):
+        sut = Sut(imagecrawler=Mock())
+        sut.images = old_images.copy()
+        # act
+        added = Sut._add_images(sut, ImageCollection(invalid_images | new_images))
+    # assert
+    assert added == len(new_images)
+    for image in old_images:
+        assert image in sut.images
+    for image in new_images:
+        assert image in sut.images
+        assert call(image) in image_added.call_args_list
+    for image in invalid_images:
+        assert image not in sut.images
+        assert call(image) not in image_added.call_args_list
