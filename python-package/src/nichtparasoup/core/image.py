@@ -11,7 +11,9 @@ SourceUri = str
 
 
 class Image:
-    """Describe an image
+    """Describe an image.
+
+    An object is intended as immutable, to allow hashing without side effects.
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.
@@ -37,6 +39,9 @@ class Image:
     `is_generic`
         If a generic image crawler is used, its common that each image URI looks exactly the same.
         To make this known, use this flag.
+        This will also impact comparisons with ``==``, ``!=`` and hashes of the instance.
+        A generic will never equal anny other but itself.
+        This is used to allow the "same" generic to exist multiple times in a ``set`` or ``ImageCollection``.
 
     `more`
         A dictionary of additional information an image crawler might want to deliver.
@@ -54,24 +59,32 @@ class Image:
                  uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
                  **more: Any) -> None:
-        self.uri = uri
+        self.__uri = uri
+        self.__is_generic = is_generic
+        self.__hash = self.__gen_hash()
         self.source = source
         self.more = more
-        self.is_generic = is_generic
-        self.__hash = hash(uuid4() if self.is_generic else self.uri)
+
+    @property
+    def uri(self) -> ImageUri:
+        # must not change, to keep hash in tact
+        return self.__uri
+
+    @property
+    def is_generic(self) -> bool:
+        # must not change, to keep hash in tact
+        return self.__is_generic
+
+    def __gen_hash(self) -> int:
+        return hash(uuid4() if self.is_generic else self.uri)
 
     def __hash__(self) -> int:
         return self.__hash
 
     def __eq__(self, other: Union['Image', Any]) -> bool:
-        if type(other) is not type(self):
+        if type(other) is not type(self):  # pragma: no cover
             return NotImplemented
-        return hash(self) == hash(other)
-
-    def __ne__(self, other: Union['Image', Any]) -> bool:
-        if type(other) is not type(self):
-            return NotImplemented
-        return hash(self) != hash(other)
+        return self.__hash == other.__hash
 
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'

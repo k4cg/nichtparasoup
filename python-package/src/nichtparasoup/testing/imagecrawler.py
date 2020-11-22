@@ -12,11 +12,10 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
 
+from .._internals import _log
 from ..core.image import ImageCollection
 from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
 from ..imagecrawlers import KnownImageCrawlers, get_imagecrawlers
-
-from .._internals import _log
 
 _Uri = str
 _FilePath = str
