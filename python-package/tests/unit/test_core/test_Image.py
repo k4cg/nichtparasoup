@@ -72,3 +72,17 @@ def test_delete_in_set(is_generic: bool) -> None:
     images.remove(image1)
     # assert
     assert len(images) == (1 if is_generic else 0)
+
+
+def test_hash_base_is_readonly() -> None:
+    # arrange
+    image = Image(is_generic=True, uri='test', source='test')
+    # assert
+    with pytest.raises(Exception):
+        image.uri = 'asdf'  # type: ignore
+    with pytest.raises(Exception):
+        del image.uri
+    with pytest.raises(Exception):
+        image.is_generic = False  # type: ignore
+    with pytest.raises(Exception):
+        del image.is_generic
