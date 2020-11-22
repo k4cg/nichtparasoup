@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from unittest.mock import MagicMock
 
-from nichtparasoup.core import ImageCollection
+from nichtparasoup.core.image import ImageCollection
 from nichtparasoup.core.imagecrawler import BaseImageCrawler as Sut, ImageCrawlerConfig, ImageCrawlerInfo
 
 
