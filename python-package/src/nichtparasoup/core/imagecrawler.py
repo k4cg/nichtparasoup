@@ -77,19 +77,15 @@ class BaseImageCrawler(ABC):
         return f'<{_type_module_name_str(type(self))} {self.config!r}>'
 
     def __str__(self) -> str:  # pragma: no cover
-        return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>' \
-            if self._np_name \
-            else self.__repr__()
+        if self._np_name:
+            return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>'
+        else:
+            return self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
         if type(self) is not type(other):
             return NotImplemented
         return self._config == other._config
-
-    def __ne__(self, other: Union['BaseImageCrawler', Any]) -> bool:
-        if type(self) is not type(other):
-            return NotImplemented
-        return self._config != other._config
 
     def get_internal_name(self) -> Optional[str]:
         """get the internal name"""
@@ -109,7 +105,7 @@ class BaseImageCrawler(ABC):
             if not key.startswith('_')
         })
 
-    config = property(fget=get_config)
+    config = property(get_config)
 
     def reset(self) -> None:
         self._reset_before_next_crawl = True
@@ -173,6 +169,7 @@ class BaseImageCrawler(ABC):
                 raise TypeError(f'height {height!r} is not int')
             if height <= 0:
                 raise ValueError(f'height {height} <= 0')
+            return ImageCrawlerConfig(height=height)
         """
         raise NotImplementedError()
 

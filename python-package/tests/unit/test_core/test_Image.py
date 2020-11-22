@@ -1,13 +1,13 @@
 import pytest
 
-from nichtparasoup.core.image import Image
+from nichtparasoup.core.image import Image as Sut
 
 
 @pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
 def test_eq(is_generic: bool) -> None:
     # arrange
-    image1 = Image(is_generic=is_generic, uri='test', source='test1')
-    image2 = Image(is_generic=is_generic, uri='test', source='test2')
+    image1 = Sut(is_generic=is_generic, uri='test', source='test1')
+    image2 = Sut(is_generic=is_generic, uri='test', source='test2')
     # act
     eq = image1 == image1
     eq12 = image1 == image2
@@ -21,8 +21,8 @@ def test_eq(is_generic: bool) -> None:
 @pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
 def test_ne(is_generic: bool) -> None:
     # arrange
-    image1 = Image(is_generic=is_generic, uri='test', source='test1')
-    image2 = Image(is_generic=is_generic, uri='test', source='test2')
+    image1 = Sut(is_generic=is_generic, uri='test', source='test1')
+    image2 = Sut(is_generic=is_generic, uri='test', source='test2')
     # act
     ne = image1 != image1
     ne12 = image1 != image2
@@ -36,8 +36,8 @@ def test_ne(is_generic: bool) -> None:
 @pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
 def test_hash(is_generic: bool) -> None:
     # arrange
-    image1 = Image(is_generic=is_generic, uri='test', source='test1')
-    image2 = Image(is_generic=is_generic, uri='test', source='test2')
+    image1 = Sut(is_generic=is_generic, uri='test', source='test1')
+    image2 = Sut(is_generic=is_generic, uri='test', source='test2')
     # act
     hash1 = hash(image1)
     hash2 = hash(image2)
@@ -49,8 +49,8 @@ def test_hash(is_generic: bool) -> None:
 @pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
 def test_in_set(is_generic: bool) -> None:
     # arrange
-    image1 = Image(is_generic=is_generic, uri='test', source='test1')
-    image2 = Image(is_generic=is_generic, uri='test', source='test2')
+    image1 = Sut(is_generic=is_generic, uri='test', source='test1')
+    image2 = Sut(is_generic=is_generic, uri='test', source='test2')
     images = {image1, image2}
     # act
     in_set1 = image1 in images
@@ -64,8 +64,8 @@ def test_in_set(is_generic: bool) -> None:
 @pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
 def test_delete_in_set(is_generic: bool) -> None:
     # arrange
-    image1 = Image(is_generic=is_generic, uri='test', source='test1')
-    image2 = Image(is_generic=is_generic, uri='test', source='test2')
+    image1 = Sut(is_generic=is_generic, uri='test', source='test1')
+    image2 = Sut(is_generic=is_generic, uri='test', source='test2')
     images = {image1, image2}
     assert len(images) == (2 if is_generic else 1)
     # act
@@ -76,7 +76,7 @@ def test_delete_in_set(is_generic: bool) -> None:
 
 def test_hash_base_is_readonly() -> None:
     # arrange
-    image = Image(is_generic=True, uri='test', source='test')
+    image = Sut(is_generic=True, uri='test', source='test')
     # assert
     with pytest.raises(Exception):
         image.uri = 'asdf'  # type: ignore
