@@ -19,7 +19,7 @@ class Image:
         The absolute URI of the image. This basically identifies the Image and makes it unique.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``scheme`` must be either 'http' or 'https' - use 'https' if possible!
+            ``scheme`` should be either 'http' or 'https' - use 'https' if possible!
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
     `source`
@@ -29,7 +29,7 @@ class Image:
         In the idea of fair use, it is encouraged to point to the source as good as possible.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``scheme`` must be either 'http' or 'https' - the last one is preferred.
+            ``scheme`` should be either 'http' or 'https' - the last one is preferred.
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
         Good examples are:
@@ -40,7 +40,7 @@ class Image:
         If a generic image crawler is used, its common that each image URI looks exactly the same.
         To make this known, use this flag.
         This will also impact comparisons with ``==``, ``!=`` and hashes of the instance.
-        A generic will never equal anny other but itself.
+        A generic instance will never equal any other instance but itself.
         This is used to allow the "same" generic to exist multiple times in a ``set`` or ``ImageCollection``.
 
     `more`
