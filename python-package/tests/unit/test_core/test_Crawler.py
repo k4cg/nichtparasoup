@@ -154,7 +154,7 @@ def test_reset() -> None:
     sut.imagecrawler.reset.assert_called_once()
 
 
-@pytest.mark.parametrize('is_exhausted', [False, True], ids=['not-exhausted', 'exhausted'])
+@pytest.mark.parametrize('is_exhausted', [False, True], ids=['not_exhausted', 'exhausted'])
 @pytest.mark.parametrize('restart_at_front_when_exhausted', [False, True], ids=['end', 'restart'])
 def test_crawl(is_exhausted: bool, restart_at_front_when_exhausted: bool) -> None:
     # arrange

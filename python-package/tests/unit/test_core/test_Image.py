@@ -3,7 +3,7 @@ import pytest
 from nichtparasoup.core.image import Image as Sut
 
 
-@pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
+@pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
 def test_eq(is_generic: bool) -> None:
     # arrange
     image1 = Sut(is_generic=is_generic, uri='test', source='test1')
@@ -18,7 +18,7 @@ def test_eq(is_generic: bool) -> None:
     assert is_generic != eq21
 
 
-@pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
+@pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
 def test_ne(is_generic: bool) -> None:
     # arrange
     image1 = Sut(is_generic=is_generic, uri='test', source='test1')
@@ -33,7 +33,7 @@ def test_ne(is_generic: bool) -> None:
     assert is_generic == ne21
 
 
-@pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
+@pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
 def test_hash(is_generic: bool) -> None:
     # arrange
     image1 = Sut(is_generic=is_generic, uri='test', source='test1')
@@ -46,7 +46,7 @@ def test_hash(is_generic: bool) -> None:
     assert is_generic != hash_eq
 
 
-@pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
+@pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
 def test_in_set(is_generic: bool) -> None:
     # arrange
     image1 = Sut(is_generic=is_generic, uri='test', source='test1')
@@ -61,7 +61,7 @@ def test_in_set(is_generic: bool) -> None:
     assert in_set2
 
 
-@pytest.mark.parametrize('is_generic', [False, True], ids=['non-generic', 'generic'])
+@pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
 def test_delete_in_set(is_generic: bool) -> None:
     # arrange
     image1 = Sut(is_generic=is_generic, uri='test', source='test1')
