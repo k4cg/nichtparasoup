@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from nichtparasoup.core.imagecrawler import BaseImageCrawler as Sut
@@ -39,6 +41,18 @@ def test_ne_based_on_config() -> None:
     assert not eq12
     assert eq13
     assert eq14
+
+
+def test_get_config() -> None:
+    # arrange
+    config_in = {'a': 'a', '_b': 'b', '__c': 'c'}
+    sut = Mock(Sut, _config=config_in)
+    # act
+    config_out = Sut.get_config(sut)
+    # assert
+    assert config_out['a'] == config_in['a']
+    assert '_b' not in config_out
+    assert '_c' not in config_out
 
 
 @pytest.mark.parametrize('must_reset', [False, True], ids=['must_not_reset', 'must_reset'])
