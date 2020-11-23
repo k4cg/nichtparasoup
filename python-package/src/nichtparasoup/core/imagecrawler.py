@@ -23,7 +23,8 @@ _ImageCrawlerConfigKey = str
 _Uri = str
 
 
-class ImageCrawlerInfo:
+class ImageCrawlerInfo:  # pragma: no cover
+    # TODO when py >= (3.7) -- make this a data class, a frozen one.
     """ImageCrawler's Info.
 
     .. seealso:: :method:`BaseImageCrawler.info()`
