@@ -1,6 +1,6 @@
 __all__ = ["Image", "ImageCollection", "ImageUri", "SourceUri"]
 
-from typing import Any, Set, Union
+from typing import Any, Dict, Set, Union
 from uuid import uuid4
 
 from .._internals import _type_module_name_str
@@ -11,9 +11,10 @@ SourceUri = str
 
 
 class Image:
+    # TODO when py >= (3.7) -- make this a data class, a frozen one.
     """Describe an image.
 
-    An object is intended as immutable, to allow hashing without side effects.
+    An object is intended as immutable(frozen), to allow hashing without side effects.
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.
@@ -55,25 +56,27 @@ class Image:
 
     """
 
+    uri: ImageUri
+    is_generic: bool
+    source: SourceUri
+    more: Dict[str, Any]
+    __hash: int
+
     def __init__(self, *,
                  uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
                  **more: Any) -> None:
-        self.__uri = uri
-        self.__is_generic = is_generic
-        self.__hash = self.__gen_hash()
-        self.source = source
-        self.more = more
+        super().__setattr__('uri', uri)
+        super().__setattr__('is_generic', is_generic)
+        super().__setattr__('source', source)
+        super().__setattr__('more', more)
+        super().__setattr__('_Image__hash', self.__gen_hash())
 
-    @property
-    def uri(self) -> ImageUri:
-        # must not change, to keep hash in tact
-        return self.__uri
+    def __setattr__(self, *_: Any, **__: Any) -> None:
+        raise KeyError('object is frozen')
 
-    @property
-    def is_generic(self) -> bool:
-        # must not change, to keep hash in tact
-        return self.__is_generic
+    def __delattr__(self, *_: Any, **__: Any) -> None:
+        raise KeyError('object is frozen')
 
     def __gen_hash(self) -> int:
         return hash(uuid4() if self.is_generic else self.uri)

@@ -19,6 +19,7 @@ Unreleased
   * Method `nichtparasoup.core.Crawler.set_image_added()`
          & `nichtparasoup.core.Crawler.get_image_added()` were removed.  
     They are replaced by a new property `nichtparasoup.core.Crawler.image_added`.
+  * Objects of `nichtparasoup.core.image.Image` are immutable(frozen) to ensure proper hashing.
 * Added
   * New method `nichtparasoup.server.has_image() -> bool`.
   * New property `nichtparasoup.core.Crawler.is_image_addable` with getter, setter.

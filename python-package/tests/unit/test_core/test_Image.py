@@ -79,10 +79,10 @@ def test_hash_base_is_readonly() -> None:
     image = Sut(is_generic=True, uri='test', source='test')
     # assert
     with pytest.raises(Exception):
-        image.uri = 'asdf'  # type: ignore
+        image.uri = 'asdf'
     with pytest.raises(Exception):
         del image.uri
     with pytest.raises(Exception):
-        image.is_generic = False  # type: ignore
+        image.is_generic = False
     with pytest.raises(Exception):
         del image.is_generic
