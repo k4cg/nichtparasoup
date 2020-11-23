@@ -133,7 +133,7 @@ class BaseImageCrawler(ABC):
 
     @classmethod
     @abstractmethod
-    def info(cls) -> ImageCrawlerInfo:
+    def info(cls) -> ImageCrawlerInfo:  # pragma: no cover
         """Get info of the crawler
 
         example implementation:
