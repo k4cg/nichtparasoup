@@ -28,6 +28,9 @@ Unreleased
     Support any kind of Callable now, formerly supported `MethodType` only.
 * Fixes
   * API `/get` no longer responds false "404 EXHAUSTED" HTTP Status code.
+  * Method `nichtparasoup.server.get_image()` no longer responds false `None`.
+  * Image detection is now case-insensitive. Will find `.png` as well as `.PNG`.
+  * Image detection knows more extensions of jpeg: `.jpg`, `.jpeg`, `.jfif`, `.pjpeg`, `.pjp`.
   * `nichtparasoup.server.get_image()` no longer responds false `None`.
 * Removed
   * Crawler `nichtparasoup.imagecrawlers.instagram` was removed from shipped imagecrawlers.

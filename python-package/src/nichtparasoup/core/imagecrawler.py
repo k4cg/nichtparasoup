@@ -289,19 +289,28 @@ class RemoteFetcher:
 
 class RemoteFetchError(Exception):
 
-    def __init__(self, msg: str, uri: _Uri) -> None:
-        super().__init__()
-        self.msg = msg
+    def __init__(self, msg: str, uri: _Uri) -> None:  # pragma: no cover
+        super().__init__(msg)
         self.uri = uri
 
     def __str__(self) -> str:  # pragma: no cover
-        return f'{self.msg or "RemoteFetchError"} for {self.uri!r}'
+        return (str(self) or 'RemoteFetchError') + f'for {self.uri!r}'
 
 
 class ImageRecognizer:
-    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg', '.webp'}
+    _IMAGE_SUFFIXES = {
+        # see https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+        # see https://caniuse.com/?search=image%20format
+        '.apng',
+        # '.avif', constrained by https://caniuse.com/avif
+        '.gif',
+        '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp',
+        '.png',
+        '.svg',
+        '.webp',
+    }
 
     def path_is_image(self, uri: _Uri) -> bool:
         return PurePath(
             urlparse(uri).path
-        ).suffix in self._IMAGE_SUFFIXES
+        ).suffix.lower() in self._IMAGE_SUFFIXES
