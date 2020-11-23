@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -18,11 +19,13 @@ def test_eq_based_on_config() -> None:
     eq12 = imagecrawler1 == imagecrawler2
     eq13 = imagecrawler1 == imagecrawler3
     eq14 = imagecrawler1 == imagecrawler4
+    eq1mock = imagecrawler1 == Mock()
     # assert
     assert eq11
     assert eq12
     assert not eq13
     assert not eq14
+    assert not eq1mock
 
 
 def test_ne_based_on_config() -> None:
@@ -36,11 +39,13 @@ def test_ne_based_on_config() -> None:
     eq12 = imagecrawler1 != imagecrawler2
     eq13 = imagecrawler1 != imagecrawler3
     eq14 = imagecrawler1 != imagecrawler4
+    eq1mock = imagecrawler1 != Mock()
     # assert
     assert not eq11
     assert not eq12
     assert eq13
     assert eq14
+    assert eq1mock
 
 
 def test_get_config() -> None:
@@ -73,6 +78,25 @@ def test_crawl(is_exhausted: bool) -> None:
     sut = _MockImageCrawler()
     sut.is_exhausted.return_value = is_exhausted
     # act
-    sut.crawl()
+    images = sut.crawl()
     # assert
-    assert sut._crawl.call_count == (0 if is_exhausted else 1)
+    if is_exhausted:
+        sut._crawl.assert_not_called()
+        assert len(images) == 0
+    else:
+        sut._crawl.assert_called_once()
+        assert images is sut._crawl.return_value
+
+
+def test_crawl_errors() -> None:
+    # arrange
+    def raise_error(*_: Any, **__: Any) -> None:
+        raise Exception()
+    sut = _MockImageCrawler()
+    sut.is_exhausted.return_value = False
+    sut._crawl.side_effect = raise_error
+    # act
+    images = sut.crawl()
+    # assert
+    sut._crawl.assert_called_once()
+    assert len(images) == 0

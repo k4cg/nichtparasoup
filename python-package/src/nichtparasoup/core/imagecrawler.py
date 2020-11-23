@@ -23,7 +23,7 @@ _ImageCrawlerConfigKey = str
 _Uri = str
 
 
-class ImageCrawlerInfo:  # pragma: no cover
+class ImageCrawlerInfo:
     # TODO when py >= (3.7) -- make this a data class, a frozen one.
     """ImageCrawler's Info.
 
@@ -35,7 +35,7 @@ class ImageCrawlerInfo:  # pragma: no cover
                  description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[_Uri] = None,
-                 **more: Any) -> None:
+                 **more: Any) -> None:  # pragma: no cover
         """
         :param description: short description
         :param long_description: long description
