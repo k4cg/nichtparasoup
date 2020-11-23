@@ -66,11 +66,12 @@ class Image:
                  uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
                  **more: Any) -> None:
-        super().__setattr__('uri', uri)
-        super().__setattr__('is_generic', is_generic)
-        super().__setattr__('source', source)
-        super().__setattr__('more', more)
-        super().__setattr__('_Image__hash', self.__gen_hash())
+        parent = super()
+        parent.__setattr__('uri', uri)
+        parent.__setattr__('is_generic', is_generic)
+        parent.__setattr__('source', source)
+        parent.__setattr__('more', more)
+        parent.__setattr__('_Image__hash', self.__gen_hash())
 
     def __setattr__(self, *_: Any, **__: Any) -> None:
         raise KeyError('object is frozen')
