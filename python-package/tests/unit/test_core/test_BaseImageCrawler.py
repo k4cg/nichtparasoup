@@ -1,36 +1,16 @@
-from typing import Any
-from unittest.mock import Mock, patch
-
 import pytest
 
-from nichtparasoup.core.image import ImageCollection
-from nichtparasoup.core.imagecrawler import BaseImageCrawler as Sut, ImageCrawlerConfig, ImageCrawlerInfo
+from nichtparasoup.core.imagecrawler import BaseImageCrawler as Sut
 
-
-class _MockImageCrawler(Sut):
-
-    def __init__(self, **config: Any) -> None:
-        super().__init__(**config)
-
-    info = Mock(return_value=Mock(ImageCrawlerInfo))
-
-    check_config = Mock(side_effect=lambda config: ImageCrawlerConfig(**config))
-
-    is_exhausted = Mock(return_value=False)
-
-    _reset = Mock(return_value=None)
-
-    _crawl = Mock(return_value=Mock(ImageCollection))
+from .mock_BaseImageCrawler import _MockImageCrawler, _OtherImageCrawler
 
 
 def test_eq_based_on_config() -> None:
     # arrange
-    class OtherImageCrawler(_MockImageCrawler):
-        ...
     imagecrawler1 = _MockImageCrawler(test='a')
     imagecrawler2 = _MockImageCrawler(test='a')
     imagecrawler3 = _MockImageCrawler(test='c')
-    imagecrawler4 = OtherImageCrawler(test='a')
+    imagecrawler4 = _OtherImageCrawler(test='a')
     # act
     eq11 = imagecrawler1 == imagecrawler1
     eq12 = imagecrawler1 == imagecrawler2
@@ -45,12 +25,10 @@ def test_eq_based_on_config() -> None:
 
 def test_ne_based_on_config() -> None:
     # arrange
-    class OtherImageCrawler(_MockImageCrawler):
-        ...
     imagecrawler1 = _MockImageCrawler(test='a')
     imagecrawler2 = _MockImageCrawler(test='a')
     imagecrawler3 = _MockImageCrawler(test='c')
-    imagecrawler4 = OtherImageCrawler(test='a')
+    imagecrawler4 = _OtherImageCrawler(test='a')
     # act
     eq11 = imagecrawler1 != imagecrawler1
     eq12 = imagecrawler1 != imagecrawler2
@@ -69,9 +47,7 @@ def test_reset(must_reset: bool) -> None:
     sut = _MockImageCrawler()
     if must_reset:
         sut.reset()
-    reset = Mock()
-    with patch.object(sut, '_reset', reset):
-        # act
-        Sut.crawl(sut)
+    # act
+    Sut.crawl(sut)
     # assert
-    assert reset.call_count == (1 if must_reset else 0)
+    assert sut._reset.call_count == (1 if must_reset else 0)
