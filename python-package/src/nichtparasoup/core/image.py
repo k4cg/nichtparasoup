@@ -82,9 +82,9 @@ class Image:
         return self.__hash
 
     def __eq__(self, other: Union['Image', Any]) -> bool:
-        if type(other) is not type(self):  # pragma: no cover
-            return NotImplemented
-        return self.__hash == other.__hash
+        if isinstance(other, Image):
+            return self.__hash == other.__hash
+        return NotImplemented   # pragma: no cover
 
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'

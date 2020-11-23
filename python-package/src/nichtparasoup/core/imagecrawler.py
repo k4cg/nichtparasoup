@@ -69,8 +69,8 @@ class BaseImageCrawler(ABC):
                 super().__init__(height=height)
         """
         self._config = self.check_config(config)  # intended to be immutable from now on
-        self._reset_before_next_crawl: bool = False
-        self._crawl_lock = Lock()
+        self.__reset_before_next_crawl: bool = False
+        self.__crawl_lock = Lock()
         _log('debug', 'crawler initialized: %r', self)
 
     def __repr__(self) -> str:  # pragma: no cover
@@ -83,9 +83,9 @@ class BaseImageCrawler(ABC):
             return self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
-        if type(self) is not type(other):
-            return NotImplemented
-        return self._config == other._config
+        if isinstance(other, BaseImageCrawler):
+            return type(self) is type(other) and self._config == other._config
+        return False
 
     def get_internal_name(self) -> Optional[str]:
         """get the internal name"""
@@ -108,15 +108,15 @@ class BaseImageCrawler(ABC):
     config = property(get_config)
 
     def reset(self) -> None:
-        self._reset_before_next_crawl = True
+        self.__reset_before_next_crawl = True
         _log('debug', 'crawler reset planned for %r', self)
 
     def crawl(self) -> ImageCollection:
-        with self._crawl_lock:
-            if self._reset_before_next_crawl:
+        with self.__crawl_lock:
+            if self.__reset_before_next_crawl:
                 _log('debug', 'Crawler resetting %r', self)
                 self._reset()
-                self._reset_before_next_crawl = False
+                self.__reset_before_next_crawl = False
             if self.is_exhausted():
                 _log('debug', 'Prevented exhausted crawling %s', self)
                 return ImageCollection()
