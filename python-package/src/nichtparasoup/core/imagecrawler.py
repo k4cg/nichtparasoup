@@ -294,7 +294,7 @@ class RemoteFetchError(Exception):
         self.uri = uri
 
     def __str__(self) -> str:  # pragma: no cover
-        return (str(self) or 'RemoteFetchError') + f'for {self.uri!r}'
+        return (super().__str__() or 'RemoteFetchError') + f' for {self.uri!r}'
 
 
 class ImageRecognizer:
