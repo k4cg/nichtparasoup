@@ -65,3 +65,14 @@ def test_reset(must_reset: bool) -> None:
     Sut.crawl(sut)
     # assert
     assert sut._reset.call_count == (1 if must_reset else 0)
+
+
+@pytest.mark.parametrize('is_exhausted', [False, True], ids=['not_exhausted', 'is_exhausted'])
+def test_crawl(is_exhausted: bool) -> None:
+    # arrange
+    sut = _MockImageCrawler()
+    sut.is_exhausted.return_value = is_exhausted
+    # act
+    sut.crawl()
+    # assert
+    assert sut._crawl.call_count == (0 if is_exhausted else 1)
