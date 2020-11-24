@@ -4,9 +4,12 @@
 __all__ = [
     "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
     "Image", "ImageCollection",
-    "RemoteFetcher", "ImageRecognizer",
+    "RemoteFetcher", "RemoteFetchError",
+    "ImageRecognizer",
 ]
 
 
 from .core.image import Image, ImageCollection
-from .core.imagecrawler import BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher
+from .core.imagecrawler import (
+    BaseImageCrawler, ImageCrawlerConfig, ImageCrawlerInfo, ImageRecognizer, RemoteFetcher, RemoteFetchError,
+)

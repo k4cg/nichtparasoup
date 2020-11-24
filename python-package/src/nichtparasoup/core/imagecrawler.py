@@ -1,7 +1,7 @@
 __all__ = [
-    "ImageCrawlerConfig",
-    "BaseImageCrawler",
-    "ImageCrawlerInfo", "RemoteFetcher", "ImageRecognizer"
+    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "RemoteFetcher", "RemoteFetchError",
+    "ImageRecognizer",
 ]
 
 import os

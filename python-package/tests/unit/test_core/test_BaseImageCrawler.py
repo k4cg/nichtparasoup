@@ -1,4 +1,3 @@
-from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -90,11 +89,9 @@ def test_crawl(is_exhausted: bool) -> None:
 
 def test_crawl_errors() -> None:
     # arrange
-    def raise_error(*_: Any, **__: Any) -> None:
-        raise Exception()
     sut = _MockImageCrawler()
     sut.is_exhausted.return_value = False
-    sut._crawl.side_effect = raise_error
+    sut._crawl.side_effect = Exception()
     # act
     images = sut.crawl()
     # assert
