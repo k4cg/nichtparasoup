@@ -231,11 +231,10 @@ class RemoteFetcher:
         if not stored_dir:
             return None
         file_name = f'{uuid4()}.nprfl'
-        file = stored_dir / file_name
         type4log = _type_module_name_str(type(self))
         _log('debug', f'{type4log} writing response for {request_url!r} to {file_name!r}')
         try:
-            self.__debug_write_response_file(file, response)
+            self.__debug_write_response_file(stored_dir / file_name, response)
         except Exception as ex:
             _log('debug', f'{type4log} failed writing response for {request_url!r} to {file_name!r}', exc_info=ex)
             raise ex

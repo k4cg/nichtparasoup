@@ -16,15 +16,11 @@ def test_get_stream(mocker: MockerFixture) -> None:
     timeout = randfloat(1.0, 9.9)
     headers = {'x-foo': 'foo', 'x-bar': 'bazz'}
     sut = Sut(timeout=timeout, headers=headers)
-    valid_uri = Mock(return_value=True)
-    mocker.patch.object(Sut, '_valid_uri', valid_uri)
+    valid_uri = mocker.patch.object(Sut, '_valid_uri', return_value=True)
     request_url = 'request_url'
-    debug_write_response = Mock()
-    mocker.patch.object(sut, '_RemoteFetcher__debug_write_response', debug_write_response)
-    urlopen = Mock(return_value=actual_response)
-    mocker.patch('nichtparasoup.core.imagecrawler.urlopen', urlopen)
-    request = Mock()
-    mocker.patch('nichtparasoup.core.imagecrawler.Request', request)
+    debug_write_response = mocker.patch.object(sut, '_RemoteFetcher__debug_write_response')
+    urlopen = mocker.patch('nichtparasoup.core.imagecrawler.urlopen', return_value=actual_response)
+    request = mocker.patch('nichtparasoup.core.imagecrawler.Request')
     # act
     got_response, got_url = Sut.get_stream(sut, request_url)
     # assert
@@ -44,8 +40,7 @@ def test_get_stream_invalid_url(mocker: MockerFixture) -> None:
     sut = Mock()
     sut._valid_uri.return_value = False
     request_url = 'request_url'
-    urlopen = Mock()
-    mocker.patch('nichtparasoup.core.imagecrawler.urlopen', urlopen)
+    urlopen = mocker.patch('nichtparasoup.core.imagecrawler.urlopen')
     # act
     with pytest.raises(ValueError, match=request_url):
         Sut.get_stream(sut, request_url)
