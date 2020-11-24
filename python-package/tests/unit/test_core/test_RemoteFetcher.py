@@ -1,7 +1,8 @@
 import os
 from http.client import HTTPResponse
+from io import BytesIO
 from random import choice, randint, uniform as randfloat
-from unittest.mock import Mock, mock_open
+from unittest.mock import Mock
 
 import pytest
 from py.path import local as LocalPath  # noqa: N812
@@ -127,7 +128,7 @@ def test_store_for_debbug(mocker: MockerFixture, tmpdir: LocalPath) -> None:
     mocker.patch.dict(os.environ, {Sut.ENV_STOREDIR: tmpdir.strpath})
     request_url = 'request_url'
     response_data = bytes(randint(0, 7) for _ in range(randint(256, 1024)))
-    response = Mock(HTTPResponse, fp=mock_open(read_data=response_data)(mode='rb'))
+    response = Mock(HTTPResponse, fp=BytesIO(response_data))
     response.geturl.return_value = request_url
     response.getheaders.return_value = {'x-foo': 'foo', 'x-bar': 'bar'}.items()
     # act
