@@ -98,3 +98,27 @@ def test_get_string() -> None:
     assert got_string == actual_string
     assert got_url == actual_url
     actual_response.close.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    ('uri', 'expected_valid'),
+    [
+        ('http://test.url', True),
+        ('https://test.url', True),
+        ('file://test.url', False),
+        ('ftp://test.url', False),
+        ('test.url', False),
+    ],
+    ids=[
+        'http',
+        'https',
+        'file',
+        'ftp',
+        'none',
+    ]
+)
+def test__valid_uri(uri: str, expected_valid: bool) -> None:
+    # act
+    got_valid = Sut._valid_uri(uri)
+    # assert
+    assert got_valid is expected_valid
