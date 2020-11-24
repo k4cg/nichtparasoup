@@ -20,7 +20,7 @@ else:
     from typing_extensions import Protocol
 
 _Timestamp = int
-"""Time in seconds since the Epoch
+"""Time in seconds since the Unix Epoch
 """
 
 
