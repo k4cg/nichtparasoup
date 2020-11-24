@@ -68,7 +68,7 @@ class Server:
     def __init__(self, core: NPCore, *,
                  crawler_upkeep: int = 30,
                  reset_timeout: int = 60 * 60
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         self.core = core
         self.keep = max(crawler_upkeep, 10)
         self.reset_timeout = max(reset_timeout, 600)
