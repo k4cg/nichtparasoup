@@ -226,7 +226,7 @@ class RemoteFetcher:
     def _valid_uri(uri: _Uri) -> bool:
         return urlparse(uri).scheme in {'http', 'https'}
 
-    def __debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
+    def _debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
         stored_dir = self._debug_store_dir
         if not stored_dir:
             return None
@@ -235,25 +235,25 @@ class RemoteFetcher:
         _log('debug', f'{type4log} writing response for {request_url!r} to {file_name!r}')
         try:
             self.__debug_write_response_file(stored_dir / file_name, response)
-        except Exception as ex:
+        except Exception as ex:  # pragma: no cover
             _log('debug', f'{type4log} failed writing response for {request_url!r} to {file_name!r}', exc_info=ex)
             raise ex
 
     @staticmethod
     def __debug_write_response_file(file: Path, response: HTTPResponse) -> None:
         url = response.geturl()
-        with open(file, 'wt') as fp_meta:
+        with open(file, mode='wt') as fp_meta:
             fp_meta.writelines([url, '\n', str(response.getcode()), '\n'])
             fp_meta.write('\n')
             fp_meta.writelines(f'{header}: {value}\n' for header, value in response.getheaders())
             fp_meta.write('\n')
         response_fp = response.fp  # type: ignore[attr-defined]
         if response_fp:
-            with open(file, 'ab') as fp_data:
+            with open(file, mode='ab') as fp_data:
                 fp_pos = fp_data.tell()
                 fp_data.write(response_fp.read())
             response_fp.close()
-            fp_data = open(file, 'rb')
+            fp_data = open(file, mode='rb')
             fp_data.seek(fp_pos)
             fp_data.seekable = lambda: False  # type: ignore[assignment]
             response.fp = fp_data  # type: ignore[attr-defined]
@@ -269,7 +269,7 @@ class RemoteFetcher:
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
         if isinstance(response, HTTPResponse):
-            self.__debug_write_response(response, uri)
+            self._debug_write_response(response, uri)
         return response, response.geturl()
 
     def get_bytes(self, uri: _Uri) -> Tuple[bytes, _Uri]:

@@ -1,8 +1,10 @@
+import os
 from http.client import HTTPResponse
-from random import choice, uniform as randfloat
-from unittest.mock import Mock
+from random import choice, randint, uniform as randfloat
+from unittest.mock import Mock, mock_open
 
 import pytest
+from py.path import local as LocalPath  # noqa: N812
 from pytest_mock import MockerFixture
 
 from nichtparasoup.core.imagecrawler import RemoteFetcher as Sut, RemoteFetchError
@@ -10,6 +12,7 @@ from nichtparasoup.core.imagecrawler import RemoteFetcher as Sut, RemoteFetchErr
 
 def test_get_stream(mocker: MockerFixture) -> None:
     # arrange
+    mocker.patch.dict(os.environ, {Sut.ENV_STOREDIR: ''})
     actual_url = 'actual_url'
     actual_response = Mock(HTTPResponse, name='actual_response')
     actual_response.geturl.return_value = actual_url
@@ -18,7 +21,7 @@ def test_get_stream(mocker: MockerFixture) -> None:
     sut = Sut(timeout=timeout, headers=headers)
     valid_uri = mocker.patch.object(Sut, '_valid_uri', return_value=True)
     request_url = 'request_url'
-    debug_write_response = mocker.patch.object(sut, '_RemoteFetcher__debug_write_response')
+    debug_write_response = mocker.patch.object(sut, '_debug_write_response')
     urlopen = mocker.patch('nichtparasoup.core.imagecrawler.urlopen', return_value=actual_response)
     request = mocker.patch('nichtparasoup.core.imagecrawler.Request')
     # act
@@ -117,3 +120,21 @@ def test__valid_uri(uri: str, expected_valid: bool) -> None:
     got_valid = Sut._valid_uri(uri)
     # assert
     assert got_valid is expected_valid
+
+
+def test_store_for_debbug(mocker: MockerFixture, tmpdir: LocalPath) -> None:
+    # arrange
+    mocker.patch.dict(os.environ, {Sut.ENV_STOREDIR: tmpdir.strpath})
+    request_url = 'request_url'
+    response_data = bytes(randint(0, 7) for _ in range(randint(256, 1024)))
+    response = Mock(HTTPResponse, fp=mock_open(read_data=response_data)(mode='rb'))
+    response.geturl.return_value = request_url
+    response.getheaders.return_value = {'x-foo': 'foo', 'x-bar': 'bar'}.items()
+    # act
+    sut = Sut()
+    sut._debug_write_response(response, request_url)
+    # assert
+    assert response.fp.read() == response_data
+    tempfile = tmpdir.listdir()[0]
+    assert tempfile.isfile()
+    assert response_data in tempfile.open(mode='rb').read()
