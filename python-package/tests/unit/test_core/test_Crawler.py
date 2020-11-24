@@ -160,15 +160,11 @@ def test_reset() -> None:
 def test_crawl(is_exhausted: bool, restart_at_front_when_exhausted: bool) -> None:
     # arrange
     images = {Mock() for _ in range(randint(1, 99))}
-    sut = Mock(
-        Sut,
-        imagecrawler=Mock(
-            is_exhausted=Mock(return_value=is_exhausted),
-            crawl=Mock(return_value=images),
-        ),
-        restart_at_front_when_exhausted=restart_at_front_when_exhausted,
-        _add_images=Mock(return_value=len(images)),
-    )
+    sut = Mock(Sut, imagecrawler=Mock())
+    sut.imagecrawler.is_exhausted.return_value = is_exhausted
+    sut.imagecrawler.crawl.return_value = images
+    sut.restart_at_front_when_exhausted = restart_at_front_when_exhausted
+    sut._add_images.return_value = len(images)
     # act
     crawled = Sut.crawl(sut)
     # assert
