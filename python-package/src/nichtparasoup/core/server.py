@@ -67,7 +67,7 @@ class Server:
         self.stats = ServerStatistics()
         self._refiller: Optional[ServerRefiller] = None
         self._trigger_reset = False
-        self._locks = _ServerLocks()
+        self.__locks = __ServerLocks()
         self.__running = False
 
     def has_image(self) -> bool:
@@ -78,7 +78,7 @@ class Server:
             image = crawler.pop_random_image()
             if image is None:
                 continue
-            with self._locks.stats_get_image:
+            with self.__locks.stats_get_image:
                 self.stats.count_images_served += 1
             return ImageResponse(image, crawler)
         return None
@@ -90,11 +90,11 @@ class Server:
             _log('info', 'refilled by %d via %s', refilled, crawler.imagecrawler)
 
     def refill(self) -> None:
-        with self._locks.refill:
+        with self.__locks.refill:
             self.core.fill_up_to(self.keep, on_refill=self._log_refill_crawler)
 
     def _reset(self) -> None:
-        with self._locks.reset:
+        with self.__locks.reset:
             self.stats.cum_blacklist_on_flush += self.core.reset()
             self.stats.count_reset += 1
             self.stats.time_last_reset = int(time())
@@ -116,7 +116,7 @@ class Server:
         return ResetResponse(request_valid, timeout)
 
     def start(self) -> None:
-        with self._locks.run:
+        with self.__locks.run:
             if self.__running:
                 raise RuntimeError('already running')
             _log('info', ' * starting %s', type(self).__name__)
@@ -132,7 +132,7 @@ class Server:
         return self.__running
 
     def stop(self) -> None:
-        with self._locks.run:
+        with self.__locks.run:
             if not self.__running:
                 raise RuntimeError('not running')
             _log('info', "\r\n * stopping %s", type(self).__name__)
@@ -157,6 +157,8 @@ class _CollectionStatus:
 
 _CS = TypeVar('_CS', bound=_CollectionStatus)
 
+_SL = TypeVar('_SL')
+
 
 class StatusLike(Protocol):  # pragma: no cover
     """A snapshot of server's metrics.
@@ -165,11 +167,8 @@ class StatusLike(Protocol):  # pragma: no cover
     """
 
     @classmethod
-    def of_server(cls: Type['_SL'], server: Server) -> '_SL':
+    def of_server(cls: Type[_SL], server: Server) -> _SL:
         raise NotImplementedError()
-
-
-_SL = TypeVar('_SL')
 
 
 class ServerStatus(StatusLike):
@@ -270,7 +269,7 @@ class ServerRefiller(Thread):
             self._stop_event.set()
 
 
-class _ServerLocks:
+class __ServerLocks:
     def __init__(self) -> None:  # pragma: no cover
         self.stats_get_image = Lock()
         self.reset = Lock()
