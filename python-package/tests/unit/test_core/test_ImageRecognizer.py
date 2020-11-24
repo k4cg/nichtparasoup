@@ -26,4 +26,4 @@ def test_known_ext(path: str) -> None:
     # act
     is_image = ir.path_is_image(path)
     # assert
-    assert is_image
+    assert is_image is True

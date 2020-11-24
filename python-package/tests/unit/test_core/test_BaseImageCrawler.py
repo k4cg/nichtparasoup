@@ -20,11 +20,11 @@ def test_eq_based_on_config() -> None:
     eq14 = imagecrawler1 == imagecrawler4
     eq1mock = imagecrawler1 == Mock()
     # assert
-    assert eq11
-    assert eq12
-    assert not eq13
-    assert not eq14
-    assert not eq1mock
+    assert eq11 is True
+    assert eq12 is True
+    assert eq13 is False
+    assert eq14 is False
+    assert eq1mock is False
 
 
 def test_ne_based_on_config() -> None:
@@ -40,11 +40,11 @@ def test_ne_based_on_config() -> None:
     eq14 = imagecrawler1 != imagecrawler4
     eq1mock = imagecrawler1 != Mock()
     # assert
-    assert not eq11
-    assert not eq12
-    assert eq13
-    assert eq14
-    assert eq1mock
+    assert eq11 is False
+    assert eq12 is False
+    assert eq13 is True
+    assert eq14 is True
+    assert eq1mock is True
 
 
 def test_get_config() -> None:

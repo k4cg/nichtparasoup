@@ -13,7 +13,7 @@ def test_eq(is_generic: bool) -> None:
     eq12 = image1 == image2
     eq21 = image2 == image1
     # assert
-    assert eq
+    assert eq is True
     assert is_generic != eq12
     assert is_generic != eq21
 
@@ -28,7 +28,7 @@ def test_ne(is_generic: bool) -> None:
     ne12 = image1 != image2
     ne21 = image2 != image1
     # assert
-    assert not ne
+    assert ne is False
     assert is_generic == ne12
     assert is_generic == ne21
 
@@ -57,8 +57,8 @@ def test_in_set(is_generic: bool) -> None:
     in_set2 = image2 in images
     # assert
     assert len(images) == (2 if is_generic else 1)
-    assert in_set1
-    assert in_set2
+    assert in_set1 is True
+    assert in_set2 is True
 
 
 @pytest.mark.parametrize('is_generic', [False, True], ids=['not_generic', 'generic'])
