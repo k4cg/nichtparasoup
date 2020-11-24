@@ -45,6 +45,14 @@ class ResetResponse:
         self.timeout = timeout
 
 
+class _ServerLocks:
+    def __init__(self) -> None:  # pragma: no cover
+        self.stats_get_image = Lock()
+        self.reset = Lock()
+        self.refill = Lock()
+        self.run = Lock()
+
+
 class Server:
     """
 
@@ -67,7 +75,7 @@ class Server:
         self.stats = ServerStatistics()
         self._refiller: Optional[ServerRefiller] = None
         self._trigger_reset = False
-        self.__locks = __ServerLocks()
+        self.__locks = _ServerLocks()
         self.__running = False
 
     def has_image(self) -> bool:
@@ -267,11 +275,3 @@ class ServerRefiller(Thread):
                 raise RuntimeError('not running')
             _log('info', ' * stopping %s', type(self).__name__)
             self._stop_event.set()
-
-
-class __ServerLocks:
-    def __init__(self) -> None:  # pragma: no cover
-        self.stats_get_image = Lock()
-        self.reset = Lock()
-        self.refill = Lock()
-        self.run = Lock()
