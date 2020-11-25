@@ -165,38 +165,39 @@ class _CollectionStatus:
 
 _CS = TypeVar('_CS', bound=_CollectionStatus)
 
-_SL = TypeVar('_SL')
 
-
-class StatusLike(Protocol):  # pragma: no cover
+class StatusLike(Protocol):
     """A snapshot of server's metrics.
 
     Basically a data class alike.
     """
 
     @classmethod
-    def of_server(cls: Type[_SL], server: Server) -> _SL:
+    def of_server(cls: Type['_SL'], server: Server) -> '_SL':
         raise NotImplementedError()
+
+
+_SL = TypeVar('_SL', bound=StatusLike)
 
 
 class ServerStatus(StatusLike):
     class _Reset:
-        def __init__(self, count: int, since: int) -> None:  # pragma: no cover
+        def __init__(self, count: int, since: int) -> None:
             self.count = count
             self.since = since
 
     class _Images:
-        def __init__(self, served: int, crawled: int) -> None:  # pragma: no cover
+        def __init__(self, served: int, crawled: int) -> None:
             self.served = served
             self.crawled = crawled
 
-    def __init__(self, *, uptime: int, reset: _Reset, images: _Images) -> None:  # pragma: no cover
+    def __init__(self, *, uptime: int, reset: _Reset, images: _Images) -> None:
         self.uptime = uptime
         self.reset = reset
         self.images = images
 
     @classmethod
-    def of_server(cls, server: Server) -> 'ServerStatus':
+    def of_server(cls: Type['_ServerStatus'], server: Server) -> '_ServerStatus':
         now = int(time())
         stats = server.stats
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
@@ -213,27 +214,34 @@ class ServerStatus(StatusLike):
         )
 
 
+_ServerStatus = TypeVar('_ServerStatus', bound=ServerStatus)
+
+
 class BlacklistStatus(_CollectionStatus, StatusLike):
 
     @classmethod
-    def of_server(cls: Type['BlacklistStatus'], server: Server) -> 'BlacklistStatus':
+    def of_server(cls: Type['_BlacklistStatus'], server: Server) -> '_BlacklistStatus':
         return super().of_collection(server.core.blacklist)
+
+
+_BlacklistStatus = TypeVar('_BlacklistStatus', bound=BlacklistStatus)
 
 
 class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler'], StatusLike):
     class _Crawler:
-        def __init__(self, crawler: Crawler) -> None:  # pragma: no cover
+        def __init__(self, crawler: Crawler) -> None:
             self.name = crawler.imagecrawler.internal_name
             self.weight = crawler.weight
             self.type = _type_module_name_str(type(crawler.imagecrawler))
             self.config = crawler.imagecrawler.get_config()
             self.images = _CollectionStatus.of_collection(crawler.images)
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pragma: no cover
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        # TODO remove?
         super().__init__(*args, **kwargs)
 
     @classmethod
-    def of_server(cls, server: Server) -> 'CrawlerStatus':
+    def of_server(cls: Type['_CrawlerStatus'], server: Server) -> '_CrawlerStatus':
         return cls(
             (id(crawler), cls._Crawler(crawler))
             for crawler
@@ -241,9 +249,12 @@ class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler'], StatusLike):
         )
 
 
+_CrawlerStatus = TypeVar('_CrawlerStatus', bound=CrawlerStatus)
+
+
 class ServerRefiller(Thread):
 
-    def __init__(self, server: Server, delay: float) -> None:  # pragma: no cover
+    def __init__(self, server: Server, delay: float) -> None:
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
         self._delay = delay
