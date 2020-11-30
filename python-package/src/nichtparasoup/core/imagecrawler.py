@@ -228,7 +228,7 @@ class RemoteFetcher:
 
     def _debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
         stored_dir = self._debug_store_dir
-        if not stored_dir:
+        if not stored_dir:  # pragma: no cover
             return None
         file_name = f'{uuid4()}.nprfl'
         type4log = _type_module_name_str(type(self))
