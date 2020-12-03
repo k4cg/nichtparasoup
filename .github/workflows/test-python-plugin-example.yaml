@@ -7,7 +7,7 @@ on:
   push:
     branches: [ 'master', '3.0-dev' ]
     paths:
-      - '.github/workflows/python-plugin-example-tests.yaml'
+      - '.github/workflows/test-python-plugin-example.yaml'
       - '.github/codeql/python-plugin-example.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
@@ -18,7 +18,7 @@ on:
   pull_request:
     branches: [ 'master', '3.0-dev' ]
     paths:
-      - '.github/workflows/python-plugin-example-tests.yaml'
+      - '.github/workflows/test-python-plugin-example.yaml'
       - '.github/codeql/python-plugin-example.yaml'
       - 'python-plugin-example/**'
       - '!python-plugin-example/docs/**'
@@ -106,15 +106,25 @@ jobs:
           python -m pip install -U wheel setuptools pip
           python -m pip install tox -c requirements/tox.txt
       - name: Test ${{ env.project-directory }}
+        id: tests
         run:
           python -m tox -r -s false --
-          --junit-xml=reports/pytests/${{ runner.os }}-${{ matrix.python }}.xml
+          --junit-xml=${{ env.reports-directory }}/pytests/${{ runner.os }}-${{ matrix.python }}.xml
           -o junit_suite_name=${{ runner.os }}-${{ matrix.python }}
         env:
           TOXENV: ${{ matrix.toxenv }}
           TOX_PARALLEL_NO_SPINNER: 1
+      # has some issues with multiple parallel runs -- reports are sent to wrong run some times
+      # - name: Publish pytest results
+      #  if: ${{ ! cancelled() && ! matrix.no-unit-test }}
+      #  # see https://github.com/mikepenz/action-junit-report
+      #  uses: mikepenz/action-junit-report@v1
+      #  with:
+      #    check_name: Pytests Report ${{ matrix.name }} PythonPluginExample
+      #    report_paths: ${{ env.project-directory }}/${{ env.reports-directory }}/pytests/${{ runner.os }}-${{ matrix.python }}.xml
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Artifact reports
-        if: ${{ always() && ! matrix.no-unit-test }}
+        if: ${{ ! cancelled() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -122,12 +132,12 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
       - name: Rename coverage for artifact
-        if: ${{ always() && ! matrix.no-unit-test }}
+        if: ${{ ! cancelled() && ! matrix.no-unit-test }}
         run: |
           mkdir ${{ env.coverage-artifact-dir }}
           mv .coverage ${{ env.coverage-artifact-dir }}/${{ runner.os }}-${{ matrix.python }}.coverage
       - name: Artifact coverage
-        if: ${{ always() && ! matrix.no-unit-test }}
+        if: ${{ ! cancelled() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
         uses: actions/upload-artifact@v2
         with:
@@ -141,7 +151,7 @@ jobs:
     name: Merge test reports
     needs: [ 'test' ]
     # jus wait until 'test' finished, but run regardless of the outcome
-    if: ${{ always() }}
+    if: ${{ ! cancelled() }}
     runs-on: ubuntu-latest
     env:
       coverage-artifact-dir: _coverage
@@ -198,7 +208,7 @@ jobs:
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ always() && github.repository_owner == 'k4cg' }}
+    if: ${{ ! cancelled() && github.repository_owner == 'k4cg' }}
     needs: [ 'test', 'test-reporting_merge' ]
     runs-on: ubuntu-latest
     steps:

@@ -7,7 +7,7 @@ on:
   push:
     branches: [ 'master', '3.0-dev' ]
     paths:
-      - '.github/workflows/web-ui-tests.yaml'
+      - '.github/workflows/test-web-ui.yaml'
       - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
@@ -17,7 +17,7 @@ on:
   pull_request:
     branches: [ 'master', '3.0-dev' ]
     paths:
-      - '.github/workflows/web-ui-tests.yaml'
+      - '.github/workflows/test-web-ui.yaml'
       - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
@@ -36,7 +36,7 @@ jobs:
   sonarcloud:
     name: SonarScanner
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ github.repository_owner == 'k4cg' }}
+    if: ${{ ! cancelled() && github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
