@@ -2,16 +2,20 @@ __all__ = [
     # ready-to-use instagram crawlers:
     "InstagramHashtag", "InstagramProfile",
     # stuff to implement an own instagram crawler:
-    "BaseInstagramCrawler", "InstagramQueryHashFinder", "INSTAGRAM_URL_ROOT", "INSTAGRAM_ICON_URL",
+    "INSTAGRAM_URL_ROOT", "INSTAGRAM_ICON_URL",
+    "BaseInstagramCrawler", "InstagramQueryHashFinder", "InstagramRemoteFetcher",
 ]
 
 import sys
 from abc import ABC, abstractmethod
+from http.client import HTTPResponse
 from json import dumps as json_encode, loads as json_loads
 from re import compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Set
+from time import sleep, time
+from typing import Any, Dict, Optional, Pattern, Set, Tuple, Union
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
+from urllib.response import addinfourl
 
 from .._internals import _log
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
@@ -48,7 +52,10 @@ else:
 # INTERNALS
 # ---------
 #
-# Since `query_hash` ins unique per purpose, its fetched once per class. so instances do share it.
+# Instagram is risky to use when flooded with requests.
+# To limit these, a blocking RemoteFetcher should be used: `InstagramRemoteFetcher`.
+#
+# Since `query_hash` is unique per purpose, its fetched once per class. so instances do share it.
 # Finding possible `query_hash` is quite easy my searching through instagram's root pge and included JavaScripts.
 # If a candidate is correct will be checked, if instagram's response to a request has the correct data format. This is
 # done by checking a response for a certain format that is unique to its purpose (see `query_hash` description)
@@ -70,6 +77,25 @@ INSTAGRAM_ICON_URL = INSTAGRAM_URL_ROOT + 'static/images/ico/favicon-192.png/68d
 
 _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
+_Uri = str
+
+
+class InstagramRemoteFetcher(RemoteFetcher):
+    """Instagram does not like many requests in short time.
+    This RemoteFetcher has a locking mechanism and some delay.
+    """
+    __DELAY = 0.1
+    __LOCK = Lock()
+    __get_stream_next = 0.0
+
+    def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
+        with self.__LOCK:
+            delay = InstagramRemoteFetcher.__get_stream_next - time()
+            if delay > 0.0:
+                sleep(delay)
+            InstagramRemoteFetcher.__get_stream_next = time() + InstagramRemoteFetcher.__DELAY
+            return super().get_stream(uri)
+
 
 class InstagramQueryHashFinder:
     __CONTAINER_PATH_RE = {
@@ -82,7 +108,7 @@ class InstagramQueryHashFinder:
     def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:
         self._container_re = re_compile(self.__CONTAINER_PATH_RE[container_type])
         self._query_hash_re = re_compile(self.__QUERY_HASH_RE)
-        self._remote_fetcher = RemoteFetcher()
+        self._remote_fetcher = InstagramRemoteFetcher()
 
     def find_hashes(self) -> Set[str]:
         return self._get_from_container(self._container_re)
@@ -127,7 +153,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         self._amount = 10
         self._has_next_page: bool = True
         self._cursor: Optional[str] = None
-        self._remote_fetcher = RemoteFetcher()
+        self._remote_fetcher = InstagramRemoteFetcher()
 
     def is_exhausted(self) -> bool:
         return not self._has_next_page
@@ -237,10 +263,10 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
     def _find_query_hash(self) -> Optional[str]:
         query_hashes = self._get_queryhashfinder().find_hashes()
-        try:
-            return next(filter(self._check_query_hash, query_hashes))
-        except StopIteration:
-            return None
+        for query_hash in query_hashes:
+            if self._check_query_hash(query_hash):
+                return query_hash
+        return None
 
     def _get_query_hash(self) -> str:
         cls = self.__class__
