@@ -13,6 +13,8 @@ Unreleased
 * Fixes
   * API `/get` no longer responds false "404 EXHAUSTED" HTTP Status code.
   * `nichtparasoup.server.get_image()` no longer responds false `None`.
+* Removed
+  * Crawler `nichtparasoup.imagecrawlers.instagram.InstagramProfile` no longer has a new optional config `profile_id`.  
 
 ## 3.0.0a2
 
