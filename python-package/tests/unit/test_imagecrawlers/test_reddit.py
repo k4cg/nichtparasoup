@@ -139,7 +139,7 @@ class TestRedditExhausted:
         assert not crawler.is_exhausted()
 
 
-_FILE_FETCHER = FileFetcher({  # relative to "./testdata_instagram"
+_FILE_FETCHER = FileFetcher({  # relative to "./testdata_reddit"
     '/r/aww.json?after=': 'aww.json',
     '/r/awwwwwwww.json?after=': 'awwwwwwww.json',
 }, base_url='https://www.reddit.com', base_dir=path_join(dirname(__file__), 'testdata_reddit'))

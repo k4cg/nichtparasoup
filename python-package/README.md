@@ -10,10 +10,9 @@
 
 _nichtparasoup_ is a hackspaces entertainment system.
 It randomly displays images from
-[instagram](https://instagram.com),
 [pr0gramm](https://pr0gramm.com) and
 [reddit](https://reddit.com).  
-Other crawlers are currently removed, but will be back soon.
+Other crawlers are currently removed, but might be back soon as plugins.
 
 If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
 Contribute it to the _nichtparasoup_ project or write it as an independent plugin :-)
