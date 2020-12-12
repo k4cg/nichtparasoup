@@ -11,7 +11,6 @@ from pkg_resources import EntryPoint, iter_entry_points
 from .._internals import _log
 from ..core.imagecrawler import BaseImageCrawler
 from .echo import Echo
-from .instagram import InstagramHashtag, InstagramProfile
 from .picsum import Picsum
 from .pr0gramm import Pr0gramm
 from .reddit import Reddit
@@ -29,8 +28,6 @@ class KnownImageCrawlers:
             'Echo': Echo,
             'Picsum': Picsum,
             'Reddit': Reddit,
-            'InstagramProfile': InstagramProfile,
-            'InstagramHashtag': InstagramHashtag,
             'Pr0gramm': Pr0gramm,
         }
 

@@ -3,13 +3,15 @@ from collections import OrderedDict
 from json import dumps as json_dumps, loads as json_loads
 from os.path import dirname, join as path_join
 from typing import Any, Dict, Tuple
+from unittest.mock import Mock
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urlparse
 
 import pytest
 
 from nichtparasoup.imagecrawler import Image, ImageCollection
 from nichtparasoup.imagecrawlers.instagram import (
-    BaseInstagramCrawler, InstagramHashtag, InstagramProfile, InstagramQueryHashFinder,
+    BaseInstagramCrawler, BaseInstagramQueryHashFinder, InstagramHashtag, InstagramProfile,
+    _InstagramProfileQueryHashFinder, _InstagramTagQueryHashFinder,
 )
 from nichtparasoup.testing.imagecrawler import FileFetcher, ImageCrawlerLoaderTest
 
@@ -58,6 +60,8 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/': 'index.html',
     '/static/bundles/metro/TagPageContainer.js/1bad9348735e.js': '1bad9348735e.js',
     '/static/bundles/metro/Consumer.js/ebbdfced63f8.js': 'ebbdfced63f8.js',
+    '/static/bundles/metro/Consumer.js/b8052b18ef4d.js': 'b8052b18ef4d.js',
+    'static/bundles/metro/TagPageContainer.js/5dc93b582a6c.js': '5dc93b582a6c.js',
     '/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&'
     'variables=%7B%22first%22%3A+1%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
         'query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={first-1,after,tag_name-foo}',
@@ -70,6 +74,7 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
     '/graphql/query/?query_hash=174a5243287c5f3a7de741089750ab3b&'
     'variables=%7B%22first%22%3A+5%2C+%22after%22%3A+%22%22%2C+%22tag_name%22%3A+%22foo%22%7D':
         'query_hash=174a5243287c5f3a7de741089750ab3b&variables={first-5,after,tag_name-foo}',
+    '/explore/tags/foo/': 'foo',
     '/natgeo/': 'natgeo',
     '/natgeo/?__a=1': 'natgeo.__a=1',
     '/graphql/query/?query_hash=51fdd02b67508306ad4484ff574a0b62&'
@@ -89,20 +94,25 @@ _FILE_FETCHER = _InstagramFileFetcher({  # relative to './testdata_instagram'
         'query_hash=51fdd02b67508306ad4484ff574a0b62&variables={first-5,after,id-787132}',
 }, base_url='https://www.instagram.com/', base_dir=_InstagramFileFetcher.TESTDATA_PATH)
 
-_QUERYHASHES_EXPECTED_TAG = {'f0986789a5c5d17c2400faebf16efd0d',
-                             'ff260833edf142911047af6024eb634a',
-                             '174a5243287c5f3a7de741089750ab3b'}
+_QUERYHASHES_EXPECTED_TAG = {
+    '174a5243287c5f3a7de741089750ab3b',
+}
 
-_QUERYHASHES_EXPECTED_PROFILE = {'97b41c52301f77ce508f55e66d17620e',
-                                 '51fdd02b67508306ad4484ff574a0b62'}
+_QUERYHASHES_EXPECTED_PROFILE = {
+    '51fdd02b67508306ad4484ff574a0b62',
+    '1ee91c32fc020d44158a3192eda98247',
+    'bfa387b2992c3a52dcbe447467b4b771',
+    '2ce1d673055b99250e93b6f88f878fde',
+    '31fe64d9463cbbe58319dced405c6206',
+    'f0986789a5c5d17c2400faebf16efd0d',
+}
 
 
 class InstagramQueryHashFinderTest(unittest.TestCase):
 
     def test_tag_get_from_container(self) -> None:
         # arrange
-        finder = InstagramQueryHashFinder('tag')
-        finder._remote_fetcher = _FILE_FETCHER
+        finder = _InstagramTagQueryHashFinder('foo', _FILE_FETCHER)
         # act
         hashes = finder.find_hashes()
         # assert
@@ -110,8 +120,7 @@ class InstagramQueryHashFinderTest(unittest.TestCase):
 
     def test_profile_get_from_container(self) -> None:
         # arrange
-        finder = InstagramQueryHashFinder('profile')
-        finder._remote_fetcher = _FILE_FETCHER
+        finder = _InstagramProfileQueryHashFinder('natgeo', _FILE_FETCHER)
         # act
         hashes = finder.find_hashes()
         # assert
@@ -223,9 +232,9 @@ class InstagramHashtagTest(unittest.TestCase):
         del self.crawler
         InstagramHashtag._query_hash = None
 
-    def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
-        finder = InstagramQueryHashFinder('tag')
-        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_TAG  # type: ignore[assignment]
+    def _get_queryhashfinder(self) -> BaseInstagramQueryHashFinder:
+        finder = Mock('BaseInstagramQueryHashFinder')
+        finder.find_hashes = Mock(return_value=_QUERYHASHES_EXPECTED_TAG)
         return finder
 
     def test__get_query_hash(self) -> None:
@@ -369,47 +378,27 @@ def test_instagram_hashtag_loader() -> None:
 
 class TestInstagramProfileConfig:
 
-    def test_neither_name_not_id(self) -> None:
-        with pytest.raises(KeyError, match=r'either .* required'):
-            InstagramProfile.check_config(dict())
-
-    def test_name_and_id(self) -> None:
-        with pytest.raises(KeyError, match=r'either .* required'):
-            InstagramProfile.check_config(dict(user_name='foo', profile_id=123))
-
     def test_name_wrong_type(self) -> None:
         for wrong in [False, 23, 4.2, [], (), {}, self]:
             with pytest.raises(TypeError, match=r'user_name .* is not str'):
-                InstagramProfile._check_config_name(wrong)
+                InstagramProfile.check_config({'user_name': wrong})
 
     def test_name_wrong_value(self) -> None:
         with pytest.raises(ValueError, match=r'user_name .* is empty'):
-            InstagramProfile._check_config_name('')
+            InstagramProfile.check_config({'user_name': ''})
 
     def test_name_correct(self) -> None:
-        InstagramProfile._check_config_name('foo')
-
-    def test_id_wrong_type(self) -> None:
-        for wrong in [False, '23', 4.2, [], (), {}, self]:
-            with pytest.raises(TypeError, match=r'profile_id .* is not int'):
-                InstagramProfile._check_config_id(wrong)
-
-    def test_id_wrong_value(self) -> None:
-        for wrong in [-1, 0]:
-            with pytest.raises(ValueError, match=r'profile_id .* is <= 0'):
-                InstagramProfile._check_config_id(wrong)
-
-    def test_id_correct(self) -> None:
-        InstagramProfile._check_config_id(23)
+        InstagramProfile.check_config({'user_name': 'foo'})
 
 
 class InstagramProfileTest(unittest.TestCase):
+    _PROFILE_NAME = 'natgeo'
     _PROFILE_ID = '787132'
     _QUERY_HASH = '51fdd02b67508306ad4484ff574a0b62'
 
     def setUp(self) -> None:
         InstagramProfile._query_hash = None
-        self.crawler = InstagramProfile(user_name='natgeo')
+        self.crawler = InstagramProfile(user_name=self.__class__._PROFILE_NAME)
         self.crawler._remote_fetcher = _FILE_FETCHER
         self.crawler._amount = 5
         self.crawler._get_queryhashfinder = self._get_queryhashfinder  # type: ignore[assignment]
@@ -418,9 +407,9 @@ class InstagramProfileTest(unittest.TestCase):
         del self.crawler
         InstagramProfile._query_hash = None
 
-    def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
-        finder = InstagramQueryHashFinder('profile')
-        finder.find_hashes = lambda: _QUERYHASHES_EXPECTED_PROFILE  # type: ignore[assignment]
+    def _get_queryhashfinder(self) -> BaseInstagramQueryHashFinder:
+        finder = Mock('BaseInstagramQueryHashFinder')
+        finder.find_hashes = Mock(return_value=_QUERYHASHES_EXPECTED_PROFILE)
         return finder
 
     def _get_profile_id(self) -> str:

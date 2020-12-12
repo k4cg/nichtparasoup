@@ -2,16 +2,20 @@ __all__ = [
     # ready-to-use instagram crawlers:
     "InstagramHashtag", "InstagramProfile",
     # stuff to implement an own instagram crawler:
-    "BaseInstagramCrawler", "InstagramQueryHashFinder", "INSTAGRAM_URL_ROOT", "INSTAGRAM_ICON_URL",
+    "INSTAGRAM_URL_ROOT", "INSTAGRAM_ICON_URL",
+    "BaseInstagramCrawler", "BaseInstagramQueryHashFinder", "InstagramRemoteFetcher",
 ]
 
 import sys
 from abc import ABC, abstractmethod
+from http.client import HTTPResponse
 from json import dumps as json_encode, loads as json_loads
 from re import compile as re_compile
 from threading import Lock
-from typing import Any, Dict, Optional, Pattern, Set
+from time import sleep, time
+from typing import Any, Dict, Optional, Pattern, Set, Tuple, Union
 from urllib.parse import quote_plus as url_quote, urlencode, urljoin
+from urllib.response import addinfourl
 
 from .._internals import _log
 from ..imagecrawler import BaseImageCrawler, Image, ImageCollection, ImageCrawlerConfig, ImageCrawlerInfo, RemoteFetcher
@@ -48,7 +52,10 @@ else:
 # INTERNALS
 # ---------
 #
-# Since `query_hash` ins unique per purpose, its fetched once per class. so instances do share it.
+# Instagram is risky to use when flooded with requests.
+# To limit these, a blocking RemoteFetcher should be used: `InstagramRemoteFetcher`.
+#
+# Since `query_hash` is unique per purpose, its fetched once per class. so instances do share it.
 # Finding possible `query_hash` is quite easy my searching through instagram's root pge and included JavaScripts.
 # If a candidate is correct will be checked, if instagram's response to a request has the correct data format. This is
 # done by checking a response for a certain format that is unique to its purpose (see `query_hash` description)
@@ -70,64 +77,74 @@ INSTAGRAM_ICON_URL = INSTAGRAM_URL_ROOT + 'static/images/ico/favicon-192.png/68d
 
 _InstagramQueryHashFinder_ContainerType = Literal['tag', 'profile']
 
+_Uri = str
 
-class InstagramQueryHashFinder:
-    __CONTAINER_PATH_RE = {
-        'tag': r'/static/bundles/metro/TagPageContainer\.js/.+?\.js',
-        'profile': r'/static/bundles/metro/Consumer\.js/.+?\.js',
-    }
 
-    __QUERY_HASH_RE = r'queryId:"(.+?)"'
+class InstagramRemoteFetcher(RemoteFetcher):
+    """Instagram does not like many requests in short time.
+    This RemoteFetcher has a locking mechanism and some delay.
+    """
+    __DELAY = 0.02
+    __LOCK = Lock()
+    __get_stream_next = 0.0
 
-    def __init__(self, container_type: _InstagramQueryHashFinder_ContainerType) -> None:
-        self._container_re = re_compile(self.__CONTAINER_PATH_RE[container_type])
-        self._query_hash_re = re_compile(self.__QUERY_HASH_RE)
-        self._remote_fetcher = RemoteFetcher()
+    def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
+        with self.__LOCK:
+            delay = InstagramRemoteFetcher.__get_stream_next - time()
+            if delay > 0.0:
+                sleep(delay)
+            InstagramRemoteFetcher.__get_stream_next = time() + InstagramRemoteFetcher.__DELAY
+            return super().get_stream(uri)
 
-    def find_hashes(self) -> Set[str]:
-        return self._get_from_container(self._container_re)
 
-    def _get_from_container(self, re_container_path: Pattern[str]) -> Set[str]:
-        page_doc, page_uri = self._remote_fetcher.get_string(INSTAGRAM_URL_ROOT)
-        container_paths = re_container_path.search(page_doc)
-        if container_paths:
-            container_path = urljoin(page_uri, container_paths.group(0))
-            return self._get_from_remote_js(container_path)
-        raise InstagramError('container not found')
+_QueryHash = str
 
-    def _get_from_remote_js(self, js_uri: str) -> Set[str]:
+
+class BaseInstagramQueryHashFinder(ABC):
+    _remote_fetcher: RemoteFetcher
+    _url_root: _Uri
+    _container_path_re: Pattern[str]
+    _query_hash_re: Pattern[str]
+
+    def find_hashes(self) -> Set[_QueryHash]:
+        page_doc, page_uri = self._remote_fetcher.get_string(self._url_root)
+        container_paths = self._container_path_re.search(page_doc)
+        if not container_paths:
+            raise InstagramError('container not found')
+        container_path = urljoin(page_uri, container_paths.group(0))
         try:
-            js_src, _ = self._remote_fetcher.get_string(js_uri)
+            js_src, _ = self._remote_fetcher.get_string(container_path)
         except Exception:
             return set()
-        return self._get_from_js(js_src)
+        else:
+            return set(self._query_hash_re.findall(js_src))
 
-    def _get_from_js(self, javascript: str) -> Set[str]:
-        return set(self._query_hash_re.findall(javascript))
+
+class _InstagramTagQueryHashFinder(BaseInstagramQueryHashFinder):
+    def __init__(self, tag_name: str, remote_fetcher: RemoteFetcher) -> None:
+        self._url_root = f'{INSTAGRAM_URL_ROOT}explore/tags/{url_quote(tag_name)}/'
+        self._container_path_re = re_compile(r'/static/bundles/(?:metro|es6)/TagPageContainer\.js/.+?\.js')
+        self._query_hash_re = re_compile(r'queryId:"(.+?)"')
+        self._remote_fetcher = remote_fetcher
+
+
+class _InstagramProfileQueryHashFinder(BaseInstagramQueryHashFinder):
+    def __init__(self, profile_name: str, remote_fetcher: RemoteFetcher) -> None:
+        self._url_root = f'{INSTAGRAM_URL_ROOT}{url_quote(profile_name)}/'
+        self._container_path_re = re_compile(r'/static/bundles/(?:metro|es6)/Consumer\.js/.+?\.js')
+        self._query_hash_re = re_compile(r'queryId:"(.+?)"')
+        self._remote_fetcher = remote_fetcher
 
 
 class BaseInstagramCrawler(BaseImageCrawler, ABC):
-    _QUERY_HASH_LOCK: Lock
-    """Class Lock for :ref:``_query_hash``.
-    see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
-    """
-
-    _query_hash: Optional[str]
-    """Class based query hash.
-    see :ref:``_get_query_hash()`` and :ref:``__init_subclass__()``.
-    """
-
-    def __init_subclass__(cls, **kwargs: Any) -> None:
-        super().__init_subclass__(**kwargs)  # type: ignore[call-arg]
-        cls._QUERY_HASH_LOCK = Lock()
-        cls._query_hash = None
-
     def __init__(self, **config: Any) -> None:
         super().__init__(**config)
-        self._amount = 10
+        self._amount = 12
         self._has_next_page: bool = True
         self._cursor: Optional[str] = None
-        self._remote_fetcher = RemoteFetcher()
+        self._remote_fetcher: RemoteFetcher = InstagramRemoteFetcher()
+        self._QUERY_HASH_LOCK = Lock()
+        self._query_hash: Optional[_QueryHash] = None
 
     def is_exhausted(self) -> bool:
         return not self._has_next_page
@@ -180,7 +197,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         return images
 
     @classmethod
-    def _get_post_url(cls, shortcode: str) -> str:
+    def _get_post_url(cls, shortcode: str) -> _Uri:
         return INSTAGRAM_URL_ROOT + 'p/' + url_quote(shortcode) + '/'
 
     def _query(self, uri: str) -> Dict[str, Any]:
@@ -218,7 +235,7 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
         })
 
     @abstractmethod
-    def _get_queryhashfinder(self) -> InstagramQueryHashFinder:  # pragma: no cover
+    def _get_queryhashfinder(self) -> BaseInstagramQueryHashFinder:  # pragma: no cover
         """
         get the query hash finder for this type of crawler
 
@@ -237,21 +254,19 @@ class BaseInstagramCrawler(BaseImageCrawler, ABC):
 
     def _find_query_hash(self) -> Optional[str]:
         query_hashes = self._get_queryhashfinder().find_hashes()
-        try:
-            return next(filter(self._check_query_hash, query_hashes))
-        except StopIteration:
-            return None
+        for query_hash in query_hashes:
+            if self._check_query_hash(query_hash):
+                return query_hash
+        return None
 
     def _get_query_hash(self) -> str:
-        cls = self.__class__
-        # same class => same query_hash ... so lock and search ... others may use the same hash later
-        with cls._QUERY_HASH_LOCK:
-            if not cls._query_hash:
+        with self._QUERY_HASH_LOCK:
+            if not self._query_hash:
                 query_hash = self._find_query_hash()
                 if not query_hash:
                     raise InstagramError('Did not find query hash')
-                cls._query_hash = query_hash
-        return cls._query_hash
+                self._query_hash = query_hash
+        return self._query_hash
 
     @abstractmethod
     def _get_query_variables(self) -> Dict[str, Any]:  # pragma: no cover
@@ -287,11 +302,11 @@ class InstagramHashtag(BaseInstagramCrawler):
         if len(tag_name) == 0:
             raise ValueError(f'tag_name {tag_name!r} is empty')
         return ImageCrawlerConfig(
-            tag_name=tag_name.lower(),
+            tag_name=tag_name,
         )
 
-    def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
-        return InstagramQueryHashFinder('tag')
+    def _get_queryhashfinder(self) -> BaseInstagramQueryHashFinder:
+        return _InstagramTagQueryHashFinder(self.config['tag_name'], self._remote_fetcher)
 
     def _get_query_variables(self) -> Dict[str, Any]:
         return {'tag_name': self._config['tag_name']}
@@ -302,12 +317,15 @@ class InstagramHashtag(BaseInstagramCrawler):
         return media
 
 
+_ProfileId = str
+
+
 class InstagramProfile(BaseInstagramCrawler):
     __PROFILE_ID_RE = r'"profilePage_([0-9]+)"'
 
-    def __init__(self, user_name: Optional[str] = None, profile_id: Optional[int] = None) -> None:
-        super().__init__(user_name=user_name, profile_id=profile_id)
-        self.__profile_id: Optional[str] = str(self._config['profile_id']) if 'profile_id' in self._config else None
+    def __init__(self, *, user_name: Optional[str] = None) -> None:
+        super().__init__(user_name=user_name)
+        self.__profile_id: Optional[_ProfileId] = None
         self.__PROFILE_ID_LOCK = Lock()
 
     @classmethod
@@ -322,43 +340,17 @@ class InstagramProfile(BaseInstagramCrawler):
 
     @classmethod
     def check_config(cls, config: Dict[str, Any]) -> ImageCrawlerConfig:
-        profile_id = config.get('profile_id')
-        user_name = config.get('user_name')
-        has_profile_id = profile_id is not None
-        has_user_name = user_name is not None
-        if has_user_name and has_profile_id:
-            raise KeyError('either "profile_id" or "user_name" required')
-        if has_profile_id:
-            return cls._check_config_id(profile_id)
-        if has_user_name:
-            return cls._check_config_name(user_name)
-        raise KeyError('either "profile_id" or "user_name" required')
-
-    @classmethod
-    def _check_config_id(cls, profile_id: Any) -> ImageCrawlerConfig:
-        if type(profile_id) is not int:
-            raise TypeError(f'profile_id {profile_id!r} is not int')
-        if profile_id <= 0:
-            raise ValueError(f'profile_id {profile_id!r} is <= 0')
-        return ImageCrawlerConfig(
-            profile_id=profile_id,
-        )
-
-    @classmethod
-    def _check_config_name(cls, user_name: Any) -> ImageCrawlerConfig:
+        user_name = config['user_name']
         if type(user_name) is not str:
             raise TypeError(f'user_name {user_name!r} is not str')
         if len(user_name) == 0:
             raise ValueError(f'user_name {user_name!r} is empty')
-        _log('info', 'An InstagramProfile user_name was given.'
-                     ' It will be tried to fetch the profile_id automatically.'
-                     '\n\tBut this might fail, so be prepared to provide the profile_id yourself.')
         return ImageCrawlerConfig(
-            user_name=user_name.lower(),
+            user_name=user_name,
         )
 
-    def _get_queryhashfinder(self) -> InstagramQueryHashFinder:
-        return InstagramQueryHashFinder('profile')
+    def _get_queryhashfinder(self) -> BaseInstagramQueryHashFinder:
+        return _InstagramProfileQueryHashFinder(self._config['user_name'], self._remote_fetcher)
 
     @classmethod
     def _get_media_from_query_response(cls, response: Dict[str, Any]) -> Dict[str, Any]:
@@ -368,29 +360,29 @@ class InstagramProfile(BaseInstagramCrawler):
     def _get_query_variables(self) -> Dict[str, Any]:
         return {'id': self._get_profile_id()}
 
-    def __fetch_profile_id__a(self) -> str:
+    def __fetch_profile_id__a(self) -> _ProfileId:
         # this is much easier than `__fetch_profile__page` - let's hope it is stable again
         profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url() + '?__a=1')
         try:
             profile: Dict[str, Any] = json_loads(profile_string)
             return str(profile['graphql']['user']['id'])  # may raise KeyError
-        except Exception as ex:
+        except KeyError as ex:
             raise InstagramError('profile_id not found') from ex
 
-    def __fetch_profile_id__page(self) -> str:
+    def __fetch_profile_id__page(self) -> _ProfileId:
         profile_string, _ = self._remote_fetcher.get_string(self._get_profile_url())
         match = re_compile(self.__PROFILE_ID_RE).search(profile_string)
         if not match:
             raise InstagramError('profile_id not found')
         return match.group(1)
 
-    def _fetch_profile_id(self) -> str:
+    def _fetch_profile_id(self) -> _ProfileId:
         try:
             return self.__fetch_profile_id__a()
         except InstagramError:
             return self.__fetch_profile_id__page()
 
-    def _get_profile_id(self) -> str:
+    def _get_profile_id(self) -> _ProfileId:
         with self.__PROFILE_ID_LOCK:
             if self.__profile_id is None:
                 try:
@@ -398,14 +390,13 @@ class InstagramProfile(BaseInstagramCrawler):
                 except InstagramError as ex:
                     _log('error', f'InstagramProfile for {self._config["user_name"]!r} failed'
                                   ' to gather the profile_id automatically.'
-                                  '\n\tYou have to provide the profile_id yourself.'
                                   '\n\tTherefore the crawler was marked as exhausted.')
                     self._has_next_page = False
                     raise ex
         return self.__profile_id
 
     def _get_profile_url(self) -> str:
-        return INSTAGRAM_URL_ROOT + url_quote(self._config['user_name']) + '/'
+        return f'{INSTAGRAM_URL_ROOT}{url_quote(self._config["user_name"])}/'
 
 
 class InstagramError(Exception):
