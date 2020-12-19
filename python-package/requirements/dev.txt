@@ -28,7 +28,7 @@ packaging==20.8           # via pytest, tox
 pep8-naming==0.11.1       # via -r requirements/style.in
 pip-tools==5.4.0          # via -r requirements/dev.in
 pluggy==0.13.1            # via pytest, tox
-py==1.9.0                 # via pytest, tox
+py==1.10.0                # via pytest, tox
 pycodestyle==2.6.0        # via autopep8, flake8
 pyflakes==2.2.0           # via flake8
 pyparsing==2.4.7          # via packaging
