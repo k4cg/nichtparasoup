@@ -19,7 +19,7 @@ flake8-use-fstring==1.1   # via -r requirements/style.in
 flake8==3.8.4             # via -r requirements/style.in, flake8-annotations, flake8-bugbear, flake8-isort, flake8-polyfill, flake8-use-fstring
 future==0.18.2            # via junitparser
 iniconfig==1.1.1          # via pytest
-isort==5.6.4              # via -r requirements/dev.in, flake8-isort
+isort==5.7.0              # via -r requirements/dev.in, flake8-isort
 junitparser==1.6.3        # via -r requirements/tests.in
 mccabe==0.6.1             # via flake8
 mypy-extensions==0.4.3    # via mypy
