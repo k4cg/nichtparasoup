@@ -253,7 +253,7 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: SonarCloud Scan
         # see https://github.com/SonarSource/sonarcloud-github-action
-        uses: sonarsource/sonarcloud-github-action@v1.4
+        uses: sonarsource/sonarcloud-github-action@v1.5
         with:
           projectBaseDir: ${{ env.project-directory }}
         env:
