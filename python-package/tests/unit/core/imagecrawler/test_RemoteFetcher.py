@@ -31,7 +31,7 @@ def test_get_stream(mocker: MockerFixture) -> None:
     valid_uri.assert_called_with(request_url)
     request.assert_called_once_with(request_url, headers=mocker.ANY)
     for header_name, header_value in headers.items():
-        assert request.call_args.kwargs['headers'][header_name] == header_value
+        assert request.call_args[1]['headers'][header_name] == header_value
     urlopen.call_args(request.return_value, timeout=timeout)
     debug_write_response.assert_called_once_with(actual_response, request_url)
     assert got_response == actual_response
