@@ -1,10 +1,8 @@
 # web-api: crawlers status
 
-Call via `/status/crawlers`.
+call via `/status/crawlers`.
 
-HTTP Status Code: 200.
-
-Example response:
+example response:
 
 ```json
 {
@@ -50,7 +48,7 @@ Example response:
 
 ## `weight`
 
-- the probability an random image is used thom this crawler
+- the probability a random image is used thom this crawler
 - type: integer or float
 
 ## `type`

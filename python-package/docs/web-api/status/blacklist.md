@@ -1,16 +1,14 @@
 # web-api: blacklist status
 
-Information about the blacklist.
+information about the blacklist.
 
-Each crawled non-generic image is added into the blacklist right away to sircumvent duplications.
+each crawled non-generic image is added into the blacklist right away to circumvent duplications.
 this means the blacklist is constantly growing.  
-When the web-api's [`/reset`](../reset.md) is triggered successfully, the blacklist gets flushed.
+when the web-api's `/reset` is triggered successfully, the blacklist gets flushed.
 
-Call via `/status/blacklist`.
+call via `/status/blacklist`.
 
-HTTP Status Code: 200.
-
-Example response:
+example response:
 
 ```json
 {
