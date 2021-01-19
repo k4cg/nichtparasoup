@@ -2,7 +2,7 @@
 
 information about the blacklist.
 
-each crawled non-generic image is added into the blacklist right away to sircumvent duplications.
+each crawled non-generic image is added into the blacklist right away to circumvent duplications.
 this means the blacklist is constantly growing.  
 when the web-api's `/reset` is triggered successfully, the blacklist gets flushed.
 

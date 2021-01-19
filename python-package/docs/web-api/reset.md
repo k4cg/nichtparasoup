@@ -1,7 +1,7 @@
 # web-api: reset
 
 try to trigger a reset on the ImageServer.  
-this will flush the ImageServers blacklist and force all ImageCrawlers to start upfront.
+this will flush the ImageServers blacklist and force all ImageCrawlers to start at the beginning.
 
 call via `/reset`.
 

@@ -15,8 +15,8 @@ It randomly displays images from
 [reddit](https://reddit.com).  
 Other crawlers are currently removed, but will be back soon.
 
-If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write an own ImageCrawler therefore.  
-Contribute it to the _nichtparasoup_ project or write it as an independent plugin :-)
+If you find an ImageCrawler for your favourite ImageBoard missing, feel free to write your own ImageCrawler for it.  
+Contribute it to the _nichtparasoup_ project or use it as an independent plugin :-)
 
 
 ![logo](https://raw.githubusercontent.com/k4cg/nichtparasoup/3.0-dev/python-package/images/logo.png)
@@ -25,8 +25,8 @@ Contribute it to the _nichtparasoup_ project or write it as an independent plugi
 ---
 
 
-At our hackspace [k4cg](https://k4cg.org) we use it since years now.  
-It turns out to be a very non-invasive way of entertaining a crowd of nerds 
+At our hackspace [k4cg](https://k4cg.org) we've been use it for years now.  
+It has proven to be a very non-invasive way of entertaining a crowd of nerds 
 without having the noise and interruptions of videos or other stuff.
 
 Here is what it looks like in your browser
@@ -39,11 +39,11 @@ and even better, on a video projector in your local hackspace!
 ## How it works
 
 Images are crawled from multiple public pre-configured sources.  
-No image is actually downloaded, just the URL to images are gathered. Found images are kept in a list, also it is
-assured that the same URL is never gathered twice.
+No image is actually downloaded, only the URLs to images are gathered. Found images are kept in a list
+to make sure the same URL is never gathered twice.
 
-To display the crawled images, _nichtparasoup_ starts a web-server display a web UI.  
-The web UI fetches a random image URL from the _nichtparasoup_ server one by one. 
+To show the crawled images, _nichtparasoup_ starts a web-server that displays a web UI.  
+The web UI fetches one random image URL from the _nichtparasoup_ server at a time. 
 
 The web UI will load new images continuously, unless one of the following events happen:
 * paused manually in the web UI
@@ -52,8 +52,8 @@ The web UI will load new images continuously, unless one of the following events
 * web UI is in image theater/zoom mode
 * boss mode is active in web UI
 
-In the web UI the images are downloaded from the original source. Also the original source is linked and marked by
-an icon. Just hover or click the icon in the bottom right of an image.
+In the web UI the images are downloaded from the original source. The original source is linked and marked by
+an icon. Just hover over or click the icon in the bottom right of an image to get there.
 
 Every time _nichtparasoup_ serves an image URL it also removes it from its list. This means an image URL is served
 only once - unless the server was reset. (This might change in the future)
