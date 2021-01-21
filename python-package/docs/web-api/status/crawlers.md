@@ -50,7 +50,7 @@ Example response:
 
 ## `weight`
 
-- the probability an random image is used thom this crawler
+- the probability a random image is used thom this crawler
 - type: integer or float
 
 ## `type`

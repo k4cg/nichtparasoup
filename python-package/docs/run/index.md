@@ -16,18 +16,18 @@ The switch `--help` will display help.
 simply runs a server.
 
 option: `--config <file>`.  
-use an own config for the server. If omitted, the default is used. to write your own config, see the sections below.
+use a custom config for the server. If omitted, the default is used. to write your own config, see the sections below.
 
 when you start _nichtparasoup_
 1. system will fill up cache by startup
 1. system starts up the web-server
-1. point your browser to the configured localhost:5000/ or whatever is configured in the config
+1. you point your browser to the configured localhost:5000/ or whatever is configured in the config
 1. start page will request single images randomly by /get and show it
 1. when system's cache is empty, it will be refilled by the crawler automatically
 1. you will (hopefully) get new results.
 
 keep in mind:  
-every time you restart _nichtparasoup_, the cache forgets about its previous shown images.  
+every time you restart _nichtparasoup_, the cache forgets about its previously shown images.  
 There is no persistence.
 
 
@@ -37,7 +37,7 @@ There is no persistence.
 _nichtparasoup_ uses YAML config files.
 for more details about config see the [config](../config/index.md) documentation.
 
-for an eay handling this sub-command comes into play.
+for easy handling this sub-command comes into play.
 
 `nichtparasoup server config` 
 
@@ -48,10 +48,10 @@ the following subcommands are available:
 
 ### check a config
 
-check if a file is a valid config.
+check if a config file is valid.
 will prompt prompt errors and warnings, if any.
 
-`nichtparasoup serer config --check <file>`
+`nichtparasoup server config --check <file>`
 
 
 ### dump a config
@@ -59,7 +59,7 @@ will prompt prompt errors and warnings, if any.
 for a quick start writing your own config, this command will dump the current default config into a file.
 you may edit this config to your needs and then - after having it checked - run nichtparasoup using it.
 
-`nichtparasoup serer config dump-defaults <file>`
+`nichtparasoup server config dump-defaults <file>`
 
 
 ## get info for installed imagecrawlers 
