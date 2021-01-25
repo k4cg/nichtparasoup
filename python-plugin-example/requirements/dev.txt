@@ -82,7 +82,7 @@ pyflakes==2.2.0
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.10.1
+pytest-cov==2.11.1
     # via -r requirements/tests.in
 pytest==6.2.1
     # via
