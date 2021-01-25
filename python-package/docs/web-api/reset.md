@@ -1,7 +1,8 @@
 # web-api: reset
 
 Try to trigger a reset on the ImageServer.  
-This will flush the ImageServers blacklist and force all ImageCrawlers to start upfront.
+
+This will flush the ImageServers blacklist and force all ImageCrawlers to start from the beginning.
 
 HTTP Status Code: 202.
 
