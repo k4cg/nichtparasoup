@@ -14,7 +14,7 @@ autopep8==1.5.4
     # via -r requirements/dev.in
 click==7.1.2
     # via pip-tools
-coverage==5.3.1
+coverage==5.4
     # via
     #   -r requirements/tests.in
     #   pytest-cov
