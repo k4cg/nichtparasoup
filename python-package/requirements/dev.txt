@@ -58,7 +58,7 @@ mypy-extensions==0.4.3
     # via mypy
 mypy==0.800
     # via -r requirements/style.in
-packaging==20.8
+packaging==20.9
     # via
     #   pytest
     #   tox
