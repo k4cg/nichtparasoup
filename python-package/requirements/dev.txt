@@ -10,7 +10,7 @@ attrs==20.3.0
     # via
     #   flake8-bugbear
     #   pytest
-autopep8==1.5.4
+autopep8==1.5.5
     # via -r requirements/dev.in
 click==7.1.2
     # via pip-tools
