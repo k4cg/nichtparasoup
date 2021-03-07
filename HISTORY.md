@@ -4,6 +4,12 @@
 
 add upcoming unreleased modifications here
 
+## 2.5.0
+
+* Misc
+  * Pinned dependency `werkzeug>=1.0, <2.0`, was `>=1.0`.
+    This is a preparation of upcoming release of `werkzeug2.0` that was not tested as a dependency, yet.
+
 ## 2.4.3
 
 * Fixed
