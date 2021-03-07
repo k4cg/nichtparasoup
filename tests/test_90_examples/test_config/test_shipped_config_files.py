@@ -15,8 +15,8 @@ class ShippedExampleConfigFileTest(ConfigFileTest):
     def test_has_examples(self) -> None:
         self.assertGreater(len(self.__class__.__EXAMPLE_FILES), 0)
 
-    @pytest.mark.online  # type: ignore  # probing goes over the internet
-    @pytest.mark.slow  # type: ignore  # probing might be slow
+    @pytest.mark.online  # probing goes over the internet
+    @pytest.mark.slow  # probing might be slow
     @idata((basename(file),) for file in __EXAMPLE_FILES)  # type: ignore
     @unpack  # type: ignore
     def test_example(self, filename: str) -> None:
