@@ -4,6 +4,7 @@
 name: WebUi Test
 
 on:
+  workflow_dispatch:
   push:
     branches: [ 'master', '3.0-dev' ]
     paths:
