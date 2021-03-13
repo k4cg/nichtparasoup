@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements/build.in
 #
-pep517==0.9.1
+pep517==0.10.0
     # via -r requirements/build.in
 toml==0.10.2
     # via pep517
