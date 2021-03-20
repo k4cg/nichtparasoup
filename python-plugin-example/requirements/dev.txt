@@ -10,7 +10,7 @@ attrs==20.3.0
     # via
     #   flake8-bugbear
     #   pytest
-autopep8==1.5.5
+autopep8==1.5.6
     # via -r requirements/dev.in
 click==7.1.2
     # via pip-tools
@@ -34,7 +34,7 @@ flake8-polyfill==1.0.2
     # via pep8-naming
 flake8-use-fstring==1.1
     # via -r requirements/style.in
-flake8==3.8.4
+flake8==3.9.0
     # via
     #   -r requirements/style.in
     #   flake8-annotations
@@ -76,11 +76,11 @@ py==1.10.0
     # via
     #   pytest
     #   tox
-pycodestyle==2.6.0
+pycodestyle==2.7.0
     # via
     #   autopep8
     #   flake8
-pyflakes==2.2.0
+pyflakes==2.3.0
     # via flake8
 pyparsing==2.4.7
     # via packaging
