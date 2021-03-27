@@ -35,7 +35,7 @@ pep8-naming==0.11.1
     # via -r requirements/style.in
 pycodestyle==2.7.0
     # via flake8
-pyflakes==2.3.0
+pyflakes==2.3.1
     # via flake8
 testfixtures==6.17.1
     # via flake8-isort
