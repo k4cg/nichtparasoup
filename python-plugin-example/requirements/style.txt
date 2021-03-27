@@ -23,7 +23,7 @@ flake8==3.9.0
     #   flake8-bugbear
     #   flake8-isort
     #   flake8-use-fstring
-isort==5.7.0
+isort==5.8.0
     # via flake8-isort
 mccabe==0.6.1
     # via flake8
