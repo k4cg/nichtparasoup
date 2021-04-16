@@ -4,6 +4,13 @@
 
 add upcoming unreleased modifications here
 
+## 2.5.1
+
+* Misc
+  * Fixed the shields in the `README.md`
+  * Removed coverage publishing to codecov.
+  * Removed SonarCloud from 2.x since it was broken for this branch.   
+
 ## 2.5.0
 
 * Misc
