@@ -173,6 +173,24 @@ Released 2020-09-05
   * Repo layout changed to be a monorepo. See [the repo](https://github.com/k4cg/nichtparasoup).  
     This also means, that the plugin-example was moved out of the project into an own project.
 
+## 2.5.1
+
+Released 2021-04-16
+
+* Misc
+  * Fixed the shields in the `README.md`
+  * Removed coverage publishing to codecov.
+  * Removed SonarCloud from 2.x since it was broken for this branch.
+
+## 2.5.0
+
+Released 2021-03-07
+
+* Misc
+  * Pinned dependency `werkzeug>=1.0, <2.0`, was `>=1.0`.
+    This is a preparation of upcoming release of `werkzeug2.0` that was not tested as a dependency, yet.
+
+
 ## 2.4.3
 
 Released 2020-09-10
