@@ -4,6 +4,9 @@
 
 add upcoming unreleased modifications here
 
+* Misc
+  * Removed coverage publishing to codecov.
+
 ## 2.5.0
 
 * Misc
