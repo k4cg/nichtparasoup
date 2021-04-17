@@ -39,7 +39,7 @@ pyflakes==2.3.1
     # via flake8
 testfixtures==6.17.1
     # via flake8-isort
-typed-ast==1.4.2
+typed-ast==1.4.3
     # via mypy
 typing-extensions==3.7.4.3
     # via mypy
