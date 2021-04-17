@@ -7,6 +7,18 @@ from nichtparasoup.core.imagecrawler import BaseImageCrawler as Sut
 from .mock_BaseImageCrawler import _MockImageCrawler, _OtherImageCrawler
 
 
+def test_get_internal_name() -> None:
+    # arrange
+    sut = _MockImageCrawler()
+    sut._np_name = 'FooBar'
+    # act
+    got_property = sut.internal_name
+    got_method = sut.get_internal_name()
+    # assert
+    assert 'FooBar' == got_property
+    assert 'FooBar' == got_method
+
+
 def test_eq_based_on_config() -> None:
     # arrange
     imagecrawler1 = _MockImageCrawler(test='a')
