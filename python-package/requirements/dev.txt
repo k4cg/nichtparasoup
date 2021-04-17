@@ -107,7 +107,7 @@ toml==0.10.2
     #   tox
 tox==3.23.0
     # via -r requirements/tox.in
-typed-ast==1.4.2
+typed-ast==1.4.3
     # via mypy
 typing-extensions==3.7.4.3
     # via mypy
