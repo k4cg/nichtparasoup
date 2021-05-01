@@ -58,6 +58,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       coverage-artifact-dir: _coverage
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
