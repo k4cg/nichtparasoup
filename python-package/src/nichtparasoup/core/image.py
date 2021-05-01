@@ -68,8 +68,8 @@ class Image:
                  **more: Any) -> None:
         parent = super()
         parent.__setattr__('uri', uri)
-        parent.__setattr__('is_generic', is_generic)
         parent.__setattr__('source', source)
+        parent.__setattr__('is_generic', is_generic)
         parent.__setattr__('more', more)
         parent.__setattr__('_Image__hash', self.__gen_hash())
 
