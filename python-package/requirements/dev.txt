@@ -88,7 +88,7 @@ pytest-cov==2.11.1
     # via -r requirements/tests.in
 pytest-mock==3.6.0
     # via -r requirements/tests.in
-pytest==6.2.3
+pytest==6.2.4
     # via
     #   -r requirements/tests.in
     #   pytest-cov
