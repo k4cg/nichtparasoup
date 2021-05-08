@@ -93,7 +93,7 @@ pytest==6.2.4
     #   -r requirements/tests.in
     #   pytest-cov
     #   pytest-mock
-six==1.15.0
+six==1.16.0
     # via
     #   tox
     #   virtualenv
