@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements/style.in
 #
-attrs==20.3.0
+attrs==21.2.0
     # via flake8-bugbear
 flake8-annotations==2.6.2
     # via -r requirements/style.in
