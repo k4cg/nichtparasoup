@@ -102,7 +102,7 @@ toml==0.10.2
     #   pep517
     #   pytest
     #   tox
-tox==3.23.0
+tox==3.23.1
     # via -r requirements/tox.in
 typed-ast==1.4.3
     # via mypy
