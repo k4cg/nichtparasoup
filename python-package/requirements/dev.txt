@@ -14,7 +14,7 @@ autopep8==1.5.7
     # via -r requirements/dev.in
 click==7.1.2
     # via pip-tools
-coverage==5.5
+coverage[toml]==5.5
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -84,7 +84,7 @@ pyflakes==2.3.1
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.11.1
+pytest-cov==2.12.0
     # via -r requirements/tests.in
 pytest-mock==3.6.1
     # via -r requirements/tests.in
@@ -102,6 +102,7 @@ testfixtures==6.17.1
 toml==0.10.2
     # via
     #   autopep8
+    #   coverage
     #   pep517
     #   pytest
     #   tox
