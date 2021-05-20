@@ -2,3 +2,5 @@ pep517
 setuptools
 wheel
 pip
+
+-c constraints.txt
