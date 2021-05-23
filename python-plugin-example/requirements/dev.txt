@@ -92,7 +92,10 @@ pytest==6.2.4
     # via
     #   -r requirements/tests.in
     #   pytest-cov
+    #   pytest-mock
 pytest-cov==2.12.1
+    # via -r requirements/tests.in
+pytest-mock==3.6.1
     # via -r requirements/tests.in
 six==1.16.0
     # via
