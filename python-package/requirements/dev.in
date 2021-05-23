@@ -1,6 +1,9 @@
 -r style.in
 -r tests.in
 -r tox.in
+
 pip-tools >= 5.3
 isort >= 5.0
 autopep8 >= 1.5
+
+-c constraints.txt

@@ -12,9 +12,9 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-click==7.1.2
+click==8.0.1
     # via pip-tools
-coverage==5.5
+coverage[toml]==5.5
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -84,7 +84,7 @@ pyflakes==2.3.1
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.11.1
+pytest-cov==2.12.0
     # via -r requirements/tests.in
 pytest==6.2.4
     # via
@@ -99,6 +99,7 @@ testfixtures==6.17.1
 toml==0.10.2
     # via
     #   autopep8
+    #   coverage
     #   pep517
     #   pytest
     #   tox
@@ -106,7 +107,7 @@ tox==3.23.1
     # via -r requirements/tox.in
 typed-ast==1.4.3
     # via mypy
-typing-extensions==3.7.4.3
+typing-extensions==3.10.0.0
     # via mypy
 virtualenv==20.4.6
     # via tox
