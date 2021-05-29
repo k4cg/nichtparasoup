@@ -46,6 +46,14 @@ flake8==3.9.2
     #   flake8-use-fstring
 future==0.18.2
     # via junitparser
+importlib-metadata==4.3.1
+    # via
+    #   flake8
+    #   pep517
+    #   pluggy
+    #   pytest
+    #   tox
+    #   virtualenv
 iniconfig==1.1.1
     # via pytest
 isort==5.8.0
@@ -111,11 +119,20 @@ toml==0.10.2
 tox==3.23.1
     # via -r requirements/tox.in
 typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.10.0.0
-    # via mypy
-virtualenv==20.4.6
+    # via
+    #   flake8-annotations
+    #   mypy
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+    #   mypy
+virtualenv==20.4.7
     # via tox
+zipp==3.4.1
+    # via
+    #   importlib-metadata
+    #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
