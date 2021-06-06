@@ -12,9 +12,13 @@ coverage[toml]==5.5
     #   pytest-cov
 future==0.18.2
     # via junitparser
+importlib-metadata==4.5.0
+    # via
+    #   pluggy
+    #   pytest
 iniconfig==1.1.1
     # via pytest
-junitparser==2.0.0
+junitparser==2.1.1
     # via -r requirements/tests.in
 packaging==20.9
     # via pytest
@@ -37,3 +41,9 @@ toml==0.10.2
     # via
     #   coverage
     #   pytest
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+zipp==3.4.1
+    # via importlib-metadata
