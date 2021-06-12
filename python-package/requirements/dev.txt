@@ -66,7 +66,7 @@ mccabe==0.6.1
     # via flake8
 mypy-extensions==0.4.3
     # via mypy
-mypy==0.812
+mypy==0.902
     # via -r requirements/style.in
 packaging==20.9
     # via
@@ -113,6 +113,7 @@ toml==0.10.2
     # via
     #   autopep8
     #   coverage
+    #   mypy
     #   pep517
     #   pytest
     #   tox
