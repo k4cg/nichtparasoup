@@ -24,6 +24,14 @@ filelock==3.0.12
     # via
     #   tox
     #   virtualenv
+flake8==3.9.2
+    # via
+    #   -r requirements/style.in
+    #   flake8-annotations
+    #   flake8-bugbear
+    #   flake8-isort
+    #   flake8-polyfill
+    #   flake8-use-fstring
 flake8-annotations==2.6.2
     # via -r requirements/style.in
 flake8-bugbear==21.4.3
@@ -34,14 +42,6 @@ flake8-polyfill==1.0.2
     # via pep8-naming
 flake8-use-fstring==1.1
     # via -r requirements/style.in
-flake8==3.9.2
-    # via
-    #   -r requirements/style.in
-    #   flake8-annotations
-    #   flake8-bugbear
-    #   flake8-isort
-    #   flake8-polyfill
-    #   flake8-use-fstring
 future==0.18.2
     # via junitparser
 iniconfig==1.1.1
@@ -54,10 +54,10 @@ junitparser==2.1.1
     # via -r requirements/tests.in
 mccabe==0.6.1
     # via flake8
-mypy-extensions==0.4.3
-    # via mypy
 mypy==0.812
     # via -r requirements/style.in
+mypy-extensions==0.4.3
+    # via mypy
 packaging==20.9
     # via
     #   pytest
@@ -66,7 +66,7 @@ pep517==0.10.0
     # via pip-tools
 pep8-naming==0.11.1
     # via -r requirements/style.in
-pip-tools==6.1.0
+pip-tools==6.2.0
     # via -r requirements/dev.in
 pluggy==0.13.1
     # via
@@ -84,12 +84,12 @@ pyflakes==2.3.1
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.12.0
-    # via -r requirements/tests.in
 pytest==6.2.4
     # via
     #   -r requirements/tests.in
     #   pytest-cov
+pytest-cov==2.12.0
+    # via -r requirements/tests.in
 six==1.16.0
     # via
     #   tox
@@ -111,6 +111,9 @@ typing-extensions==3.10.0.0
     # via mypy
 virtualenv==20.4.7
     # via tox
+wheel==0.36.2
+    # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
+# setuptools
