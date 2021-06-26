@@ -6,6 +6,14 @@
 #
 attrs==21.2.0
     # via flake8-bugbear
+flake8==3.9.2
+    # via
+    #   -r requirements/style.in
+    #   flake8-annotations
+    #   flake8-bugbear
+    #   flake8-isort
+    #   flake8-polyfill
+    #   flake8-use-fstring
 flake8-annotations==2.6.2
     # via -r requirements/style.in
 flake8-bugbear==21.4.3
@@ -16,21 +24,16 @@ flake8-polyfill==1.0.2
     # via pep8-naming
 flake8-use-fstring==1.1
     # via -r requirements/style.in
-flake8==3.9.2
-    # via
-    #   -r requirements/style.in
-    #   flake8-annotations
-    #   flake8-bugbear
-    #   flake8-isort
-    #   flake8-use-fstring
+importlib-metadata==4.5.0
+    # via flake8
 isort==5.8.0
     # via flake8-isort
 mccabe==0.6.1
     # via flake8
+mypy==0.910
+    # via -r requirements/style.in
 mypy-extensions==0.4.3
     # via mypy
-mypy==0.812
-    # via -r requirements/style.in
 pep8-naming==0.11.1
     # via -r requirements/style.in
 pycodestyle==2.7.0
@@ -39,7 +42,16 @@ pyflakes==2.3.1
     # via flake8
 testfixtures==6.17.1
     # via flake8-isort
+toml==0.10.2
+    # via mypy
 typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.10.0.0
-    # via mypy
+    # via
+    #   flake8-annotations
+    #   mypy
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+    #   mypy
+zipp==3.4.1
+    # via importlib-metadata

@@ -26,6 +26,14 @@ filelock==3.0.12
     # via
     #   tox
     #   virtualenv
+flake8==3.9.2
+    # via
+    #   -r requirements/style.in
+    #   flake8-annotations
+    #   flake8-bugbear
+    #   flake8-isort
+    #   flake8-polyfill
+    #   flake8-use-fstring
 flake8-annotations==2.6.2
     # via -r requirements/style.in
 flake8-bugbear==21.4.3
@@ -36,14 +44,6 @@ flake8-polyfill==1.0.2
     # via pep8-naming
 flake8-use-fstring==1.1
     # via -r requirements/style.in
-flake8==3.9.2
-    # via
-    #   -r requirements/style.in
-    #   flake8-annotations
-    #   flake8-bugbear
-    #   flake8-isort
-    #   flake8-polyfill
-    #   flake8-use-fstring
 future==0.18.2
     # via junitparser
 importlib-metadata==4.3.1
@@ -64,10 +64,10 @@ junitparser==2.0.0
     # via -r requirements/tests.in
 mccabe==0.6.1
     # via flake8
+mypy==0.910
+    # via -r requirements/style.in
 mypy-extensions==0.4.3
     # via mypy
-mypy==0.812
-    # via -r requirements/style.in
 packaging==20.9
     # via
     #   pytest
@@ -94,15 +94,15 @@ pyflakes==2.3.1
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.12.0
-    # via -r requirements/tests.in
-pytest-mock==3.6.1
-    # via -r requirements/tests.in
 pytest==6.2.4
     # via
     #   -r requirements/tests.in
     #   pytest-cov
     #   pytest-mock
+pytest-cov==2.12.0
+    # via -r requirements/tests.in
+pytest-mock==3.6.1
+    # via -r requirements/tests.in
 six==1.16.0
     # via
     #   tox
@@ -113,6 +113,7 @@ toml==0.10.2
     # via
     #   autopep8
     #   coverage
+    #   mypy
     #   pep517
     #   pytest
     #   tox
