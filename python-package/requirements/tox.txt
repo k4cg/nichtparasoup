@@ -39,5 +39,5 @@ typing-extensions==3.10.0.0 ; python_version < "3.8"
     #   importlib-metadata
 virtualenv==20.4.7
     # via tox
-zipp==3.4.1
+zipp==3.5.0
     # via importlib-metadata
