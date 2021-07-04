@@ -11,3 +11,5 @@ pep8-naming >= 0.9
 mypy >= 0.761
 
 # pylint >= 2.5
+
+-c ../../python-package/requirements/constraints.txt

@@ -1,1 +1,3 @@
 tox >= 3.14
+
+-c ../../python-package/requirements/constraints.txt
