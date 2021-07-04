@@ -14,7 +14,6 @@ on:
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
       - '!web-ui/**.rst'
-      - '!web-ui/LICENSE'
   pull_request:
     branches: [ 'master', '3.0-dev' ]
     paths:
@@ -24,7 +23,6 @@ on:
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
       - '!web-ui/**.rst'
-      - '!web-ui/LICENSE'
 
 defaults:
   run:

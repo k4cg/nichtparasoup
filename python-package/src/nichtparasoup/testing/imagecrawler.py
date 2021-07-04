@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 from urllib.parse import ParseResult as UrlParseResult, parse_qs, urlencode, urljoin, urlparse
 from urllib.response import addinfourl
 
+from .._internals import _log
 from ..core.image import ImageCollection
 from ..core.imagecrawler import BaseImageCrawler, RemoteFetcher
 from ..imagecrawlers import KnownImageCrawlers, get_imagecrawlers
@@ -94,6 +95,7 @@ class FileFetcher(RemoteFetcher):
 
     def get_stream(self, uri: _Uri) -> Tuple[Union[HTTPResponse, addinfourl], _Uri]:
         file, actual_uri = self._get_file_uri(uri)
+        _log('debug', f'delivering {actual_uri} instead of {uri}')
         response, _ = super().get_stream(file)
         return response, actual_uri
 

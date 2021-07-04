@@ -1,6 +1,6 @@
 __all__ = ["Image", "ImageCollection", "ImageUri", "SourceUri"]
 
-from typing import Any, Set, Union
+from typing import Any, Dict, Set, Union
 from uuid import uuid4
 
 from .._internals import _type_module_name_str
@@ -11,13 +11,16 @@ SourceUri = str
 
 
 class Image:
-    """Describe an image
+    # TODO when py >= (3.7) -- make this a data class, a frozen one.
+    """Describe an image.
+
+    An object is intended as immutable(frozen), to allow hashing without side effects.
 
     `uri`
         The absolute URI of the image. This basically identifies the Image and makes it unique.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``scheme`` must be either 'http' or 'https' - use 'https' if possible!
+            ``scheme`` should be either 'http' or 'https' - use 'https' if possible!
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
     `source`
@@ -27,7 +30,7 @@ class Image:
         In the idea of fair use, it is encouraged to point to the source as good as possible.
 
         This absolute URI must include: ``scheme``, ``host``.
-            ``scheme`` must be either 'http' or 'https' - the last one is preferred.
+            ``scheme`` should be either 'http' or 'https' - the last one is preferred.
         Optional are: ``port``, ``path``, ``query``, ``fragment``.
 
         Good examples are:
@@ -37,6 +40,9 @@ class Image:
     `is_generic`
         If a generic image crawler is used, its common that each image URI looks exactly the same.
         To make this known, use this flag.
+        This will also impact comparisons with ``==``, ``!=`` and hashes of the instance.
+        A generic instance will never equal any other instance but itself.
+        This is used to allow the "same" generic to exist multiple times in a ``set`` or ``ImageCollection``.
 
     `more`
         A dictionary of additional information an image crawler might want to deliver.
@@ -50,28 +56,39 @@ class Image:
 
     """
 
+    uri: ImageUri
+    is_generic: bool
+    source: SourceUri
+    more: Dict[str, Any]
+    __hash: int
+
     def __init__(self, *,
                  uri: ImageUri, source: SourceUri,
                  is_generic: bool = False,
                  **more: Any) -> None:
-        self.uri = uri
-        self.source = source
-        self.more = more
-        self.is_generic = is_generic
-        self.__hash = hash(uuid4() if self.is_generic else self.uri)
+        parent = super()
+        parent.__setattr__('uri', uri)
+        parent.__setattr__('source', source)
+        parent.__setattr__('is_generic', is_generic)
+        parent.__setattr__('more', more)
+        parent.__setattr__('_Image__hash', self.__gen_hash())
+
+    def __setattr__(self, *_: Any, **__: Any) -> None:
+        raise KeyError('object is frozen')
+
+    def __delattr__(self, *_: Any, **__: Any) -> None:
+        raise KeyError('object is frozen')
+
+    def __gen_hash(self) -> int:
+        return hash(uuid4() if self.is_generic else self.uri)
 
     def __hash__(self) -> int:
         return self.__hash
 
     def __eq__(self, other: Union['Image', Any]) -> bool:
-        if type(other) is not type(self):
-            return NotImplemented
-        return hash(self) == hash(other)
-
-    def __ne__(self, other: Union['Image', Any]) -> bool:
-        if type(other) is not type(self):
-            return NotImplemented
-        return hash(self) != hash(other)
+        if isinstance(other, Image):
+            return self.__hash == other.__hash
+        return NotImplemented   # pragma: no cover
 
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} object at {id(self):#x} {self.uri!r}>'

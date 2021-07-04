@@ -3,6 +3,7 @@
 See
 * [development](development.md)
 * [testing](testing.md)
+* [style](style.md)
 
 Additional
 * [plugin-development](plugin-development/index.md)

@@ -1,4 +1,3 @@
 
 # see https://github.com/github/linguist#generated-code
-static/*        linguist-generated
-static/**/*     linguist-generated
+static/**   linguist-generated

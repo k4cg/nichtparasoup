@@ -20,7 +20,7 @@ else:
     from typing_extensions import Protocol
 
 _Timestamp = int
-"""Time in seconds since the Epoch
+"""Time in seconds since the Unix Epoch
 """
 
 
@@ -45,6 +45,14 @@ class ResetResponse:
         self.timeout = timeout
 
 
+class _ServerLocks:
+    def __init__(self) -> None:  # pragma: no cover
+        self.stats_get_image = Lock()
+        self.reset = Lock()
+        self.refill = Lock()
+        self.run = Lock()
+
+
 class Server:
     """
 
@@ -60,14 +68,14 @@ class Server:
     def __init__(self, core: NPCore, *,
                  crawler_upkeep: int = 30,
                  reset_timeout: int = 60 * 60
-                 ) -> None:  # pragma: no cover
+                 ) -> None:
         self.core = core
         self.keep = max(crawler_upkeep, 10)
         self.reset_timeout = max(reset_timeout, 600)
         self.stats = ServerStatistics()
         self._refiller: Optional[ServerRefiller] = None
         self._trigger_reset = False
-        self._locks = _ServerLocks()
+        self.__locks = _ServerLocks()
         self.__running = False
 
     def has_image(self) -> bool:
@@ -78,7 +86,7 @@ class Server:
             image = crawler.pop_random_image()
             if image is None:
                 continue
-            with self._locks.stats_get_image:
+            with self.__locks.stats_get_image:
                 self.stats.count_images_served += 1
             return ImageResponse(image, crawler)
         return None
@@ -90,11 +98,11 @@ class Server:
             _log('info', 'refilled by %d via %s', refilled, crawler.imagecrawler)
 
     def refill(self) -> None:
-        with self._locks.refill:
+        with self.__locks.refill:
             self.core.fill_up_to(self.keep, on_refill=self._log_refill_crawler)
 
     def _reset(self) -> None:
-        with self._locks.reset:
+        with self.__locks.reset:
             self.stats.cum_blacklist_on_flush += self.core.reset()
             self.stats.count_reset += 1
             self.stats.time_last_reset = int(time())
@@ -116,7 +124,7 @@ class Server:
         return ResetResponse(request_valid, timeout)
 
     def start(self) -> None:
-        with self._locks.run:
+        with self.__locks.run:
             if self.__running:
                 raise RuntimeError('already running')
             _log('info', ' * starting %s', type(self).__name__)
@@ -132,7 +140,7 @@ class Server:
         return self.__running
 
     def stop(self) -> None:
-        with self._locks.run:
+        with self.__locks.run:
             if not self.__running:
                 raise RuntimeError('not running')
             _log('info', "\r\n * stopping %s", type(self).__name__)
@@ -158,7 +166,7 @@ class _CollectionStatus:
 _CS = TypeVar('_CS', bound=_CollectionStatus)
 
 
-class StatusLike(Protocol):  # pragma: no cover
+class StatusLike(Protocol):
     """A snapshot of server's metrics.
 
     Basically a data class alike.
@@ -169,27 +177,27 @@ class StatusLike(Protocol):  # pragma: no cover
         raise NotImplementedError()
 
 
-_SL = TypeVar('_SL')
+_SL = TypeVar('_SL', bound=StatusLike)
 
 
 class ServerStatus(StatusLike):
     class _Reset:
-        def __init__(self, count: int, since: int) -> None:  # pragma: no cover
+        def __init__(self, count: int, since: int) -> None:
             self.count = count
             self.since = since
 
     class _Images:
-        def __init__(self, served: int, crawled: int) -> None:  # pragma: no cover
+        def __init__(self, served: int, crawled: int) -> None:
             self.served = served
             self.crawled = crawled
 
-    def __init__(self, *, uptime: int, reset: _Reset, images: _Images) -> None:  # pragma: no cover
+    def __init__(self, *, uptime: int, reset: _Reset, images: _Images) -> None:
         self.uptime = uptime
         self.reset = reset
         self.images = images
 
     @classmethod
-    def of_server(cls, server: Server) -> 'ServerStatus':
+    def of_server(cls: Type['_ServerStatus'], server: Server) -> '_ServerStatus':
         now = int(time())
         stats = server.stats
         uptime = (now - stats.time_started) if server.is_alive() and stats.time_started else 0
@@ -206,27 +214,34 @@ class ServerStatus(StatusLike):
         )
 
 
+_ServerStatus = TypeVar('_ServerStatus', bound=ServerStatus)
+
+
 class BlacklistStatus(_CollectionStatus, StatusLike):
 
     @classmethod
-    def of_server(cls: Type['BlacklistStatus'], server: Server) -> 'BlacklistStatus':
+    def of_server(cls: Type['_BlacklistStatus'], server: Server) -> '_BlacklistStatus':
         return super().of_collection(server.core.blacklist)
+
+
+_BlacklistStatus = TypeVar('_BlacklistStatus', bound=BlacklistStatus)
 
 
 class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler'], StatusLike):
     class _Crawler:
-        def __init__(self, crawler: Crawler) -> None:  # pragma: no cover
+        def __init__(self, crawler: Crawler) -> None:
             self.name = crawler.imagecrawler.internal_name
             self.weight = crawler.weight
             self.type = _type_module_name_str(type(crawler.imagecrawler))
             self.config = crawler.imagecrawler.get_config()
             self.images = _CollectionStatus.of_collection(crawler.images)
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:  # pragma: no cover
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        # TODO remove?
         super().__init__(*args, **kwargs)
 
     @classmethod
-    def of_server(cls, server: Server) -> 'CrawlerStatus':
+    def of_server(cls: Type['_CrawlerStatus'], server: Server) -> '_CrawlerStatus':
         return cls(
             (id(crawler), cls._Crawler(crawler))
             for crawler
@@ -234,9 +249,12 @@ class CrawlerStatus(Dict[int, 'CrawlerStatus._Crawler'], StatusLike):
         )
 
 
+_CrawlerStatus = TypeVar('_CrawlerStatus', bound=CrawlerStatus)
+
+
 class ServerRefiller(Thread):
 
-    def __init__(self, server: Server, delay: float) -> None:  # pragma: no cover
+    def __init__(self, server: Server, delay: float) -> None:
         super().__init__(daemon=True)
         self._server_wr = weak_ref(server)
         self._delay = delay
@@ -268,11 +286,3 @@ class ServerRefiller(Thread):
                 raise RuntimeError('not running')
             _log('info', ' * stopping %s', type(self).__name__)
             self._stop_event.set()
-
-
-class _ServerLocks:
-    def __init__(self) -> None:  # pragma: no cover
-        self.stats_get_image = Lock()
-        self.reset = Lock()
-        self.refill = Lock()
-        self.run = Lock()

@@ -5,7 +5,7 @@ from threading import Thread
 from time import sleep
 from types import MethodType
 from typing import Callable, Generator, List, Optional, Set, Union
-from weakref import ReferenceType, WeakMethod
+from weakref import WeakMethod
 
 from .image import Image, ImageCollection, ImageUri
 from .imagecrawler import BaseImageCrawler
@@ -33,44 +33,54 @@ class Crawler:
                  is_image_addable: Optional[_IsImageAddable] = None,
                  on_image_added: Optional[_OnImageAdded] = None
                  ) -> None:
-        if weight <= 0:
-            raise ValueError('weight <= 0')
         self.imagecrawler = imagecrawler
         self.weight = weight
         self.restart_at_front_when_exhausted = restart_at_front_when_exhausted
         self.images = ImageCollection()
-        self._is_image_addable_wr: Optional[ReferenceType[_IsImageAddable]] = None
-        self._image_added_wr: Optional[ReferenceType[_OnImageAdded]] = None
-        self.set_is_image_addable(is_image_addable)
-        self.set_image_added(on_image_added)
+        self.is_image_addable = is_image_addable
+        self.image_added = on_image_added
 
-    def set_is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
-        t_is_image_addable = type(is_image_addable)
-        if None is is_image_addable:
-            self._is_image_addable_wr = None
-        elif MethodType is t_is_image_addable:
-            self._is_image_addable_wr = WeakMethod(is_image_addable)  # type: ignore[assignment,arg-type]
+    @property
+    def weight(self) -> _CrawlerWeight:
+        return self._weight
+
+    @weight.setter
+    def weight(self, weight: _CrawlerWeight) -> None:
+        if weight <= 0:
+            raise ValueError(f'expected grater than 0, got {weight!r}')
+        self._weight = weight
+
+    @property
+    def is_image_addable(self) -> Optional[_IsImageAddable]:
+        return self._is_image_addable() if isinstance(self._is_image_addable, WeakMethod) else self._is_image_addable
+
+    @is_image_addable.setter
+    def is_image_addable(self, is_image_addable: Optional[_IsImageAddable]) -> None:
+        """
+        :param is_image_addable: callable. If a (Class)Method is passed, a weak reference is stored instead.
+        """
+        # written in this stupid way to satisfy mypy
+        if type(is_image_addable) is not MethodType:
+            self._is_image_addable: Union[_IsImageAddable, WeakMethod, None] = is_image_addable
         else:
-            raise NotImplementedError(f'type {t_is_image_addable!r} not supported, yet')
-        # TODO: add function/lambda support - and write proper tests for it
+            self._is_image_addable = WeakMethod(is_image_addable)  # type: ignore[arg-type]
 
-    def get_is_image_addable(self) -> Optional[_IsImageAddable]:
-        return self._is_image_addable_wr() if self._is_image_addable_wr else None
+    @property
+    def image_added(self) -> Optional[_OnImageAdded]:
+        return self._image_added() if isinstance(self._image_added, WeakMethod) else self._image_added
 
-    def set_image_added(self, image_added: Optional[_OnImageAdded]) -> None:
-        t_image_added = type(image_added)
-        if None is image_added:
-            self._image_added_wr = None
-        elif MethodType is t_image_added:
-            self._image_added_wr = WeakMethod(image_added)  # type: ignore[assignment,arg-type]
+    @image_added.setter
+    def image_added(self, image_added: Optional[_OnImageAdded]) -> None:
+        """
+        :param image_added: callable. If a (Class)Method is passed, a weak reference is stored instead.
+        """
+        # written in this stupid way to satisfy mypy
+        if type(image_added) is not MethodType:
+            self._image_added: Union[_OnImageAdded, WeakMethod, None] = image_added
         else:
-            raise NotImplementedError(f'type {t_image_added!r} not supported, yet')
-        # TODO: add function/lambda support - and write proper tests for it
+            self._image_added = WeakMethod(image_added)  # type: ignore[arg-type]
 
-    def get_image_added(self) -> Optional[_OnImageAdded]:
-        return self._image_added_wr() if self._image_added_wr else None
-
-    def reset(self) -> None:  # pragma: no cover
+    def reset(self) -> None:
         self.images.clear()
         self.imagecrawler.reset()
 
@@ -89,8 +99,8 @@ class Crawler:
         """Add images, if allowed.
         :return: Number of newly added images.
         """
-        is_image_addable = self.get_is_image_addable()
-        image_added = self.get_image_added()
+        is_image_addable = self.is_image_addable
+        image_added = self.image_added
         if is_image_addable:
             images = ImageCollection(filter(is_image_addable, images))
         for image in images:

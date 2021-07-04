@@ -11,14 +11,31 @@ Unreleased
     It might come back as a plugin one day.  
     This crawler was just too brittle because of Instagram's WebApplicationFirewalls and other bot protections.
 * Changes
-  * API supports HTTP method "GET" only. Did support all HTTP methods in the past. 
+  * Web-API supports HTTP method "GET" only. Did support all HTTP methods in the past.
+  * Property `nichtparasoup.core.Crawler.weight` got getter & setter to reflect value constraints.
+  * Methods `nichtparasoup.core.Crawler.get_is_image_addable()`
+          & `nichtparasoup.core.Crawler.set_is_image_addable()` were removed.  
+    They are replaced by a new property `nichtparasoup.core.Crawler.is_image_addable`.
+  * Method `nichtparasoup.core.Crawler.set_image_added()`
+         & `nichtparasoup.core.Crawler.get_image_added()` were removed.  
+    They are replaced by a new property `nichtparasoup.core.Crawler.image_added`.
+  * Objects of `nichtparasoup.core.image.Image` are immutable(frozen) to ensure proper hashing.
 * Added
   * New method `nichtparasoup.server.has_image() -> bool`.
+  * New property `nichtparasoup.core.Crawler.is_image_addable` with getter, setter.
+    Support any kind of Callable now, formerly supported `MethodType` only.
+  * New property `nichtparasoup.core.Crawler.image_added` with getter, setter.
+    Support any kind of Callable now, formerly supported `MethodType` only.
 * Fixes
   * API `/get` no longer responds false "404 EXHAUSTED" HTTP Status code.
+  * Method `nichtparasoup.server.get_image()` no longer responds false `None`.
+  * Image detection is now case-insensitive. Will find `.png` as well as `.PNG`.
+  * Image detection knows more extensions of jpeg: `.jpg`, `.jpeg`, `.jfif`, `.pjpeg`, `.pjp`.
   * `nichtparasoup.server.get_image()` no longer responds false `None`.
 * Removed
   * Crawler `nichtparasoup.imagecrawlers.instagram` was removed from shipped imagecrawlers.
+* Misc
+  * Tests were restructured and rewritten. Therefore made some functions/methods more testable.
 
 ## 3.0.0a2
 

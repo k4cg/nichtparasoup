@@ -17,8 +17,8 @@ Config = Dict[str, Any]
 
 ConfigFilePath = Union[str, PathLike]
 
-DEFAULTS_FILE: ConfigFilePath = str((Path(__file__).parent / 'defaults.yaml').resolve(strict=True))
-SCHEMA_FILE: str = str((Path(__file__).parent / 'schema.yaml').resolve(strict=True))
+DEFAULTS_FILE: ConfigFilePath = str((Path(__file__).parent / '_defaults.yaml').resolve(strict=True))
+SCHEMA_FILE: str = str((Path(__file__).parent / '_schema.yaml').resolve(strict=True))
 
 _YAML_PARSER = 'ruamel'
 

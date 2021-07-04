@@ -1,7 +1,7 @@
 __all__ = [
-    "ImageCrawlerConfig",
-    "BaseImageCrawler",
-    "ImageCrawlerInfo", "RemoteFetcher", "ImageRecognizer"
+    "BaseImageCrawler", "ImageCrawlerConfig", "ImageCrawlerInfo",
+    "RemoteFetcher", "RemoteFetchError",
+    "ImageRecognizer",
 ]
 
 import os
@@ -24,6 +24,7 @@ _Uri = str
 
 
 class ImageCrawlerInfo:
+    # TODO when py >= (3.7) -- make this a data class, a frozen one.
     """ImageCrawler's Info.
 
     .. seealso:: :method:`BaseImageCrawler.info()`
@@ -34,7 +35,7 @@ class ImageCrawlerInfo:
                  description: str, long_description: Optional[str] = None,
                  config: Optional[Dict[_ImageCrawlerConfigKey, str]] = None,
                  icon_url: Optional[_Uri] = None,
-                 **more: Any) -> None:
+                 **more: Any) -> None:  # pragma: no cover
         """
         :param description: short description
         :param long_description: long description
@@ -69,27 +70,23 @@ class BaseImageCrawler(ABC):
                 super().__init__(height=height)
         """
         self._config = self.check_config(config)  # intended to be immutable from now on
-        self._reset_before_next_crawl: bool = False
-        self._crawl_lock = Lock()
+        self.__reset_before_next_crawl: bool = False
+        self.__crawl_lock = Lock()
         _log('debug', 'crawler initialized: %r', self)
 
     def __repr__(self) -> str:  # pragma: no cover
         return f'<{_type_module_name_str(type(self))} {self.config!r}>'
 
     def __str__(self) -> str:  # pragma: no cover
-        return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>' \
-            if self._np_name \
-            else self.__repr__()
+        if self._np_name:
+            return f'<NamedImagecrawler {self._np_name!r} {self.config!r}>'
+        else:
+            return self.__repr__()
 
     def __eq__(self, other: Union['BaseImageCrawler', Any]) -> bool:
-        if type(self) is not type(other):
-            return NotImplemented
-        return self._config == other._config
-
-    def __ne__(self, other: Union['BaseImageCrawler', Any]) -> bool:
-        if type(self) is not type(other):
-            return NotImplemented
-        return self._config != other._config
+        if isinstance(other, BaseImageCrawler):
+            return type(self) is type(other) and self._config == other._config
+        return False
 
     def get_internal_name(self) -> Optional[str]:
         """get the internal name"""
@@ -109,18 +106,18 @@ class BaseImageCrawler(ABC):
             if not key.startswith('_')
         })
 
-    config = property(fget=get_config)
+    config = property(get_config)
 
     def reset(self) -> None:
-        self._reset_before_next_crawl = True
+        self.__reset_before_next_crawl = True
         _log('debug', 'crawler reset planned for %r', self)
 
     def crawl(self) -> ImageCollection:
-        with self._crawl_lock:
-            if self._reset_before_next_crawl:
+        with self.__crawl_lock:
+            if self.__reset_before_next_crawl:
                 _log('debug', 'Crawler resetting %r', self)
                 self._reset()
-                self._reset_before_next_crawl = False
+                self.__reset_before_next_crawl = False
             if self.is_exhausted():
                 _log('debug', 'Prevented exhausted crawling %s', self)
                 return ImageCollection()
@@ -136,7 +133,7 @@ class BaseImageCrawler(ABC):
 
     @classmethod
     @abstractmethod
-    def info(cls) -> ImageCrawlerInfo:
+    def info(cls) -> ImageCrawlerInfo:  # pragma: no cover
         """Get info of the crawler
 
         example implementation:
@@ -173,6 +170,7 @@ class BaseImageCrawler(ABC):
                 raise TypeError(f'height {height!r} is not int')
             if height <= 0:
                 raise ValueError(f'height {height} <= 0')
+            return ImageCrawlerConfig(height=height)
         """
         raise NotImplementedError()
 
@@ -228,35 +226,34 @@ class RemoteFetcher:
     def _valid_uri(uri: _Uri) -> bool:
         return urlparse(uri).scheme in {'http', 'https'}
 
-    def __debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
+    def _debug_write_response(self, response: HTTPResponse, request_url: str) -> None:
         stored_dir = self._debug_store_dir
-        if not stored_dir:
+        if not stored_dir:  # pragma: no cover
             return None
         file_name = f'{uuid4()}.nprfl'
-        file = stored_dir / file_name
         type4log = _type_module_name_str(type(self))
         _log('debug', f'{type4log} writing response for {request_url!r} to {file_name!r}')
         try:
-            self.__debug_write_response_file(file, response)
-        except Exception as ex:
+            self.__debug_write_response_file(stored_dir / file_name, response)
+        except Exception as ex:  # pragma: no cover
             _log('debug', f'{type4log} failed writing response for {request_url!r} to {file_name!r}', exc_info=ex)
             raise ex
 
     @staticmethod
     def __debug_write_response_file(file: Path, response: HTTPResponse) -> None:
         url = response.geturl()
-        with open(file, 'wt') as fp_meta:
+        with open(file, mode='wt') as fp_meta:
             fp_meta.writelines([url, '\n', str(response.getcode()), '\n'])
             fp_meta.write('\n')
             fp_meta.writelines(f'{header}: {value}\n' for header, value in response.getheaders())
             fp_meta.write('\n')
         response_fp = response.fp  # type: ignore[attr-defined]
         if response_fp:
-            with open(file, 'ab') as fp_data:
+            with open(file, mode='ab') as fp_data:
                 fp_pos = fp_data.tell()
                 fp_data.write(response_fp.read())
             response_fp.close()
-            fp_data = open(file, 'rb')
+            fp_data = open(file, mode='rb')
             fp_data.seek(fp_pos)
             fp_data.seekable = lambda: False  # type: ignore[assignment]
             response.fp = fp_data  # type: ignore[attr-defined]
@@ -272,7 +269,7 @@ class RemoteFetcher:
             _log('debug', 'Caught error on fetch remote %r', uri, exc_info=ex)
             raise RemoteFetchError(str(ex), uri) from ex
         if isinstance(response, HTTPResponse):
-            self.__debug_write_response(response, uri)
+            self._debug_write_response(response, uri)
         return response, response.geturl()
 
     def get_bytes(self, uri: _Uri) -> Tuple[bytes, _Uri]:
@@ -291,19 +288,28 @@ class RemoteFetcher:
 
 class RemoteFetchError(Exception):
 
-    def __init__(self, msg: str, uri: _Uri) -> None:
-        super().__init__()
-        self.msg = msg
+    def __init__(self, msg: str, uri: _Uri) -> None:  # pragma: no cover
+        super().__init__(msg)
         self.uri = uri
 
     def __str__(self) -> str:  # pragma: no cover
-        return f'{self.msg or "RemoteFetchError"} for {self.uri!r}'
+        return (super().__str__() or 'RemoteFetchError') + f' for {self.uri!r}'
 
 
 class ImageRecognizer:
-    _IMAGE_SUFFIXES = {'.jpeg', '.jpg', '.png', '.gif', '.svg', '.webp'}
+    _IMAGE_SUFFIXES = {
+        # see https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+        # see https://caniuse.com/?search=image%20format
+        '.apng',
+        # '.avif', constrained by https://caniuse.com/avif
+        '.gif',
+        '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp',
+        '.png',
+        '.svg',
+        '.webp',
+    }
 
     def path_is_image(self, uri: _Uri) -> bool:
         return PurePath(
             urlparse(uri).path
-        ).suffix in self._IMAGE_SUFFIXES
+        ).suffix.lower() in self._IMAGE_SUFFIXES
