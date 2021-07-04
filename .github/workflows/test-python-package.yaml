@@ -121,7 +121,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U wheel setuptools pip
-          python -m pip install -r requirements/tox.txt
+          python -m pip install tox -c requirements/tox.txt
       - name: Test ${{ env.project-directory }}
         id: tests
         run:
@@ -219,7 +219,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U wheel setuptools pip
-          python -m pip install -r requirements/tests.txt -r requirements/tox.txt
+          python -m pip install coverage tox -c requirements/tests.txt -c requirements/tox.txt
       - name: Merge pytest-reports
         run: python -m tox -r -e pytests_merge
       - name: Merge coverage

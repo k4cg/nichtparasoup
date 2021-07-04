@@ -9,4 +9,4 @@ cd "$(dirname "$(dirname "$0")")"
 
 find "${REQUIREMENTS_DIR}" -type f -name '*.in' \
   -exec echo 'precessing {}' \; \
-  -exec pip-compile -qUr --header --annotate {} \;
+  -exec pip-compile -qUr --strip-extras --header --annotate {} \;
