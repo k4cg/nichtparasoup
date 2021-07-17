@@ -4,7 +4,7 @@
 #
 #    pip-compile --strip-extras requirements/tox.in
 #
-appdirs==1.4.4
+backports.entry-points-selectable==1.1.0
     # via virtualenv
 distlib==0.3.2
     # via virtualenv
@@ -12,8 +12,15 @@ filelock==3.0.12
     # via
     #   tox
     #   virtualenv
+importlib-metadata==4.6.1
+    # via
+    #   pluggy
+    #   tox
+    #   virtualenv
 packaging==21.0
     # via tox
+platformdirs==2.0.2
+    # via virtualenv
 pluggy==0.13.1
     # via tox
 py==1.10.0
@@ -28,5 +35,11 @@ toml==0.10.2
     # via tox
 tox==3.23.1
     # via -r requirements/tox.in
-virtualenv==20.4.7
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+virtualenv==20.6.0
     # via tox
+zipp==3.5.0
+    # via importlib-metadata
