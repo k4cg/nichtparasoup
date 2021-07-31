@@ -9,7 +9,6 @@ on:
     branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/test-web-ui.yaml'
-      - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
@@ -19,7 +18,6 @@ on:
     branches: [ 'master', '3.0-dev' ]
     paths:
       - '.github/workflows/test-web-ui.yaml'
-      - '.github/codeql/web-ui.yaml'
       - 'web-ui/**'
       - '!web-ui/docs/**'
       - '!web-ui/**.md'
@@ -54,28 +52,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  codeql:
-    # see https://github.com/github/codeql-action
-    name: CodeQL
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch Code
-        # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
-        with:
-          # We must fetch at least the immediate parents so that if this is
-          # a pull request then we can checkout the head.
-          fetch-depth: 2
-      - run: git checkout HEAD^2
-        # If this run was triggered by a pull request event, then checkout
-        # the head of the pull request instead of the merge commit.
-        if: ${{ github.event_name == 'pull_request' }}
-      - name: Initialize CodeQL
-        # see https://github.com/github/codeql-action
-        uses: github/codeql-action/init@v1
-        with:
-          languages: javascript
-          config-file: .github/codeql/${{ env.project-directory }}.yaml
-      - name: Perform CodeQL Analysis
-        # see https://github.com/github/codeql-action
-        uses: github/codeql-action/analyze@v1
