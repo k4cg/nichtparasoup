@@ -10,6 +10,7 @@ ImageUri = str
 SourceUri = str
 
 
+
 class Image:
     """Describe an image
 
