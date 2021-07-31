@@ -32,18 +32,18 @@ jobs:
       security-events: write
 
     strategy:
-    fail-fast: false
-    matrix:
-      include:
-        - name: python-package
-          language: python
-          config: python-package.yaml
-        - name: python-plugin-example
-          language: python
-          config: python-plugin-example.yaml
-        - name: web-ui
-          language: javascript
-          config: web-ui.yaml
+      fail-fast: false
+      matrix:
+        include:
+          - name: python-package
+            language: python
+            config: python-package.yaml
+          - name: python-plugin-example
+            language: python
+            config: python-plugin-example.yaml
+          - name: web-ui
+            language: javascript
+            config: web-ui.yaml
 
     steps:
       - name: Fetch Code
