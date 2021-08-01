@@ -194,11 +194,27 @@ jobs:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
           if-no-files-found: error
+
+
+  can-sonar:
+    runs-on: ubuntu-latest
+    outputs:
+      has_token: ${{ steps.has-token.outputs.has_token }}
+    steps:
+      - id: has-token
+        run: |
+          if [[ -n "$SONAR_TOKEN" ]]
+          then
+            echo '::set-output name=has_token::false'
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: .
   sonarcloud:
     name: SonarScanner
+    needs: [ 'can-sonar', 'test', 'test-reporting_merge' ]
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ ! cancelled() && github.repository_owner == 'k4cg' }}
-    needs: [ 'test', 'test-reporting_merge' ]
+    if: ${{ needs.can-sonar.outputs.has_token && ! cancelled() && github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
