@@ -32,10 +32,27 @@ env:
   project-directory: web-ui
 
 jobs:
+
+
+  can-sonar:
+    runs-on: ubuntu-latest
+    outputs:
+      has_token: ${{ steps.has-token.outputs.has_token }}
+    steps:
+      - id: has-token
+        run: |
+          if [[ -n "$SONAR_TOKEN" ]]
+          then
+            echo '::set-output name=has_token::false'
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: .
   sonarcloud:
     name: SonarScanner
+    needs: [ 'can-sonar' ]
     # have forks backed-up: Anyone without write access to a repository cannot read and use secrets
-    if: ${{ ! cancelled() && github.repository_owner == 'k4cg' }}
+    if: ${{ needs.can-sonar.outputs.has_token && ! cancelled() && github.repository_owner == 'k4cg' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Code
