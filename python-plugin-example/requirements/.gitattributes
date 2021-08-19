@@ -1,0 +1,4 @@
+
+# some files were generated via pip-compile (pip-tools)
+*.txt linguist-generated
+
