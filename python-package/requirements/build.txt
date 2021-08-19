@@ -4,12 +4,22 @@
 #
 #    pip-compile --strip-extras requirements/build.in
 #
+importlib-metadata==4.6.4
+    # via pep517
 pep517==0.11.0
     # via -r requirements/build.in
 tomli==1.2.0
     # via pep517
-wheel==0.36.2
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+wheel==0.37.0
     # via -r requirements/build.in
+zipp==3.5.0
+    # via
+    #   importlib-metadata
+    #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
