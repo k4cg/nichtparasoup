@@ -34,6 +34,7 @@ flake8==3.9.2
     #   flake8-isort
     #   flake8-polyfill
     #   flake8-use-fstring
+    #   pep8-naming
 flake8-annotations==2.6.2
     # via -r requirements/style.in
 flake8-bugbear==21.4.3
@@ -46,6 +47,14 @@ flake8-use-fstring==1.1
     # via -r requirements/style.in
 future==0.18.2
     # via junitparser
+importlib-metadata==4.6.4
+    # via
+    #   flake8
+    #   pep517
+    #   pluggy
+    #   pytest
+    #   tox
+    #   virtualenv
 iniconfig==1.1.1
     # via pytest
 isort==5.9.3
@@ -68,7 +77,7 @@ packaging==21.0
     #   tox
 pep517==0.11.0
     # via pip-tools
-pep8-naming==0.11.1
+pep8-naming==0.12.1
     # via -r requirements/style.in
 pip-tools==6.2.0
     # via -r requirements/dev.in
@@ -116,13 +125,22 @@ tomli==1.2.0
 tox==3.23.1
     # via -r requirements/tox.in
 typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.10.0.0
-    # via mypy
+    # via
+    #   flake8-annotations
+    #   mypy
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+    #   mypy
 virtualenv==20.7.2
     # via tox
 wheel==0.36.2
     # via pip-tools
+zipp==3.5.0
+    # via
+    #   importlib-metadata
+    #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
