@@ -8,7 +8,7 @@ from nichtparasoup.core.imagecrawler import ImageCrawlerConfig, ImageCrawlerInfo
 from nichtparasoup.imagecrawler import BaseImageCrawler
 from nichtparasoup.imagecrawlers.echo import Echo
 from nichtparasoup.testing.config import (
-    ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersException, _default_probe_callback,
+    ConfigProbeCallbackReason, ConfigTest, DuplicateImagecrawlersError, _default_probe_callback,
 )
 from nichtparasoup.testing.imagecrawler import ImagecrawlerProbeResult, ImageCrawlerTest
 
@@ -23,7 +23,7 @@ class ConfigTestCheckDuplicatesTest(unittest.TestCase):
         duplicates: List[BaseImageCrawler] = [Echo(image_uri='https://foo.bar.baz')]
         tester.find_duplicates = lambda: duplicates  # type: ignore[assignment]
         # act & assert
-        with self.assertRaises(DuplicateImagecrawlersException) as ar:
+        with self.assertRaises(DuplicateImagecrawlersError) as ar:
             tester.check_duplicates()
         self.assertListEqual(duplicates, ar.exception.duplicates)
 

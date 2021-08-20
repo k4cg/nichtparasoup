@@ -1,5 +1,5 @@
 __all__ = ["ConfigTest",
-           'DuplicateImagecrawlersException', 'ConfigImagecrawlerProbeResult', 'ConfigProbeResults',
+           'DuplicateImagecrawlersError', 'ConfigImagecrawlerProbeResult', 'ConfigProbeResults',
            "ConfigProbeCallbackReason", "ConfigProbeCallback",
            'PROBE_DELAY_DEFAULT', 'PROBE_RETRIES_DEFAULT'  # for convenience
            ]
@@ -58,7 +58,7 @@ def _default_probe_callback(reason: ConfigProbeCallbackReason,
     return None
 
 
-class DuplicateImagecrawlersException(Exception):
+class DuplicateImagecrawlersError(Exception):
     def __init__(self, duplicates: List[BaseImageCrawler]) -> None:
         super().__init__()
         self.duplicates = duplicates
@@ -77,11 +77,11 @@ class ConfigTest:
 
         This represents a functional test.
 
-         :raise DuplicateImagecrawlersException: when duplicates were found
+         :raise DuplicateImagecrawlersError: when duplicates were found
          """
         duplicates = self.find_duplicates()
         if duplicates:
-            raise DuplicateImagecrawlersException(duplicates)
+            raise DuplicateImagecrawlersError(duplicates)
 
     def find_duplicates(self) -> List[BaseImageCrawler]:
         """Find duplicate imagecrawlers in a config.
