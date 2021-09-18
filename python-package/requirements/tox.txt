@@ -12,6 +12,11 @@ filelock==3.0.12
     # via
     #   tox
     #   virtualenv
+importlib-metadata==4.8.1
+    # via
+    #   pluggy
+    #   tox
+    #   virtualenv
 packaging==21.0
     # via tox
 platformdirs==2.2.0
@@ -30,5 +35,11 @@ toml==0.10.2
     # via tox
 tox==3.24.2
     # via -r requirements/tox.in
-virtualenv==20.7.2
+typing-extensions==3.10.0.2 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+virtualenv==20.8.0
     # via tox
+zipp==3.5.0
+    # via importlib-metadata
