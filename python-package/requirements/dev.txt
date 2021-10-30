@@ -22,7 +22,7 @@ coverage==5.5
     #   pytest-cov
 distlib==0.3.2
     # via virtualenv
-filelock==3.0.12
+filelock==3.3.2
     # via
     #   tox
     #   virtualenv
@@ -47,6 +47,14 @@ flake8-use-fstring==1.1
     # via -r requirements/style.in
 future==0.18.2
     # via junitparser
+importlib-metadata==4.8.1
+    # via
+    #   flake8
+    #   pep517
+    #   pluggy
+    #   pytest
+    #   tox
+    #   virtualenv
 iniconfig==1.1.1
     # via pytest
 isort==5.9.3
@@ -117,13 +125,22 @@ tomli==1.2.1
 tox==3.24.2
     # via -r requirements/tox.in
 typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.10.0.0
-    # via mypy
-virtualenv==20.7.2
+    # via
+    #   flake8-annotations
+    #   mypy
+typing-extensions==3.10.0.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+    #   mypy
+virtualenv==20.9.0
     # via tox
 wheel==0.37.0
     # via pip-tools
+zipp==3.6.0
+    # via
+    #   importlib-metadata
+    #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
