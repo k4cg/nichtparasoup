@@ -120,7 +120,7 @@ toml==0.10.2
     #   pytest
     #   pytest-cov
     #   tox
-tomli==1.2.1
+tomli==1.2.2
     # via pep517
 tox==3.24.2
     # via -r requirements/tox.in
