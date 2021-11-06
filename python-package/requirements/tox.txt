@@ -19,7 +19,7 @@ importlib-metadata==4.8.1
     #   virtualenv
 packaging==21.0
     # via tox
-platformdirs==2.2.0
+platformdirs==2.4.0
     # via virtualenv
 pluggy==0.13.1
     # via tox
