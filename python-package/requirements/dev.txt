@@ -112,7 +112,7 @@ six==1.16.0
     # via
     #   tox
     #   virtualenv
-testfixtures==6.18.0
+testfixtures==6.18.3
     # via flake8-isort
 toml==0.10.2
     # via
