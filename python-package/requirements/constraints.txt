@@ -12,6 +12,3 @@
     setuptools >= 41.0
     # for CLI:
     click >= 7.1 , < 8.0
-
-# constraint from certain issues during testing
-    mypy < 0.900 # mypy introduced a lot of new stuff that was not incorporated into this project
