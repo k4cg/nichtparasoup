@@ -16,7 +16,7 @@ click==7.1.2
     # via
     #   -c requirements/constraints.txt
     #   pip-tools
-coverage==5.5
+coverage[toml]==5.5
     # via
     #   -r requirements/tests.in
     #   pytest-cov
@@ -104,7 +104,7 @@ pytest==6.2.4
     #   -r requirements/tests.in
     #   pytest-cov
     #   pytest-mock
-pytest-cov==2.12.1
+pytest-cov==3.0.0
     # via -r requirements/tests.in
 pytest-mock==3.6.1
     # via -r requirements/tests.in
@@ -117,8 +117,8 @@ testfixtures==6.18.0
 toml==0.10.2
     # via
     #   autopep8
+    #   coverage
     #   pytest
-    #   pytest-cov
     #   tox
 tomli==1.2.2
     # via pep517
