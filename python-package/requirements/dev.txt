@@ -16,7 +16,7 @@ click==7.1.2
     # via
     #   -c requirements/constraints.txt
     #   pip-tools
-coverage==5.5
+coverage==6.1.2
     # via
     #   -r requirements/tests.in
     #   pytest-cov
