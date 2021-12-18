@@ -8,7 +8,7 @@ importlib-metadata==4.8.1
     # via pep517
 pep517==0.11.0
     # via -r requirements/build.in
-tomli==1.2.2
+tomli==2.0.0
     # via pep517
 typing-extensions==3.10.0.2 ; python_version < "3.8"
     # via
