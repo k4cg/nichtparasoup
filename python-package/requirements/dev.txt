@@ -81,7 +81,7 @@ pep8-naming==0.12.1
     # via -r requirements/style.in
 pip-tools==6.2.0
     # via -r requirements/dev.in
-platformdirs==2.2.0
+platformdirs==2.4.1
     # via virtualenv
 pluggy==0.13.1
     # via
