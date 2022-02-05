@@ -79,7 +79,7 @@ pep517==0.11.0
     # via pip-tools
 pep8-naming==0.12.1
     # via -r requirements/style.in
-pip-tools==6.2.0
+pip-tools==6.5.0
     # via -r requirements/dev.in
 platformdirs==2.2.0
     # via virtualenv
