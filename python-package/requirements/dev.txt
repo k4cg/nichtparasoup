@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -61,7 +61,7 @@ isort==5.10.1
     # via
     #   -r requirements/dev.in
     #   flake8-isort
-junitparser==2.1.1
+junitparser==2.4.3
     # via -r requirements/tests.in
 mccabe==0.6.1
     # via flake8
