@@ -4,13 +4,14 @@
 #
 #    pip-compile --strip-extras requirements/dev.in
 #
-attrs==21.2.0
+attrs==21.4.0
     # via
+    #   flake8-annotations
     #   flake8-bugbear
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -35,7 +36,7 @@ flake8==3.9.2
     #   flake8-polyfill
     #   flake8-use-fstring
     #   pep8-naming
-flake8-annotations==2.7.0
+flake8-annotations==2.8.0
     # via -r requirements/style.in
 flake8-bugbear==21.11.29
     # via -r requirements/style.in
