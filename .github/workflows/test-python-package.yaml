@@ -145,7 +145,7 @@ jobs:
       - name: Artifact testlogs
         if: ${{ ! cancelled() && steps.tests.outcome == 'failure' && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: testlogs
           # see `LOGDIR` in `tests/__init__.py`
@@ -154,7 +154,7 @@ jobs:
       - name: Artifact reports
         if: ${{ ! cancelled() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
@@ -167,7 +167,7 @@ jobs:
       - name: Artifact coverage
         if: ${{ ! cancelled() && ! matrix.no-unit-test }}
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.coverage-artifact }}
           path: ${{ env.project-directory }}/${{ env.coverage-artifact-dir }}/
@@ -228,7 +228,7 @@ jobs:
           python -m tox -r -e coverage_report
       - name: Artifact combined reports
         # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}/
