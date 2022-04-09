@@ -78,7 +78,7 @@ jobs:
     steps:
       - name: Fetch build results
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: build-results
           path: ${{ env.dist-dir }}
@@ -116,7 +116,7 @@ jobs:
     steps:
       - name: Download build results
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: build-results
           path: ${{ env.dist-dir }}

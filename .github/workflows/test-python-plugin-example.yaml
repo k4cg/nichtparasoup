@@ -150,13 +150,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Fetch reports
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
       - name: Fetch coverage
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.coverage-artifact }}
           path: ${{ env.project-directory }}/${{ env.coverage-artifact-dir }}
@@ -226,7 +226,7 @@ jobs:
       - name: Fetch reports
         continue-on-error: true
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.reports-artifact }}
           path: ${{ env.project-directory }}/${{ env.reports-directory }}
