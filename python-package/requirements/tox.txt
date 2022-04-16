@@ -4,7 +4,7 @@
 #
 #    pip-compile --strip-extras requirements/tox.in
 #
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 distlib==0.3.2
     # via virtualenv
@@ -25,7 +25,7 @@ pluggy==0.13.1
     # via tox
 py==1.10.0
     # via tox
-pyparsing==2.4.7
+pyparsing==3.0.8
     # via packaging
 six==1.16.0
     # via

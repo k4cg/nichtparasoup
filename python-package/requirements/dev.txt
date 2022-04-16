@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -97,7 +97,7 @@ pycodestyle==2.7.0
     #   flake8
 pyflakes==2.3.1
     # via flake8
-pyparsing==2.4.7
+pyparsing==3.0.8
     # via packaging
 pytest==6.2.4
     # via
