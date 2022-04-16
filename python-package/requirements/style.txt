@@ -4,8 +4,10 @@
 #
 #    pip-compile --strip-extras requirements/style.in
 #
-attrs==21.2.0
-    # via flake8-bugbear
+attrs==21.4.0
+    # via
+    #   flake8-annotations
+    #   flake8-bugbear
 flake8==3.9.2
     # via
     #   -r requirements/style.in
@@ -15,7 +17,7 @@ flake8==3.9.2
     #   flake8-polyfill
     #   flake8-use-fstring
     #   pep8-naming
-flake8-annotations==2.7.0
+flake8-annotations==2.9.0
     # via -r requirements/style.in
 flake8-bugbear==21.11.29
     # via -r requirements/style.in
