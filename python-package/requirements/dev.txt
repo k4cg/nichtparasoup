@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -122,7 +122,7 @@ toml==0.10.2
     #   tox
 tomli==1.2.2
     # via pep517
-tox==3.24.2
+tox==3.25.0
     # via -r requirements/tox.in
 typed-ast==1.4.3
     # via
