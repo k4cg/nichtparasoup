@@ -12,7 +12,6 @@ flake8==3.9.2
     #   flake8-annotations
     #   flake8-bugbear
     #   flake8-isort
-    #   flake8-polyfill
     #   flake8-use-fstring
     #   pep8-naming
 flake8-annotations==2.7.0
@@ -21,8 +20,6 @@ flake8-bugbear==21.11.29
     # via -r requirements/style.in
 flake8-isort==4.0.0
     # via -r requirements/style.in
-flake8-polyfill==1.0.2
-    # via pep8-naming
 flake8-use-fstring==1.1
     # via -r requirements/style.in
 importlib-metadata==4.8.1
@@ -37,7 +34,7 @@ mypy==0.812
     #   -r requirements/style.in
 mypy-extensions==0.4.3
     # via mypy
-pep8-naming==0.12.1
+pep8-naming==0.13.0
     # via -r requirements/style.in
 pycodestyle==2.7.0
     # via flake8
