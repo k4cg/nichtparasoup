@@ -113,7 +113,7 @@ jobs:
       - name: Setup pip cache dir
         continue-on-error: true
         # see https://github.com/actions/cache
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3.0.3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: pip-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles(format('{0}/requirements/*.txt', env.project-directory)) }}
@@ -211,7 +211,7 @@ jobs:
       - name: Setup pip cache dir
         continue-on-error: true
         # see https://github.com/actions/cache
-        uses: actions/cache@v2.1.6
+        uses: actions/cache@v3.0.3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: pip-${{ runner.os }}-${{ env.latest-python-version }}-${{ hashFiles(format('{0}/requirements/*.txt', env.project-directory)) }}
