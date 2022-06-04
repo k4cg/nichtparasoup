@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -22,7 +22,7 @@ coverage==5.5
     #   pytest-cov
 distlib==0.3.2
     # via virtualenv
-filelock==3.4.0
+filelock==3.7.1
     # via
     #   tox
     #   virtualenv
