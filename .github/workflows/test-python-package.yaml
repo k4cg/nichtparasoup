@@ -103,7 +103,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Python ${{ matrix.python_version }}
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python }}
       - name: Get pip cache dir
@@ -201,7 +201,7 @@ jobs:
           path: ${{ env.project-directory }}/${{ env.coverage-artifact-dir }}
       - name: Setup Python
         # see https://github.com/actions/setup-python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.latest-python-version }}
       - name: Get pip cache dir
