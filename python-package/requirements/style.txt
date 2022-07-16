@@ -54,5 +54,5 @@ typing-extensions==3.10.0.0 ; python_version < "3.8"
     #   -c requirements/constraints.txt
     #   importlib-metadata
     #   mypy
-zipp==3.6.0
+zipp==3.8.1
     # via importlib-metadata
