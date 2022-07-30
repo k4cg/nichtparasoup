@@ -4,7 +4,7 @@
 #
 #    pip-compile --strip-extras requirements/tests.in
 #
-attrs==21.2.0
+attrs==22.1.0
     # via pytest
 coverage==5.5
     # via
@@ -12,6 +12,10 @@ coverage==5.5
     #   pytest-cov
 future==0.18.2
     # via junitparser
+importlib-metadata==4.12.0
+    # via
+    #   pluggy
+    #   pytest
 iniconfig==1.1.1
     # via pytest
 junitparser==2.1.1
@@ -37,3 +41,9 @@ toml==0.10.2
     # via
     #   pytest
     #   pytest-cov
+typing-extensions==4.3.0 ; python_version < "3.8"
+    # via
+    #   -c requirements/constraints.txt
+    #   importlib-metadata
+zipp==3.8.1
+    # via importlib-metadata

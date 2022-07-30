@@ -4,13 +4,13 @@
 #
 #    pip-compile --strip-extras requirements/dev.in
 #
-attrs==21.2.0
+attrs==22.1.0
     # via
     #   flake8-bugbear
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
