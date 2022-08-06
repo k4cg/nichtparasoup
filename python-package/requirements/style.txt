@@ -19,7 +19,7 @@ flake8-annotations==2.7.0
     # via -r requirements/style.in
 flake8-bugbear==21.11.29
     # via -r requirements/style.in
-flake8-isort==4.0.0
+flake8-isort==4.2.0
     # via -r requirements/style.in
 flake8-polyfill==1.0.2
     # via pep8-naming
@@ -43,8 +43,6 @@ pycodestyle==2.7.0
     # via flake8
 pyflakes==2.3.1
     # via flake8
-testfixtures==6.18.0
-    # via flake8-isort
 typed-ast==1.4.3
     # via
     #   flake8-annotations
