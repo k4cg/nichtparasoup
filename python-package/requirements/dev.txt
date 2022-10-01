@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -104,7 +104,7 @@ pytest==6.2.4
     #   -r requirements/tests.in
     #   pytest-cov
     #   pytest-mock
-pytest-cov==2.12.1
+pytest-cov==4.0.0
     # via -r requirements/tests.in
 pytest-mock==3.6.1
     # via -r requirements/tests.in
@@ -117,8 +117,8 @@ testfixtures==6.18.0
 toml==0.10.2
     # via
     #   autopep8
+    #   coverage
     #   pytest
-    #   pytest-cov
     #   tox
 tomli==1.2.2
     # via pep517
