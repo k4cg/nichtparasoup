@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -106,7 +106,7 @@ pytest==6.2.4
     #   pytest-mock
 pytest-cov==2.12.1
     # via -r requirements/tests.in
-pytest-mock==3.6.1
+pytest-mock==3.10.0
     # via -r requirements/tests.in
 six==1.16.0
     # via
