@@ -100,7 +100,7 @@ jobs:
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
       - name: Setup Python ${{ matrix.python_version }}
         # see https://github.com/actions/setup-python
         uses: actions/setup-python@v2
@@ -186,7 +186,7 @@ jobs:
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
       - name: Fetch reports
         # see https://github.com/actions/download-artifact
         uses: actions/download-artifact@v2
@@ -258,7 +258,7 @@ jobs:
     steps:
       - name: Fetch Code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
