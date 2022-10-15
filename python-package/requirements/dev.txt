@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -137,7 +137,7 @@ virtualenv==20.10.0
     # via tox
 wheel==0.37.0
     # via pip-tools
-zipp==3.6.0
+zipp==3.9.0
     # via
     #   importlib-metadata
     #   pep517
