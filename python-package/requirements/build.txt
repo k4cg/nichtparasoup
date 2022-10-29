@@ -16,7 +16,7 @@ typing-extensions==3.10.0.2 ; python_version < "3.8"
     #   importlib-metadata
 wheel==0.37.0
     # via -r requirements/build.in
-zipp==3.6.0
+zipp==3.10.0
     # via
     #   importlib-metadata
     #   pep517
