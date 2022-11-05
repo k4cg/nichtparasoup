@@ -10,7 +10,7 @@ attrs==21.2.0
     #   pytest
 autopep8==1.5.7
     # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
@@ -135,7 +135,7 @@ typing-extensions==3.10.0.0 ; python_version < "3.8"
     #   mypy
 virtualenv==20.10.0
     # via tox
-wheel==0.37.0
+wheel==0.38.1
     # via pip-tools
 zipp==3.6.0
     # via
