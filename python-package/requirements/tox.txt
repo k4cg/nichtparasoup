@@ -4,11 +4,11 @@
 #
 #    pip-compile --strip-extras requirements/tox.in
 #
-backports.entry-points-selectable==1.1.0
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 distlib==0.3.2
     # via virtualenv
-filelock==3.4.0
+filelock==3.8.2
     # via
     #   tox
     #   virtualenv
