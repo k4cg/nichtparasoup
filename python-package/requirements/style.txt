@@ -27,7 +27,7 @@ flake8-use-fstring==1.1
     # via -r requirements/style.in
 importlib-metadata==4.8.1
     # via flake8
-isort==5.10.1
+isort==5.11.4
     # via flake8-isort
 mccabe==0.6.1
     # via flake8
