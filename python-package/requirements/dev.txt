@@ -9,16 +9,16 @@ attrs==21.2.0
     #   flake8-bugbear
     #   pytest
 autopep8==1.5.7
-    # via -r requirements/dev.in
-backports.entry-points-selectable==1.1.0
+    # via -r dev.in
+backports-entry-points-selectable==1.1.0
     # via virtualenv
 click==7.1.2
     # via
-    #   -c requirements/constraints.txt
+    #   -c constraints.txt
     #   pip-tools
 coverage==5.5
     # via
-    #   -r requirements/tests.in
+    #   -r tests.in
     #   pytest-cov
 distlib==0.3.2
     # via virtualenv
@@ -28,7 +28,7 @@ filelock==3.4.0
     #   virtualenv
 flake8==3.9.2
     # via
-    #   -r requirements/style.in
+    #   -r style.in
     #   flake8-annotations
     #   flake8-bugbear
     #   flake8-isort
@@ -36,15 +36,15 @@ flake8==3.9.2
     #   flake8-use-fstring
     #   pep8-naming
 flake8-annotations==2.7.0
-    # via -r requirements/style.in
+    # via -r style.in
 flake8-bugbear==21.11.29
-    # via -r requirements/style.in
+    # via -r style.in
 flake8-isort==4.0.0
-    # via -r requirements/style.in
+    # via -r style.in
 flake8-polyfill==1.0.2
     # via pep8-naming
 flake8-use-fstring==1.1
-    # via -r requirements/style.in
+    # via -r style.in
 future==0.18.2
     # via junitparser
 importlib-metadata==4.8.1
@@ -59,16 +59,16 @@ iniconfig==1.1.1
     # via pytest
 isort==5.10.1
     # via
-    #   -r requirements/dev.in
+    #   -r dev.in
     #   flake8-isort
 junitparser==2.1.1
-    # via -r requirements/tests.in
+    # via -r tests.in
 mccabe==0.6.1
     # via flake8
 mypy==0.812
     # via
-    #   -c requirements/constraints.txt
-    #   -r requirements/style.in
+    #   -c constraints.txt
+    #   -r style.in
 mypy-extensions==0.4.3
     # via mypy
 packaging==21.0
@@ -78,9 +78,9 @@ packaging==21.0
 pep517==0.11.0
     # via pip-tools
 pep8-naming==0.12.1
-    # via -r requirements/style.in
+    # via -r style.in
 pip-tools==6.2.0
-    # via -r requirements/dev.in
+    # via -r dev.in
 platformdirs==2.2.0
     # via virtualenv
 pluggy==0.13.1
@@ -101,13 +101,13 @@ pyparsing==2.4.7
     # via packaging
 pytest==6.2.4
     # via
-    #   -r requirements/tests.in
+    #   -r tests.in
     #   pytest-cov
     #   pytest-mock
 pytest-cov==2.12.1
-    # via -r requirements/tests.in
+    # via -r tests.in
 pytest-mock==3.6.1
-    # via -r requirements/tests.in
+    # via -r tests.in
 six==1.16.0
     # via
     #   tox
@@ -123,19 +123,19 @@ toml==0.10.2
 tomli==1.2.2
     # via pep517
 tox==3.24.2
-    # via -r requirements/tox.in
+    # via -r tox.in
 typed-ast==1.4.3
     # via
     #   flake8-annotations
     #   mypy
 typing-extensions==3.10.0.0 ; python_version < "3.8"
     # via
-    #   -c requirements/constraints.txt
+    #   -c constraints.txt
     #   importlib-metadata
     #   mypy
 virtualenv==20.10.0
     # via tox
-wheel==0.37.0
+wheel==0.38.1
     # via pip-tools
 zipp==3.6.0
     # via
