@@ -103,10 +103,6 @@ crawlers:
   - name: "Reddit"
     weight: 3
     config:
-      subreddit: 'somememes'
-  - name: "Reddit"
-    weight: 3
-    config:
       subreddit: 'Crappydesign'
   - name: "Reddit"
     weight: 3
